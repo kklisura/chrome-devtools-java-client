@@ -19,6 +19,9 @@ import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaEnu
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.utils.JavadocUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Java enum builder implementation.
  *
@@ -26,6 +29,14 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class JavaEnumBuilderImpl extends BaseBuilder implements JavaEnumBuilder {
 	private static final String PROPERTY_NAME = "propertyName";
+
+	private static final Map<String, String> CONSTANT_NAME_OVERRIDES = new HashMap<>();
+
+	static {
+		CONSTANT_NAME_OVERRIDES.put("NaN", "NAN");
+		CONSTANT_NAME_OVERRIDES.put("-Infinity", "NEGATIVE_INFINITY");
+		CONSTANT_NAME_OVERRIDES.put("-0", "NEGATIVE_0");
+	};
 
 	private EnumDeclaration declaration;
 
@@ -78,7 +89,7 @@ public class JavaEnumBuilderImpl extends BaseBuilder implements JavaEnumBuilder 
 	 * @param name Constant name.
 	 */
 	public void addEnumConstant(String name) {
-		EnumConstantDeclaration enumConstantDeclaration = new EnumConstantDeclaration(StringUtils.upperCase(name));
+		EnumConstantDeclaration enumConstantDeclaration = new EnumConstantDeclaration(toEnumConstant(name));
 		enumConstantDeclaration.setArguments(NodeList.nodeList(new StringLiteralExpr(name)));
 		declaration.addEntry(enumConstantDeclaration);
 	}
@@ -101,5 +112,38 @@ public class JavaEnumBuilderImpl extends BaseBuilder implements JavaEnumBuilder 
 	@Override
 	public String getName() {
 		return declaration.getNameAsString();
+	}
+
+	/**
+	 * Converts input string to java enum constant.
+	 *
+	 * Converts value to UPPERCASE.
+	 * Converts special - string to lowercase.
+	 * Converts camelCase to CAMEL_CASE constant.
+	 *
+	 * @param value Input string
+	 * @return Enum constant.
+	 */
+	public static String toEnumConstant(String value) {
+		if (CONSTANT_NAME_OVERRIDES.get(value) != null) {
+			return CONSTANT_NAME_OVERRIDES.get(value);
+		}
+
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < value.length(); i++) {
+			char c = value.charAt(i);
+			if ((Character.isUpperCase(c) && i > 0 && Character.isLowerCase(value.charAt(i - 1))) ||
+					(Character.isDigit(c) && i > 0 && Character.isLetter(value.charAt(i - 1)))) {
+				sb.append("_");
+			}
+
+			if (Character.isLetterOrDigit(c)) {
+				sb.append(Character.toUpperCase(c));
+			} else {
+				sb.append("_");
+			}
+		}
+
+		return StringUtils.upperCase(sb.toString());
 	}
 }

@@ -113,10 +113,12 @@ public class TypesBuilderTest extends EasyMockSupport {
 		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
+		javaClassBuilder1.generateGettersAndSetters();
 
 		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType2"))
 				.andReturn(javaClassBuilder2);
 		javaClassBuilder2.setJavaDoc("Description2");
+		javaClassBuilder2.generateGettersAndSetters();
 
 		replayAll();
 
@@ -159,6 +161,8 @@ public class TypesBuilderTest extends EasyMockSupport {
 		javaClassBuilder1.addPrivateField("propertyTypeList", "List");
 		javaClassBuilder1.addPrivateField("propertyTypeObject", "Object");
 
+		javaClassBuilder1.generateGettersAndSetters();
+
 		replayAll();
 
 		List<Builder> builderList = builder.build(domain);
@@ -187,6 +191,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
+		javaClassBuilder1.generateGettersAndSetters();
 
 		expect(javaBuilderFactory.createEnumBuilder("my.test.package.domain-name", "enumProperty"))
 				.andReturn(javaEnumBuilder1);

@@ -2,8 +2,15 @@ package com.github.kklisura.dev.tools.java.generator.support.java.builder.impl;
 
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.FieldDeclaration;
+import com.github.javaparser.ast.expr.NormalAnnotationExpr;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaClassBuilder;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.utils.JavadocUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Java class generator.
@@ -11,6 +18,8 @@ import com.github.kklisura.dev.tools.java.generator.support.java.builder.utils.J
  * @author Kenan Klisura
  */
 public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilder {
+	public static final Logger LOGGER = LoggerFactory.getLogger(JavaClassBuilderImpl.class);
+
 	private ClassOrInterfaceDeclaration declaration;
 	private String name;
 
@@ -46,11 +55,39 @@ public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilde
 
 	/**
 	 * Adds the private field of a given type to this class.
+	 *
 	 * @param name Field name.
 	 * @param type Field type.
 	 */
 	@Override
 	public void addPrivateField(String name, String type) {
 		declaration.addField(type, name, Modifier.PRIVATE);
+	}
+
+	/**
+	 * Adds annotation to field.
+	 *
+	 * @param name Field name. Could not be in correct format.
+	 * @param annotationName Annotation name.
+	 */
+	@Override
+	public void addFieldAnnotation(String name, String annotationName) {
+		Optional<FieldDeclaration> fieldDeclaration = declaration.getFieldByName(name);
+		if (fieldDeclaration.isPresent()) {
+			NormalAnnotationExpr annotationExpr = new NormalAnnotationExpr();
+			annotationExpr.setName(annotationName);
+			fieldDeclaration.get().addAnnotation(annotationExpr);
+		} else {
+			throw new RuntimeException("Field " + name + " is not present in current class.");
+		}
+	}
+
+	@Override
+	public void generateGettersAndSetters() {
+		List<FieldDeclaration> fields = declaration.getFields();
+		for (FieldDeclaration fieldDeclaration : fields) {
+			fieldDeclaration.createGetter();
+			fieldDeclaration.createSetter();
+		}
 	}
 }

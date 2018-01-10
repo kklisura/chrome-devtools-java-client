@@ -39,6 +39,10 @@ import java.util.function.Function;
 public class TypesBuilder {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TypesBuilder.class);
 
+	private static final String DEPRECATED_ANNOTATION = "Deprecated";
+	private static final String EXPERIMENTAL_ANNOTATION = "Experimental";
+	private static final String OPTIONAL_ANNOTATION = "Optional";
+
 	private static final Map<Object, String> PROPERTY_TO_JAVA_TYPE_MAP = new HashMap<>();
 
 	private final Map<Object, Function<TypeBuildRequest, Builder>> typeHandlers = new HashMap<>();
@@ -95,11 +99,12 @@ public class TypesBuilder {
 		if (CollectionUtils.isNotEmpty(types)) {
 			for (Type type : types) {
 				Function<TypeBuildRequest, Builder> buildRequestBuilderFunction = typeHandlers.get(type.getClass());
+				if (buildRequestBuilderFunction != null) {
+					TypeBuildRequest typeBuildRequest = new TypeBuildRequest<>(domain, type);
+					Builder builder = buildRequestBuilderFunction.apply(typeBuildRequest);
 
-				TypeBuildRequest typeBuildRequest = new TypeBuildRequest<>(domain, type);
-				Builder builder = buildRequestBuilderFunction.apply(typeBuildRequest);
-
-				result.add(builder);
+					result.add(builder);
+				}
 			}
 		}
 
@@ -127,6 +132,8 @@ public class TypesBuilder {
 		List<Builder> additionalBuilders = new ArrayList<>();
 		addProperties(domain, classBuilder, type, additionalBuilders);
 
+		classBuilder.generateGettersAndSetters();
+
 		if (additionalBuilders.isEmpty()) {
 			return classBuilder;
 		}
@@ -142,7 +149,20 @@ public class TypesBuilder {
 				if (handler != null) {
 					additionalBuilders.add(handler.apply(new PropertyBuildRequest<>(domain, property)));
 				} else {
+					// TODO(kklisura): Add support for description properties; Add javadoc on getters
 					classBuilder.addPrivateField(property.getName(), getJavaType(property));
+
+					if (Boolean.TRUE.equals(property.getDeprecated())) {
+						classBuilder.addFieldAnnotation(property.getName(), DEPRECATED_ANNOTATION);
+					}
+
+					if (Boolean.TRUE.equals(property.getExperimental())) {
+						classBuilder.addFieldAnnotation(property.getName(), EXPERIMENTAL_ANNOTATION);
+					}
+
+					if (Boolean.TRUE.equals(property.getOptional())) {
+						classBuilder.addFieldAnnotation(property.getName(), OPTIONAL_ANNOTATION);
+					}
 				}
 			}
 		}
