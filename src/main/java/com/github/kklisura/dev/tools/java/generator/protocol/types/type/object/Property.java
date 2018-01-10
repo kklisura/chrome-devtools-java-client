@@ -13,12 +13,14 @@ import com.github.kklisura.dev.tools.java.generator.protocol.types.type.object.p
 import com.github.kklisura.dev.tools.java.generator.protocol.types.type.object.properties.RefProperty;
 import com.github.kklisura.dev.tools.java.generator.protocol.types.type.object.properties.StringProperty;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Object property.
  *
  * @author Kenan Klisura
  */
+@Setter
 @Getter
 @JsonSubTypes({
 		@JsonSubTypes.Type(value = StringProperty.class, name = "string"),

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.github.kklisura.dev.tools.java.generator.protocol.types.type.object.Property;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
  * @author Kenan Klisura
  */
 @Getter
+@Setter
 @JsonDeserialize(using = JsonDeserializer.None.class)
 public class EnumProperty extends Property {
 	@JsonProperty("enum")
