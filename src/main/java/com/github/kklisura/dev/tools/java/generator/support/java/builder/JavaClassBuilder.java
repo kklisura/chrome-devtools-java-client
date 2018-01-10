@@ -28,6 +28,12 @@ public interface JavaClassBuilder extends Builder {
 	void addFieldAnnotation(String name, String annotationName);
 
 	/**
+	 * Adds annotation to this class.
+	 * @param annotationName Annotation name.
+	 */
+	void addAnnotation(String annotationName);
+
+	/**
 	 * Generates getters and setters for all fields.
 	 */
 	void generateGettersAndSetters();

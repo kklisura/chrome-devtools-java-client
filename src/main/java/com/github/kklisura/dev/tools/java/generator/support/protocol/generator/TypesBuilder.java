@@ -129,6 +129,10 @@ public class TypesBuilder {
 		JavaClassBuilder classBuilder = javaBuilderFactory.createClassBuilder(packageName, type.getId());
 		classBuilder.setJavaDoc(type.getDescription());
 
+		if (Boolean.TRUE.equals(type.getExperimental())) {
+			classBuilder.addAnnotation(EXPERIMENTAL_ANNOTATION);
+		}
+
 		List<Builder> additionalBuilders = new ArrayList<>();
 		addProperties(domain, classBuilder, type, additionalBuilders);
 

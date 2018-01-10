@@ -110,9 +110,13 @@ public class TypesBuilderTest extends EasyMockSupport {
 				createObjectType("someObjectType2", "Description2")
 		));
 
+		// Set first type to experimental
+		domain.getTypes().get(0).setExperimental(Boolean.TRUE);
+
 		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
+		javaClassBuilder1.addAnnotation("Experimental");
 		javaClassBuilder1.generateGettersAndSetters();
 
 		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType2"))
@@ -174,6 +178,41 @@ public class TypesBuilderTest extends EasyMockSupport {
 	}
 
 	@Test
+	public void testTypesGeneratorGeneratesCorrectTypesOnClassTypeWithPropertyAnnotations() throws InstantiationException, IllegalAccessException {
+		ObjectType objectType = createObjectType("someObjectType1", "Description1");
+		StringProperty property = createProperty(StringProperty.class, "propertyTypeString");
+		objectType.setProperties(Collections.singletonList(property));
+
+		property.setExperimental(Boolean.TRUE);
+		property.setDeprecated(Boolean.TRUE);
+		property.setOptional(Boolean.TRUE);
+
+		Domain domain = new Domain();
+		domain.setDomain("domain-name");
+		domain.setTypes(Collections.singletonList(objectType));
+
+		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
+				.andReturn(javaClassBuilder1);
+		javaClassBuilder1.setJavaDoc("Description1");
+		javaClassBuilder1.addPrivateField("propertyTypeString", "String");
+
+		javaClassBuilder1.addFieldAnnotation("propertyTypeString", "Experimental");
+		javaClassBuilder1.addFieldAnnotation("propertyTypeString", "Deprecated");
+		javaClassBuilder1.addFieldAnnotation("propertyTypeString", "Optional");
+
+		javaClassBuilder1.generateGettersAndSetters();
+
+		replayAll();
+
+		List<Builder> builderList = builder.build(domain);
+
+		verifyAll();
+
+		assertEquals(1, builderList.size());
+		assertEquals(builderList.get(0), javaClassBuilder1);
+	}
+
+	@Test
 	public void testTypesGeneratorGeneratesCorrectTypesOnClassTypeWithEnumProperty() throws InstantiationException, IllegalAccessException {
 		EnumProperty enumProperty = createProperty(EnumProperty.class, "enumProperty");
 
@@ -186,7 +225,6 @@ public class TypesBuilderTest extends EasyMockSupport {
 		Domain domain = new Domain();
 		domain.setDomain("domain-name");
 		domain.setTypes(Collections.singletonList(objectType));
-
 
 		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
 				.andReturn(javaClassBuilder1);

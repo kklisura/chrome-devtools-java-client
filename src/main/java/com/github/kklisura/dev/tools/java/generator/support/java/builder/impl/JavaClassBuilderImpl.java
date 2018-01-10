@@ -83,6 +83,13 @@ public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilde
 	}
 
 	@Override
+	public void addAnnotation(String annotationName) {
+		NormalAnnotationExpr annotationExpr = new NormalAnnotationExpr();
+		annotationExpr.setName(annotationName);
+		declaration.addAnnotation(annotationExpr);
+	}
+
+	@Override
 	public void generateGettersAndSetters() {
 		List<FieldDeclaration> fields = declaration.getFields();
 		for (FieldDeclaration fieldDeclaration : fields) {
