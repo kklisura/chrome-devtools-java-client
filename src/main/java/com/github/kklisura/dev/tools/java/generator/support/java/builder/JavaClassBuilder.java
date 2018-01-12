@@ -37,4 +37,12 @@ public interface JavaClassBuilder extends Builder {
 	 * Generates getters and setters for all fields.
 	 */
 	void generateGettersAndSetters();
+
+	/**
+	 * Adds an import statement given a package name and its object name.
+	 *
+	 * @param packageName Package name.
+	 * @param object Object name.
+	 */
+	void addImport(String packageName, String object);
 }

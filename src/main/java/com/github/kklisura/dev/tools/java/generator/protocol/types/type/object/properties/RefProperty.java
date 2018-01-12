@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.github.kklisura.dev.tools.java.generator.protocol.types.type.object.Property;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Ref property.
@@ -12,6 +13,7 @@ import lombok.Getter;
  * @author Kenan Klisura
  */
 @Getter
+@Setter
 @JsonDeserialize(using = JsonDeserializer.None.class)
 public class RefProperty extends Property {
 	@JsonProperty("$ref")

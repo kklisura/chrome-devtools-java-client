@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.github.kklisura.dev.tools.java.generator.protocol.types.type.object.properties.array.ArrayItem;
 
 /**
- * Typed array item item.
+ * Number array item type.
  *
  * @author Kenan Klisura
  */
 @JsonDeserialize(using = JsonDeserializer.None.class)
-public class TypedArrayItem extends ArrayItem {
+public class NumberArrayItem extends ArrayItem {
 }

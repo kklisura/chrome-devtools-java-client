@@ -1,5 +1,7 @@
 package com.github.kklisura.dev.tools.java.generator;
 
+import com.github.javaparser.printer.PrettyPrinter;
+import com.github.javaparser.printer.PrettyPrinterConfiguration;
 import com.github.javaparser.utils.SourceRoot;
 import com.github.kklisura.dev.tools.java.generator.protocol.DevToolsProtocol;
 import com.github.kklisura.dev.tools.java.generator.protocol.types.Domain;
@@ -64,6 +66,14 @@ public class Application {
 			builder.build(sourceRoot);
 		}
 
+		PrettyPrinterConfiguration prettyPrinterConfiguration = new PrettyPrinterConfiguration();
+		prettyPrinterConfiguration.setIndent("\t");
+		prettyPrinterConfiguration.setPrintComments(true);
+		prettyPrinterConfiguration.setPrintJavaDoc(true);
+
+		PrettyPrinter prettyPrinter = new PrettyPrinter(prettyPrinterConfiguration);
+
+		sourceRoot.setPrinter(prettyPrinter::print);
 		sourceRoot.saveAll(rootPath);
 	}
 }

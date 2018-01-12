@@ -14,6 +14,14 @@ import com.github.kklisura.dev.tools.java.generator.protocol.types.type.object.p
 import com.github.kklisura.dev.tools.java.generator.protocol.types.type.object.properties.ObjectProperty;
 import com.github.kklisura.dev.tools.java.generator.protocol.types.type.object.properties.RefProperty;
 import com.github.kklisura.dev.tools.java.generator.protocol.types.type.object.properties.StringProperty;
+import com.github.kklisura.dev.tools.java.generator.protocol.types.type.object.properties.array.ArrayItem;
+import com.github.kklisura.dev.tools.java.generator.protocol.types.type.object.properties.array.items.AnyArrayItem;
+import com.github.kklisura.dev.tools.java.generator.protocol.types.type.object.properties.array.items.EnumArrayItem;
+import com.github.kklisura.dev.tools.java.generator.protocol.types.type.object.properties.array.items.IntegerArrayItem;
+import com.github.kklisura.dev.tools.java.generator.protocol.types.type.object.properties.array.items.NumberArrayItem;
+import com.github.kklisura.dev.tools.java.generator.protocol.types.type.object.properties.array.items.ObjectArrayItem;
+import com.github.kklisura.dev.tools.java.generator.protocol.types.type.object.properties.array.items.RefArrayItem;
+import com.github.kklisura.dev.tools.java.generator.protocol.types.type.object.properties.array.items.StringArrayItem;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.Builder;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaBuilderFactory;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaClassBuilder;
@@ -21,6 +29,7 @@ import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaEnu
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.support.CombinedBuilders;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,36 +52,52 @@ public class TypesBuilder {
 	private static final String EXPERIMENTAL_ANNOTATION = "Experimental";
 	private static final String OPTIONAL_ANNOTATION = "Optional";
 
-	private static final Map<Object, String> PROPERTY_TO_JAVA_TYPE_MAP = new HashMap<>();
+	private static final Map<Class, String> PROPERTY_TO_JAVA_TYPE_MAP = new HashMap<>();
+	private static final Map<Class, String> ARRAY_ITEM_TYPE_TO_JAVA_TYPE_MAP = new HashMap<>();
 
-	private final Map<Object, Function<TypeBuildRequest, Builder>> typeHandlers = new HashMap<>();
-	private final Map<Object, Function<PropertyBuildRequest, Builder>> propertyHandlers = new HashMap<>();
+	private final Map<Class, Function<TypeBuildRequest, Builder>> typeHandlers = new HashMap<>();
+	private final Map<Class, Function<PropertyBuildRequest, PropertyHandlerResult>> propertyHandlers = new HashMap<>();
+	private final Map<Class, Function<ArrayItemBuildRequest, ArrayItemHandlerResult>> arrayItemHandlers = new HashMap<>();
 
 	private JavaBuilderFactory javaBuilderFactory;
 	private String basePackageName;
 
 	// Register property class to java type mapping.
 	static {
-		PROPERTY_TO_JAVA_TYPE_MAP.put(StringProperty.class, "String");
-		PROPERTY_TO_JAVA_TYPE_MAP.put(NumberProperty.class, "Double");
-		PROPERTY_TO_JAVA_TYPE_MAP.put(BooleanProperty.class, "Boolean");
-		PROPERTY_TO_JAVA_TYPE_MAP.put(AnyProperty.class, "Object");
-		PROPERTY_TO_JAVA_TYPE_MAP.put(IntegerProperty.class, "Integer");
-		PROPERTY_TO_JAVA_TYPE_MAP.put(EnumProperty.class, "Enum");
-		PROPERTY_TO_JAVA_TYPE_MAP.put(ObjectProperty.class, "Object");
-		PROPERTY_TO_JAVA_TYPE_MAP.put(ArrayProperty.class, "List");
-		PROPERTY_TO_JAVA_TYPE_MAP.put(RefProperty.class, "Object");
+		registerProperty(StringProperty.class, "String");
+		registerProperty(NumberProperty.class, "Double");
+		registerProperty(BooleanProperty.class, "Boolean");
+		registerProperty(AnyProperty.class, "Object");
+		registerProperty(IntegerProperty.class, "Integer");
+		registerProperty(ObjectProperty.class, "Object");
 	}
 
-	// Register handlers of property types.
+	// Register handlers of properties. These types are special and require special handling.
 	{
-		typeHandlers.put(EnumType.class, this::buildEnumType);
-		typeHandlers.put(ObjectType.class, this::buildClass);
+		registerProperty(EnumProperty.class, this::addEnumProperty);
+		registerProperty(RefProperty.class, this::addRefProperty);
+		registerProperty(ArrayProperty.class, this::addArrayProperty);
 	}
 
-	// Register handlers of properties
+	// Register array item types.
+	static {
+		registerArrayItem(ObjectArrayItem.class, "Object");
+		registerArrayItem(AnyArrayItem.class, "Object");
+		registerArrayItem(StringArrayItem.class, "String");
+		registerArrayItem(IntegerArrayItem.class, "Integer");
+		registerArrayItem(NumberArrayItem.class, "Double");
+	}
+
+	// Register handlers for some array items types. These types are special and require special handling.
 	{
-		propertyHandlers.put(EnumProperty.class, this::addEnumProperty);
+		registerArrayItem(EnumArrayItem.class, this::addEnumArrayItem);
+		registerArrayItem(RefArrayItem.class, this::addRefArrayItem);
+	}
+
+	// Register handlers of property types. These types are special and require special handling.
+	{
+		registerType(EnumType.class, this::buildEnumType);
+		registerType(ObjectType.class, this::buildClass);
 	}
 
 	/**
@@ -115,7 +140,7 @@ public class TypesBuilder {
 		final Domain domain = request.getDomain();
 		final EnumType type = request.getType();
 
-		String packageName = buildPackageName(domain);
+		String packageName = buildPackageName(domain.getDomain().toLowerCase());
 
 		return buildEnum(packageName, type.getId(), type.getDescription(), type.getEnumValues());
 	}
@@ -124,7 +149,7 @@ public class TypesBuilder {
 		final Domain domain = request.getDomain();
 		final ObjectType type = request.getType();
 
-		String packageName = buildPackageName(domain);
+		String packageName = buildPackageName(domain.getDomain().toLowerCase());
 
 		JavaClassBuilder classBuilder = javaBuilderFactory.createClassBuilder(packageName, type.getId());
 		classBuilder.setJavaDoc(type.getDescription());
@@ -145,41 +170,131 @@ public class TypesBuilder {
 		return new CombinedBuilders(additionalBuilders);
 	}
 
-	private void addProperties(Domain domain, JavaClassBuilder classBuilder, ObjectType type,
+	private void addProperties(Domain domain, JavaClassBuilder javaClassBuilder, ObjectType type,
 							   List<Builder> additionalBuilders) {
 		if (CollectionUtils.isNotEmpty(type.getProperties())) {
 			for (Property property : type.getProperties()) {
-				Function<PropertyBuildRequest, Builder> handler = propertyHandlers.get(property.getClass());
-				if (handler != null) {
-					additionalBuilders.add(handler.apply(new PropertyBuildRequest<>(domain, property)));
+				Function<PropertyBuildRequest, PropertyHandlerResult> fn = propertyHandlers.get(property.getClass());
+				if (fn != null) {
+					// Build request object
+					PropertyBuildRequest<Property> request = new PropertyBuildRequest<>();
+					request.setJavaClassBuilder(javaClassBuilder);
+					request.setDomain(domain);
+					request.setProperty(property);
+
+					PropertyHandlerResult result = fn.apply(request);
+					if (result.getBuilder() != null) {
+						additionalBuilders.add(result.getBuilder());
+					}
+
+					javaClassBuilder.addPrivateField(property.getName(), result.getType());
 				} else {
 					// TODO(kklisura): Add support for description properties; Add javadoc on getters
-					classBuilder.addPrivateField(property.getName(), getJavaType(property));
+					javaClassBuilder.addPrivateField(property.getName(), getJavaType(property));
+				}
 
-					if (Boolean.TRUE.equals(property.getDeprecated())) {
-						classBuilder.addFieldAnnotation(property.getName(), DEPRECATED_ANNOTATION);
-					}
+				if (Boolean.TRUE.equals(property.getDeprecated())) {
+					javaClassBuilder.addFieldAnnotation(property.getName(), DEPRECATED_ANNOTATION);
+				}
 
-					if (Boolean.TRUE.equals(property.getExperimental())) {
-						classBuilder.addFieldAnnotation(property.getName(), EXPERIMENTAL_ANNOTATION);
-					}
+				if (Boolean.TRUE.equals(property.getExperimental())) {
+					javaClassBuilder.addFieldAnnotation(property.getName(), EXPERIMENTAL_ANNOTATION);
+				}
 
-					if (Boolean.TRUE.equals(property.getOptional())) {
-						classBuilder.addFieldAnnotation(property.getName(), OPTIONAL_ANNOTATION);
-					}
+				if (Boolean.TRUE.equals(property.getOptional())) {
+					javaClassBuilder.addFieldAnnotation(property.getName(), OPTIONAL_ANNOTATION);
 				}
 			}
 		}
 	}
 
-	private Builder addEnumProperty(PropertyBuildRequest<EnumProperty> request) {
+	private PropertyHandlerResult addEnumProperty(PropertyBuildRequest<EnumProperty> request) {
 		final Domain domain = request.getDomain();
 		final EnumProperty property = request.getProperty();
 
-		String packageName = buildPackageName(domain);
+		String packageName = buildPackageName(domain.getDomain().toLowerCase());
 		String name = property.getName();
 
-		return buildEnum(packageName, name, property.getDescription(), property.getEnumValues());
+		PropertyHandlerResult result = new PropertyHandlerResult();
+		result.setBuilder(buildEnum(packageName, name, property.getDescription(), property.getEnumValues()));
+		result.setType(name);
+
+		return result;
+	}
+
+	private PropertyHandlerResult addRefProperty(PropertyBuildRequest<RefProperty> request) {
+		final RefProperty property = request.getProperty();
+
+		String objectName = addRefImportStatement(request.getJavaClassBuilder(), property.getRef());
+
+		PropertyHandlerResult result = new PropertyHandlerResult();
+		result.setType(objectName);
+
+		return result;
+	}
+
+	private PropertyHandlerResult addArrayProperty(PropertyBuildRequest<ArrayProperty> request) {
+		final ArrayProperty arrayProperty = request.getProperty();
+		final ArrayItem arrayItem = arrayProperty.getItems();
+
+		PropertyHandlerResult result = new PropertyHandlerResult();
+
+		Function<ArrayItemBuildRequest, ArrayItemHandlerResult> fn = arrayItemHandlers.get(arrayItem.getClass());
+		if (fn != null) {
+			ArrayItemBuildRequest<ArrayItem> buildRequest = new ArrayItemBuildRequest<>();
+			buildRequest.setJavaClassBuilder(request.getJavaClassBuilder());
+			buildRequest.setDomain(request.getDomain());
+			buildRequest.setProperty(arrayItem);
+			buildRequest.setArrayProperty(arrayProperty);
+
+			ArrayItemHandlerResult itemResult = fn.apply(buildRequest);
+
+			result.setBuilder(itemResult.getBuilder());
+			result.setType(itemResult.getType());
+		} else {
+			result.setType(buildArrayJavaType(getTypedArrayItemType(arrayItem)));
+		}
+
+		return result;
+	}
+
+	private ArrayItemHandlerResult addRefArrayItem(ArrayItemBuildRequest<RefArrayItem> request) {
+		final RefArrayItem property = request.getProperty();
+
+		String objectName = addRefImportStatement(request.getJavaClassBuilder(), property.getRef());
+
+		ArrayItemHandlerResult result = new ArrayItemHandlerResult();
+		result.setType(buildArrayJavaType(objectName));
+		return result;
+	}
+
+	private ArrayItemHandlerResult addEnumArrayItem(ArrayItemBuildRequest<EnumArrayItem> request) {
+		// TODO(kklisura): Need to test this!
+		final Domain domain = request.getDomain();
+		final EnumArrayItem property = request.getProperty();
+
+		String packageName = buildPackageName(domain.getDomain().toLowerCase());
+		String name = request.getArrayProperty().getName();
+
+		ArrayItemHandlerResult result = new ArrayItemHandlerResult();
+		result.setBuilder(buildEnum(packageName, name, property.getDescription(), property.getEnumValues()));
+		result.setType(buildArrayJavaType(name));
+		return result;
+	}
+
+	private String addRefImportStatement(JavaClassBuilder javaClassBuilder, String ref) {
+		String namespace;
+
+		int i = ref.indexOf('.');
+		if (i != -1) {
+			namespace = ref.substring(0, i);
+			ref = ref.substring(i + 1);
+
+			String importPackageName = buildPackageName(namespace);
+			javaClassBuilder.addImport(importPackageName, ref);
+		}
+
+		return ref;
 	}
 
 	private Builder buildEnum(String packageName, String name, String description, List<String> enumValues) {
@@ -195,25 +310,107 @@ public class TypesBuilder {
 		return enumBuilder;
 	}
 
-	private String buildPackageName(Domain domain) {
-		return this.basePackageName + "." + domain.getDomain().toLowerCase();
+	private String buildPackageName(String packageName) {
+		return this.basePackageName + "." + packageName;
 	}
 
 	private String getJavaType(Property property) {
 		return PROPERTY_TO_JAVA_TYPE_MAP.get(property.getClass());
 	}
 
+	private static String buildArrayJavaType(String type) {
+		return "List<" + type + ">";
+	}
+
+	private static String getTypedArrayItemType(ArrayItem arrayItem) {
+		return ARRAY_ITEM_TYPE_TO_JAVA_TYPE_MAP.get(arrayItem.getClass());
+	}
+
+	/**
+	 * Register array item to java type mapping.
+	 *
+	 * @param clazz Class of an array item.
+	 * @param type Java type.
+	 * @param <T> Array item class type.
+	 */
+	private static <T extends ArrayItem> void registerArrayItem(Class<T> clazz, String type) {
+		ARRAY_ITEM_TYPE_TO_JAVA_TYPE_MAP.put(clazz, type);
+	}
+
+	/**
+	 * Register array item to java type mapping.
+	 *
+	 * @param clazz Class of an array item.
+	 * @param fn Handler function.
+	 * @param <T> Array item class type.
+	 */
+	private <T extends ArrayItem> void registerArrayItem(Class<T> clazz,
+														 Function<ArrayItemBuildRequest, ArrayItemHandlerResult> fn) {
+		arrayItemHandlers.put(clazz, fn);
+	}
+
+	/**
+	 * Registers java property to a property class.
+	 *
+	 * @param clazz Property class.
+	 * @param type Java type.
+	 * @param <T> Property class type.
+	 */
+	private static <T extends Property> void registerProperty(Class<T> clazz, String type) {
+		PROPERTY_TO_JAVA_TYPE_MAP.put(clazz, type);
+	}
+
+	/**
+	 * Register property handler.
+	 *
+	 * @param clazz Class which handler processes.
+	 * @param fn Handler function.
+	 * @param <T> Property class type.
+	 */
+	private <T extends Property> void registerProperty(Class<T> clazz,
+													   Function<PropertyBuildRequest, PropertyHandlerResult> fn) {
+		propertyHandlers.put(clazz, fn);
+	}
+
+	private <T extends Type> void registerType(Class<T> clazz, Function<TypeBuildRequest, Builder> fn) {
+		typeHandlers.put(clazz, fn);
+	}
+
 	@Getter
 	@AllArgsConstructor
-	public class TypeBuildRequest<T extends Type> {
+	private class TypeBuildRequest<T extends Type> {
 		private Domain domain;
 		private T type;
 	}
 
 	@Getter
-	@AllArgsConstructor
-	public class PropertyBuildRequest<T extends Property> {
+	@Setter
+	private class PropertyBuildRequest<T extends Property> {
 		private Domain domain;
 		private T property;
+		private JavaClassBuilder javaClassBuilder;
+	}
+
+	@Getter
+	@Setter
+	private class ArrayItemBuildRequest<T extends ArrayItem> {
+		private Domain domain;
+		private T property;
+		private ArrayProperty arrayProperty;
+		private JavaClassBuilder javaClassBuilder;
+	}
+
+	@Getter
+	@Setter
+	private class PropertyHandlerResult {
+		private Builder builder;
+		private String type;
+	}
+
+	@Getter
+	@Setter
+	private class ArrayItemHandlerResult {
+		private Builder builder;
+		private String type;
 	}
 }
