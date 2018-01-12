@@ -89,18 +89,18 @@ public class TypesBuilderTest extends EasyMockSupport {
 		domain.setTypes(Arrays.asList(
 				new StringType(),
 				createEnumType("someEnumType1", "Description1", null),
-				createEnumType("someEnumType2", "Description2", Arrays.asList("VAL1", "Val2"))
+				createEnumType("someEnumType2", "Description2", Arrays.asList("val1", "Val2"))
 		));
 
-		expect(javaBuilderFactory.createEnumBuilder("my.test.package.domain-name", "someEnumType1"))
+		expect(javaBuilderFactory.createEnumBuilder("my.test.package.domain-name", "SomeEnumType1"))
 				.andReturn(javaEnumBuilder1);
 		javaEnumBuilder1.setJavaDoc("Description1");
 
-		expect(javaBuilderFactory.createEnumBuilder("my.test.package.domain-name", "someEnumType2"))
+		expect(javaBuilderFactory.createEnumBuilder("my.test.package.domain-name", "SomeEnumType2"))
 				.andReturn(javaEnumBuilder2);
 		javaEnumBuilder2.setJavaDoc("Description2");
-		javaEnumBuilder2.addEnumConstant("VAL1");
-		javaEnumBuilder2.addEnumConstant("Val2");
+		javaEnumBuilder2.addEnumConstant("VAL_1", "val1");
+		javaEnumBuilder2.addEnumConstant("VAL_2", "Val2");
 
 		replayAll();
 
@@ -238,15 +238,15 @@ public class TypesBuilderTest extends EasyMockSupport {
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
 
-		javaClassBuilder1.addPrivateField("enumProperty", "enumProperty");
+		javaClassBuilder1.addPrivateField("enumProperty", "EnumProperty");
 		javaClassBuilder1.generateGettersAndSetters();
 
-		expect(javaBuilderFactory.createEnumBuilder("my.test.package.domain-name", "enumProperty"))
+		expect(javaBuilderFactory.createEnumBuilder("my.test.package.domain-name", "EnumProperty"))
 				.andReturn(javaEnumBuilder1);
 		javaEnumBuilder1.setJavaDoc("Some property description");
 
-		javaEnumBuilder1.addEnumConstant("enum1");
-		javaEnumBuilder1.addEnumConstant("enum2");
+		javaEnumBuilder1.addEnumConstant("ENUM_1", "enum1");
+		javaEnumBuilder1.addEnumConstant("ENUM_2", "enum2");
 
 		replayAll();
 
@@ -284,7 +284,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
 
-		javaClassBuilder1.addImport("my.test.package.TestPackage", "RefObject1");
+		javaClassBuilder1.addImport("my.test.package.testpackage", "RefObject1");
 		javaClassBuilder1.addPrivateField("refPropertyName1", "RefObject1");
 
 		javaClassBuilder1.addPrivateField("refPropertyName2", "RefObject2");
@@ -373,7 +373,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
 
-		javaClassBuilder1.addImport("my.test.package.Test", "RefObject2");
+		javaClassBuilder1.addImport("my.test.package.test", "RefObject2");
 
 		javaClassBuilder1.addPrivateField("arrayPropertyName1", "List<RefObject1>");
 		javaClassBuilder1.addPrivateField("arrayPropertyName2", "List<RefObject2>");
@@ -411,16 +411,16 @@ public class TypesBuilderTest extends EasyMockSupport {
 		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
 				.andReturn(javaClassBuilder1);
 
-		expect(javaBuilderFactory.createEnumBuilder("my.test.package.domain-name", "arrayPropertyName1"))
+		expect(javaBuilderFactory.createEnumBuilder("my.test.package.domain-name", "ArrayPropertyName1"))
 				.andReturn(javaEnumBuilder1);
 
 		javaClassBuilder1.setJavaDoc("Description1");
-		javaClassBuilder1.addPrivateField("arrayPropertyName1", "List<arrayPropertyName1>");
+		javaClassBuilder1.addPrivateField("arrayPropertyName1", "List<ArrayPropertyName1>");
 		javaClassBuilder1.generateGettersAndSetters();
 
 		javaEnumBuilder1.setJavaDoc("Some property description");
-		javaEnumBuilder1.addEnumConstant("enumValue1");
-		javaEnumBuilder1.addEnumConstant("enumValue2");
+		javaEnumBuilder1.addEnumConstant("ENUM_VALUE_1", "enumValue1");
+		javaEnumBuilder1.addEnumConstant("ENUM_VALUE_2", "enumValue2");
 
 		replayAll();
 

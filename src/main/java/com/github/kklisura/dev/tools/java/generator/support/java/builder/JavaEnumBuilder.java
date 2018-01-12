@@ -7,13 +7,16 @@ package com.github.kklisura.dev.tools.java.generator.support.java.builder;
  */
 public interface JavaEnumBuilder extends Builder {
 	/**
-	 * Adds new enum constant.
+	 * Adds new enum constant. This constant is in form CONSTANT_NAME("constant_value").
+	 *
 	 * @param name Constant name.
+	 * @param value Constant value.
 	 */
-	void addEnumConstant(String name);
+	void addEnumConstant(String name, String value);
 
 	/**
 	 * Sets the java doc for this class.
+	 * 
 	 * @param comment Comment.
 	 */
 	void setJavaDoc(String comment);

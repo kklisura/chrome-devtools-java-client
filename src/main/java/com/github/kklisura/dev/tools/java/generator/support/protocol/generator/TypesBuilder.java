@@ -40,6 +40,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import static com.github.kklisura.dev.tools.java.generator.support.utils.StringUtils.*;
+
 /**
  * TypesBuilder builds a types for a domain.
  *
@@ -140,16 +142,16 @@ public class TypesBuilder {
 		final Domain domain = request.getDomain();
 		final EnumType type = request.getType();
 
-		String packageName = buildPackageName(domain.getDomain().toLowerCase());
+		String packageName = buildPackageName(basePackageName, domain.getDomain().toLowerCase());
 
-		return buildEnum(packageName, type.getId(), type.getDescription(), type.getEnumValues());
+		return buildEnum(packageName, toEnumClass(type.getId()), type.getDescription(), type.getEnumValues());
 	}
 
 	private Builder buildClass(TypeBuildRequest<ObjectType> request) {
 		final Domain domain = request.getDomain();
 		final ObjectType type = request.getType();
 
-		String packageName = buildPackageName(domain.getDomain().toLowerCase());
+		String packageName = buildPackageName(basePackageName, domain.getDomain().toLowerCase());
 
 		JavaClassBuilder classBuilder = javaBuilderFactory.createClassBuilder(packageName, type.getId());
 		classBuilder.setJavaDoc(type.getDescription());
@@ -212,8 +214,8 @@ public class TypesBuilder {
 		final Domain domain = request.getDomain();
 		final EnumProperty property = request.getProperty();
 
-		String packageName = buildPackageName(domain.getDomain().toLowerCase());
-		String name = property.getName();
+		String packageName = buildPackageName(basePackageName, domain.getDomain().toLowerCase());
+		String name = toEnumClass(property.getName());
 
 		PropertyHandlerResult result = new PropertyHandlerResult();
 		result.setBuilder(buildEnum(packageName, name, property.getDescription(), property.getEnumValues()));
@@ -273,8 +275,8 @@ public class TypesBuilder {
 		final Domain domain = request.getDomain();
 		final EnumArrayItem property = request.getProperty();
 
-		String packageName = buildPackageName(domain.getDomain().toLowerCase());
-		String name = request.getArrayProperty().getName();
+		String packageName = buildPackageName(basePackageName, domain.getDomain().toLowerCase());
+		String name = toEnumClass(request.getArrayProperty().getName());
 
 		ArrayItemHandlerResult result = new ArrayItemHandlerResult();
 		result.setBuilder(buildEnum(packageName, name, property.getDescription(), property.getEnumValues()));
@@ -290,7 +292,7 @@ public class TypesBuilder {
 			namespace = ref.substring(0, i);
 			ref = ref.substring(i + 1);
 
-			String importPackageName = buildPackageName(namespace);
+			String importPackageName = buildPackageName(basePackageName, namespace);
 			javaClassBuilder.addImport(importPackageName, ref);
 		}
 
@@ -303,15 +305,11 @@ public class TypesBuilder {
 
 		if (CollectionUtils.isNotEmpty(enumValues)) {
 			for (String enumValue : enumValues) {
-				enumBuilder.addEnumConstant(enumValue);
+				enumBuilder.addEnumConstant(toEnumConstant(enumValue), enumValue);
 			}
 		}
 
 		return enumBuilder;
-	}
-
-	private String buildPackageName(String packageName) {
-		return this.basePackageName + "." + packageName;
 	}
 
 	private String getJavaType(Property property) {
