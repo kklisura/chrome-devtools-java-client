@@ -13,7 +13,9 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -23,6 +25,13 @@ import java.util.Optional;
  */
 public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilder {
 	public static final Logger LOGGER = LoggerFactory.getLogger(JavaClassBuilderImpl.class);
+
+	private static final Map<String, String> KEYWORD_TO_FIELD_MAPPING = new HashMap<>();
+
+	// Registers a keyword mapping.
+	static {
+		registerKeyword("this", "that");
+	}
 
 	private String name;
 	private ClassOrInterfaceDeclaration declaration;
@@ -69,7 +78,7 @@ public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilde
 	 */
 	@Override
 	public void addPrivateField(String name, String type) {
-		declaration.addField(type, name, Modifier.PRIVATE);
+		declaration.addField(type, getFieldName(name), Modifier.PRIVATE);
 	}
 
 	/**
@@ -80,7 +89,7 @@ public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilde
 	 */
 	@Override
 	public void addFieldAnnotation(String name, String annotationName) {
-		Optional<FieldDeclaration> fieldDeclaration = declaration.getFieldByName(name);
+		Optional<FieldDeclaration> fieldDeclaration = declaration.getFieldByName(getFieldName(name));
 		if (fieldDeclaration.isPresent()) {
 			MarkerAnnotationExpr annotationExpr = new MarkerAnnotationExpr();
 			annotationExpr.setName(annotationName);
@@ -132,5 +141,25 @@ public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilde
 		}
 
 		return false;
+	}
+
+	/**
+	 * Returns a field name given an input. This is used to rename field names that are keyword names.
+	 *
+	 * @param input Input field name.
+	 * @return Field name.
+	 */
+	private static String getFieldName(String input) {
+		return KEYWORD_TO_FIELD_MAPPING.getOrDefault(input, input);
+	}
+
+	/**
+	 * Registers keyword mapping. This is used to rename a field that belongs to a keyword to some other name (mapping).
+	 *
+	 * @param keyword Keyword to be renamed.
+	 * @param mapping Mapping to be renamed into.
+	 */
+	private static void registerKeyword(String keyword, String mapping) {
+		KEYWORD_TO_FIELD_MAPPING.put(keyword, mapping);
 	}
 }
