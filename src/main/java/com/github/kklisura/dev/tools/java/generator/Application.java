@@ -35,17 +35,19 @@ public class Application {
 	 * @param args Arguments.
 	 */
 	public static void main( String[] args ) throws IOException {
-		InputStream inputStream = Application.class.getClassLoader().getResourceAsStream("protocol.json");
+		final String typesPackageName = "com.github.kklisura.cdp.protocol.types";
+		final String annotationsPackageName = "com.github.kklisura.cdp.protocol.annotations";
 
-		DevToolsProtocol protocol = DevToolsProtocolUtils.readJson(inputStream);
+		final InputStream inputStream = Application.class.getClassLoader().getResourceAsStream("protocol.json");
+		final  DevToolsProtocol protocol = DevToolsProtocolUtils.readJson(inputStream);
 
-		Path rootPath = new File("/tmp/test-cdpj").toPath();
+		Path rootPath = new File("/Users/kenanklisura/development/playground/cdp-java-client/src/main/java").toPath();
 		SourceRoot sourceRoot = new SourceRoot(rootPath);
 
 		JavaBuilderFactory javaBuilderFactory = new JavaBuilderFactory() {
 			@Override
 			public JavaClassBuilder createClassBuilder(String packageName, String className) {
-				return new JavaClassBuilderImpl(packageName, className);
+				return new JavaClassBuilderImpl(packageName, className, annotationsPackageName);
 			}
 
 			@Override
@@ -54,7 +56,7 @@ public class Application {
 			}
 		};
 
-		TypesBuilder typesBuilder = new TypesBuilder("com.github.kklisura.test", javaBuilderFactory);
+		TypesBuilder typesBuilder = new TypesBuilder(typesPackageName, javaBuilderFactory);
 
 		List<Builder> builderList = new ArrayList<>();
 

@@ -2,19 +2,18 @@ package com.github.kklisura.dev.tools.java.generator.support.java.builder.impl;
 
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Modifier;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
 import com.github.javaparser.ast.expr.Name;
-import com.github.javaparser.ast.expr.NormalAnnotationExpr;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaClassBuilder;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.utils.JavadocUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -25,25 +24,23 @@ import java.util.Optional;
 public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilder {
 	public static final Logger LOGGER = LoggerFactory.getLogger(JavaClassBuilderImpl.class);
 
-	private static final Map<String, Class> NATIVE_IMPORTS = new HashMap<>();
-
-	static {
-		NATIVE_IMPORTS.put("List", List.class);
-	}
-
-	private ClassOrInterfaceDeclaration declaration;
 	private String name;
+	private ClassOrInterfaceDeclaration declaration;
+
+	private String annotationsPackage;
 
 	/**
 	 * Instantiates a new class builder implementation.
 	 *
 	 * @param packageName Package name.
 	 * @param name Class name.
+	 * @param annotationsPackage Package where support annotations are located (Optional, Experimental...)
 	 */
-	public JavaClassBuilderImpl(String packageName, String name) {
+	public JavaClassBuilderImpl(String packageName, String name, String annotationsPackage) {
 		super(packageName);
-		this.declaration = getCompilationUnit().addClass(name);
 		this.name = name;
+		this.declaration = getCompilationUnit().addClass(name);
+		this.annotationsPackage = annotationsPackage;
 	}
 
 	/**
@@ -88,6 +85,8 @@ public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilde
 			MarkerAnnotationExpr annotationExpr = new MarkerAnnotationExpr();
 			annotationExpr.setName(annotationName);
 			fieldDeclaration.get().addAnnotation(annotationExpr);
+
+			addImport(annotationsPackage, annotationName);
 		} else {
 			throw new RuntimeException("Field " + name + " is not present in current class.");
 		}
@@ -95,9 +94,11 @@ public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilde
 
 	@Override
 	public void addAnnotation(String annotationName) {
-		NormalAnnotationExpr annotationExpr = new NormalAnnotationExpr();
+		MarkerAnnotationExpr annotationExpr = new MarkerAnnotationExpr();
 		annotationExpr.setName(annotationName);
 		declaration.addAnnotation(annotationExpr);
+
+		addImport(annotationsPackage, annotationName);
 	}
 
 	@Override
@@ -115,6 +116,21 @@ public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilde
 		name.setQualifier(new Name(packageName));
 		name.setIdentifier(object);
 
-		getCompilationUnit().addImport(new ImportDeclaration(name, false, false));
+		if (!isAlreadyImported(name)) {
+			getCompilationUnit().addImport(new ImportDeclaration(name, false, false));
+		}
+	}
+
+	private boolean isAlreadyImported(Name name) {
+		NodeList<ImportDeclaration> imports = getCompilationUnit().getImports();
+		if (CollectionUtils.isNotEmpty(imports)) {
+			for (ImportDeclaration importDeclaration : imports) {
+				if (name.equals(importDeclaration.getName())) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 }
