@@ -338,6 +338,8 @@ public class TypesBuilderTest extends EasyMockSupport {
 
 		javaClassBuilder1.generateGettersAndSetters();
 
+		javaClassBuilder1.addImport("java.util", "List");
+
 		ArrayType resolvedType = new ArrayType();
 		resolvedType.setItems(new com.github.kklisura.dev.tools.java.generator.protocol.types.type.array.items.StringArrayItem());
 
@@ -434,6 +436,8 @@ public class TypesBuilderTest extends EasyMockSupport {
 
 			javaClassBuilder1.generateGettersAndSetters();
 
+			javaClassBuilder1.addImport("java.util", "List");
+
 			replayAll();
 
 			List<Builder> builderList = builder.build(domain, NULL_DOMAIN_TYPE_RESOLVER);
@@ -477,6 +481,9 @@ public class TypesBuilderTest extends EasyMockSupport {
 
 		javaClassBuilder1.addPrivateField("arrayPropertyName1", "List<RefObject1>");
 		javaClassBuilder1.addPrivateField("arrayPropertyName2", "List<RefObject2>");
+
+		javaClassBuilder1.addImport("java.util", "List");
+		javaClassBuilder1.addImport("java.util", "List");
 
 		javaClassBuilder1.generateGettersAndSetters();
 
@@ -528,6 +535,9 @@ public class TypesBuilderTest extends EasyMockSupport {
 
 		javaClassBuilder1.generateGettersAndSetters();
 
+		javaClassBuilder1.addImport("java.util", "List");
+		javaClassBuilder1.addImport("java.util", "List");
+
 		ArrayType resolvedType = new ArrayType();
 		resolvedType.setItems(new com.github.kklisura.dev.tools.java.generator.protocol.types.type.array.items.NumberArrayItem());
 
@@ -578,6 +588,9 @@ public class TypesBuilderTest extends EasyMockSupport {
 
 		javaClassBuilder1.generateGettersAndSetters();
 
+		javaClassBuilder1.addImport("java.util", "List");
+		javaClassBuilder1.addImport("java.util", "List");
+
 		Type resolvedType1 = new StringType();
 
 		Type resolvedType2 = new NumberType();
@@ -621,6 +634,8 @@ public class TypesBuilderTest extends EasyMockSupport {
 
 		expect(javaBuilderFactory.createEnumBuilder("my.test.package.domain-name", "ArrayPropertyName1"))
 				.andReturn(javaEnumBuilder1);
+
+		javaClassBuilder1.addImport("java.util", "List");
 
 		javaClassBuilder1.setJavaDoc("Description1");
 		javaClassBuilder1.addPrivateField("arrayPropertyName1", "List<ArrayPropertyName1>");

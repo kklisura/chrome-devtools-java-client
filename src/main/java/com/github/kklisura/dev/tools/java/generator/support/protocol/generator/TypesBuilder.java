@@ -58,6 +58,9 @@ public class TypesBuilder {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TypesBuilder.class);
 
+	private static final String LIST_PACKAGE = "java.util";
+	private static final String LIST_CLASS_NAME = "List";
+
 	private static final String DEPRECATED_ANNOTATION = "Deprecated";
 	private static final String EXPERIMENTAL_ANNOTATION = "Experimental";
 	private static final String OPTIONAL_ANNOTATION = "Optional";
@@ -311,6 +314,8 @@ public class TypesBuilder {
 			result.setType(buildArrayJavaType(getArrayItemJavaType(arrayItem)));
 		}
 
+		request.getJavaClassBuilder().addImport(LIST_PACKAGE, LIST_CLASS_NAME);
+
 		return result;
 	}
 
@@ -348,6 +353,8 @@ public class TypesBuilder {
 			// If this ref is pointing to some primitive type (integer, number, string...) we return their java types.
 			Type type = domainTypeResolver.resolve(namespace, ref);
 			if (isArrayType(type)) {
+				javaClassBuilder.addImport(LIST_PACKAGE, LIST_CLASS_NAME);
+
 				ArrayType arrayType = (ArrayType) type;
 				return buildArrayJavaType(getArrayItemJavaType(arrayType.getItems()));
 			}
@@ -364,6 +371,8 @@ public class TypesBuilder {
 		// If this ref is pointing to some primitive type (integer, number, string...) we return their java types.
 		Type type = domainTypeResolver.resolve(domain.getDomain(), refValue);
 		if (isArrayType(type)) {
+			javaClassBuilder.addImport(LIST_PACKAGE, LIST_CLASS_NAME);
+
 			ArrayType arrayType = (ArrayType) type;
 			return buildArrayJavaType(getArrayItemJavaType(arrayType.getItems()));
 		}
@@ -404,7 +413,7 @@ public class TypesBuilder {
 	}
 
 	private static String buildArrayJavaType(String type) {
-		return "List<" + type + ">";
+		return LIST_CLASS_NAME + "<" + type + ">";
 	}
 
 	/**

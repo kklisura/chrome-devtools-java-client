@@ -43,7 +43,7 @@ public class JavaEnumBuilderImpl extends BaseBuilder implements JavaEnumBuilder 
 		declaration.addField("String", PROPERTY_NAME, Modifier.FINAL);
 
 		// Add constructor
-		ConstructorDeclaration constructorDeclaration = declaration.addConstructor(Modifier.PUBLIC);
+		ConstructorDeclaration constructorDeclaration = declaration.addConstructor();
 		Parameter parameter = new Parameter();
 		parameter.setName(PROPERTY_NAME);
 		parameter.setType("String");
