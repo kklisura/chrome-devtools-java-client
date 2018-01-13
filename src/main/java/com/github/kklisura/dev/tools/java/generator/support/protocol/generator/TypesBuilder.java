@@ -35,6 +35,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,8 +59,8 @@ public class TypesBuilder {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TypesBuilder.class);
 
-	private static final String LIST_PACKAGE = "java.util";
-	private static final String LIST_CLASS_NAME = "List";
+	public static final String LIST_PACKAGE = "java.util";
+	public static final String LIST_CLASS_NAME = "List";
 
 	private static final String DEPRECATED_ANNOTATION = "Deprecated";
 	private static final String EXPERIMENTAL_ANNOTATION = "Experimental";
@@ -185,15 +186,17 @@ public class TypesBuilder {
 		return result;
 	}
 
-	private TypeHandlerResult buildClass(TypeBuildRequest<ObjectType> request) {
+	protected TypeHandlerResult buildClass(TypeBuildRequest<ObjectType> request) {
 		final Domain domain = request.getDomain();
 		final ObjectType type = request.getType();
 
 		String packageName = buildPackageName(basePackageName, domain.getDomain().toLowerCase());
-		String name = type.getId();
+		String name = toEnumClass(type.getId());
 
 		JavaClassBuilder classBuilder = javaBuilderFactory.createClassBuilder(packageName, name);
-		classBuilder.setJavaDoc(type.getDescription());
+		if (StringUtils.isNotEmpty(type.getDescription())) {
+			classBuilder.setJavaDoc(type.getDescription());
+		}
 
 		if (Boolean.TRUE.equals(type.getExperimental())) {
 			classBuilder.addAnnotation(EXPERIMENTAL_ANNOTATION);
@@ -344,33 +347,24 @@ public class TypesBuilder {
 		return result;
 	}
 
-	private String addRefImportStatement(JavaClassBuilder javaClassBuilder, String refValue,
-										 Domain domain, DomainTypeResolver domainTypeResolver) {
+	protected String addRefImportStatement(JavaClassBuilder javaClassBuilder, String refValue,
+										   Domain domain, DomainTypeResolver domainTypeResolver) {
+		return addRefImportStatement(basePackageName, javaClassBuilder, refValue, domain, domainTypeResolver);
+	}
+
+	protected String addRefImportStatement(String packageName, JavaClassBuilder javaClassBuilder, String refValue,
+										   Domain domain, DomainTypeResolver domainTypeResolver) {
+		String namespace = domain.getDomain();
+		String ref = refValue;
+
 		int i = refValue.indexOf('.');
 		if (i != -1) {
-			String namespace = refValue.substring(0, i);
-			String ref = refValue.substring(i + 1);
-
-			// If this ref is pointing to some primitive type (integer, number, string...) we return their java types.
-			Type type = domainTypeResolver.resolve(namespace, ref);
-			if (isArrayType(type)) {
-				javaClassBuilder.addImport(LIST_PACKAGE, LIST_CLASS_NAME);
-
-				ArrayType arrayType = (ArrayType) type;
-				return buildArrayJavaType(getArrayItemJavaType(arrayType.getItems()));
-			}
-			if (!isComplexType(type)) {
-				return getTypeJavaType(type);
-			}
-
-			String importPackageName = buildPackageName(basePackageName, namespace);
-			javaClassBuilder.addImport(importPackageName, ref);
-
-			return ref;
+			namespace = refValue.substring(0, i);
+			ref = refValue.substring(i + 1);
 		}
 
 		// If this ref is pointing to some primitive type (integer, number, string...) we return their java types.
-		Type type = domainTypeResolver.resolve(domain.getDomain(), refValue);
+		Type type = domainTypeResolver.resolve(namespace, ref);
 		if (isArrayType(type)) {
 			javaClassBuilder.addImport(LIST_PACKAGE, LIST_CLASS_NAME);
 
@@ -381,7 +375,12 @@ public class TypesBuilder {
 			return getTypeJavaType(type);
 		}
 
-		return refValue;
+		String importPackageName = buildPackageName(packageName, namespace);
+		if (!basePackageName.equals(packageName) || !isTypeFromDomain(domain, type)) {
+			javaClassBuilder.addImport(importPackageName, ref);
+		}
+
+		return ref;
 	}
 
 	private Builder buildEnum(String packageName, String name, String description, List<String> enumValues) {
@@ -405,15 +404,15 @@ public class TypesBuilder {
 		return ARRAY_ITEM_TYPE_TO_JAVA_TYPE_MAP.get(arrayItem.getClass());
 	}
 
-	private static String getArrayItemJavaType(com.github.kklisura.dev.tools.java.generator.protocol.types.type.array.ArrayItem arrayItem) {
+	protected static String getArrayItemJavaType(com.github.kklisura.dev.tools.java.generator.protocol.types.type.array.ArrayItem arrayItem) {
 		return ARRAY_TYPE_ITEM_TYPE_TO_JAVA_TYPE_MAP.get(arrayItem.getClass());
 	}
 
-	private static String getTypeJavaType(Type type) {
+	protected static String getTypeJavaType(Type type) {
 		return TYPE_TO_JAVA_TYPE_MAP.get(type.getClass());
 	}
 
-	private static String buildArrayJavaType(String type) {
+	protected static String buildArrayJavaType(String type) {
 		return LIST_CLASS_NAME + "<" + type + ">";
 	}
 
@@ -497,13 +496,25 @@ public class TypesBuilder {
 	}
 
 	/**
+	 * Checks if given type is from specified domain.
+	 *
+	 * @param domain Domain to check in.
+	 * @param type Type to check.
+	 * @return True if type belongs to domain.
+	 */
+	private static boolean isTypeFromDomain(Domain domain, Type type) {
+		List<Type> domainTypes = domain.getTypes();
+		return CollectionUtils.isNotEmpty(domainTypes) && domainTypes.contains(type);
+	}
+
+	/**
 	 * Returns true if given type is complex type. We assume complex types are those that need special handling
 	 * like enums or classes.
 	 *
 	 * @param type Type.
 	 * @return True if given type is complex type.
 	 */
-	private boolean isComplexType(Type type) {
+	protected boolean isComplexType(Type type) {
 		return typeHandlers.containsKey(type.getClass());
 	}
 
@@ -513,13 +524,13 @@ public class TypesBuilder {
 	 * @param type Type.
 	 * @return True if type is array type.
 	 */
-	private boolean isArrayType(Type type) {
+	protected boolean isArrayType(Type type) {
 		return type instanceof ArrayType;
 	}
 
 	@Getter
 	@AllArgsConstructor
-	private class TypeBuildRequest<T extends Type> {
+	protected class TypeBuildRequest<T extends Type> {
 		private Domain domain;
 		private T type;
 		DomainTypeResolver domainTypeResolver;
@@ -546,7 +557,7 @@ public class TypesBuilder {
 
 	@Getter
 	@Setter
-	private class TypeHandlerResult {
+	protected class TypeHandlerResult {
 		private Builder builder;
 	}
 

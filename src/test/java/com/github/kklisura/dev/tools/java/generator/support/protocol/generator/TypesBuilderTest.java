@@ -131,13 +131,13 @@ public class TypesBuilderTest extends EasyMockSupport {
 		// Set first type to experimental
 		domain.getTypes().get(0).setExperimental(Boolean.TRUE);
 
-		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
+		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "SomeObjectType1"))
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
 		javaClassBuilder1.addAnnotation("Experimental");
 		javaClassBuilder1.generateGettersAndSetters();
 
-		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType2"))
+		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "SomeObjectType2"))
 				.andReturn(javaClassBuilder2);
 		javaClassBuilder2.setJavaDoc("Description2");
 		javaClassBuilder2.generateGettersAndSetters();
@@ -169,7 +169,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 		domain.setDomain("domain-name");
 		domain.setTypes(Collections.singletonList(objectType));
 
-		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
+		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "SomeObjectType1"))
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
 		javaClassBuilder1.addPrivateField("propertyTypeString", "String", "propertyTypeStringDescription");
@@ -205,7 +205,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 		domain.setDomain("domain-name");
 		domain.setTypes(Collections.singletonList(objectType));
 
-		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
+		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "SomeObjectType1"))
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
 		javaClassBuilder1.addPrivateField("propertyTypeString", "String", "propertyTypeStringDescription");
@@ -240,7 +240,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 		domain.setDomain("domain-name");
 		domain.setTypes(Collections.singletonList(objectType));
 
-		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
+		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "SomeObjectType1"))
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
 
@@ -282,13 +282,22 @@ public class TypesBuilderTest extends EasyMockSupport {
 		ObjectType objectType = createObjectType("someObjectType1", "Description1");
 		objectType.setProperties(Arrays.asList(refProperty1, refProperty2));
 
+		Type resolvedType1 = new ObjectType();
+		resolvedType1.setId("RefObject1");
+
+		Type resolvedType2 = new ObjectType();
+		resolvedType2.setId("RefObject2");
+
 		Domain domain = new Domain();
 		domain.setDomain("domain-name");
-		domain.setTypes(Collections.singletonList(objectType));
+		domain.setTypes(Arrays.asList(objectType, resolvedType2));
 
-		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
+		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "SomeObjectType1"))
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
+
+		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "RefObject2"))
+				.andReturn(javaClassBuilder2);
 
 		javaClassBuilder1.addImport("my.test.package.testpackage", "RefObject1");
 		javaClassBuilder1.addPrivateField("refPropertyName1", "RefObject1", "Some property description");
@@ -296,10 +305,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 		javaClassBuilder1.addPrivateField("refPropertyName2", "RefObject2", "refPropertyName2Description");
 
 		javaClassBuilder1.generateGettersAndSetters();
-
-		Type resolvedType1 = new ObjectType();
-
-		Type resolvedType2 = new ObjectType();
+		javaClassBuilder2.generateGettersAndSetters();
 
 		expect(resolver.resolve("TestPackage", "RefObject1"))
 				.andReturn(resolvedType1);
@@ -312,8 +318,9 @@ public class TypesBuilderTest extends EasyMockSupport {
 
 		verifyAll();
 
-		assertEquals(1, builderList.size());
+		assertEquals(2, builderList.size());
 		assertEquals(javaClassBuilder1, builderList.get(0));
+		assertEquals(javaClassBuilder2, builderList.get(1));
 	}
 
 	@Test
@@ -330,7 +337,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 		domain.setDomain("domain-name");
 		domain.setTypes(Collections.singletonList(objectType));
 
-		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
+		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "SomeObjectType1"))
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
 
@@ -373,7 +380,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 		domain.setDomain("domain-name");
 		domain.setTypes(Collections.singletonList(objectType));
 
-		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
+		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "SomeObjectType1"))
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
 
@@ -428,7 +435,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 
 			resetAll();
 
-			expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
+			expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "SomeObjectType1"))
 					.andReturn(javaClassBuilder1);
 			javaClassBuilder1.setJavaDoc("Description1");
 
@@ -467,15 +474,24 @@ public class TypesBuilderTest extends EasyMockSupport {
 		ObjectType objectType = createObjectType("someObjectType1", "Description1");
 		objectType.setProperties(Arrays.asList(arrayProperty1, arrayProperty2));
 
+		Type resolvedType1 = new ObjectType();
+		resolvedType1.setId("RefObject1");
+
+		Type resolvedType2 = new ObjectType();
+		resolvedType2.setId("RefObject2");
+
 		Domain domain = new Domain();
 		domain.setDomain("domain-name");
-		domain.setTypes(Collections.singletonList(objectType));
+		domain.setTypes(Arrays.asList(objectType, resolvedType1));
 
 		resetAll();
 
-		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
+		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "SomeObjectType1"))
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
+
+		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "RefObject1"))
+				.andReturn(javaClassBuilder2);
 
 		javaClassBuilder1.addImport("my.test.package.test", "RefObject2");
 
@@ -486,12 +502,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 		javaClassBuilder1.addImport("java.util", "List");
 
 		javaClassBuilder1.generateGettersAndSetters();
-
-		Type resolvedType1 = new ObjectType();
-		resolvedType1.setId("RefObject1");
-
-		Type resolvedType2 = new ObjectType();
-		resolvedType2.setId("RefObject2");
+		javaClassBuilder2.generateGettersAndSetters();
 
 		expect(resolver.resolve("domain-name", "RefObject1"))
 				.andReturn(resolvedType1);
@@ -505,8 +516,9 @@ public class TypesBuilderTest extends EasyMockSupport {
 
 		verifyAll();
 
-		assertEquals(1, builderList.size());
+		assertEquals(2, builderList.size());
 		assertEquals(javaClassBuilder1, builderList.get(0));
+		assertEquals(javaClassBuilder2, builderList.get(1));
 	}
 
 	@Test
@@ -527,7 +539,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 
 		resetAll();
 
-		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
+		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "SomeObjectType1"))
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
 
@@ -578,7 +590,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 
 		resetAll();
 
-		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
+		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "SomeObjectType1"))
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
 
@@ -629,7 +641,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 
 		resetAll();
 
-		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
+		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "SomeObjectType1"))
 				.andReturn(javaClassBuilder1);
 
 		expect(javaBuilderFactory.createEnumBuilder("my.test.package.domain-name", "ArrayPropertyName1"))

@@ -11,6 +11,7 @@ import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaCla
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaEnumBuilder;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.impl.JavaClassBuilderImpl;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.impl.JavaEnumBuilderImpl;
+import com.github.kklisura.dev.tools.java.generator.support.protocol.generator.EventBuilder;
 import com.github.kklisura.dev.tools.java.generator.support.protocol.generator.TypesBuilder;
 import com.github.kklisura.dev.tools.java.generator.utils.DevToolsProtocolUtils;
 
@@ -36,6 +37,7 @@ public class Application {
 	 */
 	public static void main( String[] args ) throws IOException {
 		final String typesPackageName = "com.github.kklisura.cdp.protocol.types";
+		final String eventPackageName = "com.github.kklisura.cdp.protocol.events";
 		final String annotationsPackageName = "com.github.kklisura.cdp.protocol.annotations";
 
 		final InputStream inputStream = Application.class.getClassLoader().getResourceAsStream("protocol.json");
@@ -56,13 +58,15 @@ public class Application {
 			}
 		};
 
-		TypesBuilder typesBuilder = new TypesBuilder(typesPackageName, javaBuilderFactory);
+		final TypesBuilder typesBuilder = new TypesBuilder(typesPackageName, javaBuilderFactory);
+		final EventBuilder eventBuilder = new EventBuilder(eventPackageName, javaBuilderFactory, typesPackageName);
 
 		List<Builder> builderList = new ArrayList<>();
 
 		// Create domain type builders
 		for (Domain domain : protocol.getDomains()) {
 			builderList.addAll(typesBuilder.build(domain, devToolsProtocolResolver(protocol)));
+			builderList.addAll(eventBuilder.build(domain, devToolsProtocolResolver(protocol)));
 		}
 
 		// Build all items
