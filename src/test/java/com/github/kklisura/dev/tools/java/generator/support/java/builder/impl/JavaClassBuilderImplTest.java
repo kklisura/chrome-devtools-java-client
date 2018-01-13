@@ -90,4 +90,45 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
 
 		verifyAll();
 	}
+
+	@Test
+	public void testGenerateGettersAndSetters() throws IOException {
+		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
+
+		expect(sourceRoot.getRoot())
+				.andReturn(rootPath);
+		expect(sourceRoot.add(capture(compilationUnitCapture)))
+				.andReturn(sourceRoot);
+
+		replayAll();
+
+		javaClassBuilder.addPrivateField("privateField", "String", "Private field description");
+
+		javaClassBuilder.generateGettersAndSetters();
+
+		javaClassBuilder.build(sourceRoot);
+
+		assertEquals("package com.github.kklisura;\n" +
+				"\n" +
+				"public class ClassName {\n" +
+				"\n" +
+				"    private String privateField;\n" +
+				"\n" +
+				"    /**\n" +
+				"\t * Private field description\n" +
+				"\t */\n" +
+				"    public String getPrivateField() {\n" +
+				"        return privateField;\n" +
+				"    }\n" +
+				"\n" +
+				"    /**\n" +
+				"\t * Private field description\n" +
+				"\t */\n" +
+				"    public void setPrivateField(String privateField) {\n" +
+				"        this.privateField = privateField;\n" +
+				"    }\n" +
+				"}\n", compilationUnitCapture.getValue().toString());
+
+		verifyAll();
+	}
 }

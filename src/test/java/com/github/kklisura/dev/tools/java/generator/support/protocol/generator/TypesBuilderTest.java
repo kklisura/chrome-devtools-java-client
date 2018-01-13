@@ -172,12 +172,12 @@ public class TypesBuilderTest extends EasyMockSupport {
 		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
-		javaClassBuilder1.addPrivateField("propertyTypeString", "String");
-		javaClassBuilder1.addPrivateField("propertyTypeDouble", "Double");
-		javaClassBuilder1.addPrivateField("propertyTypeBoolean", "Boolean");
-		javaClassBuilder1.addPrivateField("propertyTypeObject", "Object");
-		javaClassBuilder1.addPrivateField("propertyTypeInteger", "Integer");
-		javaClassBuilder1.addPrivateField("propertyTypeObject", "Object");
+		javaClassBuilder1.addPrivateField("propertyTypeString", "String", "propertyTypeStringDescription");
+		javaClassBuilder1.addPrivateField("propertyTypeDouble", "Double", "propertyTypeDoubleDescription");
+		javaClassBuilder1.addPrivateField("propertyTypeBoolean", "Boolean", "propertyTypeBooleanDescription");
+		javaClassBuilder1.addPrivateField("propertyTypeObject", "Object", "propertyTypeObjectDescription");
+		javaClassBuilder1.addPrivateField("propertyTypeInteger", "Integer", "propertyTypeIntegerDescription");
+		javaClassBuilder1.addPrivateField("propertyTypeObject", "Object", "propertyTypeObjectDescription");
 
 		javaClassBuilder1.generateGettersAndSetters();
 
@@ -208,7 +208,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "someObjectType1"))
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
-		javaClassBuilder1.addPrivateField("propertyTypeString", "String");
+		javaClassBuilder1.addPrivateField("propertyTypeString", "String", "propertyTypeStringDescription");
 
 		javaClassBuilder1.addFieldAnnotation("propertyTypeString", "Experimental");
 		javaClassBuilder1.addFieldAnnotation("propertyTypeString", "Deprecated");
@@ -244,7 +244,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
 
-		javaClassBuilder1.addPrivateField("enumProperty", "EnumProperty");
+		javaClassBuilder1.addPrivateField("enumProperty", "EnumProperty", "Some property description");
 		javaClassBuilder1.generateGettersAndSetters();
 
 		expect(javaBuilderFactory.createEnumBuilder("my.test.package.domain-name", "EnumProperty"))
@@ -291,9 +291,9 @@ public class TypesBuilderTest extends EasyMockSupport {
 		javaClassBuilder1.setJavaDoc("Description1");
 
 		javaClassBuilder1.addImport("my.test.package.testpackage", "RefObject1");
-		javaClassBuilder1.addPrivateField("refPropertyName1", "RefObject1");
+		javaClassBuilder1.addPrivateField("refPropertyName1", "RefObject1", "Some property description");
 
-		javaClassBuilder1.addPrivateField("refPropertyName2", "RefObject2");
+		javaClassBuilder1.addPrivateField("refPropertyName2", "RefObject2", "refPropertyName2Description");
 
 		javaClassBuilder1.generateGettersAndSetters();
 
@@ -334,7 +334,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
 
-		javaClassBuilder1.addPrivateField("refPropertyName1", "List<String>");
+		javaClassBuilder1.addPrivateField("refPropertyName1", "List<String>", "Some property description");
 
 		javaClassBuilder1.generateGettersAndSetters();
 
@@ -377,8 +377,8 @@ public class TypesBuilderTest extends EasyMockSupport {
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
 
-		javaClassBuilder1.addPrivateField("refPropertyName1", "String");
-		javaClassBuilder1.addPrivateField("refPropertyName2", "Double");
+		javaClassBuilder1.addPrivateField("refPropertyName1", "String", "Some property description");
+		javaClassBuilder1.addPrivateField("refPropertyName2", "Double", "refPropertyName2Description");
 
 		javaClassBuilder1.generateGettersAndSetters();
 
@@ -432,7 +432,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 					.andReturn(javaClassBuilder1);
 			javaClassBuilder1.setJavaDoc("Description1");
 
-			javaClassBuilder1.addPrivateField("arrayPropertyName", "List<" + arrayItem.getValue() + ">");
+			javaClassBuilder1.addPrivateField("arrayPropertyName", "List<" + arrayItem.getValue() + ">", "Some property description");
 
 			javaClassBuilder1.generateGettersAndSetters();
 
@@ -479,8 +479,8 @@ public class TypesBuilderTest extends EasyMockSupport {
 
 		javaClassBuilder1.addImport("my.test.package.test", "RefObject2");
 
-		javaClassBuilder1.addPrivateField("arrayPropertyName1", "List<RefObject1>");
-		javaClassBuilder1.addPrivateField("arrayPropertyName2", "List<RefObject2>");
+		javaClassBuilder1.addPrivateField("arrayPropertyName1", "List<RefObject1>", "Some property description");
+		javaClassBuilder1.addPrivateField("arrayPropertyName2", "List<RefObject2>", "arrayPropertyName2Description");
 
 		javaClassBuilder1.addImport("java.util", "List");
 		javaClassBuilder1.addImport("java.util", "List");
@@ -531,7 +531,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
 
-		javaClassBuilder1.addPrivateField("arrayPropertyName1", "List<List<Double>>");
+		javaClassBuilder1.addPrivateField("arrayPropertyName1", "List<List<Double>>", "Some property description");
 
 		javaClassBuilder1.generateGettersAndSetters();
 
@@ -583,8 +583,8 @@ public class TypesBuilderTest extends EasyMockSupport {
 		javaClassBuilder1.setJavaDoc("Description1");
 
 
-		javaClassBuilder1.addPrivateField("arrayPropertyName1", "List<String>");
-		javaClassBuilder1.addPrivateField("arrayPropertyName2", "List<Double>");
+		javaClassBuilder1.addPrivateField("arrayPropertyName1", "List<String>", "Some property description");
+		javaClassBuilder1.addPrivateField("arrayPropertyName2", "List<Double>", "arrayPropertyName2Description");
 
 		javaClassBuilder1.generateGettersAndSetters();
 
@@ -638,7 +638,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 		javaClassBuilder1.addImport("java.util", "List");
 
 		javaClassBuilder1.setJavaDoc("Description1");
-		javaClassBuilder1.addPrivateField("arrayPropertyName1", "List<ArrayPropertyName1>");
+		javaClassBuilder1.addPrivateField("arrayPropertyName1", "List<ArrayPropertyName1>", "arrayPropertyName1Description");
 		javaClassBuilder1.generateGettersAndSetters();
 
 		javaEnumBuilder1.setJavaDoc("Some property description");
@@ -665,6 +665,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 			throws IllegalAccessException, InstantiationException {
 		T property = clazz.newInstance();
 		property.setName(name);
+		property.setDescription(name + "Description");
 		return property;
 	}
 

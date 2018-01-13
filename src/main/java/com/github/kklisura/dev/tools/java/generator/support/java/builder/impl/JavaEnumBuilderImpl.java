@@ -19,6 +19,8 @@ import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaEnu
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.utils.JavadocUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import static com.github.kklisura.dev.tools.java.generator.support.java.builder.utils.JavadocUtils.INDENTATION_NO_INDENTATION;
+
 /**
  * Java enum builder implementation.
  *
@@ -91,7 +93,9 @@ public class JavaEnumBuilderImpl extends BaseBuilder implements JavaEnumBuilder 
 	 */
 	@Override
 	public void setJavaDoc(String comment) {
-		declaration.setJavadocComment(JavadocUtils.createJavadocComment(comment));
+		if (StringUtils.isNotEmpty(comment)) {
+			declaration.setJavadocComment(JavadocUtils.createJavadocComment(comment, INDENTATION_NO_INDENTATION));
+		}
 	}
 
 	/**

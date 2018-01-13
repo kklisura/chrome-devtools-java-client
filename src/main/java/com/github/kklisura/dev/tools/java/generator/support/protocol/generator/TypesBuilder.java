@@ -244,10 +244,11 @@ public class TypesBuilder {
 			buildRequest.setDomainTypeResolver(request.getDomainTypeResolver());
 
 			result = fn.apply(buildRequest);
-			javaClassBuilder.addPrivateField(property.getName(), result.getType());
+			javaClassBuilder.addPrivateField(property.getName(), result.getType(), property.getDescription());
 		} else {
 			// TODO(kklisura): Add support for description properties; Add javadoc on getters
-			javaClassBuilder.addPrivateField(property.getName(), getPropertyJavaType(property));
+			javaClassBuilder.addPrivateField(property.getName(), getPropertyJavaType(property),
+					property.getDescription());
 		}
 
 		if (Boolean.TRUE.equals(property.getDeprecated())) {

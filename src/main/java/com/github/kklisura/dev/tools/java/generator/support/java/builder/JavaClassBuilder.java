@@ -16,8 +16,9 @@ public interface JavaClassBuilder extends Builder {
 	 * Adds a private field to this class with a given type.
 	 * @param name Field name. Could not be in correct format.
 	 * @param type Field type.
+	 * @param description Field description.
 	 */
-	void addPrivateField(String name, String type);
+	void addPrivateField(String name, String type, String description);
 
 	/**
 	 * Adds annotation to specified field.

@@ -5,11 +5,13 @@ import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
+import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
 import com.github.javaparser.ast.expr.Name;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaClassBuilder;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.utils.JavadocUtils;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static com.github.kklisura.dev.tools.java.generator.support.java.builder.utils.JavadocUtils.INDENTATION_NO_INDENTATION;
+import static com.github.kklisura.dev.tools.java.generator.support.java.builder.utils.JavadocUtils.INDENTATION_TAB;
 
 /**
  * Java class generator.
@@ -35,8 +40,9 @@ public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilde
 
 	private String name;
 	private ClassOrInterfaceDeclaration declaration;
-
 	private String annotationsPackage;
+
+	private Map<String, String> fieldDescriptions = new HashMap<>();
 
 	/**
 	 * Instantiates a new class builder implementation.
@@ -67,7 +73,9 @@ public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilde
 	 */
 	@Override
 	public void setJavaDoc(String comment) {
-		declaration.setJavadocComment(JavadocUtils.createJavadocComment(comment));
+		if (StringUtils.isNotEmpty(comment)) {
+			declaration.setJavadocComment(JavadocUtils.createJavadocComment(comment, INDENTATION_NO_INDENTATION));
+		}
 	}
 
 	/**
@@ -77,8 +85,10 @@ public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilde
 	 * @param type Field type.
 	 */
 	@Override
-	public void addPrivateField(String name, String type) {
-		declaration.addField(type, getFieldName(name), Modifier.PRIVATE);
+	public void addPrivateField(String name, String type, String description) {
+		String fieldName = getFieldName(name);
+		declaration.addField(type, fieldName, Modifier.PRIVATE);
+		fieldDescriptions.put(fieldName, description);
 	}
 
 	/**
@@ -114,8 +124,10 @@ public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilde
 	public void generateGettersAndSetters() {
 		List<FieldDeclaration> fields = declaration.getFields();
 		for (FieldDeclaration fieldDeclaration : fields) {
-			fieldDeclaration.createGetter();
-			fieldDeclaration.createSetter();
+			String fieldName = fieldDeclaration.getVariables().get(0).getNameAsString();
+
+			setMethodJavadoc(fieldName, fieldDeclaration.createGetter());
+			setMethodJavadoc(fieldName, fieldDeclaration.createSetter());
 		}
 	}
 
@@ -141,6 +153,13 @@ public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilde
 		}
 
 		return false;
+	}
+
+	private void setMethodJavadoc(String fieldName, MethodDeclaration methodDeclaration) {
+		String description = fieldDescriptions.get(fieldName);
+		if (StringUtils.isNotEmpty(description)) {
+			methodDeclaration.setJavadocComment(JavadocUtils.createJavadocComment(description, INDENTATION_TAB));
+		}
 	}
 
 	/**
