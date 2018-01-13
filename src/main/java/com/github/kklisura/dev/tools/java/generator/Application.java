@@ -21,6 +21,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.kklisura.dev.tools.java.generator.support.utils.DomainUtils.devToolsProtocolResolver;
+
 /**
  * Application
  *
@@ -58,7 +60,7 @@ public class Application {
 
 		// Create domain type builders
 		for (Domain domain : protocol.getDomains()) {
-			builderList.addAll(typesBuilder.build(domain));
+			builderList.addAll(typesBuilder.build(domain, devToolsProtocolResolver(protocol)));
 		}
 
 		// Build all items

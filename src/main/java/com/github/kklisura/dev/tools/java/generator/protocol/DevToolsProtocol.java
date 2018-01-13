@@ -3,6 +3,7 @@ package com.github.kklisura.dev.tools.java.generator.protocol;
 import com.github.kklisura.dev.tools.java.generator.protocol.types.Domain;
 import com.github.kklisura.dev.tools.java.generator.protocol.types.Version;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * @author Kenan Klisura
  */
 @Getter
+@Setter
 public class DevToolsProtocol {
 	private Version version;
 
