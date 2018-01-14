@@ -2,6 +2,7 @@ package com.github.kklisura.dev.tools.java.generator.support.java.builder.impl;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.utils.SourceRoot;
+import com.github.kklisura.dev.tools.java.generator.support.java.builder.MethodParam;
 import org.easymock.Capture;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
@@ -13,37 +14,39 @@ import org.junit.runner.RunWith;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Java class builder test.
+ * Java interface builder test.
  *
  * @author Kenan Klisura
  */
 @RunWith(EasyMockRunner.class)
-public class JavaClassBuilderImplTest extends EasyMockSupport {
-	private static final String PACKAGE_NAME = "com.github.kklisura";
-	private static final String CLASS_NAME = "ClassName";
+public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
+	private static final String NAME = "InterfaceTest";
+	private static final String BASE_PACKAGE_NAME = "com.github.kklisura";
 	private static final String ANNOTATIONS_PACKAGE_NAME = "com.github.kklisura.annotations";
+
+	private JavaInterfaceBuilderImpl interfaceBuilder;
 
 	@Mock
 	private SourceRoot sourceRoot;
 
 	private Path rootPath;
 
-	private JavaClassBuilderImpl javaClassBuilder;
-
 	@Before
 	public void setUp() throws Exception {
 		rootPath = new File("/tmp/test-class-builder").toPath();
-		javaClassBuilder = new JavaClassBuilderImpl(PACKAGE_NAME, CLASS_NAME, ANNOTATIONS_PACKAGE_NAME);
+		interfaceBuilder = new JavaInterfaceBuilderImpl(BASE_PACKAGE_NAME, NAME, ANNOTATIONS_PACKAGE_NAME);
 	}
 
 	@Test
-	public void testBasicClass() throws IOException {
+	public void testBasicInterface() throws IOException {
 		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
 		expect(sourceRoot.getRoot())
@@ -51,15 +54,15 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
 		expect(sourceRoot.add(capture(compilationUnitCapture)))
 				.andReturn(sourceRoot);
 
-		javaClassBuilder.setJavaDoc("");
+		interfaceBuilder.setJavaDoc("");
 
 		replayAll();
 
-		javaClassBuilder.build(sourceRoot);
+		interfaceBuilder.build(sourceRoot);
 
 		assertEquals("package com.github.kklisura;\n" +
 				"\n" +
-				"public class ClassName {\n" +
+				"public interface InterfaceTest {\n" +
 				"}\n" +
 				"", compilationUnitCapture.getValue().toString());
 
@@ -67,7 +70,7 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
 	}
 
 	@Test
-	public void testBasicClassWithAnnotation() throws IOException {
+	public void testBasicInterfaceWithAnnotation() throws IOException {
 		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
 		expect(sourceRoot.getRoot())
@@ -75,18 +78,18 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
 		expect(sourceRoot.add(capture(compilationUnitCapture)))
 				.andReturn(sourceRoot);
 
-		javaClassBuilder.addAnnotation("Annotation");
+		interfaceBuilder.addAnnotation("Annotation");
 
 		replayAll();
 
-		javaClassBuilder.build(sourceRoot);
+		interfaceBuilder.build(sourceRoot);
 
 		assertEquals("package com.github.kklisura;\n" +
 				"\n" +
 				"import com.github.kklisura.annotations.Annotation;\n" +
 				"\n" +
 				"@Annotation\n" +
-				"public class ClassName {\n" +
+				"public interface InterfaceTest {\n" +
 				"}\n" +
 				"", compilationUnitCapture.getValue().toString());
 
@@ -102,46 +105,19 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
 		expect(sourceRoot.add(capture(compilationUnitCapture)))
 				.andReturn(sourceRoot);
 
-		javaClassBuilder.setJavaDoc("Java doc.");
+		interfaceBuilder.setJavaDoc("Java doc.");
 
 		replayAll();
 
-		javaClassBuilder.build(sourceRoot);
+		interfaceBuilder.build(sourceRoot);
 
 		assertEquals("package com.github.kklisura;\n" +
 				"\n" +
 				"/**\n" +
 				" * Java doc.\n" +
 				" */\n" +
-				"public class ClassName {\n" +
+				"public interface InterfaceTest {\n" +
 				"}\n", compilationUnitCapture.getValue().toString());
-
-		verifyAll();
-	}
-
-	@Test
-	public void testAddingImports() throws IOException {
-		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
-
-		expect(sourceRoot.getRoot())
-				.andReturn(rootPath);
-		expect(sourceRoot.add(capture(compilationUnitCapture)))
-				.andReturn(sourceRoot);
-
-		replayAll();
-
-		javaClassBuilder.addImport("java.util", "List");
-		javaClassBuilder.addImport("java.util", "List");
-		javaClassBuilder.addImport("java.util", "List");
-
-		javaClassBuilder.build(sourceRoot);
-
-		assertEquals("package com.github.kklisura;\n\n" +
-				"import java.util.List;\n" +
-				"\n" +
-				"public class ClassName {\n" +
-				"}\n" +
-				"", compilationUnitCapture.getValue().toString());
 
 		verifyAll();
 	}
@@ -157,15 +133,17 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
 
 		replayAll();
 
-		javaClassBuilder.addImport(PACKAGE_NAME, "Test");
-		javaClassBuilder.addImport("java.util", "List");
+		interfaceBuilder.addImport(BASE_PACKAGE_NAME, "Test");
+		interfaceBuilder.addImport("java.util", "List");
+		interfaceBuilder.addImport("java.util", "List");
+		interfaceBuilder.addImport("java.util", "List");
 
-		javaClassBuilder.build(sourceRoot);
+		interfaceBuilder.build(sourceRoot);
 
 		assertEquals("package com.github.kklisura;\n\n" +
 				"import java.util.List;\n" +
 				"\n" +
-				"public class ClassName {\n" +
+				"public interface InterfaceTest {\n" +
 				"}\n" +
 				"", compilationUnitCapture.getValue().toString());
 
@@ -173,7 +151,7 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
 	}
 
 	@Test
-	public void testGenerateGettersAndSetters() throws IOException {
+	public void testBasicInterfaceWithSimpleMethod() throws IOException {
 		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
 		expect(sourceRoot.getRoot())
@@ -181,40 +159,29 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
 		expect(sourceRoot.add(capture(compilationUnitCapture)))
 				.andReturn(sourceRoot);
 
+		interfaceBuilder.addMethod("someMethod1", "Method description", Collections.emptyList(), null);
+
 		replayAll();
 
-		javaClassBuilder.addPrivateField("privateField", "String", "Private field description");
-
-		javaClassBuilder.generateGettersAndSetters();
-
-		javaClassBuilder.build(sourceRoot);
+		interfaceBuilder.build(sourceRoot);
 
 		assertEquals("package com.github.kklisura;\n" +
 				"\n" +
-				"public class ClassName {\n" +
-				"\n" +
-				"    private String privateField;\n" +
+				"public interface InterfaceTest {\n" +
 				"\n" +
 				"    /**\n" +
-				"\t * Private field description\n" +
+				"\t * Method description\n" +
 				"\t */\n" +
-				"    public String getPrivateField() {\n" +
-				"        return privateField;\n" +
-				"    }\n" +
+				"    void someMethod1();" +
 				"\n" +
-				"    /**\n" +
-				"\t * Private field description\n" +
-				"\t */\n" +
-				"    public void setPrivateField(String privateField) {\n" +
-				"        this.privateField = privateField;\n" +
-				"    }\n" +
-				"}\n", compilationUnitCapture.getValue().toString());
+				"}\n" +
+				"", compilationUnitCapture.getValue().toString());
 
 		verifyAll();
 	}
 
 	@Test
-	public void testGenerateFieldAnnotation() throws IOException {
+	public void testBasicInterfaceWithSimpleMethod2() throws IOException {
 		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
 		expect(sourceRoot.getRoot())
@@ -222,29 +189,34 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
 		expect(sourceRoot.add(capture(compilationUnitCapture)))
 				.andReturn(sourceRoot);
 
+		final MethodParam param1 = new MethodParam();
+		param1.setType("Integer");
+		param1.setName("param1");
+
+		final MethodParam param2 = new MethodParam();
+		param2.setType("String");
+		param2.setName("param2");
+		param2.setAnnotations(Arrays.asList("Annotation", "Annotation1"));
+
+		interfaceBuilder.addMethod("someMethod1", "", Arrays.asList(param1, param2), "String");
+		interfaceBuilder.addMethodAnnotation("someMethod1", "Annotation");
+
 		replayAll();
 
-		javaClassBuilder.addPrivateField("privateField", "String", "Private field description");
-
-		javaClassBuilder.addAnnotation("Annotation");
-		javaClassBuilder.addFieldAnnotation("privateField", "Annotation");
-		javaClassBuilder.addFieldAnnotation("privateField", "Annotation1");
-
-		javaClassBuilder.build(sourceRoot);
+		interfaceBuilder.build(sourceRoot);
 
 		assertEquals("package com.github.kklisura;\n" +
 				"\n" +
 				"import com.github.kklisura.annotations.Annotation;\n" +
 				"import com.github.kklisura.annotations.Annotation1;\n" +
 				"\n" +
-				"@Annotation\n" +
-				"public class ClassName {\n" +
+				"public interface InterfaceTest {\n" +
 				"\n" +
 				"    @Annotation\n" +
-				"    @Annotation1\n" +
-				"    private String privateField;\n" +
+				"    String someMethod1(Integer param1, @Annotation @Annotation1 String param2);\n" +
 				"}\n", compilationUnitCapture.getValue().toString());
 
 		verifyAll();
 	}
+
 }

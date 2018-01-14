@@ -59,6 +59,14 @@ public class JavaInterfaceBuilderImpl extends BaseBuilder implements JavaInterfa
 	}
 
 	@Override
+	public void addMethodAnnotation(String methodName, String annotationName) {
+		List<MethodDeclaration> methods = declaration.getMethodsByName(methodName);
+		for (MethodDeclaration methodDeclaration : methods) {
+			methodDeclaration.addMarkerAnnotation(annotationName);
+		}
+	}
+
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -69,7 +77,7 @@ public class JavaInterfaceBuilderImpl extends BaseBuilder implements JavaInterfa
 		name.setQualifier(new Name(packageName));
 		name.setIdentifier(object);
 
-		if (!isImported(getCompilationUnit(), name)) {
+		if (!getPackageName().equalsIgnoreCase(packageName) && !isImported(getCompilationUnit(), name)) {
 			getCompilationUnit().addImport(new ImportDeclaration(name, false, false));
 		}
 	}

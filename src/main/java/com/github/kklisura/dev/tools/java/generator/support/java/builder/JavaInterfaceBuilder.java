@@ -23,6 +23,14 @@ public interface JavaInterfaceBuilder extends JavaImportAwareBuilder {
 	void addAnnotation(String annotationName);
 
 	/**
+	 * Adds annotation to a method.
+	 *
+	 * @param methodName     Method name.
+	 * @param annotationName Annotation name.
+	 */
+	void addMethodAnnotation(String methodName, String annotationName);
+
+	/**
 	 * Adds a method to this interface.
 	 *
 	 * @param name         Method name.

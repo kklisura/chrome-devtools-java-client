@@ -13,6 +13,7 @@ import com.github.kklisura.dev.tools.java.generator.support.protocol.generator.s
 import com.github.kklisura.dev.tools.java.generator.support.protocol.generator.support.PropertyHandlerResult;
 import com.github.kklisura.dev.tools.java.generator.support.protocol.generator.support.TypeBuildRequest;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -58,7 +59,9 @@ public class CommandBuilder {
 		JavaInterfaceBuilder interfaceBuilder = javaBuilderFactory.createInterfaceBuilder(basePackageName,
 				toEnumClass(domain.getDomain()));
 
-		interfaceBuilder.setJavaDoc(domain.getDescription());
+		if (StringUtils.isNotEmpty(domain.getDescription())) {
+			interfaceBuilder.setJavaDoc(domain.getDescription());
+		}
 
 		if (Boolean.TRUE.equals(domain.getExperimental())) {
 			interfaceBuilder.addAnnotation("Experimental");
@@ -86,12 +89,22 @@ public class CommandBuilder {
 
 	private void addCommand(Command command, Domain domain, JavaInterfaceBuilder interfaceBuilder,
 							DomainTypeResolver domainTypeResolver, List<Builder> builders) {
+		final String method = command.getName();
+
 		List<MethodParam> methodParams = buildMethodParams(command, domain, interfaceBuilder, domainTypeResolver,
 				builders);
 
 		String returnType = buildReturnType(command, domain, interfaceBuilder, domainTypeResolver, builders);
 
-		interfaceBuilder.addMethod(command.getName(), command.getDescription(), methodParams, returnType);
+		interfaceBuilder.addMethod(method, command.getDescription(), methodParams, returnType);
+
+		if (Boolean.TRUE.equals(command.getDeprecated())) {
+			interfaceBuilder.addMethodAnnotation(method, "Deprecated");
+		}
+
+		if (Boolean.TRUE.equals(command.getExperimental())) {
+			interfaceBuilder.addMethodAnnotation(method, "Experimental");
+		}
 	}
 
 	private String buildReturnType(Command command, Domain domain, JavaInterfaceBuilder interfaceBuilder,
@@ -105,7 +118,7 @@ public class CommandBuilder {
 				final Property property = returns.get(0);
 
 				ObjectType objectType = new ObjectType();
-				objectType.setId(toEnumClass(domain.getDomain())); // TODO(kklisura): Test this!!
+				objectType.setId(toEnumClass(domain.getDomain()));
 				TypeBuildRequest<ObjectType> request = new TypeBuildRequest<>(domain, objectType, domainTypeResolver);
 
 				PropertyHandlerResult result = typesBuilder.getPropertyHandleResult(property, request,
@@ -148,7 +161,7 @@ public class CommandBuilder {
 		if (CollectionUtils.isNotEmpty(parameters)) {
 			for (Property property : parameters) {
 				ObjectType objectType = new ObjectType();
-				objectType.setId(toEnumClass(domain.getDomain())); // TODO(kklisura): Test this!!
+				objectType.setId(toEnumClass(domain.getDomain()));
 				TypeBuildRequest<ObjectType> request = new TypeBuildRequest<>(domain, objectType, domainTypeResolver);
 
 				PropertyHandlerResult result = typesBuilder.getPropertyHandleResult(property, request,

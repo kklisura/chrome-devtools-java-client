@@ -400,7 +400,9 @@ public class TypesBuilder {
 
 	private Builder buildEnum(String packageName, String name, String description, List<String> enumValues) {
 		JavaEnumBuilder enumBuilder = javaBuilderFactory.createEnumBuilder(packageName, name);
-		enumBuilder.setJavaDoc(description);
+		if (StringUtils.isNotEmpty(description)) {
+			enumBuilder.setJavaDoc(description);
+		}
 
 		if (CollectionUtils.isNotEmpty(enumValues)) {
 			for (String enumValue : enumValues) {
@@ -508,18 +510,6 @@ public class TypesBuilder {
 	 */
 	private static <T extends Type> void registerType(Class<T> clazz, String javaType) {
 		TYPE_TO_JAVA_TYPE_MAP.put(clazz, javaType);
-	}
-
-	/**
-	 * Checks if given type is from specified domain.
-	 *
-	 * @param domain Domain to check in.
-	 * @param type Type to check.
-	 * @return True if type belongs to domain.
-	 */
-	private static boolean isTypeFromDomain(Domain domain, Type type) {
-		List<Type> domainTypes = domain.getTypes();
-		return CollectionUtils.isNotEmpty(domainTypes) && domainTypes.contains(type);
 	}
 
 	/**
