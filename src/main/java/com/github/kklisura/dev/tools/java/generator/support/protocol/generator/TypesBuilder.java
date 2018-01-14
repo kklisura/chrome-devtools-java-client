@@ -30,8 +30,11 @@ import com.github.kklisura.dev.tools.java.generator.support.java.builder.Builder
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaBuilderFactory;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaClassBuilder;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaEnumBuilder;
+import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaImportAwareBuilder;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.support.CombinedBuilders;
-import lombok.AllArgsConstructor;
+import com.github.kklisura.dev.tools.java.generator.support.protocol.generator.support.DomainTypeResolver;
+import com.github.kklisura.dev.tools.java.generator.support.protocol.generator.support.PropertyHandlerResult;
+import com.github.kklisura.dev.tools.java.generator.support.protocol.generator.support.TypeBuildRequest;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
@@ -186,7 +189,7 @@ public class TypesBuilder {
 		return result;
 	}
 
-	protected TypeHandlerResult buildClass(TypeBuildRequest<ObjectType> request) {
+	public TypeHandlerResult buildClass(TypeBuildRequest<ObjectType> request) {
 		final Domain domain = request.getDomain();
 		final ObjectType type = request.getType();
 
@@ -235,24 +238,8 @@ public class TypesBuilder {
 
 	private PropertyHandlerResult addProperty(Property property, TypeBuildRequest<ObjectType> request,
 											  JavaClassBuilder javaClassBuilder) {
-		PropertyHandlerResult result = new PropertyHandlerResult();
-
-		Function<PropertyBuildRequest, PropertyHandlerResult> fn = propertyHandlers.get(property.getClass());
-		if (fn != null) {
-			// Build request object
-			PropertyBuildRequest<Property> buildRequest = new PropertyBuildRequest<>();
-			buildRequest.setJavaClassBuilder(javaClassBuilder);
-			buildRequest.setDomain(request.getDomain());
-			buildRequest.setProperty(property);
-			buildRequest.setDomainTypeResolver(request.getDomainTypeResolver());
-
-			result = fn.apply(buildRequest);
-			javaClassBuilder.addPrivateField(property.getName(), result.getType(), property.getDescription());
-		} else {
-			// TODO(kklisura): Add support for description properties; Add javadoc on getters
-			javaClassBuilder.addPrivateField(property.getName(), getPropertyJavaType(property),
-					property.getDescription());
-		}
+		PropertyHandlerResult result = getPropertyHandleResult(property, request, javaClassBuilder);
+		javaClassBuilder.addPrivateField(property.getName(), result.getType(), property.getDescription());
 
 		if (Boolean.TRUE.equals(property.getDeprecated())) {
 			javaClassBuilder.addFieldAnnotation(property.getName(), DEPRECATED_ANNOTATION);
@@ -264,6 +251,27 @@ public class TypesBuilder {
 
 		if (Boolean.TRUE.equals(property.getOptional())) {
 			javaClassBuilder.addFieldAnnotation(property.getName(), OPTIONAL_ANNOTATION);
+		}
+
+		return result;
+	}
+
+	public PropertyHandlerResult getPropertyHandleResult(Property property, TypeBuildRequest<ObjectType> request,
+														 JavaImportAwareBuilder importAwareBuilder) {
+		PropertyHandlerResult result = new PropertyHandlerResult();
+
+		Function<PropertyBuildRequest, PropertyHandlerResult> fn = propertyHandlers.get(property.getClass());
+		if (fn != null) {
+			// Build request object
+			PropertyBuildRequest<Property> buildRequest = new PropertyBuildRequest<>();
+			buildRequest.setImportAwareBuilder(importAwareBuilder);
+			buildRequest.setDomain(request.getDomain());
+			buildRequest.setProperty(property);
+			buildRequest.setDomainTypeResolver(request.getDomainTypeResolver());
+			buildRequest.setObjectType(request.getType());
+			result = fn.apply(buildRequest);
+		} else {
+			result.setType(getPropertyJavaType(property));
 		}
 
 		return result;
@@ -286,8 +294,8 @@ public class TypesBuilder {
 	private PropertyHandlerResult addRefProperty(PropertyBuildRequest<RefProperty> request) {
 		final RefProperty property = request.getProperty();
 
-		String objectName = addRefImportStatement(request.getJavaClassBuilder(), property.getRef(),
-				request.getDomain(), request.getDomainTypeResolver());
+		String objectName = addRefImportStatement(request.getImportAwareBuilder(), property.getRef(),
+				request.getObjectType(), request.getDomain(), request.getDomainTypeResolver());
 
 		PropertyHandlerResult result = new PropertyHandlerResult();
 		result.setType(objectName);
@@ -304,11 +312,12 @@ public class TypesBuilder {
 		Function<ArrayItemBuildRequest, ArrayItemHandlerResult> fn = arrayItemHandlers.get(arrayItem.getClass());
 		if (fn != null) {
 			ArrayItemBuildRequest<ArrayItem> buildRequest = new ArrayItemBuildRequest<>();
-			buildRequest.setJavaClassBuilder(request.getJavaClassBuilder());
+			buildRequest.setImportAwareBuilder(request.getImportAwareBuilder());
 			buildRequest.setDomain(request.getDomain());
 			buildRequest.setProperty(arrayItem);
 			buildRequest.setArrayProperty(arrayProperty);
 			buildRequest.setDomainTypeResolver(request.getDomainTypeResolver());
+			buildRequest.setObjectType(request.getObjectType());
 
 			ArrayItemHandlerResult itemResult = fn.apply(buildRequest);
 
@@ -318,7 +327,7 @@ public class TypesBuilder {
 			result.setType(buildArrayJavaType(getArrayItemJavaType(arrayItem)));
 		}
 
-		request.getJavaClassBuilder().addImport(LIST_PACKAGE, LIST_CLASS_NAME);
+		request.getImportAwareBuilder().addImport(LIST_PACKAGE, LIST_CLASS_NAME);
 
 		return result;
 	}
@@ -326,8 +335,8 @@ public class TypesBuilder {
 	private ArrayItemHandlerResult addRefArrayItem(ArrayItemBuildRequest<RefArrayItem> request) {
 		final RefArrayItem property = request.getProperty();
 
-		String objectName = addRefImportStatement(request.getJavaClassBuilder(), property.getRef(),
-				request.getDomain(), request.getDomainTypeResolver());
+		String objectName = addRefImportStatement(request.getImportAwareBuilder(), property.getRef(),
+				request.getObjectType(), request.getDomain(), request.getDomainTypeResolver());
 
 		ArrayItemHandlerResult result = new ArrayItemHandlerResult();
 		result.setType(buildArrayJavaType(objectName));
@@ -347,13 +356,15 @@ public class TypesBuilder {
 		return result;
 	}
 
-	protected String addRefImportStatement(JavaClassBuilder javaClassBuilder, String refValue,
-										   Domain domain, DomainTypeResolver domainTypeResolver) {
-		return addRefImportStatement(basePackageName, javaClassBuilder, refValue, domain, domainTypeResolver);
+	protected String addRefImportStatement(JavaImportAwareBuilder importAwareBuilder, String refValue,
+										   ObjectType objectType, Domain domain, DomainTypeResolver domainTypeResolver) {
+		return addRefImportStatement(basePackageName, importAwareBuilder, refValue, objectType, domain,
+				domainTypeResolver);
 	}
 
-	protected String addRefImportStatement(String packageName, JavaClassBuilder javaClassBuilder, String refValue,
-										   Domain domain, DomainTypeResolver domainTypeResolver) {
+	protected String addRefImportStatement(String packageName, JavaImportAwareBuilder importAwareBuilder,
+										   String refValue, ObjectType objectType, Domain domain,
+										   DomainTypeResolver domainTypeResolver) {
 		String namespace = domain.getDomain();
 		String ref = refValue;
 
@@ -366,7 +377,7 @@ public class TypesBuilder {
 		// If this ref is pointing to some primitive type (integer, number, string...) we return their java types.
 		Type type = domainTypeResolver.resolve(namespace, ref);
 		if (isArrayType(type)) {
-			javaClassBuilder.addImport(LIST_PACKAGE, LIST_CLASS_NAME);
+			importAwareBuilder.addImport(LIST_PACKAGE, LIST_CLASS_NAME);
 
 			ArrayType arrayType = (ArrayType) type;
 			return buildArrayJavaType(getArrayItemJavaType(arrayType.getItems()));
@@ -375,10 +386,14 @@ public class TypesBuilder {
 			return getTypeJavaType(type);
 		}
 
-		String importPackageName = buildPackageName(packageName, namespace);
-		if (!basePackageName.equals(packageName) || !isTypeFromDomain(domain, type)) {
-			javaClassBuilder.addImport(importPackageName, ref);
+		String importPackageName = buildPackageName(packageName, namespace.toLowerCase());
+
+		String currentObjectName = toEnumClass(objectType.getId());
+		if (currentObjectName.equals(ref)) {
+			return importPackageName + "." + ref;
 		}
+
+		importAwareBuilder.addImport(importPackageName, ref);
 
 		return ref;
 	}
@@ -529,20 +544,13 @@ public class TypesBuilder {
 	}
 
 	@Getter
-	@AllArgsConstructor
-	protected class TypeBuildRequest<T extends Type> {
-		private Domain domain;
-		private T type;
-		DomainTypeResolver domainTypeResolver;
-	}
-
-	@Getter
 	@Setter
 	private class PropertyBuildRequest<T extends Property> {
 		private Domain domain;
 		private T property;
-		private JavaClassBuilder javaClassBuilder;
+		private JavaImportAwareBuilder importAwareBuilder;
 		private DomainTypeResolver domainTypeResolver;
+		private ObjectType objectType;
 	}
 
 	@Getter
@@ -551,8 +559,9 @@ public class TypesBuilder {
 		private Domain domain;
 		private T property;
 		private ArrayProperty arrayProperty;
-		private JavaClassBuilder javaClassBuilder;
+		private JavaImportAwareBuilder importAwareBuilder;
 		private DomainTypeResolver domainTypeResolver;
+		private ObjectType objectType;
 	}
 
 	@Getter
@@ -563,23 +572,8 @@ public class TypesBuilder {
 
 	@Getter
 	@Setter
-	private class PropertyHandlerResult {
-		private Builder builder;
-		private String type;
-	}
-
-	@Getter
-	@Setter
 	private class ArrayItemHandlerResult {
 		private Builder builder;
 		private String type;
-	}
-
-	/**
-	 * Domain type resolves type given a domain and its object.
-	 */
-	@FunctionalInterface
-	public interface DomainTypeResolver {
-		Type resolve(String domain, String object);
 	}
 }

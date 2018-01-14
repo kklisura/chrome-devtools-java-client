@@ -9,8 +9,11 @@ import com.github.kklisura.dev.tools.java.generator.support.java.builder.Builder
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaBuilderFactory;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaClassBuilder;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaEnumBuilder;
+import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaInterfaceBuilder;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.impl.JavaClassBuilderImpl;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.impl.JavaEnumBuilderImpl;
+import com.github.kklisura.dev.tools.java.generator.support.java.builder.impl.JavaInterfaceBuilderImpl;
+import com.github.kklisura.dev.tools.java.generator.support.protocol.generator.CommandBuilder;
 import com.github.kklisura.dev.tools.java.generator.support.protocol.generator.EventBuilder;
 import com.github.kklisura.dev.tools.java.generator.support.protocol.generator.TypesBuilder;
 import com.github.kklisura.dev.tools.java.generator.utils.DevToolsProtocolUtils;
@@ -38,6 +41,7 @@ public class Application {
 	public static void main( String[] args ) throws IOException {
 		final String typesPackageName = "com.github.kklisura.cdp.protocol.types";
 		final String eventPackageName = "com.github.kklisura.cdp.protocol.events";
+		final String commandPackageName = "com.github.kklisura.cdp.protocol.commands";
 		final String annotationsPackageName = "com.github.kklisura.cdp.protocol.annotations";
 
 		final InputStream inputStream = Application.class.getClassLoader().getResourceAsStream("protocol.json");
@@ -56,10 +60,16 @@ public class Application {
 			public JavaEnumBuilder createEnumBuilder(String packageName, String enumName) {
 				return new JavaEnumBuilderImpl(packageName, enumName);
 			}
+
+			@Override
+			public JavaInterfaceBuilder createInterfaceBuilder(String packageName, String interfaceName) {
+				return new JavaInterfaceBuilderImpl(packageName, interfaceName, annotationsPackageName);
+			}
 		};
 
 		final TypesBuilder typesBuilder = new TypesBuilder(typesPackageName, javaBuilderFactory);
 		final EventBuilder eventBuilder = new EventBuilder(eventPackageName, javaBuilderFactory, typesPackageName);
+		final CommandBuilder commandBuilder = new CommandBuilder(commandPackageName, javaBuilderFactory, typesPackageName, eventPackageName);
 
 		List<Builder> builderList = new ArrayList<>();
 
@@ -67,6 +77,7 @@ public class Application {
 		for (Domain domain : protocol.getDomains()) {
 			builderList.addAll(typesBuilder.build(domain, devToolsProtocolResolver(protocol)));
 			builderList.addAll(eventBuilder.build(domain, devToolsProtocolResolver(protocol)));
+			builderList.add(commandBuilder.build(domain, devToolsProtocolResolver(protocol)));
 		}
 
 		// Build all items

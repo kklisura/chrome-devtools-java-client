@@ -3,7 +3,7 @@ package com.github.kklisura.dev.tools.java.generator.support.utils;
 import com.github.kklisura.dev.tools.java.generator.protocol.DevToolsProtocol;
 import com.github.kklisura.dev.tools.java.generator.protocol.types.Domain;
 import com.github.kklisura.dev.tools.java.generator.protocol.types.Type;
-import com.github.kklisura.dev.tools.java.generator.support.protocol.generator.TypesBuilder;
+import com.github.kklisura.dev.tools.java.generator.support.protocol.generator.support.DomainTypeResolver;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -19,7 +19,7 @@ public class DomainUtils {
 	 * @param protocol Dev tools protocol.
 	 * @return Domain type resolver.
 	 */
-	public static TypesBuilder.DomainTypeResolver devToolsProtocolResolver(DevToolsProtocol protocol) {
+	public static DomainTypeResolver devToolsProtocolResolver(DevToolsProtocol protocol) {
 		return ((domain, object) -> {
 			for (Domain protocolDomain : protocol.getDomains()) {
 				if (protocolDomain.getDomain().equals(domain)) {

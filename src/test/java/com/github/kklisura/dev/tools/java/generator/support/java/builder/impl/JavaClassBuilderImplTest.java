@@ -92,6 +92,32 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
 	}
 
 	@Test
+	public void testAddingImportsOnSamePackage() throws IOException {
+		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
+
+		expect(sourceRoot.getRoot())
+				.andReturn(rootPath);
+		expect(sourceRoot.add(capture(compilationUnitCapture)))
+				.andReturn(sourceRoot);
+
+		replayAll();
+
+		javaClassBuilder.addImport(PACKAGE_NAME, "Test");
+		javaClassBuilder.addImport("java.util", "List");
+
+		javaClassBuilder.build(sourceRoot);
+
+		assertEquals("package com.github.kklisura;\n\n" +
+				"import java.util.List;\n" +
+				"\n" +
+				"public class ClassName {\n" +
+				"}\n" +
+				"", compilationUnitCapture.getValue().toString());
+
+		verifyAll();
+	}
+
+	@Test
 	public void testGenerateGettersAndSetters() throws IOException {
 		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 

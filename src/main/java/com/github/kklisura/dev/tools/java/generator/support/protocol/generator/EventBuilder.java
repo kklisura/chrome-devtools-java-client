@@ -5,7 +5,9 @@ import com.github.kklisura.dev.tools.java.generator.protocol.types.Event;
 import com.github.kklisura.dev.tools.java.generator.protocol.types.type.object.ObjectType;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.Builder;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaBuilderFactory;
-import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaClassBuilder;
+import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaImportAwareBuilder;
+import com.github.kklisura.dev.tools.java.generator.support.protocol.generator.support.DomainTypeResolver;
+import com.github.kklisura.dev.tools.java.generator.support.protocol.generator.support.TypeBuildRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.commons.collections4.CollectionUtils;
@@ -53,9 +55,11 @@ public class EventBuilder extends TypesBuilder {
 	}
 
 	@Override
-	protected String addRefImportStatement(JavaClassBuilder javaClassBuilder, String refValue, Domain domain,
+	protected String addRefImportStatement(JavaImportAwareBuilder importAwareBuilder, String refValue,
+										   ObjectType objectType, Domain domain,
 										   DomainTypeResolver domainTypeResolver) {
-		return addRefImportStatement(typesPackageName, javaClassBuilder, refValue, domain, domainTypeResolver);
+		return addRefImportStatement(typesPackageName, importAwareBuilder, refValue, objectType, domain,
+				domainTypeResolver);
 	}
 
 	private EventHandlerResult buildEvent(Event event, Domain domain, DomainTypeResolver domainTypeResolver) {

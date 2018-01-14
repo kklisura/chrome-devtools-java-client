@@ -4,6 +4,8 @@ import lombok.experimental.UtilityClass;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Kenan Klisura on 12/01/2018.
@@ -19,6 +21,8 @@ public class StringUtils {
 		ENUM_CONSTANT_VALUE_OVERRIDES.put("-Infinity", "NEGATIVE_INFINITY");
 		ENUM_CONSTANT_VALUE_OVERRIDES.put("-0", "NEGATIVE_0");
 	}
+
+	private static final Pattern GETTER_NAME_PATTERN = Pattern.compile("^get(.*)");
 
 	/**
 	 * Converts input string to java enum constant.
@@ -57,14 +61,13 @@ public class StringUtils {
 
 	/**
 	 * Builds a package name based on base package and new package.
-	 * Base package name is assumed to be correct.
 	 *
 	 * @param basePackageName Base package name.
-	 * @param packageName Package name.
+	 * @param packageName     Package name.
 	 * @return Package name.
 	 */
 	public static String buildPackageName(String basePackageName, String packageName) {
-		return basePackageName + "." + packageName.toLowerCase();
+		return basePackageName + "." + packageName;
 	}
 
 	/**
@@ -85,5 +88,23 @@ public class StringUtils {
 	 */
 	public static String toEnumClass(String value) {
 		return capitalize(value);
+	}
+
+	/**
+	 * Returns return type name from a getter i.e. getFrameWithManifest -> FrameWithManifest
+	 *
+	 * If nothing found then return is as follows: xxYyyyy -> XxYyyy
+	 *
+	 * @param getterName Getter name.
+	 * @return Return type name or getter name if nothing found.
+	 */
+	public static String getReturnTypeFromGetter(String getterName) {
+		Matcher matcher = GETTER_NAME_PATTERN.matcher(getterName);
+
+		if (matcher.matches()) {
+			return toEnumClass(matcher.group(1));
+		}
+
+		return toEnumClass(getterName);
 	}
 }

@@ -30,6 +30,7 @@ import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaBui
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaClassBuilder;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaEnumBuilder;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.support.CombinedBuilders;
+import com.github.kklisura.dev.tools.java.generator.support.protocol.generator.support.DomainTypeResolver;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
 import org.easymock.Mock;
@@ -73,7 +74,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 	private JavaClassBuilder javaClassBuilder2;
 
 	@Mock
-	private TypesBuilder.DomainTypeResolver resolver;
+	private DomainTypeResolver resolver;
 
 	private TypesBuilder builder;
 
@@ -299,7 +300,9 @@ public class TypesBuilderTest extends EasyMockSupport {
 		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "RefObject2"))
 				.andReturn(javaClassBuilder2);
 
+		javaClassBuilder1.addImport("my.test.package.domain-name", "RefObject2");
 		javaClassBuilder1.addImport("my.test.package.testpackage", "RefObject1");
+
 		javaClassBuilder1.addPrivateField("refPropertyName1", "RefObject1", "Some property description");
 
 		javaClassBuilder1.addPrivateField("refPropertyName2", "RefObject2", "refPropertyName2Description");
@@ -314,6 +317,107 @@ public class TypesBuilderTest extends EasyMockSupport {
 
 		replayAll();
 
+		List<Builder> builderList = builder.build(domain, resolver);
+
+		verifyAll();
+
+		assertEquals(2, builderList.size());
+		assertEquals(javaClassBuilder1, builderList.get(0));
+		assertEquals(javaClassBuilder2, builderList.get(1));
+	}
+
+	@Test
+	public void testTypesGeneratorGeneratesCorrectTypesOnClassTypeWithRefPropertyToObjectTypeWithSameName() throws InstantiationException, IllegalAccessException {
+		RefProperty refProperty1 = createProperty(RefProperty.class, "refPropertyName1");
+
+		refProperty1.setDescription("Some property description");
+		refProperty1.setRef("TestPackage.SomeObjectType1");
+
+		ObjectType objectType = createObjectType("someObjectType1", "Description1");
+		objectType.setProperties(Collections.singletonList(refProperty1));
+
+		Type resolvedType1 = new ObjectType();
+		resolvedType1.setId("SomeObjectType1");
+
+		Type resolvedType2 = new ObjectType();
+		resolvedType2.setId("SomeObjectType1-resolved");
+
+		Domain domain = new Domain();
+		domain.setDomain("domain-name");
+		domain.setTypes(Arrays.asList(objectType, resolvedType2));
+
+		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "SomeObjectType1"))
+				.andReturn(javaClassBuilder1);
+		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "SomeObjectType1-resolved"))
+				.andReturn(javaClassBuilder2);
+		javaClassBuilder1.setJavaDoc("Description1");
+
+		javaClassBuilder1.addPrivateField("refPropertyName1", "my.test.package.testpackage.SomeObjectType1", "Some property description");
+
+		javaClassBuilder1.generateGettersAndSetters();
+		javaClassBuilder2.generateGettersAndSetters();
+
+		expect(resolver.resolve("TestPackage", "SomeObjectType1"))
+				.andReturn(resolvedType1);
+
+		replayAll();
+
+		List<Builder> builderList = builder.build(domain, resolver);
+
+		verifyAll();
+
+		assertEquals(2, builderList.size());
+		assertEquals(javaClassBuilder1, builderList.get(0));
+		assertEquals(javaClassBuilder2, builderList.get(1));
+	}
+
+	@Test
+	public void testTypesGeneratorWithRefImportsGeneratesCorrectTypesOnClassTypeWithRefPropertyToObjectType() throws InstantiationException, IllegalAccessException {
+		RefProperty refProperty1 = createProperty(RefProperty.class, "refPropertyName1");
+
+		refProperty1.setDescription("Some property description");
+		refProperty1.setRef("TestPackage.RefObject1");
+
+		RefProperty refProperty2 = createProperty(RefProperty.class, "refPropertyName2");
+		refProperty2.setRef("RefObject2");
+
+		ObjectType objectType = createObjectType("someObjectType1", "Description1");
+		objectType.setProperties(Arrays.asList(refProperty1, refProperty2));
+
+		Type resolvedType1 = new ObjectType();
+		resolvedType1.setId("RefObject1");
+
+		Type resolvedType2 = new ObjectType();
+		resolvedType2.setId("RefObject2");
+
+		Domain domain = new Domain();
+		domain.setDomain("domain-name");
+		domain.setTypes(Arrays.asList(objectType, resolvedType2));
+
+		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "SomeObjectType1"))
+				.andReturn(javaClassBuilder1);
+		javaClassBuilder1.setJavaDoc("Description1");
+
+		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "RefObject2"))
+				.andReturn(javaClassBuilder2);
+
+		javaClassBuilder1.addImport("my.test.package.testpackage", "RefObject1");
+		javaClassBuilder1.addPrivateField("refPropertyName1", "RefObject1", "Some property description");
+
+		javaClassBuilder1.addImport("my.test.package.domain-name", "RefObject2");
+		javaClassBuilder1.addPrivateField("refPropertyName2", "RefObject2", "refPropertyName2Description");
+
+		javaClassBuilder1.generateGettersAndSetters();
+		javaClassBuilder2.generateGettersAndSetters();
+
+		expect(resolver.resolve("TestPackage", "RefObject1"))
+				.andReturn(resolvedType1);
+		expect(resolver.resolve("domain-name", "RefObject2"))
+				.andReturn(resolvedType2);
+
+		replayAll();
+
+		builder = new TypesBuilder(BASE_PACKAGE_NAME, javaBuilderFactory);
 		List<Builder> builderList = builder.build(domain, resolver);
 
 		verifyAll();
@@ -493,6 +597,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "RefObject1"))
 				.andReturn(javaClassBuilder2);
 
+		javaClassBuilder1.addImport("my.test.package.domain-name", "RefObject1");
 		javaClassBuilder1.addImport("my.test.package.test", "RefObject2");
 
 		javaClassBuilder1.addPrivateField("arrayPropertyName1", "List<RefObject1>", "Some property description");

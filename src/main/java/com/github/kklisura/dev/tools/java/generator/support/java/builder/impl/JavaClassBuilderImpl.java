@@ -2,7 +2,6 @@ package com.github.kklisura.dev.tools.java.generator.support.java.builder.impl;
 
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Modifier;
-import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
@@ -10,7 +9,6 @@ import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
 import com.github.javaparser.ast.expr.Name;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.JavaClassBuilder;
 import com.github.kklisura.dev.tools.java.generator.support.java.builder.utils.JavadocUtils;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.github.kklisura.dev.tools.java.generator.support.java.builder.impl.utils.CompilationUnitUtils.isImported;
 import static com.github.kklisura.dev.tools.java.generator.support.java.builder.utils.JavadocUtils.INDENTATION_NO_INDENTATION;
 import static com.github.kklisura.dev.tools.java.generator.support.java.builder.utils.JavadocUtils.INDENTATION_TAB;
 
@@ -137,22 +136,9 @@ public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilde
 		name.setQualifier(new Name(packageName));
 		name.setIdentifier(object);
 
-		if (!isAlreadyImported(name)) {
+		if (!getPackageName().equalsIgnoreCase(packageName) && !isImported(getCompilationUnit(), name)) {
 			getCompilationUnit().addImport(new ImportDeclaration(name, false, false));
 		}
-	}
-
-	private boolean isAlreadyImported(Name name) {
-		NodeList<ImportDeclaration> imports = getCompilationUnit().getImports();
-		if (CollectionUtils.isNotEmpty(imports)) {
-			for (ImportDeclaration importDeclaration : imports) {
-				if (name.equals(importDeclaration.getName())) {
-					return true;
-				}
-			}
-		}
-
-		return false;
 	}
 
 	private void setMethodJavadoc(String fieldName, MethodDeclaration methodDeclaration) {

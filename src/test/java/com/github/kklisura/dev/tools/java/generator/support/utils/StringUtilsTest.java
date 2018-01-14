@@ -26,11 +26,17 @@ public class StringUtilsTest {
 	@Test
 	public void testBuildPackageName() {
 		assertEquals("com.github.kklisura", StringUtils.buildPackageName("com.github", "kklisura"));
-		assertEquals("com.github.kklisura", StringUtils.buildPackageName("com.github", "KKLISURA"));
 	}
 
 	@Test
 	public void testCapitalize() {
 		assertEquals("TestCapitalization", StringUtils.capitalize("testCapitalization"));
+	}
+
+	@Test
+	public void testGetReturnTypeFromGetter() {
+		assertEquals("Test", StringUtils.getReturnTypeFromGetter("test"));
+		assertEquals("Test", StringUtils.getReturnTypeFromGetter("getTest"));
+		assertEquals("Test", StringUtils.getReturnTypeFromGetter("gettest"));
 	}
 }

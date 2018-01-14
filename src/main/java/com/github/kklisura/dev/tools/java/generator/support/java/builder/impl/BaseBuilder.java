@@ -21,11 +21,21 @@ public abstract class BaseBuilder implements Builder {
 
 	/**
 	 * Instantiates a new base builder given a package name.
+	 *
 	 * @param packageName Package name.
 	 */
 	public BaseBuilder(String packageName) {
 		this.compilationUnit = new CompilationUnit(packageName);
 		this.packageName = packageName;
+	}
+
+	/**
+	 * Returns package name for this builder.
+	 *
+	 * @return Package name for this builder.
+	 */
+	protected String getPackageName() {
+		return packageName;
 	}
 
 	/**
