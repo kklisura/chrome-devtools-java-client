@@ -3,12 +3,12 @@ package com.github.kklisura.cdtp.definition.builder;
 import com.github.javaparser.printer.PrettyPrinter;
 import com.github.javaparser.printer.PrettyPrinterConfiguration;
 import com.github.javaparser.utils.SourceRoot;
+import com.github.kklisura.cdtp.definition.builder.protocol.DevToolsProtocol;
+import com.github.kklisura.cdtp.definition.builder.protocol.types.Domain;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.Builder;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.JavaBuilderFactory;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.JavaClassBuilder;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.JavaEnumBuilder;
-import com.github.kklisura.cdtp.definition.builder.protocol.DevToolsProtocol;
-import com.github.kklisura.cdtp.definition.builder.protocol.types.Domain;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.JavaInterfaceBuilder;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.impl.JavaClassBuilderImpl;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.impl.JavaEnumBuilderImpl;
@@ -38,16 +38,16 @@ public class Application {
 	 *
 	 * @param args Arguments.
 	 */
-	public static void main( String[] args ) throws IOException {
-		final String typesPackageName = "com.github.kklisura.cdp.protocol.types";
-		final String eventPackageName = "com.github.kklisura.cdp.protocol.events";
-		final String commandPackageName = "com.github.kklisura.cdp.protocol.commands";
-		final String annotationsPackageName = "com.github.kklisura.cdp.protocol.annotations";
+	public static void main(String[] args) throws IOException {
+		final String typesPackageName = "com.github.kklisura.cdtp.protocol.types";
+		final String eventPackageName = "com.github.kklisura.cdtp.protocol.events";
+		final String commandPackageName = "com.github.kklisura.cdtp.protocol.commands";
+		final String annotationsPackageName = "com.github.kklisura.cdtp.protocol.annotations";
 
 		final InputStream inputStream = Application.class.getClassLoader().getResourceAsStream("protocol.json");
 		final  DevToolsProtocol protocol = DevToolsProtocolUtils.readJson(inputStream);
 
-		Path rootPath = new File("/Users/kenanklisura/development/playground/cdp-java-client/src/main/java").toPath();
+		Path rootPath = new File("/Users/kenanklisura/development/playground/dev-tools-protocol-java-generator/cdtp-java-client/src/main/java").toPath();
 		SourceRoot sourceRoot = new SourceRoot(rootPath);
 
 		JavaBuilderFactory javaBuilderFactory = new JavaBuilderFactory() {

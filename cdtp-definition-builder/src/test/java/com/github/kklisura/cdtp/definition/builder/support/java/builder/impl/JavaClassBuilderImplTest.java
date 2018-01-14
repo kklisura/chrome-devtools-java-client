@@ -76,6 +76,7 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
 				.andReturn(sourceRoot);
 
 		javaClassBuilder.addAnnotation("Annotation");
+		javaClassBuilder.addAnnotation("Deprecated");
 
 		replayAll();
 
@@ -86,6 +87,7 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
 				"import com.github.kklisura.annotations.Annotation;\n" +
 				"\n" +
 				"@Annotation\n" +
+				"@Deprecated\n" +
 				"public class ClassName {\n" +
 				"}\n" +
 				"", compilationUnitCapture.getValue().toString());
@@ -229,6 +231,7 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
 		javaClassBuilder.addAnnotation("Annotation");
 		javaClassBuilder.addFieldAnnotation("privateField", "Annotation");
 		javaClassBuilder.addFieldAnnotation("privateField", "Annotation1");
+		javaClassBuilder.addFieldAnnotation("privateField", "Deprecated");
 
 		javaClassBuilder.build(sourceRoot);
 
@@ -242,6 +245,7 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
 				"\n" +
 				"    @Annotation\n" +
 				"    @Annotation1\n" +
+				"    @Deprecated\n" +
 				"    private String privateField;\n" +
 				"}\n", compilationUnitCapture.getValue().toString());
 

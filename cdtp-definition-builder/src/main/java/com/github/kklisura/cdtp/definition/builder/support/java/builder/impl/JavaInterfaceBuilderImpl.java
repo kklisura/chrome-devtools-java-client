@@ -24,6 +24,8 @@ import static com.github.kklisura.cdtp.definition.builder.support.java.builder.u
  * @author Kenan Klisura
  */
 public class JavaInterfaceBuilderImpl extends BaseBuilder implements JavaInterfaceBuilder {
+	private static final String DEPRECATED_ANNOTATION = "Deprecated";
+
 	private String name;
 	private ClassOrInterfaceDeclaration declaration;
 	private String annotationsPackage;
@@ -55,7 +57,9 @@ public class JavaInterfaceBuilderImpl extends BaseBuilder implements JavaInterfa
 		annotationExpr.setName(annotationName);
 		declaration.addAnnotation(annotationExpr);
 
-		addImport(annotationsPackage, annotationName);
+		if (!DEPRECATED_ANNOTATION.equals(annotationName)) {
+			addImport(annotationsPackage, annotationName);
+		}
 	}
 
 	@Override
@@ -63,6 +67,10 @@ public class JavaInterfaceBuilderImpl extends BaseBuilder implements JavaInterfa
 		List<MethodDeclaration> methods = declaration.getMethodsByName(methodName);
 		for (MethodDeclaration methodDeclaration : methods) {
 			methodDeclaration.addMarkerAnnotation(annotationName);
+		}
+
+		if (!DEPRECATED_ANNOTATION.equals(annotationName)) {
+			addImport(annotationsPackage, annotationName);
 		}
 	}
 
@@ -104,7 +112,9 @@ public class JavaInterfaceBuilderImpl extends BaseBuilder implements JavaInterfa
 					for (String annotation : methodParam.getAnnotations()) {
 						parameter.addMarkerAnnotation(annotation);
 
-						addImport(annotationsPackage, annotation);
+						if (!DEPRECATED_ANNOTATION.equals(annotation)) {
+							addImport(annotationsPackage, annotation);
+						}
 					}
 				}
 			}

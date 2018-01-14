@@ -30,6 +30,8 @@ import static com.github.kklisura.cdtp.definition.builder.support.java.builder.u
 public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilder {
 	public static final Logger LOGGER = LoggerFactory.getLogger(JavaClassBuilderImpl.class);
 
+	private static final String DEPRECATED_ANNOTATION = "Deprecated";
+
 	private static final Map<String, String> KEYWORD_TO_FIELD_MAPPING = new HashMap<>();
 
 	// Registers a keyword mapping.
@@ -104,7 +106,9 @@ public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilde
 			annotationExpr.setName(annotationName);
 			fieldDeclaration.get().addAnnotation(annotationExpr);
 
-			addImport(annotationsPackage, annotationName);
+			if (!DEPRECATED_ANNOTATION.equals(annotationName)) {
+				addImport(annotationsPackage, annotationName);
+			}
 		} else {
 			throw new RuntimeException("Field " + name + " is not present in current class.");
 		}
@@ -116,7 +120,9 @@ public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilde
 		annotationExpr.setName(annotationName);
 		declaration.addAnnotation(annotationExpr);
 
-		addImport(annotationsPackage, annotationName);
+		if (!DEPRECATED_ANNOTATION.equals(annotationName)) {
+			addImport(annotationsPackage, annotationName);
+		}
 	}
 
 	@Override
