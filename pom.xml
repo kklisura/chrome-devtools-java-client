@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.github.kklisura</groupId>
-  <artifactId>dev-tools-protocol-java-generator</artifactId>
+  <artifactId>cdtp-definition-builder</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>dev-tools-protocol-java-generator</name>
+  <name>chrome-dev-tools-protocol-definition-builder</name>
   <url>https://github.com/kklisura/dev-tools-protocol-java-generator</url>
 
   <properties>
