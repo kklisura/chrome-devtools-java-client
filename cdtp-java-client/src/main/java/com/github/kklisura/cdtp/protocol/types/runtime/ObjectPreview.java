@@ -40,14 +40,14 @@ public class ObjectPreview {
 	}
 
 	/**
-	 * Object subtype hint. Specified for <code>object</code> type values only.
+	 * Object subtype hint. Specified for `object` type values only.
 	 */
 	public Subtype getSubtype() {
 		return subtype;
 	}
 
 	/**
-	 * Object subtype hint. Specified for <code>object</code> type values only.
+	 * Object subtype hint. Specified for `object` type values only.
 	 */
 	public void setSubtype(Subtype subtype) {
 		this.subtype = subtype;
@@ -96,14 +96,14 @@ public class ObjectPreview {
 	}
 
 	/**
-	 * List of the entries. Specified for <code>map</code> and <code>set</code> subtype values only.
+	 * List of the entries. Specified for `map` and `set` subtype values only.
 	 */
 	public List<EntryPreview> getEntries() {
 		return entries;
 	}
 
 	/**
-	 * List of the entries. Specified for <code>map</code> and <code>set</code> subtype values only.
+	 * List of the entries. Specified for `map` and `set` subtype values only.
 	 */
 	public void setEntries(List<EntryPreview> entries) {
 		this.entries = entries;

@@ -5,7 +5,8 @@ import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.types.runtime.StackTrace;
 
 /**
- * Fired when virtual machine parses script. This event is also fired for all known and uncollected scripts upon enabling debugger.
+ * Fired when virtual machine parses script. This event is also fired for all known and uncollected
+ * scripts upon enabling debugger.
  */
 public class ScriptParsed {
 
@@ -35,15 +36,12 @@ public class ScriptParsed {
 	@Optional
 	private String sourceMapURL;
 
-	@Experimental
 	@Optional
 	private Boolean hasSourceURL;
 
-	@Experimental
 	@Optional
 	private Boolean isModule;
 
-	@Experimental
 	@Optional
 	private Integer length;
 

@@ -3,7 +3,8 @@ package com.github.kklisura.cdtp.protocol.types.runtime;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
 
 /**
- * Detailed information about exception (or error) that was thrown during script compilation or execution.
+ * Detailed information about exception (or error) that was thrown during script compilation or
+ * execution.
  */
 public class ExceptionDetails {
 

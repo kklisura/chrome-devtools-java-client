@@ -17,8 +17,11 @@ import com.github.kklisura.cdtp.definition.builder.support.protocol.builder.Comm
 import com.github.kklisura.cdtp.definition.builder.support.protocol.builder.EventBuilder;
 import com.github.kklisura.cdtp.definition.builder.support.protocol.builder.TypesBuilder;
 import com.github.kklisura.cdtp.definition.builder.utils.DevToolsProtocolUtils;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.ParserProperties;
 
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -26,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.kklisura.cdtp.definition.builder.support.utils.DomainUtils.devToolsProtocolResolver;
+import static com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.buildPackageName;
 
 /**
  * Application
@@ -33,22 +37,43 @@ import static com.github.kklisura.cdtp.definition.builder.support.utils.DomainUt
  * @author Kenan Klisura
  */
 public class Application {
+	private static final String TYPES_PACKAGE = "types";
+	private static final String EVENTS_PACKAGE = "events";
+	private static final String COMMANDS_PACKAGE = "commands";
+	private static final String ANNOTATIONS_PACKAGE = "annotations";
+
+	private static final String SRC_MAIN = "src/main/java";
+
 	/**
 	 * Applications main entry point.
 	 *
 	 * @param args Arguments.
 	 */
 	public static void main(String[] args) throws IOException {
-		final String typesPackageName = "com.github.kklisura.cdtp.protocol.types";
-		final String eventPackageName = "com.github.kklisura.cdtp.protocol.events";
-		final String commandPackageName = "com.github.kklisura.cdtp.protocol.commands";
-		final String annotationsPackageName = "com.github.kklisura.cdtp.protocol.annotations";
+		final ParserProperties parserProperties = ParserProperties.defaults()
+				.withUsageWidth(120);
 
-		final InputStream inputStream = Application.class.getClassLoader().getResourceAsStream("protocol.json");
+		final Configuration configuration = new Configuration();
+		final CmdLineParser parser = new CmdLineParser(configuration, parserProperties);
+
+		try {
+			parser.parseArgument(args);
+		} catch (CmdLineException ex) {
+			System.err.println(ex.getMessage());
+			parser.printUsage(System.err);
+			System.exit(1);
+		}
+
+		final String typesPackageName = buildPackageName(configuration.getBasePackage(), TYPES_PACKAGE);
+		final String eventPackageName = buildPackageName(configuration.getBasePackage(), EVENTS_PACKAGE);
+		final String commandPackageName = buildPackageName(configuration.getBasePackage(), COMMANDS_PACKAGE);
+		final String annotationsPackageName = buildPackageName(configuration.getBasePackage(), ANNOTATIONS_PACKAGE);
+
+		final InputStream inputStream = new FileInputStream(configuration.getProtocolFile());
 		final  DevToolsProtocol protocol = DevToolsProtocolUtils.readJson(inputStream);
 
-		Path rootPath = new File("/Users/kenanklisura/development/playground/dev-tools-protocol-java-generator/cdtp-java-client/src/main/java").toPath();
-		SourceRoot sourceRoot = new SourceRoot(rootPath);
+		Path outputLocation = configuration.getOutputProjectLocation().toPath().resolve(SRC_MAIN);
+		SourceRoot sourceRoot = new SourceRoot(outputLocation);
 
 		JavaBuilderFactory javaBuilderFactory = new JavaBuilderFactory() {
 			@Override
@@ -93,6 +118,6 @@ public class Application {
 		PrettyPrinter prettyPrinter = new PrettyPrinter(prettyPrinterConfiguration);
 
 		sourceRoot.setPrinter(prettyPrinter::print);
-		sourceRoot.saveAll(rootPath);
+		sourceRoot.saveAll(outputLocation);
 	}
 }

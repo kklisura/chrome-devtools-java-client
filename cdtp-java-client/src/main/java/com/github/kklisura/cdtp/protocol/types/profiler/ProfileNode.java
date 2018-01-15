@@ -1,7 +1,6 @@
 package com.github.kklisura.cdtp.protocol.types.profiler;
 
 import com.github.kklisura.cdtp.protocol.types.runtime.CallFrame;
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
 import java.util.List;
 
@@ -14,7 +13,6 @@ public class ProfileNode {
 
 	private CallFrame callFrame;
 
-	@Experimental
 	@Optional
 	private Integer hitCount;
 
@@ -24,7 +22,6 @@ public class ProfileNode {
 	@Optional
 	private String deoptReason;
 
-	@Experimental
 	@Optional
 	private List<PositionTickInfo> positionTicks;
 
@@ -85,14 +82,16 @@ public class ProfileNode {
 	}
 
 	/**
-	 * The reason of being not optimized. The function may be deoptimized or marked as don't optimize.
+	 * The reason of being not optimized. The function may be deoptimized or marked as don't
+	 * optimize.
 	 */
 	public String getDeoptReason() {
 		return deoptReason;
 	}
 
 	/**
-	 * The reason of being not optimized. The function may be deoptimized or marked as don't optimize.
+	 * The reason of being not optimized. The function may be deoptimized or marked as don't
+	 * optimize.
 	 */
 	public void setDeoptReason(String deoptReason) {
 		this.deoptReason = deoptReason;

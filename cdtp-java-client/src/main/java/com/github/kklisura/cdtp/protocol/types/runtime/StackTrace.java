@@ -19,17 +19,19 @@ public class StackTrace {
 
 	@Experimental
 	@Optional
-	private CallFrame promiseCreationFrame;
+	private StackTraceId parentId;
 
 	/**
-	 * String label of this stack trace. For async traces this may be a name of the function that initiated the async call.
+	 * String label of this stack trace. For async traces this may be a name of the function that
+	 * initiated the async call.
 	 */
 	public String getDescription() {
 		return description;
 	}
 
 	/**
-	 * String label of this stack trace. For async traces this may be a name of the function that initiated the async call.
+	 * String label of this stack trace. For async traces this may be a name of the function that
+	 * initiated the async call.
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -64,16 +66,16 @@ public class StackTrace {
 	}
 
 	/**
-	 * Creation frame of the Promise which produced the next synchronous trace when resolved, if available.
+	 * Asynchronous JavaScript stack trace that preceded this stack, if available.
 	 */
-	public CallFrame getPromiseCreationFrame() {
-		return promiseCreationFrame;
+	public StackTraceId getParentId() {
+		return parentId;
 	}
 
 	/**
-	 * Creation frame of the Promise which produced the next synchronous trace when resolved, if available.
+	 * Asynchronous JavaScript stack trace that preceded this stack, if available.
 	 */
-	public void setPromiseCreationFrame(CallFrame promiseCreationFrame) {
-		this.promiseCreationFrame = promiseCreationFrame;
+	public void setParentId(StackTraceId parentId) {
+		this.parentId = parentId;
 	}
 }

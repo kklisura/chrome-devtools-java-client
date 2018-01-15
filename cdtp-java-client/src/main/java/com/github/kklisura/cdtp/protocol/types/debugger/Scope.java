@@ -36,14 +36,18 @@ public class Scope {
 	}
 
 	/**
-	 * Object representing the scope. For <code>global</code> and <code>with</code> scopes it represents the actual object; for the rest of the scopes, it is artificial transient object enumerating scope variables as its properties.
+	 * Object representing the scope. For `global` and `with` scopes it represents the actual
+	 * object; for the rest of the scopes, it is artificial transient object enumerating scope
+	 * variables as its properties.
 	 */
 	public RemoteObject getObject() {
 		return object;
 	}
 
 	/**
-	 * Object representing the scope. For <code>global</code> and <code>with</code> scopes it represents the actual object; for the rest of the scopes, it is artificial transient object enumerating scope variables as its properties.
+	 * Object representing the scope. For `global` and `with` scopes it represents the actual
+	 * object; for the rest of the scopes, it is artificial transient object enumerating scope
+	 * variables as its properties.
 	 */
 	public void setObject(RemoteObject object) {
 		this.object = object;

@@ -1,8 +1,8 @@
 package com.github.kklisura.cdtp.protocol.events.debugger;
 
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.types.runtime.StackTrace;
+import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 
 /**
  * Fired when virtual machine fails to parse the script.
@@ -31,15 +31,12 @@ public class ScriptFailedToParse {
 	@Optional
 	private String sourceMapURL;
 
-	@Experimental
 	@Optional
 	private Boolean hasSourceURL;
 
-	@Experimental
 	@Optional
 	private Boolean isModule;
 
-	@Experimental
 	@Optional
 	private Integer length;
 

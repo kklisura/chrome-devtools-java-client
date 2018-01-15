@@ -5,6 +5,7 @@ import com.github.kklisura.cdtp.definition.builder.protocol.types.Type;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.ArrayType;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.EnumType;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.IntegerType;
+import com.github.kklisura.cdtp.definition.builder.protocol.types.type.NumberType;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.StringType;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.ObjectType;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.Property;
@@ -14,6 +15,7 @@ import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.pr
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.EnumProperty;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.IntegerProperty;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.NumberProperty;
+import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.ObjectProperty;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.RefProperty;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.StringProperty;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.array.ArrayItem;
@@ -33,8 +35,6 @@ import com.github.kklisura.cdtp.definition.builder.support.java.builder.support.
 import com.github.kklisura.cdtp.definition.builder.support.protocol.builder.support.DomainTypeResolver;
 import com.github.kklisura.cdtp.definition.builder.support.protocol.builder.support.PropertyHandlerResult;
 import com.github.kklisura.cdtp.definition.builder.support.protocol.builder.support.TypeBuildRequest;
-import com.github.kklisura.cdtp.definition.builder.protocol.types.type.NumberType;
-import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.ObjectProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;

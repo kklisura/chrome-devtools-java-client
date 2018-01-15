@@ -1,6 +1,5 @@
 package com.github.kklisura.cdtp.protocol.types.debugger;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
 import java.util.List;
 import com.github.kklisura.cdtp.protocol.types.runtime.RemoteObject;
@@ -14,7 +13,6 @@ public class CallFrame {
 
 	private String functionName;
 
-	@Experimental
 	@Optional
 	private Location functionLocation;
 
@@ -114,14 +112,14 @@ public class CallFrame {
 	}
 
 	/**
-	 * <code>this</code> object for this call frame.
+	 * `this` object for this call frame.
 	 */
 	public RemoteObject getThat() {
 		return that;
 	}
 
 	/**
-	 * <code>this</code> object for this call frame.
+	 * `this` object for this call frame.
 	 */
 	public void setThat(RemoteObject that) {
 		this.that = that;
