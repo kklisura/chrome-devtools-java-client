@@ -1,8 +1,11 @@
 package com.github.kklisura.cdtp.protocol.types.debugger;
 
+import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+
 /**
  * Search match for resource.
  */
+@Experimental
 public class SearchMatch {
 
 	private Double lineNumber;

@@ -203,6 +203,10 @@ public class TypesBuilder {
 			classBuilder.addAnnotation(EXPERIMENTAL_ANNOTATION);
 		}
 
+		if (Boolean.TRUE.equals(type.getDeprecated())) {
+			classBuilder.addAnnotation(DEPRECATED_ANNOTATION);
+		}
+
 		List<Builder> additionalBuilders = new ArrayList<>();
 		addProperties(request, classBuilder, additionalBuilders);
 

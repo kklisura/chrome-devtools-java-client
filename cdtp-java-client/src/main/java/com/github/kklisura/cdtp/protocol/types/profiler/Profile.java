@@ -77,16 +77,14 @@ public class Profile {
 	}
 
 	/**
-	 * Time intervals between adjacent samples in microseconds. The first delta is relative to the
-	 * profile startTime.
+	 * Time intervals between adjacent samples in microseconds. The first delta is relative to the profile startTime.
 	 */
 	public List<Integer> getTimeDeltas() {
 		return timeDeltas;
 	}
 
 	/**
-	 * Time intervals between adjacent samples in microseconds. The first delta is relative to the
-	 * profile startTime.
+	 * Time intervals between adjacent samples in microseconds. The first delta is relative to the profile startTime.
 	 */
 	public void setTimeDeltas(List<Integer> timeDeltas) {
 		this.timeDeltas = timeDeltas;

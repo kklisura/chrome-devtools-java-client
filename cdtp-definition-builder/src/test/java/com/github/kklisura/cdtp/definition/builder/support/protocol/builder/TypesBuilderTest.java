@@ -4,6 +4,7 @@ import com.github.kklisura.cdtp.definition.builder.protocol.types.Domain;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Type;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.ArrayType;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.EnumType;
+import com.github.kklisura.cdtp.definition.builder.protocol.types.type.NumberType;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.StringType;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.array.items.StringArrayItem;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.ObjectType;
@@ -14,6 +15,7 @@ import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.pr
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.EnumProperty;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.IntegerProperty;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.NumberProperty;
+import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.ObjectProperty;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.RefProperty;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.StringProperty;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.array.ArrayItem;
@@ -29,8 +31,6 @@ import com.github.kklisura.cdtp.definition.builder.support.java.builder.JavaClas
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.JavaEnumBuilder;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.support.CombinedBuilders;
 import com.github.kklisura.cdtp.definition.builder.support.protocol.builder.support.DomainTypeResolver;
-import com.github.kklisura.cdtp.definition.builder.protocol.types.type.NumberType;
-import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.ObjectProperty;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
 import org.easymock.Mock;
@@ -132,6 +132,9 @@ public class TypesBuilderTest extends EasyMockSupport {
 		// Set first type to experimental
 		domain.getTypes().get(0).setExperimental(Boolean.TRUE);
 
+		// Set second to deprecated
+		domain.getTypes().get(1).setDeprecated(Boolean.TRUE);
+
 		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "SomeObjectType1"))
 				.andReturn(javaClassBuilder1);
 		javaClassBuilder1.setJavaDoc("Description1");
@@ -141,6 +144,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 		expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "SomeObjectType2"))
 				.andReturn(javaClassBuilder2);
 		javaClassBuilder2.setJavaDoc("Description2");
+		javaClassBuilder2.addAnnotation("Deprecated");
 		javaClassBuilder2.generateGettersAndSetters();
 
 		replayAll();

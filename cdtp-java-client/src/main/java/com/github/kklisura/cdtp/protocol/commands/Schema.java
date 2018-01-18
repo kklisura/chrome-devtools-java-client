@@ -4,9 +4,8 @@ import com.github.kklisura.cdtp.protocol.types.schema.Domain;
 import java.util.List;
 
 /**
- * This domain is deprecated.
+ * Provides information about the protocol schema.
  */
-@Deprecated
 public interface Schema {
 
 	/**

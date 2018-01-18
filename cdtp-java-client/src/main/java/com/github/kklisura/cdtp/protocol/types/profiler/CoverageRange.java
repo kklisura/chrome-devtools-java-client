@@ -1,8 +1,11 @@
 package com.github.kklisura.cdtp.protocol.types.profiler;
 
+import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+
 /**
  * Coverage data for a source range.
  */
+@Experimental
 public class CoverageRange {
 
 	private Integer startOffset;

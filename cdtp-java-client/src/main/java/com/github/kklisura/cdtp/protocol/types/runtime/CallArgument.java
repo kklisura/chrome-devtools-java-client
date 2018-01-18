@@ -3,8 +3,7 @@ package com.github.kklisura.cdtp.protocol.types.runtime;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
 
 /**
- * Represents function call argument. Either remote object id `objectId`, primitive `value`,
- * unserializable primitive value or neither of (for undefined) them should be specified.
+ * Represents function call argument. Either remote object id <code>objectId</code>, primitive <code>value</code>, unserializable primitive value or neither of (for undefined) them should be specified.
  */
 public class CallArgument {
 

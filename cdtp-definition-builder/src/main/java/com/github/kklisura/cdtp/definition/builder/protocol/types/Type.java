@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.github.kklisura.cdtp.definition.builder.protocol.deserializers.impl.types.TypeSubTypeJsonDeserializer;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.ArrayType;
-import com.github.kklisura.cdtp.definition.builder.protocol.types.type.IntegerType;
-import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.ObjectType;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.EnumType;
+import com.github.kklisura.cdtp.definition.builder.protocol.types.type.IntegerType;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.NumberType;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.StringType;
+import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.ObjectType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,4 +36,6 @@ public abstract class Type {
 	private String description;
 
 	private Boolean experimental;
+
+	private Boolean deprecated;
 }

@@ -20,5 +20,7 @@ public class Event {
 
 	private Boolean experimental;
 
+	private Boolean deprecated;
+
 	private List<Property> parameters;
 }

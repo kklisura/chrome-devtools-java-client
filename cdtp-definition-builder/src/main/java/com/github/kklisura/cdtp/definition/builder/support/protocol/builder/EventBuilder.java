@@ -66,6 +66,7 @@ public class EventBuilder extends TypesBuilder {
 		ObjectType objectType = new ObjectType();
 		objectType.setId(event.getName());
 		objectType.setExperimental(event.getExperimental());
+		objectType.setDeprecated(event.getDeprecated());
 		objectType.setDescription(event.getDescription());
 		objectType.setProperties(event.getParameters());
 

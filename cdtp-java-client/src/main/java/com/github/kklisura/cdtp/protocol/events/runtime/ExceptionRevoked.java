@@ -24,14 +24,14 @@ public class ExceptionRevoked {
 	}
 
 	/**
-	 * The id of revoked exception, as reported in `exceptionThrown`.
+	 * The id of revoked exception, as reported in <code>exceptionUnhandled</code>.
 	 */
 	public Integer getExceptionId() {
 		return exceptionId;
 	}
 
 	/**
-	 * The id of revoked exception, as reported in `exceptionThrown`.
+	 * The id of revoked exception, as reported in <code>exceptionUnhandled</code>.
 	 */
 	public void setExceptionId(Integer exceptionId) {
 		this.exceptionId = exceptionId;

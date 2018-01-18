@@ -84,6 +84,7 @@ public class EventBuilderTest extends EasyMockSupport {
 		event.setName("eventName");
 		event.setDescription("Event description.");
 		event.setExperimental(Boolean.TRUE);
+		event.setDeprecated(Boolean.TRUE);
 		event.setParameters(Arrays.asList(stringProperty, refProperty));
 
 		domain1.setEvents(Collections.singletonList(event));
@@ -94,6 +95,7 @@ public class EventBuilderTest extends EasyMockSupport {
 
 		javaClassBuilder.setJavaDoc("Event description.");
 		javaClassBuilder.addAnnotation("Experimental");
+		javaClassBuilder.addAnnotation("Deprecated");
 
 		javaClassBuilder.addImport(TYPES_PACKAGE_NAME + ".domain2", "Domain2RefProperty");
 

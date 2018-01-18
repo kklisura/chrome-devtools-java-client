@@ -1,10 +1,12 @@
 package com.github.kklisura.cdtp.protocol.types.profiler;
 
+import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import java.util.List;
 
 /**
  * Coverage data for a JavaScript script.
  */
+@Experimental
 public class ScriptCoverage {
 
 	private String scriptId;

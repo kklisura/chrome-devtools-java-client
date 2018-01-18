@@ -7,9 +7,9 @@ package com.github.kklisura.cdtp.protocol.commands;
 public interface Console {
 
 	/**
-	 * Does nothing.
+	 * Enables console domain, sends the messages collected so far to the client by means of the <code>messageAdded</code> notification.
 	 */
-	void clearMessages();
+	void enable();
 
 	/**
 	 * Disables console domain, prevents further console messages from being reported to the client.
@@ -17,8 +17,7 @@ public interface Console {
 	void disable();
 
 	/**
-	 * Enables console domain, sends the messages collected so far to the client by means of the
-	 * `messageAdded` notification.
+	 * Does nothing.
 	 */
-	void enable();
+	void clearMessages();
 }

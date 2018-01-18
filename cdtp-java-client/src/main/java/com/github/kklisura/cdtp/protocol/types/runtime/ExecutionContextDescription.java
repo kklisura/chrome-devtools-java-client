@@ -17,16 +17,14 @@ public class ExecutionContextDescription {
 	private Object auxData;
 
 	/**
-	 * Unique id of the execution context. It can be used to specify in which execution context
-	 * script evaluation should be performed.
+	 * Unique id of the execution context. It can be used to specify in which execution context script evaluation should be performed.
 	 */
 	public Integer getId() {
 		return id;
 	}
 
 	/**
-	 * Unique id of the execution context. It can be used to specify in which execution context
-	 * script evaluation should be performed.
+	 * Unique id of the execution context. It can be used to specify in which execution context script evaluation should be performed.
 	 */
 	public void setId(Integer id) {
 		this.id = id;

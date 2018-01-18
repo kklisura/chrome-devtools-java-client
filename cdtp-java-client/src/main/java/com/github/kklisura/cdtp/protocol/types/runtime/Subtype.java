@@ -1,7 +1,7 @@
 package com.github.kklisura.cdtp.protocol.types.runtime;
 
 /**
- * Object subtype hint. Specified for `object` type values only.
+ * Object subtype hint. Specified for <code>object</code> type values only.
  */
 public enum Subtype {
 

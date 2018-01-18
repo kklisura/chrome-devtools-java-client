@@ -1,6 +1,7 @@
 MVN=mvn
 RM=rm
 JAVA=java
+CP=cp
 RUN_JAR=$(JAVA) -jar
 
 DEFINITION_BUILDER_DIR=cdtp-definition-builder
@@ -14,7 +15,8 @@ PROTOCOL_JSON_FILE=./protocol.json
 
 build-cdtp-definition-builder:
 	# Building cdtp-definition-builder project...
-	$(MVN) --file "cdtp-definition-builder/" clean package
+	$(CP) $(PROTOCOL_JSON_FILE) "./$(DEFINITION_BUILDER_DIR)/src/test/resources/protocol.json"
+	$(MVN) --file "$(DEFINITION_BUILDER_DIR)/" clean package
 
 compile-cdtp-java-client:
 	# Compiling cdtp-java-client project...
