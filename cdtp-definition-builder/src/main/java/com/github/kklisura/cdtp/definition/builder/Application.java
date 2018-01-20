@@ -42,6 +42,10 @@ public class Application {
 	private static final String COMMANDS_PACKAGE = "commands";
 	private static final String ANNOTATIONS_PACKAGE = "annotations";
 
+	private static final String FACTORY_PACKAGE = "factory";
+
+	private static final String COMMAND_FACTORY_NAME = "CommandFactory";
+
 	private static final String SRC_MAIN = "src/main/java";
 
 	/**
@@ -105,6 +109,9 @@ public class Application {
 			builderList.add(commandBuilder.build(domain, devToolsProtocolResolver(protocol)));
 		}
 
+		// Build command factory
+		builderList.add(buildCommandFactory(protocol.getDomains(), configuration.getBasePackage()));
+
 		// Build all items
 		for (Builder builder : builderList) {
 			builder.build(sourceRoot);
@@ -119,5 +126,22 @@ public class Application {
 
 		sourceRoot.setPrinter(prettyPrinter::print);
 		sourceRoot.saveAll(outputLocation);
+	}
+
+	private static Builder buildCommandFactory(List<Domain> domains, String basePackage) {
+		String commandsPackage = basePackage + "." + COMMANDS_PACKAGE;
+		String factoryPackage = commandsPackage + "." + FACTORY_PACKAGE;
+
+		JavaInterfaceBuilder factoryInterfaceBuilder = new JavaInterfaceBuilderImpl(factoryPackage, COMMAND_FACTORY_NAME,
+				null);
+
+		for (Domain domain : domains) {
+			String description = String.format("Returns the %s command.", domain.getDomain());
+
+			factoryInterfaceBuilder.addImport(commandsPackage, domain.getDomain());
+			factoryInterfaceBuilder.addMethod("get" + domain.getDomain(), description, null, domain.getDomain());
+		}
+
+		return factoryInterfaceBuilder;
 	}
 }
