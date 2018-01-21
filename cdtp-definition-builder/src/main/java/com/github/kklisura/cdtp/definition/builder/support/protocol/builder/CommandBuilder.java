@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.github.kklisura.cdtp.definition.builder.support.protocol.builder.TypesBuilder.*;
+import static com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.*;
 
 /**
  * Builds a domain commands.
@@ -57,7 +58,7 @@ public class CommandBuilder {
 	 */
 	public Builder build(Domain domain, DomainTypeResolver domainTypeResolver) {
 		JavaInterfaceBuilder interfaceBuilder = javaBuilderFactory.createInterfaceBuilder(basePackageName,
-				com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.toEnumClass(domain.getDomain()));
+				toEnumClass(domain.getDomain()));
 
 		if (StringUtils.isNotEmpty(domain.getDescription())) {
 			interfaceBuilder.setJavaDoc(domain.getDescription());
@@ -105,6 +106,13 @@ public class CommandBuilder {
 		if (Boolean.TRUE.equals(command.getExperimental())) {
 			interfaceBuilder.addMethodAnnotation(method, EXPERIMENTAL_ANNOTATION);
 		}
+
+		List<Property> returns = command.getReturns();
+		if (CollectionUtils.isNotEmpty(returns)) {
+			if (returns.size() == 1) {
+				interfaceBuilder.addParametrizedMethodAnnotation(method, RETURNS_ANNOTATION, returns.get(0).getName());
+			}
+		}
 	}
 
 	private String buildReturnType(Command command, Domain domain, JavaInterfaceBuilder interfaceBuilder,
@@ -118,7 +126,7 @@ public class CommandBuilder {
 				final Property property = returns.get(0);
 
 				ObjectType objectType = new ObjectType();
-				objectType.setId(com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.toEnumClass(domain.getDomain()));
+				objectType.setId(toEnumClass(domain.getDomain()));
 				TypeBuildRequest<ObjectType> request = new TypeBuildRequest<>(domain, objectType, domainTypeResolver);
 
 				PropertyHandlerResult result = typesBuilder.getPropertyHandleResult(property, request,
@@ -128,7 +136,7 @@ public class CommandBuilder {
 
 				return result.getType();
 			} else {
-				String name = com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.getReturnTypeFromGetter(command.getName());
+				String name = getReturnTypeFromGetter(command.getName());
 
 				ObjectType objectType = new ObjectType();
 				objectType.setId(name);
@@ -141,7 +149,7 @@ public class CommandBuilder {
 				builders.add(result.getBuilder());
 
 				// Since these properties are not ref type, we need to manually import them.
-				String packageName = com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.buildPackageName(typesPackageName, domain.getDomain().toLowerCase());
+				String packageName = buildPackageName(typesPackageName, domain.getDomain().toLowerCase());
 				interfaceBuilder.addImport(packageName, name);
 
 				return name;
@@ -161,7 +169,7 @@ public class CommandBuilder {
 		if (CollectionUtils.isNotEmpty(parameters)) {
 			for (Property property : parameters) {
 				ObjectType objectType = new ObjectType();
-				objectType.setId(com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.toEnumClass(domain.getDomain()));
+				objectType.setId(toEnumClass(domain.getDomain()));
 				TypeBuildRequest<ObjectType> request = new TypeBuildRequest<>(domain, objectType, domainTypeResolver);
 
 				PropertyHandlerResult result = typesBuilder.getPropertyHandleResult(property, request,
@@ -199,8 +207,8 @@ public class CommandBuilder {
 			builders.add(result.getBuilder());
 
 			// Since these properties are not ref type, we need to manually import them.
-			String packageName = com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.buildPackageName(typesPackageName, domain.getDomain().toLowerCase());
-			String name = com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.toEnumClass(property.getName());
+			String packageName = buildPackageName(typesPackageName, domain.getDomain().toLowerCase());
+			String name = toEnumClass(property.getName());
 
 			interfaceBuilder.addImport(packageName, name);
 		}

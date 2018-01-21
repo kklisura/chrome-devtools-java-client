@@ -1,6 +1,7 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.cachestorage.Cache;
 import com.github.kklisura.cdtp.protocol.types.cachestorage.CachedResponse;
 import com.github.kklisura.cdtp.protocol.types.cachestorage.RequestEntries;
@@ -12,6 +13,7 @@ public interface CacheStorage {
 	/**
 	 * Requests cache names.
 	 */
+	@Returns("caches")
 	List<Cache> requestCacheNames(String securityOrigin);
 
 	/**
@@ -32,5 +34,6 @@ public interface CacheStorage {
 	/**
 	 * Fetches cache entry.
 	 */
+	@Returns("response")
 	CachedResponse requestCachedResponse(String cacheId, String requestURL);
 }

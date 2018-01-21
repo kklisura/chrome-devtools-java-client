@@ -6,6 +6,7 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
 import com.github.javaparser.ast.expr.Name;
+import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.JavaInterfaceBuilder;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.support.MethodParam;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.utils.JavadocUtils;
@@ -57,9 +58,7 @@ public class JavaInterfaceBuilderImpl extends BaseBuilder implements JavaInterfa
 		annotationExpr.setName(annotationName);
 		declaration.addAnnotation(annotationExpr);
 
-		if (!DEPRECATED_ANNOTATION.equals(annotationName)) {
-			addImport(annotationsPackage, annotationName);
-		}
+		importAnnotation(annotationName);
 	}
 
 	@Override
@@ -69,9 +68,17 @@ public class JavaInterfaceBuilderImpl extends BaseBuilder implements JavaInterfa
 			methodDeclaration.addMarkerAnnotation(annotationName);
 		}
 
-		if (!DEPRECATED_ANNOTATION.equals(annotationName)) {
-			addImport(annotationsPackage, annotationName);
+		importAnnotation(annotationName);
+	}
+
+	@Override
+	public void addParametrizedMethodAnnotation(String methodName, String annotationName, String parameter) {
+		List<MethodDeclaration> methods = declaration.getMethodsByName(methodName);
+		for (MethodDeclaration methodDeclaration : methods) {
+			methodDeclaration.addSingleMemberAnnotation(annotationName, new StringLiteralExpr(parameter));
 		}
+
+		importAnnotation(annotationName);
 	}
 
 	@Override
@@ -118,6 +125,12 @@ public class JavaInterfaceBuilderImpl extends BaseBuilder implements JavaInterfa
 					}
 				}
 			}
+		}
+	}
+
+	private void importAnnotation(String annotationName) {
+		if (!DEPRECATED_ANNOTATION.equals(annotationName)) {
+			addImport(annotationsPackage, annotationName);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.performance.Metric;
 import java.util.List;
 
@@ -20,5 +21,6 @@ public interface Performance {
 	/**
 	 * Retrieve current values of run-time metrics.
 	 */
+	@Returns("metrics")
 	List<Metric> getMetrics();
 }

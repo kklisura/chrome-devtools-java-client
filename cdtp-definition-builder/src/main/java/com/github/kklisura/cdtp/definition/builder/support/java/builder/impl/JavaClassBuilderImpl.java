@@ -106,9 +106,7 @@ public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilde
 			annotationExpr.setName(annotationName);
 			fieldDeclaration.get().addAnnotation(annotationExpr);
 
-			if (!DEPRECATED_ANNOTATION.equals(annotationName)) {
-				addImport(annotationsPackage, annotationName);
-			}
+			importAnnotation(annotationName);
 		} else {
 			throw new RuntimeException("Field " + name + " is not present in current class.");
 		}
@@ -120,9 +118,7 @@ public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilde
 		annotationExpr.setName(annotationName);
 		declaration.addAnnotation(annotationExpr);
 
-		if (!DEPRECATED_ANNOTATION.equals(annotationName)) {
-			addImport(annotationsPackage, annotationName);
-		}
+		importAnnotation(annotationName);
 	}
 
 	@Override
@@ -151,6 +147,12 @@ public class JavaClassBuilderImpl extends BaseBuilder implements JavaClassBuilde
 		String description = fieldDescriptions.get(fieldName);
 		if (StringUtils.isNotEmpty(description)) {
 			methodDeclaration.setJavadocComment(JavadocUtils.createJavadocComment(description, INDENTATION_TAB));
+		}
+	}
+
+	private void importAnnotation(String annotationName) {
+		if (!DEPRECATED_ANNOTATION.equals(annotationName)) {
+			addImport(annotationsPackage, annotationName);
 		}
 	}
 

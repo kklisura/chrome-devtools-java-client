@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.debugger.SearchMatch;
 import com.github.kklisura.cdtp.protocol.types.emulation.ScreenOrientation;
 import com.github.kklisura.cdtp.protocol.types.network.Cookie;
@@ -37,6 +38,7 @@ public interface Page {
 	 */
 	@Deprecated
 	@Experimental
+	@Returns("identifier")
 	String addScriptToEvaluateOnLoad(String scriptSource);
 
 	/**
@@ -50,6 +52,7 @@ public interface Page {
 	 * Evaluates given script in every frame upon creation (before loading frame's scripts).
 	 */
 	@Experimental
+	@Returns("identifier")
 	String addScriptToEvaluateOnNewDocument(String source);
 
 	/**
@@ -78,6 +81,7 @@ public interface Page {
 	/**
 	 * Navigates current page to the given URL.
 	 */
+	@Returns("frameId")
 	String navigate(String url, @Experimental @Optional String referrer, @Experimental @Optional TransitionType transitionType);
 
 	/**
@@ -102,6 +106,7 @@ public interface Page {
 	 * Returns all browser cookies. Depending on the backend support, will return detailed cookie information in the <code>cookies</code> field.
 	 */
 	@Experimental
+	@Returns("cookies")
 	List<Cookie> getCookies();
 
 	/**
@@ -114,6 +119,7 @@ public interface Page {
 	 * Returns present frame / resource tree structure.
 	 */
 	@Experimental
+	@Returns("frameTree")
 	FrameResourceTree getResourceTree();
 
 	/**
@@ -126,6 +132,7 @@ public interface Page {
 	 * Searches for given string in resource content.
 	 */
 	@Experimental
+	@Returns("result")
 	List<SearchMatch> searchInResource(String frameId, String url, String query, @Optional Boolean caseSensitive, @Optional Boolean isRegex);
 
 	/**
@@ -178,12 +185,14 @@ public interface Page {
 	 * Capture page screenshot.
 	 */
 	@Experimental
+	@Returns("data")
 	String captureScreenshot(@Optional Format format, @Optional Integer quality, @Experimental @Optional Viewport clip, @Experimental @Optional Boolean fromSurface);
 
 	/**
 	 * Print page as PDF.
 	 */
 	@Experimental
+	@Returns("data")
 	String printToPDF(@Optional Boolean landscape, @Optional Boolean displayHeaderFooter, @Optional Boolean printBackground, @Optional Double scale, @Optional Double paperWidth, @Optional Double paperHeight, @Optional Double marginTop, @Optional Double marginBottom, @Optional Double marginLeft, @Optional Double marginRight, @Optional String pageRanges, @Optional Boolean ignoreInvalidPageRanges);
 
 	/**
@@ -225,6 +234,7 @@ public interface Page {
 	 * Creates an isolated world for the given frame.
 	 */
 	@Experimental
+	@Returns("executionContextId")
 	Integer createIsolatedWorld(String frameId, @Optional String worldName, @Optional Boolean grantUniveralAccess);
 
 	/**

@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.profiler.Profile;
 import com.github.kklisura.cdtp.protocol.types.profiler.ScriptCoverage;
 import com.github.kklisura.cdtp.protocol.types.profiler.ScriptTypeProfile;
@@ -20,6 +21,7 @@ public interface Profiler {
 
 	void start();
 
+	@Returns("profile")
 	Profile stop();
 
 	/**
@@ -38,12 +40,14 @@ public interface Profiler {
 	 * Collect coverage data for the current isolate, and resets execution counters. Precise code coverage needs to have started.
 	 */
 	@Experimental
+	@Returns("result")
 	List<ScriptCoverage> takePreciseCoverage();
 
 	/**
 	 * Collect coverage data for the current isolate. The coverage data may be incomplete due to garbage collection.
 	 */
 	@Experimental
+	@Returns("result")
 	List<ScriptCoverage> getBestEffortCoverage();
 
 	/**
@@ -62,5 +66,6 @@ public interface Profiler {
 	 * Collect type profile.
 	 */
 	@Experimental
+	@Returns("result")
 	List<ScriptTypeProfile> takeTypeProfile();
 }

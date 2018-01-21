@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.debugger.BreakLocation;
 import com.github.kklisura.cdtp.protocol.types.debugger.EvaluateOnCallFrame;
 import com.github.kklisura.cdtp.protocol.types.debugger.Location;
@@ -60,6 +61,7 @@ public interface Debugger {
 	 * Returns possible locations for breakpoint. scriptId in start and end range locations should be the same.
 	 */
 	@Experimental
+	@Returns("locations")
 	List<BreakLocation> getPossibleBreakpoints(Location start, @Optional Location end, @Optional Boolean restrictToFunction);
 
 	/**
@@ -102,6 +104,7 @@ public interface Debugger {
 	 * Searches for given string in script content.
 	 */
 	@Experimental
+	@Returns("result")
 	List<SearchMatch> searchInContent(String scriptId, String query, @Optional Boolean caseSensitive, @Optional Boolean isRegex);
 
 	/**
@@ -117,6 +120,7 @@ public interface Debugger {
 	/**
 	 * Returns source for the script with given id.
 	 */
+	@Returns("scriptSource")
 	String getScriptSource(String scriptId);
 
 	/**

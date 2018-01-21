@@ -1,4 +1,4 @@
-package com.github.kklisura.cdtp.protocol.commands.factory;
+package com.github.kklisura.cdtp.protocol;
 
 import com.github.kklisura.cdtp.protocol.commands.Accessibility;
 import com.github.kklisura.cdtp.protocol.commands.Animation;
@@ -39,7 +39,7 @@ import com.github.kklisura.cdtp.protocol.commands.Target;
 import com.github.kklisura.cdtp.protocol.commands.Tethering;
 import com.github.kklisura.cdtp.protocol.commands.Tracing;
 
-public interface CommandFactory {
+public interface ChromeDevTools {
 
 	/**
 	 * Returns the Inspector command.

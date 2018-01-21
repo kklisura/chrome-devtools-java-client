@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.target.RemoteLocation;
 import com.github.kklisura.cdtp.protocol.types.target.TargetInfo;
 import java.util.List;
@@ -37,6 +38,7 @@ public interface Target {
 	/**
 	 * Returns information about a target.
 	 */
+	@Returns("targetInfo")
 	TargetInfo getTargetInfo(String targetId);
 
 	/**
@@ -47,11 +49,13 @@ public interface Target {
 	/**
 	 * Closes the target. If the target is a page that gets closed too.
 	 */
+	@Returns("success")
 	Boolean closeTarget(String targetId);
 
 	/**
 	 * Attaches to the target with given id.
 	 */
+	@Returns("sessionId")
 	String attachToTarget(String targetId);
 
 	/**
@@ -62,20 +66,24 @@ public interface Target {
 	/**
 	 * Creates a new empty BrowserContext. Similar to an incognito profile but you can have more than one.
 	 */
+	@Returns("browserContextId")
 	String createBrowserContext();
 
 	/**
 	 * Deletes a BrowserContext, will fail of any open page uses it.
 	 */
+	@Returns("success")
 	Boolean disposeBrowserContext(String browserContextId);
 
 	/**
 	 * Creates a new page.
 	 */
+	@Returns("targetId")
 	String createTarget(String url, @Optional Integer width, @Optional Integer height, @Optional String browserContextId);
 
 	/**
 	 * Retrieves a list of available targets.
 	 */
+	@Returns("targetInfos")
 	List<TargetInfo> getTargets();
 }

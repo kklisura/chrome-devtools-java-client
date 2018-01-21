@@ -65,6 +65,7 @@ public class TypesBuilder {
 
 	public static final String DEPRECATED_ANNOTATION = "Deprecated";
 	public static final String EXPERIMENTAL_ANNOTATION = "Experimental";
+	public static final String RETURNS_ANNOTATION = "Returns";
 	public static final String OPTIONAL_ANNOTATION = "Optional";
 
 	private static final Map<Class, String> TYPE_TO_JAVA_TYPE_MAP = new HashMap<>();

@@ -1,6 +1,7 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.browser.Bounds;
 import com.github.kklisura.cdtp.protocol.types.browser.Version;
 import com.github.kklisura.cdtp.protocol.types.browser.WindowForTarget;
@@ -29,5 +30,6 @@ public interface Browser {
 	/**
 	 * Get position and size of the browser window.
 	 */
+	@Returns("bounds")
 	Bounds getWindowBounds(Integer windowId);
 }

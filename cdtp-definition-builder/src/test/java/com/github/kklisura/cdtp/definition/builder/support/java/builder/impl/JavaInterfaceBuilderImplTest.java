@@ -202,6 +202,7 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
 
 		interfaceBuilder.addMethod("someMethod1", "", Arrays.asList(param1, param2), "String");
 		interfaceBuilder.addMethodAnnotation("someMethod1", "Annotation");
+		interfaceBuilder.addParametrizedMethodAnnotation("someMethod1", "Annotation2", "param");
 
 		replayAll();
 
@@ -211,10 +212,12 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
 				"\n" +
 				"import com.github.kklisura.annotations.Annotation;\n" +
 				"import com.github.kklisura.annotations.Annotation1;\n" +
+				"import com.github.kklisura.annotations.Annotation2;\n" +
 				"\n" +
 				"public interface InterfaceTest {\n" +
 				"\n" +
 				"    @Annotation\n" +
+				"    @Annotation2(\"param\")\n" +
 				"    String someMethod1(Integer param1, @Annotation @Annotation1 @Deprecated String param2);\n" +
 				"}\n", compilationUnitCapture.getValue().toString());
 

@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.heapprofiler.SamplingHeapProfile;
 import com.github.kklisura.cdtp.protocol.types.runtime.RemoteObject;
 
@@ -20,6 +21,7 @@ public interface HeapProfiler {
 
 	void collectGarbage();
 
+	@Returns("result")
 	RemoteObject getObjectByHeapObjectId(String objectId, @Optional String objectGroup);
 
 	/**
@@ -27,9 +29,11 @@ public interface HeapProfiler {
 	 */
 	void addInspectedHeapObject(String heapObjectId);
 
+	@Returns("heapSnapshotObjectId")
 	String getHeapObjectId(String objectId);
 
 	void startSampling(@Optional Double samplingInterval);
 
+	@Returns("profile")
 	SamplingHeapProfile stopSampling();
 }

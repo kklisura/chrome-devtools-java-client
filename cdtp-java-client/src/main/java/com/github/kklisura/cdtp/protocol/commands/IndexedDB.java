@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.indexeddb.DatabaseWithObjectStores;
 import com.github.kklisura.cdtp.protocol.types.indexeddb.KeyRange;
 import com.github.kklisura.cdtp.protocol.types.indexeddb.RequestData;
@@ -23,11 +24,13 @@ public interface IndexedDB {
 	/**
 	 * Requests database names for given security origin.
 	 */
+	@Returns("databaseNames")
 	List<String> requestDatabaseNames(String securityOrigin);
 
 	/**
 	 * Requests database with given name in given frame.
 	 */
+	@Returns("databaseWithObjectStores")
 	DatabaseWithObjectStores requestDatabase(String securityOrigin, String databaseName);
 
 	/**

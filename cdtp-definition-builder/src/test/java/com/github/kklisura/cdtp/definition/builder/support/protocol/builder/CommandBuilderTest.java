@@ -1,8 +1,14 @@
 package com.github.kklisura.cdtp.definition.builder.support.protocol.builder;
 
+import com.github.kklisura.cdtp.definition.builder.protocol.types.Command;
+import com.github.kklisura.cdtp.definition.builder.protocol.types.Domain;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.ObjectType;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.ArrayProperty;
+import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.BooleanProperty;
+import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.NumberProperty;
+import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.RefProperty;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.StringProperty;
+import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.array.items.EnumArrayItem;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.Builder;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.JavaBuilderFactory;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.JavaClassBuilder;
@@ -11,12 +17,6 @@ import com.github.kklisura.cdtp.definition.builder.support.java.builder.JavaInte
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.support.CombinedBuilders;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.support.MethodParam;
 import com.github.kklisura.cdtp.definition.builder.support.protocol.builder.support.DomainTypeResolver;
-import com.github.kklisura.cdtp.definition.builder.protocol.types.Command;
-import com.github.kklisura.cdtp.definition.builder.protocol.types.Domain;
-import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.BooleanProperty;
-import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.NumberProperty;
-import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.RefProperty;
-import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.array.items.EnumArrayItem;
 import org.easymock.Capture;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
@@ -166,6 +166,7 @@ public class CommandBuilderTest extends EasyMockSupport {
 		numberParam.setExperimental(Boolean.TRUE);
 
 		final BooleanProperty booleanReturnParam = new BooleanProperty();
+		booleanReturnParam.setName("booleanReturn");
 
 		command.setParameters(Arrays.asList(stringParam, numberParam));
 		command.setReturns(Collections.singletonList(booleanReturnParam));
@@ -178,6 +179,9 @@ public class CommandBuilderTest extends EasyMockSupport {
 
 		Capture<List<MethodParam>> methodParamCapture = Capture.newInstance();
 		interfaceBuilder.addMethod(eq("command"), eq("command description"), capture(methodParamCapture), eq("Boolean"));
+
+		interfaceBuilder.addParametrizedMethodAnnotation("command", "Returns", "booleanReturn");
+
 
 		replayAll();
 
@@ -221,6 +225,7 @@ public class CommandBuilderTest extends EasyMockSupport {
 		arrayProperty.setItems(enumArrayItem);
 
 		final BooleanProperty booleanReturnParam = new BooleanProperty();
+		booleanReturnParam.setName("booleanReturnValue");
 
 		command.setParameters(Arrays.asList(refParam, arrayProperty));
 		command.setReturns(Collections.singletonList(booleanReturnParam));
@@ -249,6 +254,8 @@ public class CommandBuilderTest extends EasyMockSupport {
 		interfaceBuilder.addImport("com.github.kklisura.types.domainname", "TestRef");
 		interfaceBuilder.addImport("java.util", "List");
 		interfaceBuilder.addImport("com.github.kklisura.types.domainname", "EnumParam1");
+
+		interfaceBuilder.addParametrizedMethodAnnotation("command", "Returns", "booleanReturnValue");
 
 		replayAll();
 

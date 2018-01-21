@@ -1,6 +1,7 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.css.BackgroundColors;
 import com.github.kklisura.cdtp.protocol.types.css.CSSComputedStyleProperty;
 import com.github.kklisura.cdtp.protocol.types.css.CSSMedia;
@@ -46,58 +47,69 @@ public interface CSS {
 	/**
 	 * Returns the computed style for a DOM node identified by <code>nodeId</code>.
 	 */
+	@Returns("computedStyle")
 	List<CSSComputedStyleProperty> getComputedStyleForNode(Integer nodeId);
 
 	/**
 	 * Requests information about platform fonts which we used to render child TextNodes in the given node.
 	 */
 	@Experimental
+	@Returns("fonts")
 	List<PlatformFontUsage> getPlatformFontsForNode(Integer nodeId);
 
 	/**
 	 * Returns the current textual content and the URL for a stylesheet.
 	 */
+	@Returns("text")
 	String getStyleSheetText(String styleSheetId);
 
 	/**
 	 * Returns all class names from specified stylesheet.
 	 */
 	@Experimental
+	@Returns("classNames")
 	List<String> collectClassNames(String styleSheetId);
 
 	/**
 	 * Sets the new stylesheet text.
 	 */
+	@Returns("sourceMapURL")
 	String setStyleSheetText(String styleSheetId, String text);
 
 	/**
 	 * Modifies the rule selector.
 	 */
+	@Returns("selectorList")
 	SelectorList setRuleSelector(String styleSheetId, SourceRange range, String selector);
 
 	/**
 	 * Modifies the keyframe rule key text.
 	 */
+	@Returns("keyText")
 	Value setKeyframeKey(String styleSheetId, SourceRange range, String keyText);
 
 	/**
 	 * Applies specified style edits one after another in the given order.
 	 */
+	@Returns("styles")
 	List<CSSStyle> setStyleTexts(List<StyleDeclarationEdit> edits);
 
 	/**
 	 * Modifies the rule selector.
 	 */
+	@Returns("media")
 	CSSMedia setMediaText(String styleSheetId, SourceRange range, String text);
 
 	/**
 	 * Creates a new special "via-inspector" stylesheet in the frame with given <code>frameId</code>.
 	 */
+	@Returns("styleSheetId")
 	String createStyleSheet(String frameId);
 
 	/**
 	 * Inserts a new rule with the given <code>ruleText</code> in a stylesheet with given <code>styleSheetId</code>, at the position specified by <code>location</code>.
 	 */
+	@Returns("rule")
 	CSSRule addRule(String styleSheetId, String ruleText, SourceRange location);
 
 	/**
@@ -109,6 +121,7 @@ public interface CSS {
 	 * Returns all media queries parsed by the rendering engine.
 	 */
 	@Experimental
+	@Returns("medias")
 	List<CSSMedia> getMediaQueries();
 
 	/**
@@ -130,11 +143,13 @@ public interface CSS {
 	 * Obtain list of rules that became used since last call to this method (or since start of coverage instrumentation)
 	 */
 	@Experimental
+	@Returns("coverage")
 	List<RuleUsage> takeCoverageDelta();
 
 	/**
 	 * The list of rules with an indication of whether these were used
 	 */
 	@Experimental
+	@Returns("ruleUsage")
 	List<RuleUsage> stopRuleUsageTracking();
 }

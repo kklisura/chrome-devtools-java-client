@@ -1,6 +1,7 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.runtime.RemoteObject;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public interface Animation {
 	/**
 	 * Gets the playback rate of the document timeline.
 	 */
+	@Returns("playbackRate")
 	Double getPlaybackRate();
 
 	/**
@@ -30,6 +32,7 @@ public interface Animation {
 	/**
 	 * Returns the current time of the an animation.
 	 */
+	@Returns("currentTime")
 	Double getCurrentTime(String id);
 
 	/**
@@ -55,5 +58,6 @@ public interface Animation {
 	/**
 	 * Gets the remote object of the Animation.
 	 */
+	@Returns("remoteObject")
 	RemoteObject resolveAnimation(String animationId);
 }

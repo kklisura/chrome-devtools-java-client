@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.domdebugger.DOMBreakpointType;
 import com.github.kklisura.cdtp.protocol.types.domdebugger.EventListener;
 import java.util.List;
@@ -57,5 +58,6 @@ public interface DOMDebugger {
 	 * Returns event listeners of the given object.
 	 */
 	@Experimental
+	@Returns("listeners")
 	List<EventListener> getEventListeners(String objectId, @Experimental @Optional Integer depth, @Experimental @Optional Boolean pierce);
 }

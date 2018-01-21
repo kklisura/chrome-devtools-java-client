@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.tracing.RequestMemoryDump;
 import com.github.kklisura.cdtp.protocol.types.tracing.TraceConfig;
 import com.github.kklisura.cdtp.protocol.types.tracing.TransferMode;
@@ -23,6 +24,7 @@ public interface Tracing {
 	/**
 	 * Gets supported tracing categories.
 	 */
+	@Returns("categories")
 	List<String> getCategories();
 
 	/**

@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.dom.BoxModel;
 import com.github.kklisura.cdtp.protocol.types.dom.Node;
 import com.github.kklisura.cdtp.protocol.types.dom.PerformSearch;
@@ -26,17 +27,20 @@ public interface DOM {
 	/**
 	 * Returns the root DOM node (and optionally the subtree) to the caller.
 	 */
+	@Returns("root")
 	Node getDocument(@Experimental @Optional Integer depth, @Experimental @Optional Boolean pierce);
 
 	/**
 	 * Returns the root DOM node (and optionally the subtree) to the caller.
 	 */
+	@Returns("nodes")
 	List<Node> getFlattenedDocument(@Experimental @Optional Integer depth, @Experimental @Optional Boolean pierce);
 
 	/**
 	 * Collects class names for the node with given id and all of it's child nodes.
 	 */
 	@Experimental
+	@Returns("classNames")
 	List<String> collectClassNamesFromSubtree(Integer nodeId);
 
 	/**
@@ -47,16 +51,19 @@ public interface DOM {
 	/**
 	 * Executes <code>querySelector</code> on a given node.
 	 */
+	@Returns("nodeId")
 	Integer querySelector(Integer nodeId, String selector);
 
 	/**
 	 * Executes <code>querySelectorAll</code> on a given node.
 	 */
+	@Returns("nodeIds")
 	List<Integer> querySelectorAll(Integer nodeId, String selector);
 
 	/**
 	 * Sets node name for a node with given id.
 	 */
+	@Returns("nodeId")
 	Integer setNodeName(Integer nodeId, String name);
 
 	/**
@@ -87,6 +94,7 @@ public interface DOM {
 	/**
 	 * Returns node's HTML markup.
 	 */
+	@Returns("outerHTML")
 	String getOuterHTML(@Optional Integer nodeId, @Optional Integer backendNodeId, @Optional String objectId);
 
 	/**
@@ -104,6 +112,7 @@ public interface DOM {
 	 * Returns search results from given <code>fromIndex</code> to given <code>toIndex</code> from the sarch with the given identifier.
 	 */
 	@Experimental
+	@Returns("nodeIds")
 	List<Integer> getSearchResults(String searchId, Integer fromIndex, Integer toIndex);
 
 	/**
@@ -115,6 +124,7 @@ public interface DOM {
 	/**
 	 * Requests that the node is sent to the caller given the JavaScript node object reference. All nodes that form the path from the node to the root are also sent to the client as a series of <code>setChildNodes</code> notifications.
 	 */
+	@Returns("nodeId")
 	Integer requestNode(String objectId);
 
 	/**
@@ -136,12 +146,14 @@ public interface DOM {
 	 * Requests that the node is sent to the caller given its path. // FIXME, use XPath
 	 */
 	@Experimental
+	@Returns("nodeId")
 	Integer pushNodeByPathToFrontend(String path);
 
 	/**
 	 * Requests that a batch of nodes is sent to the caller given their backend node ids.
 	 */
 	@Experimental
+	@Returns("nodeIds")
 	List<Integer> pushNodesByBackendIdsToFrontend(List<Integer> backendNodeIds);
 
 	/**
@@ -153,22 +165,26 @@ public interface DOM {
 	/**
 	 * Resolves the JavaScript node object for a given NodeId or BackendNodeId.
 	 */
+	@Returns("object")
 	RemoteObject resolveNode(@Optional Integer nodeId, @Optional Integer backendNodeId, @Optional String objectGroup);
 
 	/**
 	 * Returns attributes for the specified node.
 	 */
+	@Returns("attributes")
 	List<String> getAttributes(Integer nodeId);
 
 	/**
 	 * Creates a deep copy of the specified node and places it into the target container before the given anchor.
 	 */
 	@Experimental
+	@Returns("nodeId")
 	Integer copyTo(Integer nodeId, Integer targetNodeId, @Optional Integer insertBeforeNodeId);
 
 	/**
 	 * Moves node into the new container, places it before the given anchor.
 	 */
+	@Returns("nodeId")
 	Integer moveTo(Integer nodeId, Integer targetNodeId, @Optional Integer insertBeforeNodeId);
 
 	/**
@@ -205,22 +221,26 @@ public interface DOM {
 	 * Returns boxes for the currently selected nodes.
 	 */
 	@Experimental
+	@Returns("model")
 	BoxModel getBoxModel(@Optional Integer nodeId, @Optional Integer backendNodeId, @Optional String objectId);
 
 	/**
 	 * Returns node id at given location.
 	 */
 	@Experimental
+	@Returns("nodeId")
 	Integer getNodeForLocation(Integer x, Integer y, @Optional Boolean includeUserAgentShadowDOM);
 
 	/**
 	 * Returns the id of the nearest ancestor that is a relayout boundary.
 	 */
 	@Experimental
+	@Returns("nodeId")
 	Integer getRelayoutBoundary(Integer nodeId);
 
 	/**
 	 * Describes node given its id, does not require domain to be enabled. Does not start tracking any objects, can be used for automation.
 	 */
+	@Returns("node")
 	Node describeNode(@Optional Integer nodeId, @Optional Integer backendNodeId, @Optional String objectId, @Experimental @Optional Integer depth, @Experimental @Optional Boolean pierce);
 }

@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.runtime.AwaitPromise;
 import com.github.kklisura.cdtp.protocol.types.runtime.CallArgument;
 import com.github.kklisura.cdtp.protocol.types.runtime.CallFunctionOn;
@@ -81,5 +82,6 @@ public interface Runtime {
 	RunScript runScript(String scriptId, @Optional Integer executionContextId, @Optional String objectGroup, @Optional Boolean silent, @Optional Boolean includeCommandLineAPI, @Optional Boolean returnByValue, @Optional Boolean generatePreview, @Optional Boolean awaitPromise);
 
 	@Experimental
+	@Returns("objects")
 	RemoteObject queryObjects(String prototypeObjectId);
 }

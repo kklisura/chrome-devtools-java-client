@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.network.AuthChallengeResponse;
 import com.github.kklisura.cdtp.protocol.types.network.ConnectionType;
 import com.github.kklisura.cdtp.protocol.types.network.Cookie;
@@ -57,6 +58,7 @@ public interface Network {
 	/**
 	 * Tells whether clearing browser cache is supported.
 	 */
+	@Returns("result")
 	Boolean canClearBrowserCache();
 
 	/**
@@ -67,6 +69,7 @@ public interface Network {
 	/**
 	 * Tells whether clearing browser cookies is supported.
 	 */
+	@Returns("result")
 	Boolean canClearBrowserCookies();
 
 	/**
@@ -78,12 +81,14 @@ public interface Network {
 	 * Returns all browser cookies for the current URL. Depending on the backend support, will return detailed cookie information in the <code>cookies</code> field.
 	 */
 	@Experimental
+	@Returns("cookies")
 	List<Cookie> getCookies(@Optional List<String> urls);
 
 	/**
 	 * Returns all browser cookies. Depending on the backend support, will return detailed cookie information in the <code>cookies</code> field.
 	 */
 	@Experimental
+	@Returns("cookies")
 	List<Cookie> getAllCookies();
 
 	/**
@@ -96,6 +101,7 @@ public interface Network {
 	 * Sets a cookie with the given cookie data; may overwrite equivalent cookies if they exist.
 	 */
 	@Experimental
+	@Returns("success")
 	Boolean setCookie(String name, String value, @Optional String url, @Optional String domain, @Optional String path, @Optional Boolean secure, @Optional Boolean httpOnly, @Optional CookieSameSite sameSite, @Optional Double expires);
 
 	/**
@@ -108,6 +114,7 @@ public interface Network {
 	 * Tells whether emulation of network conditions is supported.
 	 */
 	@Experimental
+	@Returns("result")
 	Boolean canEmulateNetworkConditions();
 
 	/**
@@ -136,6 +143,7 @@ public interface Network {
 	 * Returns the DER-encoded certificate.
 	 */
 	@Experimental
+	@Returns("tableNames")
 	List<String> getCertificate(String origin);
 
 	/**
