@@ -163,21 +163,6 @@ public interface DOM {
 	Integer requestNode(@ParamName("objectId") String objectId);
 
 	/**
-	 * Highlights given rectangle.
-	 */
-	void highlightRect();
-
-	/**
-	 * Highlights DOM node.
-	 */
-	void highlightNode();
-
-	/**
-	 * Hides any highlight.
-	 */
-	void hideHighlight();
-
-	/**
 	 * Requests that the node is sent to the caller given its path. // FIXME, use XPath
 	 */
 	@Experimental

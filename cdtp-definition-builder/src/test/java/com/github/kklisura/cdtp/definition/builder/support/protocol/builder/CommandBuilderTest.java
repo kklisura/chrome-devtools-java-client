@@ -122,7 +122,12 @@ public class CommandBuilderTest extends EasyMockSupport {
 		command2.setName("command2");
 		command2.setDescription("command2 description");
 
-		domain.setCommands(Arrays.asList(command1, command2));
+		final Command command3 = new Command();
+		command3.setName("command3");
+		command3.setDescription("command3 description");
+		command3.setRedirect("Redirect");
+
+		domain.setCommands(Arrays.asList(command1, command2, command3));
 
 		expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
 				.andReturn(interfaceBuilder);

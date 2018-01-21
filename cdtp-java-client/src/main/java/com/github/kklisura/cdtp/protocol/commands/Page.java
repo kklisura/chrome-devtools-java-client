@@ -5,11 +5,8 @@ import com.github.kklisura.cdtp.protocol.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.debugger.SearchMatch;
-import com.github.kklisura.cdtp.protocol.types.emulation.ScreenOrientation;
-import com.github.kklisura.cdtp.protocol.types.network.Cookie;
 import com.github.kklisura.cdtp.protocol.types.page.AppManifest;
 import com.github.kklisura.cdtp.protocol.types.page.Behavior;
-import com.github.kklisura.cdtp.protocol.types.page.Configuration;
 import com.github.kklisura.cdtp.protocol.types.page.Format;
 import com.github.kklisura.cdtp.protocol.types.page.FrameResourceTree;
 import com.github.kklisura.cdtp.protocol.types.page.LayoutMetrics;
@@ -115,19 +112,6 @@ public interface Page {
 	void navigateToHistoryEntry(@ParamName("entryId") Integer entryId);
 
 	/**
-	 * Returns all browser cookies. Depending on the backend support, will return detailed cookie information in the <code>cookies</code> field.
-	 */
-	@Experimental
-	@Returns("cookies")
-	List<Cookie> getCookies();
-
-	/**
-	 * Deletes browser cookie with given name, domain and path.
-	 */
-	@Experimental
-	void deleteCookie(@ParamName("cookieName") String cookieName, @ParamName("url") String url);
-
-	/**
 	 * Returns present frame / resource tree structure.
 	 */
 	@Experimental
@@ -159,63 +143,6 @@ public interface Page {
 	 */
 	@Experimental
 	void setDocumentContent(@ParamName("frameId") String frameId, @ParamName("html") String html);
-
-	/**
-	 * Overrides the values of device screen dimensions (window.screen.width, window.screen.height, window.innerWidth, window.innerHeight, and "device-width"/"device-height"-related CSS media query results).
-	 */
-	@Experimental
-	void setDeviceMetricsOverride(@ParamName("width") Integer width, @ParamName("height") Integer height, @ParamName("deviceScaleFactor") Double deviceScaleFactor, @ParamName("mobile") Boolean mobile);
-
-	/**
-	 * Overrides the values of device screen dimensions (window.screen.width, window.screen.height, window.innerWidth, window.innerHeight, and "device-width"/"device-height"-related CSS media query results).
-	 */
-	@Experimental
-	void setDeviceMetricsOverride(@ParamName("width") Integer width, @ParamName("height") Integer height, @ParamName("deviceScaleFactor") Double deviceScaleFactor, @ParamName("mobile") Boolean mobile, @Optional @ParamName("scale") Double scale, @Optional @ParamName("screenWidth") Integer screenWidth, @Optional @ParamName("screenHeight") Integer screenHeight, @Optional @ParamName("positionX") Integer positionX, @Optional @ParamName("positionY") Integer positionY, @Optional @ParamName("dontSetVisibleSize") Boolean dontSetVisibleSize, @Optional @ParamName("screenOrientation") ScreenOrientation screenOrientation);
-
-	/**
-	 * Clears the overriden device metrics.
-	 */
-	@Experimental
-	void clearDeviceMetricsOverride();
-
-	/**
-	 * Overrides the Geolocation Position or Error. Omitting any of the parameters emulates position unavailable.
-	 */
-	void setGeolocationOverride();
-
-	/**
-	 * Overrides the Geolocation Position or Error. Omitting any of the parameters emulates position unavailable.
-	 */
-	void setGeolocationOverride(@Optional @ParamName("latitude") Double latitude, @Optional @ParamName("longitude") Double longitude, @Optional @ParamName("accuracy") Double accuracy);
-
-	/**
-	 * Clears the overriden Geolocation Position and Error.
-	 */
-	void clearGeolocationOverride();
-
-	/**
-	 * Overrides the Device Orientation.
-	 */
-	@Experimental
-	void setDeviceOrientationOverride(@ParamName("alpha") Double alpha, @ParamName("beta") Double beta, @ParamName("gamma") Double gamma);
-
-	/**
-	 * Clears the overridden Device Orientation.
-	 */
-	@Experimental
-	void clearDeviceOrientationOverride();
-
-	/**
-	 * Toggles mouse event-based touch event emulation.
-	 */
-	@Experimental
-	void setTouchEmulationEnabled(@ParamName("enabled") Boolean enabled);
-
-	/**
-	 * Toggles mouse event-based touch event emulation.
-	 */
-	@Experimental
-	void setTouchEmulationEnabled(@ParamName("enabled") Boolean enabled, @Optional @ParamName("configuration") Configuration configuration);
 
 	/**
 	 * Capture page screenshot.

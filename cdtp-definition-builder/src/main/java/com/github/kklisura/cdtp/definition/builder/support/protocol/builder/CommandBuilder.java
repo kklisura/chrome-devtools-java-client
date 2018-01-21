@@ -79,21 +79,9 @@ public class CommandBuilder {
 		List<Command> commands = domain.getCommands();
 		if (CollectionUtils.isNotEmpty(commands)) {
 			for (Command command : commands) {
-				List<Property> parameters = command.getParameters();
-				if (parameters == null) {
-					parameters = new ArrayList<>();
-				}
-
-				// Generate methods with mandatory params first
-				List<Property> mandatoryParams = filterParameters(parameters, property ->
-						!Boolean.TRUE.equals(property.getOptional()));
-				command.setParameters(mandatoryParams);
-				addCommand(command, domain, interfaceBuilder, domainTypeResolver, builders);
-
-				if (mandatoryParams.size() != parameters.size()) {
-					// Generate methods with rest of the params
-					command.setParameters(parameters);
-					addCommand(command, domain, interfaceBuilder, domainTypeResolver, builders);
+				// Do not generate commands with redirect value. Source https://github.com/ChromeDevTools/debugger-protocol-viewer/issues/26
+				if (StringUtils.isEmpty(command.getRedirect())) {
+					processCommand(command, domain, interfaceBuilder, domainTypeResolver, builders);
 				}
 			}
 		}
@@ -103,6 +91,26 @@ public class CommandBuilder {
 		}
 		builders.add(interfaceBuilder);
 		return new CombinedBuilders(builders);
+	}
+
+	private void processCommand(Command command, Domain domain, JavaInterfaceBuilder interfaceBuilder,
+								DomainTypeResolver domainTypeResolver, List<Builder> builders) {
+		List<Property> parameters = command.getParameters();
+		if (parameters == null) {
+			parameters = new ArrayList<>();
+		}
+
+		// Generate methods with mandatory params first
+		List<Property> mandatoryParams = filterParameters(parameters, property ->
+				!Boolean.TRUE.equals(property.getOptional()));
+		command.setParameters(mandatoryParams);
+		addCommand(command, domain, interfaceBuilder, domainTypeResolver, builders);
+
+		if (mandatoryParams.size() != parameters.size()) {
+			// Generate methods with rest of the params
+			command.setParameters(parameters);
+			addCommand(command, domain, interfaceBuilder, domainTypeResolver, builders);
+		}
 	}
 
 	private void addCommand(Command command, Domain domain, JavaInterfaceBuilder interfaceBuilder,
