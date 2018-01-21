@@ -18,6 +18,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static com.github.kklisura.cdtp.definition.builder.support.protocol.builder.TypesBuilder.*;
 import static com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.*;
@@ -77,7 +79,22 @@ public class CommandBuilder {
 		List<Command> commands = domain.getCommands();
 		if (CollectionUtils.isNotEmpty(commands)) {
 			for (Command command : commands) {
+				List<Property> parameters = command.getParameters();
+				if (parameters == null) {
+					parameters = new ArrayList<>();
+				}
+
+				// Generate methods with mandatory params first
+				List<Property> mandatoryParams = filterParameters(parameters, property ->
+						!Boolean.TRUE.equals(property.getOptional()));
+				command.setParameters(mandatoryParams);
 				addCommand(command, domain, interfaceBuilder, domainTypeResolver, builders);
+
+				if (mandatoryParams.size() != parameters.size()) {
+					// Generate methods with rest of the params
+					command.setParameters(parameters);
+					addCommand(command, domain, interfaceBuilder, domainTypeResolver, builders);
+				}
 			}
 		}
 
@@ -215,5 +232,15 @@ public class CommandBuilder {
 
 			interfaceBuilder.addImport(packageName, name);
 		}
+	}
+
+	private List<Property> filterParameters(List<Property> parameters, Predicate<Property> filterPredicate) {
+		if (CollectionUtils.isNotEmpty(parameters)) {
+			return parameters.stream()
+					.filter(filterPredicate)
+					.collect(Collectors.toList());
+		}
+
+		return parameters;
 	}
 }

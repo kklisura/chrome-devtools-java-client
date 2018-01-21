@@ -37,6 +37,11 @@ public interface IndexedDB {
 	/**
 	 * Requests data from object store or index.
 	 */
+	RequestData requestData(@ParamName("securityOrigin") String securityOrigin, @ParamName("databaseName") String databaseName, @ParamName("objectStoreName") String objectStoreName, @ParamName("indexName") String indexName, @ParamName("skipCount") Integer skipCount, @ParamName("pageSize") Integer pageSize);
+
+	/**
+	 * Requests data from object store or index.
+	 */
 	RequestData requestData(@ParamName("securityOrigin") String securityOrigin, @ParamName("databaseName") String databaseName, @ParamName("objectStoreName") String objectStoreName, @ParamName("indexName") String indexName, @ParamName("skipCount") Integer skipCount, @ParamName("pageSize") Integer pageSize, @Optional @ParamName("keyRange") KeyRange keyRange);
 
 	/**

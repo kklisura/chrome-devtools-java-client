@@ -22,7 +22,17 @@ public interface Runtime {
 	/**
 	 * Evaluates expression on global object.
 	 */
+	Evaluate evaluate(@ParamName("expression") String expression);
+
+	/**
+	 * Evaluates expression on global object.
+	 */
 	Evaluate evaluate(@ParamName("expression") String expression, @Optional @ParamName("objectGroup") String objectGroup, @Optional @ParamName("includeCommandLineAPI") Boolean includeCommandLineAPI, @Optional @ParamName("silent") Boolean silent, @Optional @ParamName("contextId") Integer contextId, @Optional @ParamName("returnByValue") Boolean returnByValue, @Experimental @Optional @ParamName("generatePreview") Boolean generatePreview, @Experimental @Optional @ParamName("userGesture") Boolean userGesture, @Optional @ParamName("awaitPromise") Boolean awaitPromise);
+
+	/**
+	 * Add handler to promise with given promise object id.
+	 */
+	AwaitPromise awaitPromise(@ParamName("promiseObjectId") String promiseObjectId);
 
 	/**
 	 * Add handler to promise with given promise object id.
@@ -32,7 +42,17 @@ public interface Runtime {
 	/**
 	 * Calls function with given declaration on the given object. Object group of the result is inherited from the target object.
 	 */
+	CallFunctionOn callFunctionOn(@ParamName("functionDeclaration") String functionDeclaration);
+
+	/**
+	 * Calls function with given declaration on the given object. Object group of the result is inherited from the target object.
+	 */
 	CallFunctionOn callFunctionOn(@ParamName("functionDeclaration") String functionDeclaration, @Optional @ParamName("objectId") String objectId, @Optional @ParamName("arguments") List<CallArgument> arguments, @Optional @ParamName("silent") Boolean silent, @Optional @ParamName("returnByValue") Boolean returnByValue, @Experimental @Optional @ParamName("generatePreview") Boolean generatePreview, @Experimental @Optional @ParamName("userGesture") Boolean userGesture, @Optional @ParamName("awaitPromise") Boolean awaitPromise, @Optional @ParamName("executionContextId") Integer executionContextId, @Optional @ParamName("objectGroup") String objectGroup);
+
+	/**
+	 * Returns properties of a given object. Object group of the result is inherited from the target object.
+	 */
+	Properties getProperties(@ParamName("objectId") String objectId);
 
 	/**
 	 * Returns properties of a given object. Object group of the result is inherited from the target object.
@@ -75,7 +95,17 @@ public interface Runtime {
 	/**
 	 * Compiles expression.
 	 */
+	CompileScript compileScript(@ParamName("expression") String expression, @ParamName("sourceURL") String sourceURL, @ParamName("persistScript") Boolean persistScript);
+
+	/**
+	 * Compiles expression.
+	 */
 	CompileScript compileScript(@ParamName("expression") String expression, @ParamName("sourceURL") String sourceURL, @ParamName("persistScript") Boolean persistScript, @Optional @ParamName("executionContextId") Integer executionContextId);
+
+	/**
+	 * Runs script with given id in a given context.
+	 */
+	RunScript runScript(@ParamName("scriptId") String scriptId);
 
 	/**
 	 * Runs script with given id in a given context.

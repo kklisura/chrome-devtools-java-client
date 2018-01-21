@@ -71,6 +71,11 @@ public interface Page {
 	/**
 	 * Reloads given page optionally ignoring the cache.
 	 */
+	void reload();
+
+	/**
+	 * Reloads given page optionally ignoring the cache.
+	 */
 	void reload(@Optional @ParamName("ignoreCache") Boolean ignoreCache, @Optional @ParamName("scriptToEvaluateOnLoad") String scriptToEvaluateOnLoad);
 
 	/**
@@ -78,6 +83,12 @@ public interface Page {
 	 */
 	@Experimental
 	void setAdBlockingEnabled(@ParamName("enabled") Boolean enabled);
+
+	/**
+	 * Navigates current page to the given URL.
+	 */
+	@Returns("frameId")
+	String navigate(@ParamName("url") String url);
 
 	/**
 	 * Navigates current page to the given URL.
@@ -134,6 +145,13 @@ public interface Page {
 	 */
 	@Experimental
 	@Returns("result")
+	List<SearchMatch> searchInResource(@ParamName("frameId") String frameId, @ParamName("url") String url, @ParamName("query") String query);
+
+	/**
+	 * Searches for given string in resource content.
+	 */
+	@Experimental
+	@Returns("result")
 	List<SearchMatch> searchInResource(@ParamName("frameId") String frameId, @ParamName("url") String url, @ParamName("query") String query, @Optional @ParamName("caseSensitive") Boolean caseSensitive, @Optional @ParamName("isRegex") Boolean isRegex);
 
 	/**
@@ -146,6 +164,12 @@ public interface Page {
 	 * Overrides the values of device screen dimensions (window.screen.width, window.screen.height, window.innerWidth, window.innerHeight, and "device-width"/"device-height"-related CSS media query results).
 	 */
 	@Experimental
+	void setDeviceMetricsOverride(@ParamName("width") Integer width, @ParamName("height") Integer height, @ParamName("deviceScaleFactor") Double deviceScaleFactor, @ParamName("mobile") Boolean mobile);
+
+	/**
+	 * Overrides the values of device screen dimensions (window.screen.width, window.screen.height, window.innerWidth, window.innerHeight, and "device-width"/"device-height"-related CSS media query results).
+	 */
+	@Experimental
 	void setDeviceMetricsOverride(@ParamName("width") Integer width, @ParamName("height") Integer height, @ParamName("deviceScaleFactor") Double deviceScaleFactor, @ParamName("mobile") Boolean mobile, @Optional @ParamName("scale") Double scale, @Optional @ParamName("screenWidth") Integer screenWidth, @Optional @ParamName("screenHeight") Integer screenHeight, @Optional @ParamName("positionX") Integer positionX, @Optional @ParamName("positionY") Integer positionY, @Optional @ParamName("dontSetVisibleSize") Boolean dontSetVisibleSize, @Optional @ParamName("screenOrientation") ScreenOrientation screenOrientation);
 
 	/**
@@ -153,6 +177,11 @@ public interface Page {
 	 */
 	@Experimental
 	void clearDeviceMetricsOverride();
+
+	/**
+	 * Overrides the Geolocation Position or Error. Omitting any of the parameters emulates position unavailable.
+	 */
+	void setGeolocationOverride();
 
 	/**
 	 * Overrides the Geolocation Position or Error. Omitting any of the parameters emulates position unavailable.
@@ -180,7 +209,20 @@ public interface Page {
 	 * Toggles mouse event-based touch event emulation.
 	 */
 	@Experimental
+	void setTouchEmulationEnabled(@ParamName("enabled") Boolean enabled);
+
+	/**
+	 * Toggles mouse event-based touch event emulation.
+	 */
+	@Experimental
 	void setTouchEmulationEnabled(@ParamName("enabled") Boolean enabled, @Optional @ParamName("configuration") Configuration configuration);
+
+	/**
+	 * Capture page screenshot.
+	 */
+	@Experimental
+	@Returns("data")
+	String captureScreenshot();
 
 	/**
 	 * Capture page screenshot.
@@ -194,7 +236,20 @@ public interface Page {
 	 */
 	@Experimental
 	@Returns("data")
+	String printToPDF();
+
+	/**
+	 * Print page as PDF.
+	 */
+	@Experimental
+	@Returns("data")
 	String printToPDF(@Optional @ParamName("landscape") Boolean landscape, @Optional @ParamName("displayHeaderFooter") Boolean displayHeaderFooter, @Optional @ParamName("printBackground") Boolean printBackground, @Optional @ParamName("scale") Double scale, @Optional @ParamName("paperWidth") Double paperWidth, @Optional @ParamName("paperHeight") Double paperHeight, @Optional @ParamName("marginTop") Double marginTop, @Optional @ParamName("marginBottom") Double marginBottom, @Optional @ParamName("marginLeft") Double marginLeft, @Optional @ParamName("marginRight") Double marginRight, @Optional @ParamName("pageRanges") String pageRanges, @Optional @ParamName("ignoreInvalidPageRanges") Boolean ignoreInvalidPageRanges);
+
+	/**
+	 * Starts sending each frame using the <code>screencastFrame</code> event.
+	 */
+	@Experimental
+	void startScreencast();
 
 	/**
 	 * Starts sending each frame using the <code>screencastFrame</code> event.
@@ -213,6 +268,11 @@ public interface Page {
 	 */
 	@Experimental
 	void screencastFrameAck(@ParamName("sessionId") Integer sessionId);
+
+	/**
+	 * Accepts or dismisses a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload).
+	 */
+	void handleJavaScriptDialog(@ParamName("accept") Boolean accept);
 
 	/**
 	 * Accepts or dismisses a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload).
@@ -236,12 +296,25 @@ public interface Page {
 	 */
 	@Experimental
 	@Returns("executionContextId")
+	Integer createIsolatedWorld(@ParamName("frameId") String frameId);
+
+	/**
+	 * Creates an isolated world for the given frame.
+	 */
+	@Experimental
+	@Returns("executionContextId")
 	Integer createIsolatedWorld(@ParamName("frameId") String frameId, @Optional @ParamName("worldName") String worldName, @Optional @ParamName("grantUniveralAccess") Boolean grantUniveralAccess);
 
 	/**
 	 * Brings page to front (activates tab).
 	 */
 	void bringToFront();
+
+	/**
+	 * Set the behavior when downloading a file.
+	 */
+	@Experimental
+	void setDownloadBehavior(@ParamName("behavior") Behavior behavior);
 
 	/**
 	 * Set the behavior when downloading a file.

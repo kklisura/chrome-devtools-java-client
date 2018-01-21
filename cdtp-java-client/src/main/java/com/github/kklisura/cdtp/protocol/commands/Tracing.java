@@ -15,6 +15,11 @@ public interface Tracing {
 	/**
 	 * Start trace events collection.
 	 */
+	void start();
+
+	/**
+	 * Start trace events collection.
+	 */
 	void start(@Deprecated @Optional @ParamName("categories") String categories, @Deprecated @Optional @ParamName("options") String options, @Optional @ParamName("bufferUsageReportingInterval") Double bufferUsageReportingInterval, @Optional @ParamName("transferMode") TransferMode transferMode, @Optional @ParamName("traceConfig") TraceConfig traceConfig);
 
 	/**

@@ -15,5 +15,10 @@ public interface Audits {
 	/**
 	 * Returns the response body and size if it were re-encoded with the specified settings. Only applies to images.
 	 */
+	EncodedResponse getEncodedResponse(@ParamName("requestId") String requestId, @ParamName("encoding") Encoding encoding);
+
+	/**
+	 * Returns the response body and size if it were re-encoded with the specified settings. Only applies to images.
+	 */
 	EncodedResponse getEncodedResponse(@ParamName("requestId") String requestId, @ParamName("encoding") Encoding encoding, @Optional @ParamName("quality") Double quality, @Optional @ParamName("sizeOnly") Boolean sizeOnly);
 }

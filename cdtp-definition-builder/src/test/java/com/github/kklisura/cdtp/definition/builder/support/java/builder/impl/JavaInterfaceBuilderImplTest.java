@@ -79,6 +79,8 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
 				.andReturn(sourceRoot);
 
 		interfaceBuilder.addAnnotation("Annotation");
+		interfaceBuilder.addAnnotation("Annotation");
+		interfaceBuilder.addAnnotation("Deprecated");
 		interfaceBuilder.addAnnotation("Deprecated");
 
 		replayAll();
@@ -199,10 +201,12 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
 		param2.setType("String");
 		param2.setName("param2");
 		param2.setAnnotations(Arrays.asList(createAnnotation("Annotation"), createAnnotation("Annotation1"),
-				createAnnotation("Deprecated"), createAnnotation("ParamValue", "paramValueName")));
+				createAnnotation("Annotation1"), createAnnotation("Deprecated"), createAnnotation("ParamValue", "paramValueName")));
 
 		interfaceBuilder.addMethod("someMethod1", "", Arrays.asList(param1, param2), "String");
 		interfaceBuilder.addMethodAnnotation("someMethod1", "Annotation");
+		interfaceBuilder.addMethodAnnotation("someMethod1", "Annotation");
+		interfaceBuilder.addParametrizedMethodAnnotation("someMethod1", "Annotation2", "param");
 		interfaceBuilder.addParametrizedMethodAnnotation("someMethod1", "Annotation2", "param");
 
 		replayAll();

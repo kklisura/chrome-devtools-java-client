@@ -246,19 +246,25 @@ public class CommandBuilderTest extends EasyMockSupport {
 				.andReturn(interfaceBuilder);
 		interfaceBuilder.setJavaDoc("Description");
 
-		Capture<List<MethodParam>> methodParamCapture = Capture.newInstance();
-		interfaceBuilder.addMethod(eq("command"), eq("command description"), capture(methodParamCapture), eq("Boolean"));
+		Capture<List<MethodParam>> mandatoryMethodParamCapture = Capture.newInstance();
+		interfaceBuilder.addMethod(eq("command"), eq("command description"), capture(mandatoryMethodParamCapture), eq("Boolean"));
+
+		Capture<List<MethodParam>> allMethodParamCapture = Capture.newInstance();
+		interfaceBuilder.addMethod(eq("command"), eq("command description"), capture(allMethodParamCapture), eq("Boolean"));
 
 		final ObjectType resolvedRefType = new ObjectType();
 		resolvedRefType.setId("TestRef");
 
 		expect(resolver.resolve("domainName", "TestRef"))
-				.andReturn(resolvedRefType);
+				.andReturn(resolvedRefType)
+				.times(2);
 
 		interfaceBuilder.addImport("com.github.kklisura.types.domainname", "TestRef");
+		expectLastCall().times(2);
 		interfaceBuilder.addImport("java.util", "List");
 		interfaceBuilder.addImport("com.github.kklisura.types.domainname", "EnumParam1");
 
+		interfaceBuilder.addParametrizedMethodAnnotation("command", "Returns", "booleanReturnValue");
 		interfaceBuilder.addParametrizedMethodAnnotation("command", "Returns", "booleanReturnValue");
 
 		replayAll();
@@ -275,20 +281,28 @@ public class CommandBuilderTest extends EasyMockSupport {
 		assertEquals(javaEnumBuilder, builderList.get(0));
 		assertEquals(interfaceBuilder, builderList.get(1));
 
-		List<MethodParam> params = methodParamCapture.getValue();
-		assertEquals(2, params.size());
-		assertEquals(refParam.getName(), params.get(0).getName());
-		assertEquals("TestRef", params.get(0).getType());
-		assertEquals("Deprecated", params.get(0).getAnnotations().get(0).getName());
-		assertEquals("ParamName", params.get(0).getAnnotations().get(1).getName());
-		assertEquals(refParam.getName(), params.get(0).getAnnotations().get(1).getValue());
+		List<MethodParam> mandatoryParams = mandatoryMethodParamCapture.getValue();
+		assertEquals(1, mandatoryParams.size());
+		assertEquals(refParam.getName(), mandatoryParams.get(0).getName());
+		assertEquals("TestRef", mandatoryParams.get(0).getType());
+		assertEquals("Deprecated", mandatoryParams.get(0).getAnnotations().get(0).getName());
+		assertEquals("ParamName", mandatoryParams.get(0).getAnnotations().get(1).getName());
+		assertEquals(refParam.getName(), mandatoryParams.get(0).getAnnotations().get(1).getValue());
 
-		Assert.assertEquals(arrayProperty.getName(), params.get(1).getName());
-		assertEquals("List<EnumParam1>", params.get(1).getType());
-		assertEquals("Experimental", params.get(1).getAnnotations().get(0).getName());
-		assertEquals("Optional", params.get(1).getAnnotations().get(1).getName());
-		assertEquals("ParamName", params.get(1).getAnnotations().get(2).getName());
-		assertEquals(arrayProperty.getName(), params.get(1).getAnnotations().get(2).getValue());
+		List<MethodParam> allParams = allMethodParamCapture.getValue();
+		assertEquals(2, allParams.size());
+		assertEquals(refParam.getName(), allParams.get(0).getName());
+		assertEquals("TestRef", allParams.get(0).getType());
+		assertEquals("Deprecated", allParams.get(0).getAnnotations().get(0).getName());
+		assertEquals("ParamName", allParams.get(0).getAnnotations().get(1).getName());
+		assertEquals(refParam.getName(), allParams.get(0).getAnnotations().get(1).getValue());
+
+		Assert.assertEquals(arrayProperty.getName(), allParams.get(1).getName());
+		assertEquals("List<EnumParam1>", allParams.get(1).getType());
+		assertEquals("Experimental", allParams.get(1).getAnnotations().get(0).getName());
+		assertEquals("Optional", allParams.get(1).getAnnotations().get(1).getName());
+		assertEquals("ParamName", allParams.get(1).getAnnotations().get(2).getName());
+		assertEquals(arrayProperty.getName(), allParams.get(1).getAnnotations().get(2).getValue());
 	}
 
 	@Test

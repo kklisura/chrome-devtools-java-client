@@ -46,7 +46,17 @@ public interface Debugger {
 	/**
 	 * Sets JavaScript breakpoint at given location specified either by URL or URL regex. Once this command is issued, all existing parsed scripts will have breakpoints resolved and returned in <code>locations</code> property. Further matching script parsing will result in subsequent <code>breakpointResolved</code> events issued. This logical breakpoint will survive page reloads.
 	 */
+	SetBreakpointByUrl setBreakpointByUrl(@ParamName("lineNumber") Integer lineNumber);
+
+	/**
+	 * Sets JavaScript breakpoint at given location specified either by URL or URL regex. Once this command is issued, all existing parsed scripts will have breakpoints resolved and returned in <code>locations</code> property. Further matching script parsing will result in subsequent <code>breakpointResolved</code> events issued. This logical breakpoint will survive page reloads.
+	 */
 	SetBreakpointByUrl setBreakpointByUrl(@ParamName("lineNumber") Integer lineNumber, @Optional @ParamName("url") String url, @Optional @ParamName("urlRegex") String urlRegex, @Optional @ParamName("columnNumber") Integer columnNumber, @Optional @ParamName("condition") String condition);
+
+	/**
+	 * Sets JavaScript breakpoint at a given location.
+	 */
+	SetBreakpoint setBreakpoint(@ParamName("location") Location location);
 
 	/**
 	 * Sets JavaScript breakpoint at a given location.
@@ -63,7 +73,19 @@ public interface Debugger {
 	 */
 	@Experimental
 	@Returns("locations")
+	List<BreakLocation> getPossibleBreakpoints(@ParamName("start") Location start);
+
+	/**
+	 * Returns possible locations for breakpoint. scriptId in start and end range locations should be the same.
+	 */
+	@Experimental
+	@Returns("locations")
 	List<BreakLocation> getPossibleBreakpoints(@ParamName("start") Location start, @Optional @ParamName("end") Location end, @Optional @ParamName("restrictToFunction") Boolean restrictToFunction);
+
+	/**
+	 * Continues execution until specific location is reached.
+	 */
+	void continueToLocation(@ParamName("location") Location location);
 
 	/**
 	 * Continues execution until specific location is reached.
@@ -106,7 +128,19 @@ public interface Debugger {
 	 */
 	@Experimental
 	@Returns("result")
+	List<SearchMatch> searchInContent(@ParamName("scriptId") String scriptId, @ParamName("query") String query);
+
+	/**
+	 * Searches for given string in script content.
+	 */
+	@Experimental
+	@Returns("result")
 	List<SearchMatch> searchInContent(@ParamName("scriptId") String scriptId, @ParamName("query") String query, @Optional @ParamName("caseSensitive") Boolean caseSensitive, @Optional @ParamName("isRegex") Boolean isRegex);
+
+	/**
+	 * Edits JavaScript source live.
+	 */
+	SetScriptSource setScriptSource(@ParamName("scriptId") String scriptId, @ParamName("scriptSource") String scriptSource);
 
 	/**
 	 * Edits JavaScript source live.
@@ -128,6 +162,11 @@ public interface Debugger {
 	 * Defines pause on exceptions state. Can be set to stop on all exceptions, uncaught exceptions or no exceptions. Initial pause on exceptions state is <code>none</code>.
 	 */
 	void setPauseOnExceptions(@ParamName("state") State state);
+
+	/**
+	 * Evaluates expression on a given call frame.
+	 */
+	EvaluateOnCallFrame evaluateOnCallFrame(@ParamName("callFrameId") String callFrameId, @ParamName("expression") String expression);
 
 	/**
 	 * Evaluates expression on a given call frame.

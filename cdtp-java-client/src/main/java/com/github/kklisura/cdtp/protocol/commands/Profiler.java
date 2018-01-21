@@ -29,6 +29,12 @@ public interface Profiler {
 	 * Enable precise code coverage. Coverage data for JavaScript executed before enabling precise code coverage may be incomplete. Enabling prevents running optimized code and resets execution counters.
 	 */
 	@Experimental
+	void startPreciseCoverage();
+
+	/**
+	 * Enable precise code coverage. Coverage data for JavaScript executed before enabling precise code coverage may be incomplete. Enabling prevents running optimized code and resets execution counters.
+	 */
+	@Experimental
 	void startPreciseCoverage(@Optional @ParamName("callCount") Boolean callCount, @Optional @ParamName("detailed") Boolean detailed);
 
 	/**

@@ -17,6 +17,11 @@ public interface Emulation {
 	/**
 	 * Overrides the values of device screen dimensions (window.screen.width, window.screen.height, window.innerWidth, window.innerHeight, and "device-width"/"device-height"-related CSS media query results).
 	 */
+	void setDeviceMetricsOverride(@ParamName("width") Integer width, @ParamName("height") Integer height, @ParamName("deviceScaleFactor") Double deviceScaleFactor, @ParamName("mobile") Boolean mobile);
+
+	/**
+	 * Overrides the values of device screen dimensions (window.screen.width, window.screen.height, window.innerWidth, window.innerHeight, and "device-width"/"device-height"-related CSS media query results).
+	 */
 	void setDeviceMetricsOverride(@ParamName("width") Integer width, @ParamName("height") Integer height, @ParamName("deviceScaleFactor") Double deviceScaleFactor, @ParamName("mobile") Boolean mobile, @Optional @ParamName("scale") Double scale, @Experimental @Optional @ParamName("screenWidth") Integer screenWidth, @Experimental @Optional @ParamName("screenHeight") Integer screenHeight, @Experimental @Optional @ParamName("positionX") Integer positionX, @Experimental @Optional @ParamName("positionY") Integer positionY, @Experimental @Optional @ParamName("dontSetVisibleSize") Boolean dontSetVisibleSize, @Optional @ParamName("screenOrientation") ScreenOrientation screenOrientation);
 
 	/**
@@ -53,6 +58,12 @@ public interface Emulation {
 	 * Overrides the Geolocation Position or Error. Omitting any of the parameters emulates position unavailable.
 	 */
 	@Experimental
+	void setGeolocationOverride();
+
+	/**
+	 * Overrides the Geolocation Position or Error. Omitting any of the parameters emulates position unavailable.
+	 */
+	@Experimental
 	void setGeolocationOverride(@Optional @ParamName("latitude") Double latitude, @Optional @ParamName("longitude") Double longitude, @Optional @ParamName("accuracy") Double accuracy);
 
 	/**
@@ -64,7 +75,15 @@ public interface Emulation {
 	/**
 	 * Enables touch on platforms which do not support them.
 	 */
+	void setTouchEmulationEnabled(@ParamName("enabled") Boolean enabled);
+
+	/**
+	 * Enables touch on platforms which do not support them.
+	 */
 	void setTouchEmulationEnabled(@ParamName("enabled") Boolean enabled, @Optional @ParamName("maxTouchPoints") Integer maxTouchPoints);
+
+	@Experimental
+	void setEmitTouchEventsForMouse(@ParamName("enabled") Boolean enabled);
 
 	@Experimental
 	void setEmitTouchEventsForMouse(@ParamName("enabled") Boolean enabled, @Optional @ParamName("configuration") Configuration configuration);
@@ -91,6 +110,12 @@ public interface Emulation {
 	 * Turns on virtual time for all frames (replacing real-time with a synthetic time source) and sets the current virtual time policy.  Note this supersedes any previous time budget.
 	 */
 	@Experimental
+	void setVirtualTimePolicy(@ParamName("policy") VirtualTimePolicy policy);
+
+	/**
+	 * Turns on virtual time for all frames (replacing real-time with a synthetic time source) and sets the current virtual time policy.  Note this supersedes any previous time budget.
+	 */
+	@Experimental
 	void setVirtualTimePolicy(@ParamName("policy") VirtualTimePolicy policy, @Optional @ParamName("budget") Integer budget);
 
 	/**
@@ -98,6 +123,12 @@ public interface Emulation {
 	 */
 	@Experimental
 	void setNavigatorOverrides(@ParamName("platform") String platform);
+
+	/**
+	 * Sets or clears an override of the default background color of the frame. This override is used if the content does not specify one.
+	 */
+	@Experimental
+	void setDefaultBackgroundColorOverride();
 
 	/**
 	 * Sets or clears an override of the default background color of the frame. This override is used if the content does not specify one.

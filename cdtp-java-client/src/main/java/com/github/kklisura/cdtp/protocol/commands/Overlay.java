@@ -50,9 +50,16 @@ public interface Overlay {
 	 */
 	void setShowViewportSizeOnResize(@ParamName("show") Boolean show);
 
+	void setPausedInDebuggerMessage();
+
 	void setPausedInDebuggerMessage(@Optional @ParamName("message") String message);
 
 	void setSuspended(@ParamName("suspended") Boolean suspended);
+
+	/**
+	 * Enters the 'inspect' mode. In this mode, elements that user is hovering over are highlighted. Backend then generates 'inspectNodeRequested' event upon element selection.
+	 */
+	void setInspectMode(@ParamName("mode") InspectMode mode);
 
 	/**
 	 * Enters the 'inspect' mode. In this mode, elements that user is hovering over are highlighted. Backend then generates 'inspectNodeRequested' event upon element selection.
@@ -62,7 +69,17 @@ public interface Overlay {
 	/**
 	 * Highlights given rectangle. Coordinates are absolute with respect to the main frame viewport.
 	 */
+	void highlightRect(@ParamName("x") Integer x, @ParamName("y") Integer y, @ParamName("width") Integer width, @ParamName("height") Integer height);
+
+	/**
+	 * Highlights given rectangle. Coordinates are absolute with respect to the main frame viewport.
+	 */
 	void highlightRect(@ParamName("x") Integer x, @ParamName("y") Integer y, @ParamName("width") Integer width, @ParamName("height") Integer height, @Optional @ParamName("color") RGBA color, @Optional @ParamName("outlineColor") RGBA outlineColor);
+
+	/**
+	 * Highlights given quad. Coordinates are absolute with respect to the main frame viewport.
+	 */
+	void highlightQuad(@ParamName("quad") List<Double> quad);
 
 	/**
 	 * Highlights given quad. Coordinates are absolute with respect to the main frame viewport.
@@ -72,7 +89,17 @@ public interface Overlay {
 	/**
 	 * Highlights DOM node with given id or with the given JavaScript object wrapper. Either nodeId or objectId must be specified.
 	 */
+	void highlightNode(@ParamName("highlightConfig") HighlightConfig highlightConfig);
+
+	/**
+	 * Highlights DOM node with given id or with the given JavaScript object wrapper. Either nodeId or objectId must be specified.
+	 */
 	void highlightNode(@ParamName("highlightConfig") HighlightConfig highlightConfig, @Optional @ParamName("nodeId") Integer nodeId, @Optional @ParamName("backendNodeId") Integer backendNodeId, @Optional @ParamName("objectId") String objectId);
+
+	/**
+	 * Highlights owner element of the frame with given id.
+	 */
+	void highlightFrame(@ParamName("frameId") String frameId);
 
 	/**
 	 * Highlights owner element of the frame with given id.

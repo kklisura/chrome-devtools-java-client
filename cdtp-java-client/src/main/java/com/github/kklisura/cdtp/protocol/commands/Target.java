@@ -34,6 +34,11 @@ public interface Target {
 	/**
 	 * Sends protocol message over session with given id.
 	 */
+	void sendMessageToTarget(@ParamName("message") String message);
+
+	/**
+	 * Sends protocol message over session with given id.
+	 */
 	void sendMessageToTarget(@ParamName("message") String message, @Optional @ParamName("sessionId") String sessionId, @Deprecated @Optional @ParamName("targetId") String targetId);
 
 	/**
@@ -62,6 +67,11 @@ public interface Target {
 	/**
 	 * Detaches session with given id.
 	 */
+	void detachFromTarget();
+
+	/**
+	 * Detaches session with given id.
+	 */
 	void detachFromTarget(@Optional @ParamName("sessionId") String sessionId, @Deprecated @Optional @ParamName("targetId") String targetId);
 
 	/**
@@ -75,6 +85,12 @@ public interface Target {
 	 */
 	@Returns("success")
 	Boolean disposeBrowserContext(@ParamName("browserContextId") String browserContextId);
+
+	/**
+	 * Creates a new page.
+	 */
+	@Returns("targetId")
+	String createTarget(@ParamName("url") String url);
 
 	/**
 	 * Creates a new page.

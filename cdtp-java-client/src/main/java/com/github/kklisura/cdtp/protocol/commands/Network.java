@@ -22,6 +22,11 @@ public interface Network {
 	/**
 	 * Enables network tracking, network events will now be delivered to the client.
 	 */
+	void enable();
+
+	/**
+	 * Enables network tracking, network events will now be delivered to the client.
+	 */
 	void enable(@Experimental @Optional @ParamName("maxTotalBufferSize") Integer maxTotalBufferSize, @Experimental @Optional @ParamName("maxResourceBufferSize") Integer maxResourceBufferSize);
 
 	/**
@@ -83,6 +88,13 @@ public interface Network {
 	 */
 	@Experimental
 	@Returns("cookies")
+	List<Cookie> getCookies();
+
+	/**
+	 * Returns all browser cookies for the current URL. Depending on the backend support, will return detailed cookie information in the <code>cookies</code> field.
+	 */
+	@Experimental
+	@Returns("cookies")
 	List<Cookie> getCookies(@Optional @ParamName("urls") List<String> urls);
 
 	/**
@@ -96,7 +108,20 @@ public interface Network {
 	 * Deletes browser cookies with matching name and url or domain/path pair.
 	 */
 	@Experimental
+	void deleteCookies(@ParamName("name") String name);
+
+	/**
+	 * Deletes browser cookies with matching name and url or domain/path pair.
+	 */
+	@Experimental
 	void deleteCookies(@ParamName("name") String name, @Optional @ParamName("url") String url, @Optional @ParamName("domain") String domain, @Optional @ParamName("path") String path);
+
+	/**
+	 * Sets a cookie with the given cookie data; may overwrite equivalent cookies if they exist.
+	 */
+	@Experimental
+	@Returns("success")
+	Boolean setCookie(@ParamName("name") String name, @ParamName("value") String value);
 
 	/**
 	 * Sets a cookie with the given cookie data; may overwrite equivalent cookies if they exist.
@@ -117,6 +142,11 @@ public interface Network {
 	@Experimental
 	@Returns("result")
 	Boolean canEmulateNetworkConditions();
+
+	/**
+	 * Activates emulation of network conditions.
+	 */
+	void emulateNetworkConditions(@ParamName("offline") Boolean offline, @ParamName("latency") Double latency, @ParamName("downloadThroughput") Double downloadThroughput, @ParamName("uploadThroughput") Double uploadThroughput);
 
 	/**
 	 * Activates emulation of network conditions.
@@ -151,7 +181,19 @@ public interface Network {
 	 * Sets the requests to intercept that match a the provided patterns.
 	 */
 	@Experimental
+	void setRequestInterceptionEnabled(@ParamName("enabled") Boolean enabled);
+
+	/**
+	 * Sets the requests to intercept that match a the provided patterns.
+	 */
+	@Experimental
 	void setRequestInterceptionEnabled(@ParamName("enabled") Boolean enabled, @Optional @ParamName("patterns") List<String> patterns);
+
+	/**
+	 * Response to Network.requestIntercepted which either modifies the request to continue with any modifications, or blocks it, or completes it with the provided response bytes. If a network fetch occurs as a result which encounters a redirect an additional Network.requestIntercepted event will be sent with the same InterceptionId.
+	 */
+	@Experimental
+	void continueInterceptedRequest(@ParamName("interceptionId") String interceptionId);
 
 	/**
 	 * Response to Network.requestIntercepted which either modifies the request to continue with any modifications, or blocks it, or completes it with the provided response bytes. If a network fetch occurs as a result which encounters a redirect an additional Network.requestIntercepted event will be sent with the same InterceptionId.

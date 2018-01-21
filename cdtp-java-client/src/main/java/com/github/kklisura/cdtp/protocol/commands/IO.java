@@ -15,6 +15,11 @@ public interface IO {
 	/**
 	 * Read a chunk of the stream
 	 */
+	Read read(@ParamName("handle") String handle);
+
+	/**
+	 * Read a chunk of the stream
+	 */
 	Read read(@ParamName("handle") String handle, @Optional @ParamName("offset") Integer offset, @Optional @ParamName("size") Integer size);
 
 	/**

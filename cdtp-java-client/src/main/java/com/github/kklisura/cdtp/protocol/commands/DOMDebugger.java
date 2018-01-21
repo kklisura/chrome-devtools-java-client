@@ -26,7 +26,17 @@ public interface DOMDebugger {
 	/**
 	 * Sets breakpoint on particular DOM event.
 	 */
+	void setEventListenerBreakpoint(@ParamName("eventName") String eventName);
+
+	/**
+	 * Sets breakpoint on particular DOM event.
+	 */
 	void setEventListenerBreakpoint(@ParamName("eventName") String eventName, @Experimental @Optional @ParamName("targetName") String targetName);
+
+	/**
+	 * Removes breakpoint on particular DOM event.
+	 */
+	void removeEventListenerBreakpoint(@ParamName("eventName") String eventName);
 
 	/**
 	 * Removes breakpoint on particular DOM event.
@@ -54,6 +64,13 @@ public interface DOMDebugger {
 	 * Removes breakpoint from XMLHttpRequest.
 	 */
 	void removeXHRBreakpoint(@ParamName("url") String url);
+
+	/**
+	 * Returns event listeners of the given object.
+	 */
+	@Experimental
+	@Returns("listeners")
+	List<EventListener> getEventListeners(@ParamName("objectId") String objectId);
 
 	/**
 	 * Returns event listeners of the given object.

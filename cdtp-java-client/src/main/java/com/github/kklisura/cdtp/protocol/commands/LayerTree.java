@@ -45,7 +45,16 @@ public interface LayerTree {
 	void releaseSnapshot(@ParamName("snapshotId") String snapshotId);
 
 	@Returns("timings")
+	List<List<Double>> profileSnapshot(@ParamName("snapshotId") String snapshotId);
+
+	@Returns("timings")
 	List<List<Double>> profileSnapshot(@ParamName("snapshotId") String snapshotId, @Optional @ParamName("minRepeatCount") Integer minRepeatCount, @Optional @ParamName("minDuration") Double minDuration, @Optional @ParamName("clipRect") Rect clipRect);
+
+	/**
+	 * Replays the layer snapshot and returns the resulting bitmap.
+	 */
+	@Returns("dataURL")
+	String replaySnapshot(@ParamName("snapshotId") String snapshotId);
 
 	/**
 	 * Replays the layer snapshot and returns the resulting bitmap.

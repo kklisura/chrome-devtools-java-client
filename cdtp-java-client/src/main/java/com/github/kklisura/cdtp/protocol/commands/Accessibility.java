@@ -15,5 +15,12 @@ public interface Accessibility {
 	 */
 	@Experimental
 	@Returns("nodes")
+	List<AXNode> getPartialAXTree(@ParamName("nodeId") Integer nodeId);
+
+	/**
+	 * Fetches the accessibility node and partial accessibility tree for this DOM node, if it exists.
+	 */
+	@Experimental
+	@Returns("nodes")
 	List<AXNode> getPartialAXTree(@ParamName("nodeId") Integer nodeId, @Optional @ParamName("fetchRelatives") Boolean fetchRelatives);
 }

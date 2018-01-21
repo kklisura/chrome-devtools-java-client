@@ -14,13 +14,22 @@ public interface HeapProfiler {
 
 	void disable();
 
+	void startTrackingHeapObjects();
+
 	void startTrackingHeapObjects(@Optional @ParamName("trackAllocations") Boolean trackAllocations);
 
+	void stopTrackingHeapObjects();
+
 	void stopTrackingHeapObjects(@Optional @ParamName("reportProgress") Boolean reportProgress);
+
+	void takeHeapSnapshot();
 
 	void takeHeapSnapshot(@Optional @ParamName("reportProgress") Boolean reportProgress);
 
 	void collectGarbage();
+
+	@Returns("result")
+	RemoteObject getObjectByHeapObjectId(@ParamName("objectId") String objectId);
 
 	@Returns("result")
 	RemoteObject getObjectByHeapObjectId(@ParamName("objectId") String objectId, @Optional @ParamName("objectGroup") String objectGroup);
@@ -32,6 +41,8 @@ public interface HeapProfiler {
 
 	@Returns("heapSnapshotObjectId")
 	String getHeapObjectId(@ParamName("objectId") String objectId);
+
+	void startSampling();
 
 	void startSampling(@Optional @ParamName("samplingInterval") Double samplingInterval);
 

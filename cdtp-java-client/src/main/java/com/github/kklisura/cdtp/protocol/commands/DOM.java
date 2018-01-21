@@ -29,7 +29,19 @@ public interface DOM {
 	 * Returns the root DOM node (and optionally the subtree) to the caller.
 	 */
 	@Returns("root")
+	Node getDocument();
+
+	/**
+	 * Returns the root DOM node (and optionally the subtree) to the caller.
+	 */
+	@Returns("root")
 	Node getDocument(@Experimental @Optional @ParamName("depth") Integer depth, @Experimental @Optional @ParamName("pierce") Boolean pierce);
+
+	/**
+	 * Returns the root DOM node (and optionally the subtree) to the caller.
+	 */
+	@Returns("nodes")
+	List<Node> getFlattenedDocument();
 
 	/**
 	 * Returns the root DOM node (and optionally the subtree) to the caller.
@@ -43,6 +55,11 @@ public interface DOM {
 	@Experimental
 	@Returns("classNames")
 	List<String> collectClassNamesFromSubtree(@ParamName("nodeId") Integer nodeId);
+
+	/**
+	 * Requests that children of the node with given id are returned to the caller in form of <code>setChildNodes</code> events where not only immediate children are retrieved, but all children down to the specified depth.
+	 */
+	void requestChildNodes(@ParamName("nodeId") Integer nodeId);
 
 	/**
 	 * Requests that children of the node with given id are returned to the caller in form of <code>setChildNodes</code> events where not only immediate children are retrieved, but all children down to the specified depth.
@@ -85,6 +102,11 @@ public interface DOM {
 	/**
 	 * Sets attributes on element with given id. This method is useful when user edits some existing attribute value and types in several attribute name/value pairs.
 	 */
+	void setAttributesAsText(@ParamName("nodeId") Integer nodeId, @ParamName("text") String text);
+
+	/**
+	 * Sets attributes on element with given id. This method is useful when user edits some existing attribute value and types in several attribute name/value pairs.
+	 */
 	void setAttributesAsText(@ParamName("nodeId") Integer nodeId, @ParamName("text") String text, @Optional @ParamName("name") String name);
 
 	/**
@@ -96,12 +118,24 @@ public interface DOM {
 	 * Returns node's HTML markup.
 	 */
 	@Returns("outerHTML")
+	String getOuterHTML();
+
+	/**
+	 * Returns node's HTML markup.
+	 */
+	@Returns("outerHTML")
 	String getOuterHTML(@Optional @ParamName("nodeId") Integer nodeId, @Optional @ParamName("backendNodeId") Integer backendNodeId, @Optional @ParamName("objectId") String objectId);
 
 	/**
 	 * Sets node HTML markup, returns new node id.
 	 */
 	void setOuterHTML(@ParamName("nodeId") Integer nodeId, @ParamName("outerHTML") String outerHTML);
+
+	/**
+	 * Searches for a given string in the DOM tree. Use <code>getSearchResults</code> to access search results or <code>cancelSearch</code> to end this search session.
+	 */
+	@Experimental
+	PerformSearch performSearch(@ParamName("query") String query);
 
 	/**
 	 * Searches for a given string in the DOM tree. Use <code>getSearchResults</code> to access search results or <code>cancelSearch</code> to end this search session.
@@ -167,6 +201,12 @@ public interface DOM {
 	 * Resolves the JavaScript node object for a given NodeId or BackendNodeId.
 	 */
 	@Returns("object")
+	RemoteObject resolveNode();
+
+	/**
+	 * Resolves the JavaScript node object for a given NodeId or BackendNodeId.
+	 */
+	@Returns("object")
 	RemoteObject resolveNode(@Optional @ParamName("nodeId") Integer nodeId, @Optional @ParamName("backendNodeId") Integer backendNodeId, @Optional @ParamName("objectGroup") String objectGroup);
 
 	/**
@@ -180,7 +220,20 @@ public interface DOM {
 	 */
 	@Experimental
 	@Returns("nodeId")
+	Integer copyTo(@ParamName("nodeId") Integer nodeId, @ParamName("targetNodeId") Integer targetNodeId);
+
+	/**
+	 * Creates a deep copy of the specified node and places it into the target container before the given anchor.
+	 */
+	@Experimental
+	@Returns("nodeId")
 	Integer copyTo(@ParamName("nodeId") Integer nodeId, @ParamName("targetNodeId") Integer targetNodeId, @Optional @ParamName("insertBeforeNodeId") Integer insertBeforeNodeId);
+
+	/**
+	 * Moves node into the new container, places it before the given anchor.
+	 */
+	@Returns("nodeId")
+	Integer moveTo(@ParamName("nodeId") Integer nodeId, @ParamName("targetNodeId") Integer targetNodeId);
 
 	/**
 	 * Moves node into the new container, places it before the given anchor.
@@ -210,7 +263,19 @@ public interface DOM {
 	 * Focuses the given element.
 	 */
 	@Experimental
+	void focus();
+
+	/**
+	 * Focuses the given element.
+	 */
+	@Experimental
 	void focus(@Optional @ParamName("nodeId") Integer nodeId, @Optional @ParamName("backendNodeId") Integer backendNodeId, @Optional @ParamName("objectId") String objectId);
+
+	/**
+	 * Sets files for the given file input element.
+	 */
+	@Experimental
+	void setFileInputFiles(@ParamName("files") List<String> files);
 
 	/**
 	 * Sets files for the given file input element.
@@ -223,7 +288,21 @@ public interface DOM {
 	 */
 	@Experimental
 	@Returns("model")
+	BoxModel getBoxModel();
+
+	/**
+	 * Returns boxes for the currently selected nodes.
+	 */
+	@Experimental
+	@Returns("model")
 	BoxModel getBoxModel(@Optional @ParamName("nodeId") Integer nodeId, @Optional @ParamName("backendNodeId") Integer backendNodeId, @Optional @ParamName("objectId") String objectId);
+
+	/**
+	 * Returns node id at given location.
+	 */
+	@Experimental
+	@Returns("nodeId")
+	Integer getNodeForLocation(@ParamName("x") Integer x, @ParamName("y") Integer y);
 
 	/**
 	 * Returns node id at given location.
@@ -238,6 +317,12 @@ public interface DOM {
 	@Experimental
 	@Returns("nodeId")
 	Integer getRelayoutBoundary(@ParamName("nodeId") Integer nodeId);
+
+	/**
+	 * Describes node given its id, does not require domain to be enabled. Does not start tracking any objects, can be used for automation.
+	 */
+	@Returns("node")
+	Node describeNode();
 
 	/**
 	 * Describes node given its id, does not require domain to be enabled. Does not start tracking any objects, can be used for automation.
