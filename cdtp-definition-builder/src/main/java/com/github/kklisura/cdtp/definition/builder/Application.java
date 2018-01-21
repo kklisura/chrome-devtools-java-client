@@ -42,9 +42,7 @@ public class Application {
 	private static final String COMMANDS_PACKAGE = "commands";
 	private static final String ANNOTATIONS_PACKAGE = "annotations";
 
-	private static final String FACTORY_PACKAGE = "factory";
-
-	private static final String COMMAND_FACTORY_NAME = "CommandFactory";
+	private static final String COMMAND_FACTORY_NAME = "ChromeDevTools";
 
 	private static final String SRC_MAIN = "src/main/java";
 
@@ -131,9 +129,8 @@ public class Application {
 
 	private static Builder buildCommandFactory(List<Domain> domains, String basePackage) {
 		String commandsPackage = basePackage + "." + COMMANDS_PACKAGE;
-		String factoryPackage = commandsPackage + "." + FACTORY_PACKAGE;
 
-		JavaInterfaceBuilder factoryInterfaceBuilder = new JavaInterfaceBuilderImpl(factoryPackage, COMMAND_FACTORY_NAME,
+		JavaInterfaceBuilder factoryInterfaceBuilder = new JavaInterfaceBuilderImpl(basePackage, COMMAND_FACTORY_NAME,
 				null);
 
 		for (Domain domain : domains) {

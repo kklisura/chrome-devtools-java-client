@@ -15,13 +15,8 @@ import java.io.InputStream;
  */
 @UtilityClass
 public class DevToolsProtocolUtils {
-	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
-	private static final ObjectMapper SERIALIZATION_OBJECT_MAPPER = new ObjectMapper();
-
-	static {
-		SERIALIZATION_OBJECT_MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-	}
+	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
+			.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
 	/**
 	 * Deserializes dev tools protocol from string value.
@@ -53,6 +48,6 @@ public class DevToolsProtocolUtils {
 	 * @throws IOException If any serialization exceptions occur.
 	 */
 	public static String writeJson(DevToolsProtocol protocol) throws IOException {
-		return SERIALIZATION_OBJECT_MAPPER.writeValueAsString(protocol);
+		return OBJECT_MAPPER.writeValueAsString(protocol);
 	}
 }
