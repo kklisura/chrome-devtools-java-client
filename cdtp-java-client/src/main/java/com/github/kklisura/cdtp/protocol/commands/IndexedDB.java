@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.indexeddb.DatabaseWithObjectStores;
 import com.github.kklisura.cdtp.protocol.types.indexeddb.KeyRange;
@@ -25,26 +26,26 @@ public interface IndexedDB {
 	 * Requests database names for given security origin.
 	 */
 	@Returns("databaseNames")
-	List<String> requestDatabaseNames(String securityOrigin);
+	List<String> requestDatabaseNames(@ParamName("securityOrigin") String securityOrigin);
 
 	/**
 	 * Requests database with given name in given frame.
 	 */
 	@Returns("databaseWithObjectStores")
-	DatabaseWithObjectStores requestDatabase(String securityOrigin, String databaseName);
+	DatabaseWithObjectStores requestDatabase(@ParamName("securityOrigin") String securityOrigin, @ParamName("databaseName") String databaseName);
 
 	/**
 	 * Requests data from object store or index.
 	 */
-	RequestData requestData(String securityOrigin, String databaseName, String objectStoreName, String indexName, Integer skipCount, Integer pageSize, @Optional KeyRange keyRange);
+	RequestData requestData(@ParamName("securityOrigin") String securityOrigin, @ParamName("databaseName") String databaseName, @ParamName("objectStoreName") String objectStoreName, @ParamName("indexName") String indexName, @ParamName("skipCount") Integer skipCount, @ParamName("pageSize") Integer pageSize, @Optional @ParamName("keyRange") KeyRange keyRange);
 
 	/**
 	 * Clears all entries from an object store.
 	 */
-	void clearObjectStore(String securityOrigin, String databaseName, String objectStoreName);
+	void clearObjectStore(@ParamName("securityOrigin") String securityOrigin, @ParamName("databaseName") String databaseName, @ParamName("objectStoreName") String objectStoreName);
 
 	/**
 	 * Deletes a database.
 	 */
-	void deleteDatabase(String securityOrigin, String databaseName);
+	void deleteDatabase(@ParamName("securityOrigin") String securityOrigin, @ParamName("databaseName") String databaseName);
 }

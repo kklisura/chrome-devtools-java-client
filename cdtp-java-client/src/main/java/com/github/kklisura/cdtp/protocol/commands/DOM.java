@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.dom.BoxModel;
 import com.github.kklisura.cdtp.protocol.types.dom.Node;
@@ -28,104 +29,104 @@ public interface DOM {
 	 * Returns the root DOM node (and optionally the subtree) to the caller.
 	 */
 	@Returns("root")
-	Node getDocument(@Experimental @Optional Integer depth, @Experimental @Optional Boolean pierce);
+	Node getDocument(@Experimental @Optional @ParamName("depth") Integer depth, @Experimental @Optional @ParamName("pierce") Boolean pierce);
 
 	/**
 	 * Returns the root DOM node (and optionally the subtree) to the caller.
 	 */
 	@Returns("nodes")
-	List<Node> getFlattenedDocument(@Experimental @Optional Integer depth, @Experimental @Optional Boolean pierce);
+	List<Node> getFlattenedDocument(@Experimental @Optional @ParamName("depth") Integer depth, @Experimental @Optional @ParamName("pierce") Boolean pierce);
 
 	/**
 	 * Collects class names for the node with given id and all of it's child nodes.
 	 */
 	@Experimental
 	@Returns("classNames")
-	List<String> collectClassNamesFromSubtree(Integer nodeId);
+	List<String> collectClassNamesFromSubtree(@ParamName("nodeId") Integer nodeId);
 
 	/**
 	 * Requests that children of the node with given id are returned to the caller in form of <code>setChildNodes</code> events where not only immediate children are retrieved, but all children down to the specified depth.
 	 */
-	void requestChildNodes(Integer nodeId, @Experimental @Optional Integer depth, @Experimental @Optional Boolean pierce);
+	void requestChildNodes(@ParamName("nodeId") Integer nodeId, @Experimental @Optional @ParamName("depth") Integer depth, @Experimental @Optional @ParamName("pierce") Boolean pierce);
 
 	/**
 	 * Executes <code>querySelector</code> on a given node.
 	 */
 	@Returns("nodeId")
-	Integer querySelector(Integer nodeId, String selector);
+	Integer querySelector(@ParamName("nodeId") Integer nodeId, @ParamName("selector") String selector);
 
 	/**
 	 * Executes <code>querySelectorAll</code> on a given node.
 	 */
 	@Returns("nodeIds")
-	List<Integer> querySelectorAll(Integer nodeId, String selector);
+	List<Integer> querySelectorAll(@ParamName("nodeId") Integer nodeId, @ParamName("selector") String selector);
 
 	/**
 	 * Sets node name for a node with given id.
 	 */
 	@Returns("nodeId")
-	Integer setNodeName(Integer nodeId, String name);
+	Integer setNodeName(@ParamName("nodeId") Integer nodeId, @ParamName("name") String name);
 
 	/**
 	 * Sets node value for a node with given id.
 	 */
-	void setNodeValue(Integer nodeId, String value);
+	void setNodeValue(@ParamName("nodeId") Integer nodeId, @ParamName("value") String value);
 
 	/**
 	 * Removes node with given id.
 	 */
-	void removeNode(Integer nodeId);
+	void removeNode(@ParamName("nodeId") Integer nodeId);
 
 	/**
 	 * Sets attribute for an element with given id.
 	 */
-	void setAttributeValue(Integer nodeId, String name, String value);
+	void setAttributeValue(@ParamName("nodeId") Integer nodeId, @ParamName("name") String name, @ParamName("value") String value);
 
 	/**
 	 * Sets attributes on element with given id. This method is useful when user edits some existing attribute value and types in several attribute name/value pairs.
 	 */
-	void setAttributesAsText(Integer nodeId, String text, @Optional String name);
+	void setAttributesAsText(@ParamName("nodeId") Integer nodeId, @ParamName("text") String text, @Optional @ParamName("name") String name);
 
 	/**
 	 * Removes attribute with given name from an element with given id.
 	 */
-	void removeAttribute(Integer nodeId, String name);
+	void removeAttribute(@ParamName("nodeId") Integer nodeId, @ParamName("name") String name);
 
 	/**
 	 * Returns node's HTML markup.
 	 */
 	@Returns("outerHTML")
-	String getOuterHTML(@Optional Integer nodeId, @Optional Integer backendNodeId, @Optional String objectId);
+	String getOuterHTML(@Optional @ParamName("nodeId") Integer nodeId, @Optional @ParamName("backendNodeId") Integer backendNodeId, @Optional @ParamName("objectId") String objectId);
 
 	/**
 	 * Sets node HTML markup, returns new node id.
 	 */
-	void setOuterHTML(Integer nodeId, String outerHTML);
+	void setOuterHTML(@ParamName("nodeId") Integer nodeId, @ParamName("outerHTML") String outerHTML);
 
 	/**
 	 * Searches for a given string in the DOM tree. Use <code>getSearchResults</code> to access search results or <code>cancelSearch</code> to end this search session.
 	 */
 	@Experimental
-	PerformSearch performSearch(String query, @Experimental @Optional Boolean includeUserAgentShadowDOM);
+	PerformSearch performSearch(@ParamName("query") String query, @Experimental @Optional @ParamName("includeUserAgentShadowDOM") Boolean includeUserAgentShadowDOM);
 
 	/**
 	 * Returns search results from given <code>fromIndex</code> to given <code>toIndex</code> from the sarch with the given identifier.
 	 */
 	@Experimental
 	@Returns("nodeIds")
-	List<Integer> getSearchResults(String searchId, Integer fromIndex, Integer toIndex);
+	List<Integer> getSearchResults(@ParamName("searchId") String searchId, @ParamName("fromIndex") Integer fromIndex, @ParamName("toIndex") Integer toIndex);
 
 	/**
 	 * Discards search results from the session with the given id. <code>getSearchResults</code> should no longer be called for that search.
 	 */
 	@Experimental
-	void discardSearchResults(String searchId);
+	void discardSearchResults(@ParamName("searchId") String searchId);
 
 	/**
 	 * Requests that the node is sent to the caller given the JavaScript node object reference. All nodes that form the path from the node to the root are also sent to the client as a series of <code>setChildNodes</code> notifications.
 	 */
 	@Returns("nodeId")
-	Integer requestNode(String objectId);
+	Integer requestNode(@ParamName("objectId") String objectId);
 
 	/**
 	 * Highlights given rectangle.
@@ -147,45 +148,45 @@ public interface DOM {
 	 */
 	@Experimental
 	@Returns("nodeId")
-	Integer pushNodeByPathToFrontend(String path);
+	Integer pushNodeByPathToFrontend(@ParamName("path") String path);
 
 	/**
 	 * Requests that a batch of nodes is sent to the caller given their backend node ids.
 	 */
 	@Experimental
 	@Returns("nodeIds")
-	List<Integer> pushNodesByBackendIdsToFrontend(List<Integer> backendNodeIds);
+	List<Integer> pushNodesByBackendIdsToFrontend(@ParamName("backendNodeIds") List<Integer> backendNodeIds);
 
 	/**
 	 * Enables console to refer to the node with given id via $x (see Command Line API for more details $x functions).
 	 */
 	@Experimental
-	void setInspectedNode(Integer nodeId);
+	void setInspectedNode(@ParamName("nodeId") Integer nodeId);
 
 	/**
 	 * Resolves the JavaScript node object for a given NodeId or BackendNodeId.
 	 */
 	@Returns("object")
-	RemoteObject resolveNode(@Optional Integer nodeId, @Optional Integer backendNodeId, @Optional String objectGroup);
+	RemoteObject resolveNode(@Optional @ParamName("nodeId") Integer nodeId, @Optional @ParamName("backendNodeId") Integer backendNodeId, @Optional @ParamName("objectGroup") String objectGroup);
 
 	/**
 	 * Returns attributes for the specified node.
 	 */
 	@Returns("attributes")
-	List<String> getAttributes(Integer nodeId);
+	List<String> getAttributes(@ParamName("nodeId") Integer nodeId);
 
 	/**
 	 * Creates a deep copy of the specified node and places it into the target container before the given anchor.
 	 */
 	@Experimental
 	@Returns("nodeId")
-	Integer copyTo(Integer nodeId, Integer targetNodeId, @Optional Integer insertBeforeNodeId);
+	Integer copyTo(@ParamName("nodeId") Integer nodeId, @ParamName("targetNodeId") Integer targetNodeId, @Optional @ParamName("insertBeforeNodeId") Integer insertBeforeNodeId);
 
 	/**
 	 * Moves node into the new container, places it before the given anchor.
 	 */
 	@Returns("nodeId")
-	Integer moveTo(Integer nodeId, Integer targetNodeId, @Optional Integer insertBeforeNodeId);
+	Integer moveTo(@ParamName("nodeId") Integer nodeId, @ParamName("targetNodeId") Integer targetNodeId, @Optional @ParamName("insertBeforeNodeId") Integer insertBeforeNodeId);
 
 	/**
 	 * Undoes the last performed action.
@@ -209,38 +210,38 @@ public interface DOM {
 	 * Focuses the given element.
 	 */
 	@Experimental
-	void focus(@Optional Integer nodeId, @Optional Integer backendNodeId, @Optional String objectId);
+	void focus(@Optional @ParamName("nodeId") Integer nodeId, @Optional @ParamName("backendNodeId") Integer backendNodeId, @Optional @ParamName("objectId") String objectId);
 
 	/**
 	 * Sets files for the given file input element.
 	 */
 	@Experimental
-	void setFileInputFiles(List<String> files, @Optional Integer nodeId, @Optional Integer backendNodeId, @Optional String objectId);
+	void setFileInputFiles(@ParamName("files") List<String> files, @Optional @ParamName("nodeId") Integer nodeId, @Optional @ParamName("backendNodeId") Integer backendNodeId, @Optional @ParamName("objectId") String objectId);
 
 	/**
 	 * Returns boxes for the currently selected nodes.
 	 */
 	@Experimental
 	@Returns("model")
-	BoxModel getBoxModel(@Optional Integer nodeId, @Optional Integer backendNodeId, @Optional String objectId);
+	BoxModel getBoxModel(@Optional @ParamName("nodeId") Integer nodeId, @Optional @ParamName("backendNodeId") Integer backendNodeId, @Optional @ParamName("objectId") String objectId);
 
 	/**
 	 * Returns node id at given location.
 	 */
 	@Experimental
 	@Returns("nodeId")
-	Integer getNodeForLocation(Integer x, Integer y, @Optional Boolean includeUserAgentShadowDOM);
+	Integer getNodeForLocation(@ParamName("x") Integer x, @ParamName("y") Integer y, @Optional @ParamName("includeUserAgentShadowDOM") Boolean includeUserAgentShadowDOM);
 
 	/**
 	 * Returns the id of the nearest ancestor that is a relayout boundary.
 	 */
 	@Experimental
 	@Returns("nodeId")
-	Integer getRelayoutBoundary(Integer nodeId);
+	Integer getRelayoutBoundary(@ParamName("nodeId") Integer nodeId);
 
 	/**
 	 * Describes node given its id, does not require domain to be enabled. Does not start tracking any objects, can be used for automation.
 	 */
 	@Returns("node")
-	Node describeNode(@Optional Integer nodeId, @Optional Integer backendNodeId, @Optional String objectId, @Experimental @Optional Integer depth, @Experimental @Optional Boolean pierce);
+	Node describeNode(@Optional @ParamName("nodeId") Integer nodeId, @Optional @ParamName("backendNodeId") Integer backendNodeId, @Optional @ParamName("objectId") String objectId, @Experimental @Optional @ParamName("depth") Integer depth, @Experimental @Optional @ParamName("pierce") Boolean pierce);
 }

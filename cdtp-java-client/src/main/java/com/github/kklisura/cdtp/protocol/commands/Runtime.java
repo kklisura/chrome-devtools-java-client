@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.runtime.AwaitPromise;
 import com.github.kklisura.cdtp.protocol.types.runtime.CallArgument;
@@ -21,32 +22,32 @@ public interface Runtime {
 	/**
 	 * Evaluates expression on global object.
 	 */
-	Evaluate evaluate(String expression, @Optional String objectGroup, @Optional Boolean includeCommandLineAPI, @Optional Boolean silent, @Optional Integer contextId, @Optional Boolean returnByValue, @Experimental @Optional Boolean generatePreview, @Experimental @Optional Boolean userGesture, @Optional Boolean awaitPromise);
+	Evaluate evaluate(@ParamName("expression") String expression, @Optional @ParamName("objectGroup") String objectGroup, @Optional @ParamName("includeCommandLineAPI") Boolean includeCommandLineAPI, @Optional @ParamName("silent") Boolean silent, @Optional @ParamName("contextId") Integer contextId, @Optional @ParamName("returnByValue") Boolean returnByValue, @Experimental @Optional @ParamName("generatePreview") Boolean generatePreview, @Experimental @Optional @ParamName("userGesture") Boolean userGesture, @Optional @ParamName("awaitPromise") Boolean awaitPromise);
 
 	/**
 	 * Add handler to promise with given promise object id.
 	 */
-	AwaitPromise awaitPromise(String promiseObjectId, @Optional Boolean returnByValue, @Optional Boolean generatePreview);
+	AwaitPromise awaitPromise(@ParamName("promiseObjectId") String promiseObjectId, @Optional @ParamName("returnByValue") Boolean returnByValue, @Optional @ParamName("generatePreview") Boolean generatePreview);
 
 	/**
 	 * Calls function with given declaration on the given object. Object group of the result is inherited from the target object.
 	 */
-	CallFunctionOn callFunctionOn(String functionDeclaration, @Optional String objectId, @Optional List<CallArgument> arguments, @Optional Boolean silent, @Optional Boolean returnByValue, @Experimental @Optional Boolean generatePreview, @Experimental @Optional Boolean userGesture, @Optional Boolean awaitPromise, @Optional Integer executionContextId, @Optional String objectGroup);
+	CallFunctionOn callFunctionOn(@ParamName("functionDeclaration") String functionDeclaration, @Optional @ParamName("objectId") String objectId, @Optional @ParamName("arguments") List<CallArgument> arguments, @Optional @ParamName("silent") Boolean silent, @Optional @ParamName("returnByValue") Boolean returnByValue, @Experimental @Optional @ParamName("generatePreview") Boolean generatePreview, @Experimental @Optional @ParamName("userGesture") Boolean userGesture, @Optional @ParamName("awaitPromise") Boolean awaitPromise, @Optional @ParamName("executionContextId") Integer executionContextId, @Optional @ParamName("objectGroup") String objectGroup);
 
 	/**
 	 * Returns properties of a given object. Object group of the result is inherited from the target object.
 	 */
-	Properties getProperties(String objectId, @Optional Boolean ownProperties, @Experimental @Optional Boolean accessorPropertiesOnly, @Experimental @Optional Boolean generatePreview);
+	Properties getProperties(@ParamName("objectId") String objectId, @Optional @ParamName("ownProperties") Boolean ownProperties, @Experimental @Optional @ParamName("accessorPropertiesOnly") Boolean accessorPropertiesOnly, @Experimental @Optional @ParamName("generatePreview") Boolean generatePreview);
 
 	/**
 	 * Releases remote object with given id.
 	 */
-	void releaseObject(String objectId);
+	void releaseObject(@ParamName("objectId") String objectId);
 
 	/**
 	 * Releases all remote objects that belong to a given group.
 	 */
-	void releaseObjectGroup(String objectGroup);
+	void releaseObjectGroup(@ParamName("objectGroup") String objectGroup);
 
 	/**
 	 * Tells inspected instance to run if it was waiting for debugger to attach.
@@ -69,19 +70,19 @@ public interface Runtime {
 	void discardConsoleEntries();
 
 	@Experimental
-	void setCustomObjectFormatterEnabled(Boolean enabled);
+	void setCustomObjectFormatterEnabled(@ParamName("enabled") Boolean enabled);
 
 	/**
 	 * Compiles expression.
 	 */
-	CompileScript compileScript(String expression, String sourceURL, Boolean persistScript, @Optional Integer executionContextId);
+	CompileScript compileScript(@ParamName("expression") String expression, @ParamName("sourceURL") String sourceURL, @ParamName("persistScript") Boolean persistScript, @Optional @ParamName("executionContextId") Integer executionContextId);
 
 	/**
 	 * Runs script with given id in a given context.
 	 */
-	RunScript runScript(String scriptId, @Optional Integer executionContextId, @Optional String objectGroup, @Optional Boolean silent, @Optional Boolean includeCommandLineAPI, @Optional Boolean returnByValue, @Optional Boolean generatePreview, @Optional Boolean awaitPromise);
+	RunScript runScript(@ParamName("scriptId") String scriptId, @Optional @ParamName("executionContextId") Integer executionContextId, @Optional @ParamName("objectGroup") String objectGroup, @Optional @ParamName("silent") Boolean silent, @Optional @ParamName("includeCommandLineAPI") Boolean includeCommandLineAPI, @Optional @ParamName("returnByValue") Boolean returnByValue, @Optional @ParamName("generatePreview") Boolean generatePreview, @Optional @ParamName("awaitPromise") Boolean awaitPromise);
 
 	@Experimental
 	@Returns("objects")
-	RemoteObject queryObjects(String prototypeObjectId);
+	RemoteObject queryObjects(@ParamName("prototypeObjectId") String prototypeObjectId);
 }

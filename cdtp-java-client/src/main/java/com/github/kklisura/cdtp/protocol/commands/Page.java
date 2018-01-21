@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.debugger.SearchMatch;
 import com.github.kklisura.cdtp.protocol.types.emulation.ScreenOrientation;
@@ -39,50 +40,50 @@ public interface Page {
 	@Deprecated
 	@Experimental
 	@Returns("identifier")
-	String addScriptToEvaluateOnLoad(String scriptSource);
+	String addScriptToEvaluateOnLoad(@ParamName("scriptSource") String scriptSource);
 
 	/**
 	 * Deprecated, please use removeScriptToEvaluateOnNewDocument instead.
 	 */
 	@Deprecated
 	@Experimental
-	void removeScriptToEvaluateOnLoad(String identifier);
+	void removeScriptToEvaluateOnLoad(@ParamName("identifier") String identifier);
 
 	/**
 	 * Evaluates given script in every frame upon creation (before loading frame's scripts).
 	 */
 	@Experimental
 	@Returns("identifier")
-	String addScriptToEvaluateOnNewDocument(String source);
+	String addScriptToEvaluateOnNewDocument(@ParamName("source") String source);
 
 	/**
 	 * Removes given script from the list.
 	 */
 	@Experimental
-	void removeScriptToEvaluateOnNewDocument(String identifier);
+	void removeScriptToEvaluateOnNewDocument(@ParamName("identifier") String identifier);
 
 	/**
 	 * Controls whether browser will open a new inspector window for connected pages.
 	 */
 	@Experimental
-	void setAutoAttachToCreatedPages(Boolean autoAttach);
+	void setAutoAttachToCreatedPages(@ParamName("autoAttach") Boolean autoAttach);
 
 	/**
 	 * Reloads given page optionally ignoring the cache.
 	 */
-	void reload(@Optional Boolean ignoreCache, @Optional String scriptToEvaluateOnLoad);
+	void reload(@Optional @ParamName("ignoreCache") Boolean ignoreCache, @Optional @ParamName("scriptToEvaluateOnLoad") String scriptToEvaluateOnLoad);
 
 	/**
 	 * Enable Chrome's experimental ad filter on all sites.
 	 */
 	@Experimental
-	void setAdBlockingEnabled(Boolean enabled);
+	void setAdBlockingEnabled(@ParamName("enabled") Boolean enabled);
 
 	/**
 	 * Navigates current page to the given URL.
 	 */
 	@Returns("frameId")
-	String navigate(String url, @Experimental @Optional String referrer, @Experimental @Optional TransitionType transitionType);
+	String navigate(@ParamName("url") String url, @Experimental @Optional @ParamName("referrer") String referrer, @Experimental @Optional @ParamName("transitionType") TransitionType transitionType);
 
 	/**
 	 * Force the page stop all navigations and pending resource fetches.
@@ -100,7 +101,7 @@ public interface Page {
 	 * Navigates current page to the given history entry.
 	 */
 	@Experimental
-	void navigateToHistoryEntry(Integer entryId);
+	void navigateToHistoryEntry(@ParamName("entryId") Integer entryId);
 
 	/**
 	 * Returns all browser cookies. Depending on the backend support, will return detailed cookie information in the <code>cookies</code> field.
@@ -113,7 +114,7 @@ public interface Page {
 	 * Deletes browser cookie with given name, domain and path.
 	 */
 	@Experimental
-	void deleteCookie(String cookieName, String url);
+	void deleteCookie(@ParamName("cookieName") String cookieName, @ParamName("url") String url);
 
 	/**
 	 * Returns present frame / resource tree structure.
@@ -126,26 +127,26 @@ public interface Page {
 	 * Returns content of the given resource.
 	 */
 	@Experimental
-	ResourceContent getResourceContent(String frameId, String url);
+	ResourceContent getResourceContent(@ParamName("frameId") String frameId, @ParamName("url") String url);
 
 	/**
 	 * Searches for given string in resource content.
 	 */
 	@Experimental
 	@Returns("result")
-	List<SearchMatch> searchInResource(String frameId, String url, String query, @Optional Boolean caseSensitive, @Optional Boolean isRegex);
+	List<SearchMatch> searchInResource(@ParamName("frameId") String frameId, @ParamName("url") String url, @ParamName("query") String query, @Optional @ParamName("caseSensitive") Boolean caseSensitive, @Optional @ParamName("isRegex") Boolean isRegex);
 
 	/**
 	 * Sets given markup as the document's HTML.
 	 */
 	@Experimental
-	void setDocumentContent(String frameId, String html);
+	void setDocumentContent(@ParamName("frameId") String frameId, @ParamName("html") String html);
 
 	/**
 	 * Overrides the values of device screen dimensions (window.screen.width, window.screen.height, window.innerWidth, window.innerHeight, and "device-width"/"device-height"-related CSS media query results).
 	 */
 	@Experimental
-	void setDeviceMetricsOverride(Integer width, Integer height, Double deviceScaleFactor, Boolean mobile, @Optional Double scale, @Optional Integer screenWidth, @Optional Integer screenHeight, @Optional Integer positionX, @Optional Integer positionY, @Optional Boolean dontSetVisibleSize, @Optional ScreenOrientation screenOrientation);
+	void setDeviceMetricsOverride(@ParamName("width") Integer width, @ParamName("height") Integer height, @ParamName("deviceScaleFactor") Double deviceScaleFactor, @ParamName("mobile") Boolean mobile, @Optional @ParamName("scale") Double scale, @Optional @ParamName("screenWidth") Integer screenWidth, @Optional @ParamName("screenHeight") Integer screenHeight, @Optional @ParamName("positionX") Integer positionX, @Optional @ParamName("positionY") Integer positionY, @Optional @ParamName("dontSetVisibleSize") Boolean dontSetVisibleSize, @Optional @ParamName("screenOrientation") ScreenOrientation screenOrientation);
 
 	/**
 	 * Clears the overriden device metrics.
@@ -156,7 +157,7 @@ public interface Page {
 	/**
 	 * Overrides the Geolocation Position or Error. Omitting any of the parameters emulates position unavailable.
 	 */
-	void setGeolocationOverride(@Optional Double latitude, @Optional Double longitude, @Optional Double accuracy);
+	void setGeolocationOverride(@Optional @ParamName("latitude") Double latitude, @Optional @ParamName("longitude") Double longitude, @Optional @ParamName("accuracy") Double accuracy);
 
 	/**
 	 * Clears the overriden Geolocation Position and Error.
@@ -167,7 +168,7 @@ public interface Page {
 	 * Overrides the Device Orientation.
 	 */
 	@Experimental
-	void setDeviceOrientationOverride(Double alpha, Double beta, Double gamma);
+	void setDeviceOrientationOverride(@ParamName("alpha") Double alpha, @ParamName("beta") Double beta, @ParamName("gamma") Double gamma);
 
 	/**
 	 * Clears the overridden Device Orientation.
@@ -179,27 +180,27 @@ public interface Page {
 	 * Toggles mouse event-based touch event emulation.
 	 */
 	@Experimental
-	void setTouchEmulationEnabled(Boolean enabled, @Optional Configuration configuration);
+	void setTouchEmulationEnabled(@ParamName("enabled") Boolean enabled, @Optional @ParamName("configuration") Configuration configuration);
 
 	/**
 	 * Capture page screenshot.
 	 */
 	@Experimental
 	@Returns("data")
-	String captureScreenshot(@Optional Format format, @Optional Integer quality, @Experimental @Optional Viewport clip, @Experimental @Optional Boolean fromSurface);
+	String captureScreenshot(@Optional @ParamName("format") Format format, @Optional @ParamName("quality") Integer quality, @Experimental @Optional @ParamName("clip") Viewport clip, @Experimental @Optional @ParamName("fromSurface") Boolean fromSurface);
 
 	/**
 	 * Print page as PDF.
 	 */
 	@Experimental
 	@Returns("data")
-	String printToPDF(@Optional Boolean landscape, @Optional Boolean displayHeaderFooter, @Optional Boolean printBackground, @Optional Double scale, @Optional Double paperWidth, @Optional Double paperHeight, @Optional Double marginTop, @Optional Double marginBottom, @Optional Double marginLeft, @Optional Double marginRight, @Optional String pageRanges, @Optional Boolean ignoreInvalidPageRanges);
+	String printToPDF(@Optional @ParamName("landscape") Boolean landscape, @Optional @ParamName("displayHeaderFooter") Boolean displayHeaderFooter, @Optional @ParamName("printBackground") Boolean printBackground, @Optional @ParamName("scale") Double scale, @Optional @ParamName("paperWidth") Double paperWidth, @Optional @ParamName("paperHeight") Double paperHeight, @Optional @ParamName("marginTop") Double marginTop, @Optional @ParamName("marginBottom") Double marginBottom, @Optional @ParamName("marginLeft") Double marginLeft, @Optional @ParamName("marginRight") Double marginRight, @Optional @ParamName("pageRanges") String pageRanges, @Optional @ParamName("ignoreInvalidPageRanges") Boolean ignoreInvalidPageRanges);
 
 	/**
 	 * Starts sending each frame using the <code>screencastFrame</code> event.
 	 */
 	@Experimental
-	void startScreencast(@Optional Format format, @Optional Integer quality, @Optional Integer maxWidth, @Optional Integer maxHeight, @Optional Integer everyNthFrame);
+	void startScreencast(@Optional @ParamName("format") Format format, @Optional @ParamName("quality") Integer quality, @Optional @ParamName("maxWidth") Integer maxWidth, @Optional @ParamName("maxHeight") Integer maxHeight, @Optional @ParamName("everyNthFrame") Integer everyNthFrame);
 
 	/**
 	 * Stops sending each frame in the <code>screencastFrame</code>.
@@ -211,12 +212,12 @@ public interface Page {
 	 * Acknowledges that a screencast frame has been received by the frontend.
 	 */
 	@Experimental
-	void screencastFrameAck(Integer sessionId);
+	void screencastFrameAck(@ParamName("sessionId") Integer sessionId);
 
 	/**
 	 * Accepts or dismisses a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload).
 	 */
-	void handleJavaScriptDialog(Boolean accept, @Optional String promptText);
+	void handleJavaScriptDialog(@ParamName("accept") Boolean accept, @Optional @ParamName("promptText") String promptText);
 
 	@Experimental
 	AppManifest getAppManifest();
@@ -235,7 +236,7 @@ public interface Page {
 	 */
 	@Experimental
 	@Returns("executionContextId")
-	Integer createIsolatedWorld(String frameId, @Optional String worldName, @Optional Boolean grantUniveralAccess);
+	Integer createIsolatedWorld(@ParamName("frameId") String frameId, @Optional @ParamName("worldName") String worldName, @Optional @ParamName("grantUniveralAccess") Boolean grantUniveralAccess);
 
 	/**
 	 * Brings page to front (activates tab).
@@ -246,5 +247,5 @@ public interface Page {
 	 * Set the behavior when downloading a file.
 	 */
 	@Experimental
-	void setDownloadBehavior(Behavior behavior, @Optional String downloadPath);
+	void setDownloadBehavior(@ParamName("behavior") Behavior behavior, @Optional @ParamName("downloadPath") String downloadPath);
 }

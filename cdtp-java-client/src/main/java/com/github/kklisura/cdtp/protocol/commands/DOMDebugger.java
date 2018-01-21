@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.domdebugger.DOMBreakpointType;
 import com.github.kklisura.cdtp.protocol.types.domdebugger.EventListener;
@@ -15,49 +16,49 @@ public interface DOMDebugger {
 	/**
 	 * Sets breakpoint on particular operation with DOM.
 	 */
-	void setDOMBreakpoint(Integer nodeId, DOMBreakpointType type);
+	void setDOMBreakpoint(@ParamName("nodeId") Integer nodeId, @ParamName("type") DOMBreakpointType type);
 
 	/**
 	 * Removes DOM breakpoint that was set using <code>setDOMBreakpoint</code>.
 	 */
-	void removeDOMBreakpoint(Integer nodeId, DOMBreakpointType type);
+	void removeDOMBreakpoint(@ParamName("nodeId") Integer nodeId, @ParamName("type") DOMBreakpointType type);
 
 	/**
 	 * Sets breakpoint on particular DOM event.
 	 */
-	void setEventListenerBreakpoint(String eventName, @Experimental @Optional String targetName);
+	void setEventListenerBreakpoint(@ParamName("eventName") String eventName, @Experimental @Optional @ParamName("targetName") String targetName);
 
 	/**
 	 * Removes breakpoint on particular DOM event.
 	 */
-	void removeEventListenerBreakpoint(String eventName, @Experimental @Optional String targetName);
+	void removeEventListenerBreakpoint(@ParamName("eventName") String eventName, @Experimental @Optional @ParamName("targetName") String targetName);
 
 	/**
 	 * Sets breakpoint on particular native event.
 	 */
 	@Experimental
-	void setInstrumentationBreakpoint(String eventName);
+	void setInstrumentationBreakpoint(@ParamName("eventName") String eventName);
 
 	/**
 	 * Removes breakpoint on particular native event.
 	 */
 	@Experimental
-	void removeInstrumentationBreakpoint(String eventName);
+	void removeInstrumentationBreakpoint(@ParamName("eventName") String eventName);
 
 	/**
 	 * Sets breakpoint on XMLHttpRequest.
 	 */
-	void setXHRBreakpoint(String url);
+	void setXHRBreakpoint(@ParamName("url") String url);
 
 	/**
 	 * Removes breakpoint from XMLHttpRequest.
 	 */
-	void removeXHRBreakpoint(String url);
+	void removeXHRBreakpoint(@ParamName("url") String url);
 
 	/**
 	 * Returns event listeners of the given object.
 	 */
 	@Experimental
 	@Returns("listeners")
-	List<EventListener> getEventListeners(String objectId, @Experimental @Optional Integer depth, @Experimental @Optional Boolean pierce);
+	List<EventListener> getEventListeners(@ParamName("objectId") String objectId, @Experimental @Optional @ParamName("depth") Integer depth, @Experimental @Optional @ParamName("pierce") Boolean pierce);
 }

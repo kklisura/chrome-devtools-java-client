@@ -1,6 +1,7 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.domstorage.StorageId;
 import java.util.List;
@@ -21,12 +22,12 @@ public interface DOMStorage {
 	 */
 	void disable();
 
-	void clear(StorageId storageId);
+	void clear(@ParamName("storageId") StorageId storageId);
 
 	@Returns("entries")
-	List<List<String>> getDOMStorageItems(StorageId storageId);
+	List<List<String>> getDOMStorageItems(@ParamName("storageId") StorageId storageId);
 
-	void setDOMStorageItem(StorageId storageId, String key, String value);
+	void setDOMStorageItem(@ParamName("storageId") StorageId storageId, @ParamName("key") String key, @ParamName("value") String value);
 
-	void removeDOMStorageItem(StorageId storageId, String key);
+	void removeDOMStorageItem(@ParamName("storageId") StorageId storageId, @ParamName("key") String key);
 }

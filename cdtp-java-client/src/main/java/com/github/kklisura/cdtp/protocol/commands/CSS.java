@@ -1,6 +1,7 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.css.BackgroundColors;
 import com.github.kklisura.cdtp.protocol.types.css.CSSComputedStyleProperty;
@@ -37,85 +38,85 @@ public interface CSS {
 	/**
 	 * Returns requested styles for a DOM node identified by <code>nodeId</code>.
 	 */
-	MatchedStylesForNode getMatchedStylesForNode(Integer nodeId);
+	MatchedStylesForNode getMatchedStylesForNode(@ParamName("nodeId") Integer nodeId);
 
 	/**
 	 * Returns the styles defined inline (explicitly in the "style" attribute and implicitly, using DOM attributes) for a DOM node identified by <code>nodeId</code>.
 	 */
-	InlineStylesForNode getInlineStylesForNode(Integer nodeId);
+	InlineStylesForNode getInlineStylesForNode(@ParamName("nodeId") Integer nodeId);
 
 	/**
 	 * Returns the computed style for a DOM node identified by <code>nodeId</code>.
 	 */
 	@Returns("computedStyle")
-	List<CSSComputedStyleProperty> getComputedStyleForNode(Integer nodeId);
+	List<CSSComputedStyleProperty> getComputedStyleForNode(@ParamName("nodeId") Integer nodeId);
 
 	/**
 	 * Requests information about platform fonts which we used to render child TextNodes in the given node.
 	 */
 	@Experimental
 	@Returns("fonts")
-	List<PlatformFontUsage> getPlatformFontsForNode(Integer nodeId);
+	List<PlatformFontUsage> getPlatformFontsForNode(@ParamName("nodeId") Integer nodeId);
 
 	/**
 	 * Returns the current textual content and the URL for a stylesheet.
 	 */
 	@Returns("text")
-	String getStyleSheetText(String styleSheetId);
+	String getStyleSheetText(@ParamName("styleSheetId") String styleSheetId);
 
 	/**
 	 * Returns all class names from specified stylesheet.
 	 */
 	@Experimental
 	@Returns("classNames")
-	List<String> collectClassNames(String styleSheetId);
+	List<String> collectClassNames(@ParamName("styleSheetId") String styleSheetId);
 
 	/**
 	 * Sets the new stylesheet text.
 	 */
 	@Returns("sourceMapURL")
-	String setStyleSheetText(String styleSheetId, String text);
+	String setStyleSheetText(@ParamName("styleSheetId") String styleSheetId, @ParamName("text") String text);
 
 	/**
 	 * Modifies the rule selector.
 	 */
 	@Returns("selectorList")
-	SelectorList setRuleSelector(String styleSheetId, SourceRange range, String selector);
+	SelectorList setRuleSelector(@ParamName("styleSheetId") String styleSheetId, @ParamName("range") SourceRange range, @ParamName("selector") String selector);
 
 	/**
 	 * Modifies the keyframe rule key text.
 	 */
 	@Returns("keyText")
-	Value setKeyframeKey(String styleSheetId, SourceRange range, String keyText);
+	Value setKeyframeKey(@ParamName("styleSheetId") String styleSheetId, @ParamName("range") SourceRange range, @ParamName("keyText") String keyText);
 
 	/**
 	 * Applies specified style edits one after another in the given order.
 	 */
 	@Returns("styles")
-	List<CSSStyle> setStyleTexts(List<StyleDeclarationEdit> edits);
+	List<CSSStyle> setStyleTexts(@ParamName("edits") List<StyleDeclarationEdit> edits);
 
 	/**
 	 * Modifies the rule selector.
 	 */
 	@Returns("media")
-	CSSMedia setMediaText(String styleSheetId, SourceRange range, String text);
+	CSSMedia setMediaText(@ParamName("styleSheetId") String styleSheetId, @ParamName("range") SourceRange range, @ParamName("text") String text);
 
 	/**
 	 * Creates a new special "via-inspector" stylesheet in the frame with given <code>frameId</code>.
 	 */
 	@Returns("styleSheetId")
-	String createStyleSheet(String frameId);
+	String createStyleSheet(@ParamName("frameId") String frameId);
 
 	/**
 	 * Inserts a new rule with the given <code>ruleText</code> in a stylesheet with given <code>styleSheetId</code>, at the position specified by <code>location</code>.
 	 */
 	@Returns("rule")
-	CSSRule addRule(String styleSheetId, String ruleText, SourceRange location);
+	CSSRule addRule(@ParamName("styleSheetId") String styleSheetId, @ParamName("ruleText") String ruleText, @ParamName("location") SourceRange location);
 
 	/**
 	 * Ensures that the given node will have specified pseudo-classes whenever its style is computed by the browser.
 	 */
-	void forcePseudoState(Integer nodeId, List<ForcedPseudoClasses> forcedPseudoClasses);
+	void forcePseudoState(@ParamName("nodeId") Integer nodeId, @ParamName("forcedPseudoClasses") List<ForcedPseudoClasses> forcedPseudoClasses);
 
 	/**
 	 * Returns all media queries parsed by the rendering engine.
@@ -128,10 +129,10 @@ public interface CSS {
 	 * Find a rule with the given active property for the given node and set the new value for this property
 	 */
 	@Experimental
-	void setEffectivePropertyValueForNode(Integer nodeId, String propertyName, String value);
+	void setEffectivePropertyValueForNode(@ParamName("nodeId") Integer nodeId, @ParamName("propertyName") String propertyName, @ParamName("value") String value);
 
 	@Experimental
-	BackgroundColors getBackgroundColors(Integer nodeId);
+	BackgroundColors getBackgroundColors(@ParamName("nodeId") Integer nodeId);
 
 	/**
 	 * Enables the selector recording.

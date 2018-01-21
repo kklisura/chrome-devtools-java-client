@@ -67,6 +67,7 @@ public class TypesBuilder {
 	public static final String EXPERIMENTAL_ANNOTATION = "Experimental";
 	public static final String RETURNS_ANNOTATION = "Returns";
 	public static final String OPTIONAL_ANNOTATION = "Optional";
+	public static final String PARAM_NAME_ANNOTATION = "ParamName";
 
 	private static final Map<Class, String> TYPE_TO_JAVA_TYPE_MAP = new HashMap<>();
 	private static final Map<Class, String> PROPERTY_TO_JAVA_TYPE_MAP = new HashMap<>();

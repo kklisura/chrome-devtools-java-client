@@ -116,11 +116,16 @@ public class JavaInterfaceBuilderImpl extends BaseBuilder implements JavaInterfa
 						methodParam.getName());
 
 				if (CollectionUtils.isNotEmpty(methodParam.getAnnotations())) {
-					for (String annotation : methodParam.getAnnotations()) {
-						parameter.addMarkerAnnotation(annotation);
+					for (MethodParam.Annotation annotation : methodParam.getAnnotations()) {
+						if (StringUtils.isNotEmpty(annotation.getValue())) {
+							parameter.addSingleMemberAnnotation(annotation.getName(),
+									new StringLiteralExpr(annotation.getValue()));
+						} else {
+							parameter.addMarkerAnnotation(annotation.getName());
+						}
 
-						if (!DEPRECATED_ANNOTATION.equals(annotation)) {
-							addImport(annotationsPackage, annotation);
+						if (!DEPRECATED_ANNOTATION.equals(annotation.getName())) {
+							addImport(annotationsPackage, annotation.getName());
 						}
 					}
 				}

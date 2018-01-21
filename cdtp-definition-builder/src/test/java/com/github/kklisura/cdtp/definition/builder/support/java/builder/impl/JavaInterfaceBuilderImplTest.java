@@ -198,7 +198,8 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
 		final MethodParam param2 = new MethodParam();
 		param2.setType("String");
 		param2.setName("param2");
-		param2.setAnnotations(Arrays.asList("Annotation", "Annotation1", "Deprecated"));
+		param2.setAnnotations(Arrays.asList(createAnnotation("Annotation"), createAnnotation("Annotation1"),
+				createAnnotation("Deprecated"), createAnnotation("ParamValue", "paramValueName")));
 
 		interfaceBuilder.addMethod("someMethod1", "", Arrays.asList(param1, param2), "String");
 		interfaceBuilder.addMethodAnnotation("someMethod1", "Annotation");
@@ -212,16 +213,24 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
 				"\n" +
 				"import com.github.kklisura.annotations.Annotation;\n" +
 				"import com.github.kklisura.annotations.Annotation1;\n" +
+				"import com.github.kklisura.annotations.ParamValue;\n" +
 				"import com.github.kklisura.annotations.Annotation2;\n" +
 				"\n" +
 				"public interface InterfaceTest {\n" +
 				"\n" +
 				"    @Annotation\n" +
 				"    @Annotation2(\"param\")\n" +
-				"    String someMethod1(Integer param1, @Annotation @Annotation1 @Deprecated String param2);\n" +
+				"    String someMethod1(Integer param1, @Annotation @Annotation1 @Deprecated @ParamValue(\"paramValueName\") String param2);\n" +
 				"}\n", compilationUnitCapture.getValue().toString());
 
 		verifyAll();
 	}
 
+	private MethodParam.Annotation createAnnotation(String name) {
+		return new MethodParam.Annotation(name);
+	}
+
+	private MethodParam.Annotation createAnnotation(String name, String value) {
+		return new MethodParam.Annotation(name, value);
+	}
 }

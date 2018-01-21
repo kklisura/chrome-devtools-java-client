@@ -1,6 +1,7 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.database.ExecuteSQL;
 import java.util.List;
@@ -19,7 +20,7 @@ public interface Database {
 	void disable();
 
 	@Returns("tableNames")
-	List<String> getDatabaseTableNames(String databaseId);
+	List<String> getDatabaseTableNames(@ParamName("databaseId") String databaseId);
 
-	ExecuteSQL executeSQL(String databaseId, String query);
+	ExecuteSQL executeSQL(@ParamName("databaseId") String databaseId, @ParamName("query") String query);
 }

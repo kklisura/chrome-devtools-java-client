@@ -1,6 +1,7 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.annotations.ParamName;
 
 @Experimental
 public interface ServiceWorker {
@@ -9,23 +10,23 @@ public interface ServiceWorker {
 
 	void disable();
 
-	void unregister(String scopeURL);
+	void unregister(@ParamName("scopeURL") String scopeURL);
 
-	void updateRegistration(String scopeURL);
+	void updateRegistration(@ParamName("scopeURL") String scopeURL);
 
-	void startWorker(String scopeURL);
+	void startWorker(@ParamName("scopeURL") String scopeURL);
 
-	void skipWaiting(String scopeURL);
+	void skipWaiting(@ParamName("scopeURL") String scopeURL);
 
-	void stopWorker(String versionId);
+	void stopWorker(@ParamName("versionId") String versionId);
 
 	void stopAllWorkers();
 
-	void inspectWorker(String versionId);
+	void inspectWorker(@ParamName("versionId") String versionId);
 
-	void setForceUpdateOnPageLoad(Boolean forceUpdateOnPageLoad);
+	void setForceUpdateOnPageLoad(@ParamName("forceUpdateOnPageLoad") Boolean forceUpdateOnPageLoad);
 
-	void deliverPushMessage(String origin, String registrationId, String data);
+	void deliverPushMessage(@ParamName("origin") String origin, @ParamName("registrationId") String registrationId, @ParamName("data") String data);
 
-	void dispatchSyncEvent(String origin, String registrationId, String tag, Boolean lastChance);
+	void dispatchSyncEvent(@ParamName("origin") String origin, @ParamName("registrationId") String registrationId, @ParamName("tag") String tag, @ParamName("lastChance") Boolean lastChance);
 }

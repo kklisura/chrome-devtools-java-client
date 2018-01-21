@@ -183,16 +183,19 @@ public class CommandBuilder {
 				methodParam.setAnnotations(new ArrayList<>());
 
 				if (Boolean.TRUE.equals(property.getDeprecated())) {
-					methodParam.getAnnotations().add(DEPRECATED_ANNOTATION);
+					methodParam.getAnnotations().add(new MethodParam.Annotation(DEPRECATED_ANNOTATION));
 				}
 
 				if (Boolean.TRUE.equals(property.getExperimental())) {
-					methodParam.getAnnotations().add(EXPERIMENTAL_ANNOTATION);
+					methodParam.getAnnotations().add(new MethodParam.Annotation(EXPERIMENTAL_ANNOTATION));
 				}
 
 				if (Boolean.TRUE.equals(property.getOptional())) {
-					methodParam.getAnnotations().add(OPTIONAL_ANNOTATION);
+					methodParam.getAnnotations().add(new MethodParam.Annotation(OPTIONAL_ANNOTATION));
 				}
+
+				methodParam.getAnnotations().add(new MethodParam.Annotation(PARAM_NAME_ANNOTATION,
+						methodParam.getName()));
 
 				methodParams.add(methodParam);
 			}

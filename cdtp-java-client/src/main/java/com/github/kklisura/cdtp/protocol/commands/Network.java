@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.network.AuthChallengeResponse;
 import com.github.kklisura.cdtp.protocol.types.network.ConnectionType;
@@ -21,7 +22,7 @@ public interface Network {
 	/**
 	 * Enables network tracking, network events will now be delivered to the client.
 	 */
-	void enable(@Experimental @Optional Integer maxTotalBufferSize, @Experimental @Optional Integer maxResourceBufferSize);
+	void enable(@Experimental @Optional @ParamName("maxTotalBufferSize") Integer maxTotalBufferSize, @Experimental @Optional @ParamName("maxResourceBufferSize") Integer maxResourceBufferSize);
 
 	/**
 	 * Disables network tracking, prevents network events from being sent to the client.
@@ -31,29 +32,29 @@ public interface Network {
 	/**
 	 * Allows overriding user agent with the given string.
 	 */
-	void setUserAgentOverride(String userAgent);
+	void setUserAgentOverride(@ParamName("userAgent") String userAgent);
 
 	/**
 	 * Specifies whether to always send extra HTTP headers with the requests from this page.
 	 */
-	void setExtraHTTPHeaders(Headers headers);
+	void setExtraHTTPHeaders(@ParamName("headers") Headers headers);
 
 	/**
 	 * Returns content served for the given request.
 	 */
-	ResponseBody getResponseBody(String requestId);
+	ResponseBody getResponseBody(@ParamName("requestId") String requestId);
 
 	/**
 	 * Blocks URLs from loading.
 	 */
 	@Experimental
-	void setBlockedURLs(List<String> urls);
+	void setBlockedURLs(@ParamName("urls") List<String> urls);
 
 	/**
 	 * This method sends a new XMLHttpRequest which is identical to the original one. The following parameters should be identical: method, url, async, request body, extra headers, withCredentials attribute, user, password.
 	 */
 	@Experimental
-	void replayXHR(String requestId);
+	void replayXHR(@ParamName("requestId") String requestId);
 
 	/**
 	 * Tells whether clearing browser cache is supported.
@@ -82,7 +83,7 @@ public interface Network {
 	 */
 	@Experimental
 	@Returns("cookies")
-	List<Cookie> getCookies(@Optional List<String> urls);
+	List<Cookie> getCookies(@Optional @ParamName("urls") List<String> urls);
 
 	/**
 	 * Returns all browser cookies. Depending on the backend support, will return detailed cookie information in the <code>cookies</code> field.
@@ -95,20 +96,20 @@ public interface Network {
 	 * Deletes browser cookies with matching name and url or domain/path pair.
 	 */
 	@Experimental
-	void deleteCookies(String name, @Optional String url, @Optional String domain, @Optional String path);
+	void deleteCookies(@ParamName("name") String name, @Optional @ParamName("url") String url, @Optional @ParamName("domain") String domain, @Optional @ParamName("path") String path);
 
 	/**
 	 * Sets a cookie with the given cookie data; may overwrite equivalent cookies if they exist.
 	 */
 	@Experimental
 	@Returns("success")
-	Boolean setCookie(String name, String value, @Optional String url, @Optional String domain, @Optional String path, @Optional Boolean secure, @Optional Boolean httpOnly, @Optional CookieSameSite sameSite, @Optional Double expires);
+	Boolean setCookie(@ParamName("name") String name, @ParamName("value") String value, @Optional @ParamName("url") String url, @Optional @ParamName("domain") String domain, @Optional @ParamName("path") String path, @Optional @ParamName("secure") Boolean secure, @Optional @ParamName("httpOnly") Boolean httpOnly, @Optional @ParamName("sameSite") CookieSameSite sameSite, @Optional @ParamName("expires") Double expires);
 
 	/**
 	 * Sets given cookies.
 	 */
 	@Experimental
-	void setCookies(List<CookieParam> cookies);
+	void setCookies(@ParamName("cookies") List<CookieParam> cookies);
 
 	/**
 	 * Tells whether emulation of network conditions is supported.
@@ -120,41 +121,41 @@ public interface Network {
 	/**
 	 * Activates emulation of network conditions.
 	 */
-	void emulateNetworkConditions(Boolean offline, Double latency, Double downloadThroughput, Double uploadThroughput, @Optional ConnectionType connectionType);
+	void emulateNetworkConditions(@ParamName("offline") Boolean offline, @ParamName("latency") Double latency, @ParamName("downloadThroughput") Double downloadThroughput, @ParamName("uploadThroughput") Double uploadThroughput, @Optional @ParamName("connectionType") ConnectionType connectionType);
 
 	/**
 	 * Toggles ignoring cache for each request. If <code>true</code>, cache will not be used.
 	 */
-	void setCacheDisabled(Boolean cacheDisabled);
+	void setCacheDisabled(@ParamName("cacheDisabled") Boolean cacheDisabled);
 
 	/**
 	 * Toggles ignoring of service worker for each request.
 	 */
 	@Experimental
-	void setBypassServiceWorker(Boolean bypass);
+	void setBypassServiceWorker(@ParamName("bypass") Boolean bypass);
 
 	/**
 	 * For testing.
 	 */
 	@Experimental
-	void setDataSizeLimitsForTest(Integer maxTotalSize, Integer maxResourceSize);
+	void setDataSizeLimitsForTest(@ParamName("maxTotalSize") Integer maxTotalSize, @ParamName("maxResourceSize") Integer maxResourceSize);
 
 	/**
 	 * Returns the DER-encoded certificate.
 	 */
 	@Experimental
 	@Returns("tableNames")
-	List<String> getCertificate(String origin);
+	List<String> getCertificate(@ParamName("origin") String origin);
 
 	/**
 	 * Sets the requests to intercept that match a the provided patterns.
 	 */
 	@Experimental
-	void setRequestInterceptionEnabled(Boolean enabled, @Optional List<String> patterns);
+	void setRequestInterceptionEnabled(@ParamName("enabled") Boolean enabled, @Optional @ParamName("patterns") List<String> patterns);
 
 	/**
 	 * Response to Network.requestIntercepted which either modifies the request to continue with any modifications, or blocks it, or completes it with the provided response bytes. If a network fetch occurs as a result which encounters a redirect an additional Network.requestIntercepted event will be sent with the same InterceptionId.
 	 */
 	@Experimental
-	void continueInterceptedRequest(String interceptionId, @Optional ErrorReason errorReason, @Optional String rawResponse, @Optional String url, @Optional String method, @Optional String postData, @Optional Headers headers, @Optional AuthChallengeResponse authChallengeResponse);
+	void continueInterceptedRequest(@ParamName("interceptionId") String interceptionId, @Optional @ParamName("errorReason") ErrorReason errorReason, @Optional @ParamName("rawResponse") String rawResponse, @Optional @ParamName("url") String url, @Optional @ParamName("method") String method, @Optional @ParamName("postData") String postData, @Optional @ParamName("headers") Headers headers, @Optional @ParamName("authChallengeResponse") AuthChallengeResponse authChallengeResponse);
 }

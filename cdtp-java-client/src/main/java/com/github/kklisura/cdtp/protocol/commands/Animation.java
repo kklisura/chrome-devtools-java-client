@@ -1,6 +1,7 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.runtime.RemoteObject;
 import java.util.List;
@@ -27,37 +28,37 @@ public interface Animation {
 	/**
 	 * Sets the playback rate of the document timeline.
 	 */
-	void setPlaybackRate(Double playbackRate);
+	void setPlaybackRate(@ParamName("playbackRate") Double playbackRate);
 
 	/**
 	 * Returns the current time of the an animation.
 	 */
 	@Returns("currentTime")
-	Double getCurrentTime(String id);
+	Double getCurrentTime(@ParamName("id") String id);
 
 	/**
 	 * Sets the paused state of a set of animations.
 	 */
-	void setPaused(List<String> animations, Boolean paused);
+	void setPaused(@ParamName("animations") List<String> animations, @ParamName("paused") Boolean paused);
 
 	/**
 	 * Sets the timing of an animation node.
 	 */
-	void setTiming(String animationId, Double duration, Double delay);
+	void setTiming(@ParamName("animationId") String animationId, @ParamName("duration") Double duration, @ParamName("delay") Double delay);
 
 	/**
 	 * Seek a set of animations to a particular time within each animation.
 	 */
-	void seekAnimations(List<String> animations, Double currentTime);
+	void seekAnimations(@ParamName("animations") List<String> animations, @ParamName("currentTime") Double currentTime);
 
 	/**
 	 * Releases a set of animations to no longer be manipulated.
 	 */
-	void releaseAnimations(List<String> animations);
+	void releaseAnimations(@ParamName("animations") List<String> animations);
 
 	/**
 	 * Gets the remote object of the Animation.
 	 */
 	@Returns("remoteObject")
-	RemoteObject resolveAnimation(String animationId);
+	RemoteObject resolveAnimation(@ParamName("animationId") String animationId);
 }

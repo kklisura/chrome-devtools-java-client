@@ -1,6 +1,7 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.types.log.ViolationSetting;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public interface Log {
 	/**
 	 * start violation reporting.
 	 */
-	void startViolationsReport(List<ViolationSetting> config);
+	void startViolationsReport(@ParamName("config") List<ViolationSetting> config);
 
 	/**
 	 * Stop violation reporting.

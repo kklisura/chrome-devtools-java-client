@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.debugger.BreakLocation;
 import com.github.kklisura.cdtp.protocol.types.debugger.EvaluateOnCallFrame;
@@ -35,39 +36,39 @@ public interface Debugger {
 	/**
 	 * Activates / deactivates all breakpoints on the page.
 	 */
-	void setBreakpointsActive(Boolean active);
+	void setBreakpointsActive(@ParamName("active") Boolean active);
 
 	/**
 	 * Makes page not interrupt on any pauses (breakpoint, exception, dom exception etc).
 	 */
-	void setSkipAllPauses(Boolean skip);
+	void setSkipAllPauses(@ParamName("skip") Boolean skip);
 
 	/**
 	 * Sets JavaScript breakpoint at given location specified either by URL or URL regex. Once this command is issued, all existing parsed scripts will have breakpoints resolved and returned in <code>locations</code> property. Further matching script parsing will result in subsequent <code>breakpointResolved</code> events issued. This logical breakpoint will survive page reloads.
 	 */
-	SetBreakpointByUrl setBreakpointByUrl(Integer lineNumber, @Optional String url, @Optional String urlRegex, @Optional Integer columnNumber, @Optional String condition);
+	SetBreakpointByUrl setBreakpointByUrl(@ParamName("lineNumber") Integer lineNumber, @Optional @ParamName("url") String url, @Optional @ParamName("urlRegex") String urlRegex, @Optional @ParamName("columnNumber") Integer columnNumber, @Optional @ParamName("condition") String condition);
 
 	/**
 	 * Sets JavaScript breakpoint at a given location.
 	 */
-	SetBreakpoint setBreakpoint(Location location, @Optional String condition);
+	SetBreakpoint setBreakpoint(@ParamName("location") Location location, @Optional @ParamName("condition") String condition);
 
 	/**
 	 * Removes JavaScript breakpoint.
 	 */
-	void removeBreakpoint(String breakpointId);
+	void removeBreakpoint(@ParamName("breakpointId") String breakpointId);
 
 	/**
 	 * Returns possible locations for breakpoint. scriptId in start and end range locations should be the same.
 	 */
 	@Experimental
 	@Returns("locations")
-	List<BreakLocation> getPossibleBreakpoints(Location start, @Optional Location end, @Optional Boolean restrictToFunction);
+	List<BreakLocation> getPossibleBreakpoints(@ParamName("start") Location start, @Optional @ParamName("end") Location end, @Optional @ParamName("restrictToFunction") Boolean restrictToFunction);
 
 	/**
 	 * Continues execution until specific location is reached.
 	 */
-	void continueToLocation(Location location, @Experimental @Optional TargetCallFrames targetCallFrames);
+	void continueToLocation(@ParamName("location") Location location, @Experimental @Optional @ParamName("targetCallFrames") TargetCallFrames targetCallFrames);
 
 	/**
 	 * Steps over the statement.
@@ -105,53 +106,53 @@ public interface Debugger {
 	 */
 	@Experimental
 	@Returns("result")
-	List<SearchMatch> searchInContent(String scriptId, String query, @Optional Boolean caseSensitive, @Optional Boolean isRegex);
+	List<SearchMatch> searchInContent(@ParamName("scriptId") String scriptId, @ParamName("query") String query, @Optional @ParamName("caseSensitive") Boolean caseSensitive, @Optional @ParamName("isRegex") Boolean isRegex);
 
 	/**
 	 * Edits JavaScript source live.
 	 */
-	SetScriptSource setScriptSource(String scriptId, String scriptSource, @Optional Boolean dryRun);
+	SetScriptSource setScriptSource(@ParamName("scriptId") String scriptId, @ParamName("scriptSource") String scriptSource, @Optional @ParamName("dryRun") Boolean dryRun);
 
 	/**
 	 * Restarts particular call frame from the beginning.
 	 */
-	RestartFrame restartFrame(String callFrameId);
+	RestartFrame restartFrame(@ParamName("callFrameId") String callFrameId);
 
 	/**
 	 * Returns source for the script with given id.
 	 */
 	@Returns("scriptSource")
-	String getScriptSource(String scriptId);
+	String getScriptSource(@ParamName("scriptId") String scriptId);
 
 	/**
 	 * Defines pause on exceptions state. Can be set to stop on all exceptions, uncaught exceptions or no exceptions. Initial pause on exceptions state is <code>none</code>.
 	 */
-	void setPauseOnExceptions(State state);
+	void setPauseOnExceptions(@ParamName("state") State state);
 
 	/**
 	 * Evaluates expression on a given call frame.
 	 */
-	EvaluateOnCallFrame evaluateOnCallFrame(String callFrameId, String expression, @Optional String objectGroup, @Optional Boolean includeCommandLineAPI, @Optional Boolean silent, @Optional Boolean returnByValue, @Experimental @Optional Boolean generatePreview, @Experimental @Optional Boolean throwOnSideEffect);
+	EvaluateOnCallFrame evaluateOnCallFrame(@ParamName("callFrameId") String callFrameId, @ParamName("expression") String expression, @Optional @ParamName("objectGroup") String objectGroup, @Optional @ParamName("includeCommandLineAPI") Boolean includeCommandLineAPI, @Optional @ParamName("silent") Boolean silent, @Optional @ParamName("returnByValue") Boolean returnByValue, @Experimental @Optional @ParamName("generatePreview") Boolean generatePreview, @Experimental @Optional @ParamName("throwOnSideEffect") Boolean throwOnSideEffect);
 
 	/**
 	 * Changes value of variable in a callframe. Object-based scopes are not supported and must be mutated manually.
 	 */
-	void setVariableValue(Integer scopeNumber, String variableName, CallArgument newValue, String callFrameId);
+	void setVariableValue(@ParamName("scopeNumber") Integer scopeNumber, @ParamName("variableName") String variableName, @ParamName("newValue") CallArgument newValue, @ParamName("callFrameId") String callFrameId);
 
 	/**
 	 * Enables or disables async call stacks tracking.
 	 */
-	void setAsyncCallStackDepth(Integer maxDepth);
+	void setAsyncCallStackDepth(@ParamName("maxDepth") Integer maxDepth);
 
 	/**
 	 * Replace previous blackbox patterns with passed ones. Forces backend to skip stepping/pausing in scripts with url matching one of the patterns. VM will try to leave blackboxed script by performing 'step in' several times, finally resorting to 'step out' if unsuccessful.
 	 */
 	@Experimental
-	void setBlackboxPatterns(List<String> patterns);
+	void setBlackboxPatterns(@ParamName("patterns") List<String> patterns);
 
 	/**
 	 * Makes backend skip steps in the script in blackboxed ranges. VM will try leave blacklisted scripts by performing 'step in' several times, finally resorting to 'step out' if unsuccessful. Positions array contains positions where blackbox state is changed. First interval isn't blackboxed. Array should be sorted.
 	 */
 	@Experimental
-	void setBlackboxedRanges(String scriptId, List<ScriptPosition> positions);
+	void setBlackboxedRanges(@ParamName("scriptId") String scriptId, @ParamName("positions") List<ScriptPosition> positions);
 }

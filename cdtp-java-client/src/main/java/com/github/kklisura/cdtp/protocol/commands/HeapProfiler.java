@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.heapprofiler.SamplingHeapProfile;
 import com.github.kklisura.cdtp.protocol.types.runtime.RemoteObject;
@@ -13,26 +14,26 @@ public interface HeapProfiler {
 
 	void disable();
 
-	void startTrackingHeapObjects(@Optional Boolean trackAllocations);
+	void startTrackingHeapObjects(@Optional @ParamName("trackAllocations") Boolean trackAllocations);
 
-	void stopTrackingHeapObjects(@Optional Boolean reportProgress);
+	void stopTrackingHeapObjects(@Optional @ParamName("reportProgress") Boolean reportProgress);
 
-	void takeHeapSnapshot(@Optional Boolean reportProgress);
+	void takeHeapSnapshot(@Optional @ParamName("reportProgress") Boolean reportProgress);
 
 	void collectGarbage();
 
 	@Returns("result")
-	RemoteObject getObjectByHeapObjectId(String objectId, @Optional String objectGroup);
+	RemoteObject getObjectByHeapObjectId(@ParamName("objectId") String objectId, @Optional @ParamName("objectGroup") String objectGroup);
 
 	/**
 	 * Enables console to refer to the node with given id via $x (see Command Line API for more details $x functions).
 	 */
-	void addInspectedHeapObject(String heapObjectId);
+	void addInspectedHeapObject(@ParamName("heapObjectId") String heapObjectId);
 
 	@Returns("heapSnapshotObjectId")
-	String getHeapObjectId(String objectId);
+	String getHeapObjectId(@ParamName("objectId") String objectId);
 
-	void startSampling(@Optional Double samplingInterval);
+	void startSampling(@Optional @ParamName("samplingInterval") Double samplingInterval);
 
 	@Returns("profile")
 	SamplingHeapProfile stopSampling();

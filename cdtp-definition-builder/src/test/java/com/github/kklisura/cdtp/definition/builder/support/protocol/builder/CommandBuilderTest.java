@@ -193,11 +193,15 @@ public class CommandBuilderTest extends EasyMockSupport {
 		assertEquals(2, params.size());
 		Assert.assertEquals(stringParam.getName(), params.get(0).getName());
 		assertEquals("String", params.get(0).getType());
-		assertEquals("Deprecated", params.get(0).getAnnotations().get(0));
+		assertEquals("Deprecated", params.get(0).getAnnotations().get(0).getName());
+		assertEquals("ParamName", params.get(0).getAnnotations().get(1).getName());
+		assertEquals(stringParam.getName(), params.get(0).getAnnotations().get(1).getValue());
 
 		assertEquals(numberParam.getName(), params.get(1).getName());
 		assertEquals("Double", params.get(1).getType());
-		assertEquals("Experimental", params.get(1).getAnnotations().get(0));
+		assertEquals("Experimental", params.get(1).getAnnotations().get(0).getName());
+		assertEquals("ParamName", params.get(1).getAnnotations().get(1).getName());
+		assertEquals(numberParam.getName(), params.get(1).getAnnotations().get(1).getValue());
 	}
 
 	@Test
@@ -275,12 +279,16 @@ public class CommandBuilderTest extends EasyMockSupport {
 		assertEquals(2, params.size());
 		assertEquals(refParam.getName(), params.get(0).getName());
 		assertEquals("TestRef", params.get(0).getType());
-		assertEquals("Deprecated", params.get(0).getAnnotations().get(0));
+		assertEquals("Deprecated", params.get(0).getAnnotations().get(0).getName());
+		assertEquals("ParamName", params.get(0).getAnnotations().get(1).getName());
+		assertEquals(refParam.getName(), params.get(0).getAnnotations().get(1).getValue());
 
 		Assert.assertEquals(arrayProperty.getName(), params.get(1).getName());
 		assertEquals("List<EnumParam1>", params.get(1).getType());
-		assertEquals("Experimental", params.get(1).getAnnotations().get(0));
-		assertEquals("Optional", params.get(1).getAnnotations().get(1));
+		assertEquals("Experimental", params.get(1).getAnnotations().get(0).getName());
+		assertEquals("Optional", params.get(1).getAnnotations().get(1).getName());
+		assertEquals("ParamName", params.get(1).getAnnotations().get(2).getName());
+		assertEquals(arrayProperty.getName(), params.get(1).getAnnotations().get(2).getValue());
 	}
 
 	@Test

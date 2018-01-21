@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.profiler.Profile;
 import com.github.kklisura.cdtp.protocol.types.profiler.ScriptCoverage;
@@ -17,7 +18,7 @@ public interface Profiler {
 	/**
 	 * Changes CPU profiler sampling interval. Must be called before CPU profiles recording started.
 	 */
-	void setSamplingInterval(Integer interval);
+	void setSamplingInterval(@ParamName("interval") Integer interval);
 
 	void start();
 
@@ -28,7 +29,7 @@ public interface Profiler {
 	 * Enable precise code coverage. Coverage data for JavaScript executed before enabling precise code coverage may be incomplete. Enabling prevents running optimized code and resets execution counters.
 	 */
 	@Experimental
-	void startPreciseCoverage(@Optional Boolean callCount, @Optional Boolean detailed);
+	void startPreciseCoverage(@Optional @ParamName("callCount") Boolean callCount, @Optional @ParamName("detailed") Boolean detailed);
 
 	/**
 	 * Disable precise code coverage. Disabling releases unnecessary execution count records and allows executing optimized code.
