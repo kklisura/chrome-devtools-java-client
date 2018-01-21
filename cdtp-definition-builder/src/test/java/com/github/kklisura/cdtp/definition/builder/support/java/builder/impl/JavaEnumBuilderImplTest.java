@@ -58,19 +58,10 @@ public class JavaEnumBuilderImplTest extends EasyMockSupport {
 
 		assertEquals("package com.github.kklisura;\n" +
 				"\n" +
+				"import com.fasterxml.jackson.annotation.JsonProperty;\n" +
+				"\n" +
 				"public enum EnumName {\n" +
 				"\n" +
-				"    ;\n" +
-				"\n" +
-				"    final String propertyName;\n" +
-				"\n" +
-				"    EnumName(final String propertyName) {\n" +
-				"        this.propertyName = propertyName;\n" +
-				"    }\n" +
-				"\n" +
-				"    public String getPropertyName() {\n" +
-				"        return this.propertyName;\n" +
-				"    }\n" +
 				"}\n", compilationUnitCapture.getValue().toString());
 
 		verifyAll();
@@ -94,22 +85,15 @@ public class JavaEnumBuilderImplTest extends EasyMockSupport {
 
 		assertEquals("package com.github.kklisura;\n" +
 				"\n" +
+				"import com.fasterxml.jackson.annotation.JsonProperty;\n" +
+				"\n" +
 				"/**\n" +
 				" * Java doc.\n" +
 				" */\n" +
 				"public enum EnumName {\n" +
 				"\n" +
-				"    ENUM_CONSTANT(\"enumConstant\");\n" +
-				"\n" +
-				"    final String propertyName;\n" +
-				"\n" +
-				"    EnumName(final String propertyName) {\n" +
-				"        this.propertyName = propertyName;\n" +
-				"    }\n" +
-				"\n" +
-				"    public String getPropertyName() {\n" +
-				"        return this.propertyName;\n" +
-				"    }\n" +
+				"    @JsonProperty(\"enumConstant\")\n" +
+				"    ENUM_CONSTANT\n" +
 				"}\n", compilationUnitCapture.getValue().toString());
 
 		verifyAll();

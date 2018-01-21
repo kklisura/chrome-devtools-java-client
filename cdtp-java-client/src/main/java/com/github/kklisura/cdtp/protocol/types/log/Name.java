@@ -1,19 +1,18 @@
 package com.github.kklisura.cdtp.protocol.types.log;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Violation type.
  */
 public enum Name {
 
-	LONG_TASK("longTask"), LONG_LAYOUT("longLayout"), BLOCKED_EVENT("blockedEvent"), BLOCKED_PARSER("blockedParser"), DISCOURAGED_API_USE("discouragedAPIUse"), HANDLER("handler"), RECURRING_HANDLER("recurringHandler");
-
-	final String propertyName;
-
-	Name(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("longTask")
+	LONG_TASK, @JsonProperty("longLayout")
+	LONG_LAYOUT, @JsonProperty("blockedEvent")
+	BLOCKED_EVENT, @JsonProperty("blockedParser")
+	BLOCKED_PARSER, @JsonProperty("discouragedAPIUse")
+	DISCOURAGED_API_USE, @JsonProperty("handler")
+	HANDLER, @JsonProperty("recurringHandler")
+	RECURRING_HANDLER
 }

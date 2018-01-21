@@ -1,19 +1,14 @@
 package com.github.kklisura.cdtp.protocol.types.security;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * A description of mixed content (HTTP resources on HTTPS pages), as defined by https://www.w3.org/TR/mixed-content/#categories
  */
 public enum MixedContentType {
 
-	BLOCKABLE("blockable"), OPTIONALLY_BLOCKABLE("optionally-blockable"), NONE("none");
-
-	final String propertyName;
-
-	MixedContentType(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("blockable")
+	BLOCKABLE, @JsonProperty("optionally-blockable")
+	OPTIONALLY_BLOCKABLE, @JsonProperty("none")
+	NONE
 }

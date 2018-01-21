@@ -1,19 +1,14 @@
 package com.github.kklisura.cdtp.protocol.types.dom;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Shadow root type.
  */
 public enum ShadowRootType {
 
-	USER_AGENT("user-agent"), OPEN("open"), CLOSED("closed");
-
-	final String propertyName;
-
-	ShadowRootType(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("user-agent")
+	USER_AGENT, @JsonProperty("open")
+	OPEN, @JsonProperty("closed")
+	CLOSED
 }

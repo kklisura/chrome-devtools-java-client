@@ -172,8 +172,8 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
 				"public interface InterfaceTest {\n" +
 				"\n" +
 				"    /**\n" +
-				"\t * Method description\n" +
-				"\t */\n" +
+				"     * Method description\n" +
+				"     */\n" +
 				"    void someMethod1();" +
 				"\n" +
 				"}\n" +

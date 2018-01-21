@@ -1,11 +1,11 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.types.profiler.Profile;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.types.profiler.Profile;
 import com.github.kklisura.cdtp.protocol.types.profiler.ScriptCoverage;
-import java.util.List;
 import com.github.kklisura.cdtp.protocol.types.profiler.ScriptTypeProfile;
+import java.util.List;
 
 public interface Profiler {
 

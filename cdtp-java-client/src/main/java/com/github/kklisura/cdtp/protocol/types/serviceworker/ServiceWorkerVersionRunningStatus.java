@@ -1,16 +1,12 @@
 package com.github.kklisura.cdtp.protocol.types.serviceworker;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public enum ServiceWorkerVersionRunningStatus {
 
-	STOPPED("stopped"), STARTING("starting"), RUNNING("running"), STOPPING("stopping");
-
-	final String propertyName;
-
-	ServiceWorkerVersionRunningStatus(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("stopped")
+	STOPPED, @JsonProperty("starting")
+	STARTING, @JsonProperty("running")
+	RUNNING, @JsonProperty("stopping")
+	STOPPING
 }

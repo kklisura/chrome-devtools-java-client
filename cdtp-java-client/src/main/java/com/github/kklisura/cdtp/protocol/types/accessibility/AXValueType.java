@@ -1,19 +1,28 @@
 package com.github.kklisura.cdtp.protocol.types.accessibility;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Enum of possible property types.
  */
 public enum AXValueType {
 
-	BOOLEAN("boolean"), TRISTATE("tristate"), BOOLEAN_OR_UNDEFINED("booleanOrUndefined"), IDREF("idref"), IDREF_LIST("idrefList"), INTEGER("integer"), NODE("node"), NODE_LIST("nodeList"), NUMBER("number"), STRING("string"), COMPUTED_STRING("computedString"), TOKEN("token"), TOKEN_LIST("tokenList"), DOM_RELATION("domRelation"), ROLE("role"), INTERNAL_ROLE("internalRole"), VALUE_UNDEFINED("valueUndefined");
-
-	final String propertyName;
-
-	AXValueType(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("boolean")
+	BOOLEAN, @JsonProperty("tristate")
+	TRISTATE, @JsonProperty("booleanOrUndefined")
+	BOOLEAN_OR_UNDEFINED, @JsonProperty("idref")
+	IDREF, @JsonProperty("idrefList")
+	IDREF_LIST, @JsonProperty("integer")
+	INTEGER, @JsonProperty("node")
+	NODE, @JsonProperty("nodeList")
+	NODE_LIST, @JsonProperty("number")
+	NUMBER, @JsonProperty("string")
+	STRING, @JsonProperty("computedString")
+	COMPUTED_STRING, @JsonProperty("token")
+	TOKEN, @JsonProperty("tokenList")
+	TOKEN_LIST, @JsonProperty("domRelation")
+	DOM_RELATION, @JsonProperty("role")
+	ROLE, @JsonProperty("internalRole")
+	INTERNAL_ROLE, @JsonProperty("valueUndefined")
+	VALUE_UNDEFINED
 }

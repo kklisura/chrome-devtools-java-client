@@ -1,11 +1,11 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import java.util.List;
+import com.github.kklisura.cdtp.protocol.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.types.indexeddb.DatabaseWithObjectStores;
 import com.github.kklisura.cdtp.protocol.types.indexeddb.KeyRange;
 import com.github.kklisura.cdtp.protocol.types.indexeddb.RequestData;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import java.util.List;
 
 @Experimental
 public interface IndexedDB {

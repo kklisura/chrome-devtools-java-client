@@ -1,7 +1,7 @@
 package com.github.kklisura.cdtp.protocol.types.network;
 
-import com.github.kklisura.cdtp.protocol.types.runtime.StackTrace;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.types.runtime.StackTrace;
 
 /**
  * Information about the request initiator.

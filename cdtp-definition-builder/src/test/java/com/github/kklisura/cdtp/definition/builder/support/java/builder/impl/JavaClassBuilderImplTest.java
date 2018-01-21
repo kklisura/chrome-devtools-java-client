@@ -198,15 +198,15 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
 				"    private String privateField;\n" +
 				"\n" +
 				"    /**\n" +
-				"\t * Private field description\n" +
-				"\t */\n" +
+				"     * Private field description\n" +
+				"     */\n" +
 				"    public String getPrivateField() {\n" +
 				"        return privateField;\n" +
 				"    }\n" +
 				"\n" +
 				"    /**\n" +
-				"\t * Private field description\n" +
-				"\t */\n" +
+				"     * Private field description\n" +
+				"     */\n" +
 				"    public void setPrivateField(String privateField) {\n" +
 				"        this.privateField = privateField;\n" +
 				"    }\n" +

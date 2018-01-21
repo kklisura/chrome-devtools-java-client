@@ -1,7 +1,7 @@
 package com.github.kklisura.cdtp.protocol.types.network;
 
-import com.github.kklisura.cdtp.protocol.types.page.ResourceType;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.types.page.ResourceType;
 
 /**
  * Information about the cached resource.

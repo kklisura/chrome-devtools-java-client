@@ -1,16 +1,10 @@
 package com.github.kklisura.cdtp.protocol.types.debugger;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public enum TargetCallFrames {
 
-	ANY("any"), CURRENT("current");
-
-	final String propertyName;
-
-	TargetCallFrames(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("any")
+	ANY, @JsonProperty("current")
+	CURRENT
 }

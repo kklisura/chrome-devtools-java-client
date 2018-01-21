@@ -1,19 +1,15 @@
 package com.github.kklisura.cdtp.protocol.types.accessibility;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Attributes which apply to nodes in live regions.
  */
 public enum AXLiveRegionAttributes {
 
-	LIVE("live"), ATOMIC("atomic"), RELEVANT("relevant"), ROOT("root");
-
-	final String propertyName;
-
-	AXLiveRegionAttributes(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("live")
+	LIVE, @JsonProperty("atomic")
+	ATOMIC, @JsonProperty("relevant")
+	RELEVANT, @JsonProperty("root")
+	ROOT
 }

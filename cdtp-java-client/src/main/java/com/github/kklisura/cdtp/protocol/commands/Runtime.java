@@ -1,16 +1,16 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.types.runtime.Evaluate;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.types.runtime.AwaitPromise;
 import com.github.kklisura.cdtp.protocol.types.runtime.CallArgument;
-import java.util.List;
 import com.github.kklisura.cdtp.protocol.types.runtime.CallFunctionOn;
-import com.github.kklisura.cdtp.protocol.types.runtime.Properties;
 import com.github.kklisura.cdtp.protocol.types.runtime.CompileScript;
-import com.github.kklisura.cdtp.protocol.types.runtime.RunScript;
+import com.github.kklisura.cdtp.protocol.types.runtime.Evaluate;
+import com.github.kklisura.cdtp.protocol.types.runtime.Properties;
 import com.github.kklisura.cdtp.protocol.types.runtime.RemoteObject;
+import com.github.kklisura.cdtp.protocol.types.runtime.RunScript;
+import java.util.List;
 
 /**
  * Runtime domain exposes JavaScript runtime by means of remote evaluation and mirror objects. Evaluation results are returned as mirror object that expose object type, string representation and unique identifier that can be used for further object reference. Original objects are maintained in memory unless they are either explicitly released or are released along with the other objects in their object group.

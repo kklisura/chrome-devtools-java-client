@@ -1,9 +1,9 @@
 package com.github.kklisura.cdtp.protocol.events.debugger;
 
-import com.github.kklisura.cdtp.protocol.types.debugger.CallFrame;
-import java.util.List;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.types.debugger.CallFrame;
 import com.github.kklisura.cdtp.protocol.types.runtime.StackTrace;
+import java.util.List;
 
 /**
  * Fired when the virtual machine stopped on breakpoint or exception or any other stop criteria.

@@ -1,10 +1,10 @@
 package com.github.kklisura.cdtp.protocol.events.runtime;
 
-import com.github.kklisura.cdtp.protocol.types.runtime.RemoteObject;
-import java.util.List;
-import com.github.kklisura.cdtp.protocol.types.runtime.StackTrace;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.types.runtime.RemoteObject;
+import com.github.kklisura.cdtp.protocol.types.runtime.StackTrace;
+import java.util.List;
 
 /**
  * Issued when console API was called.

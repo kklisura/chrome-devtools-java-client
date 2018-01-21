@@ -1,19 +1,18 @@
 package com.github.kklisura.cdtp.protocol.types.accessibility;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * States which apply to every AX node.
  */
 public enum AXGlobalStates {
 
-	BUSY("busy"), DISABLED("disabled"), HIDDEN("hidden"), HIDDEN_ROOT("hiddenRoot"), INVALID("invalid"), KEYSHORTCUTS("keyshortcuts"), ROLEDESCRIPTION("roledescription");
-
-	final String propertyName;
-
-	AXGlobalStates(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("busy")
+	BUSY, @JsonProperty("disabled")
+	DISABLED, @JsonProperty("hidden")
+	HIDDEN, @JsonProperty("hiddenRoot")
+	HIDDEN_ROOT, @JsonProperty("invalid")
+	INVALID, @JsonProperty("keyshortcuts")
+	KEYSHORTCUTS, @JsonProperty("roledescription")
+	ROLEDESCRIPTION
 }

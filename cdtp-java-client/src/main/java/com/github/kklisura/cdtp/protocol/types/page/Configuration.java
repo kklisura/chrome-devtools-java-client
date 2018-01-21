@@ -1,19 +1,13 @@
 package com.github.kklisura.cdtp.protocol.types.page;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Touch/gesture events configuration. Default: current platform.
  */
 public enum Configuration {
 
-	MOBILE("mobile"), DESKTOP("desktop");
-
-	final String propertyName;
-
-	Configuration(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("mobile")
+	MOBILE, @JsonProperty("desktop")
+	DESKTOP
 }

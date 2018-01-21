@@ -120,7 +120,8 @@ public class Application {
 		PrettyPrinterConfiguration prettyPrinterConfiguration = new PrettyPrinterConfiguration();
 		prettyPrinterConfiguration.setIndent("\t");
 		prettyPrinterConfiguration.setPrintComments(true);
-		prettyPrinterConfiguration.setPrintJavaDoc(true);
+		prettyPrinterConfiguration.setPrintJavadoc(true);
+		prettyPrinterConfiguration.setOrderImports(true);
 
 		PrettyPrinter prettyPrinter = new PrettyPrinter(prettyPrinterConfiguration);
 

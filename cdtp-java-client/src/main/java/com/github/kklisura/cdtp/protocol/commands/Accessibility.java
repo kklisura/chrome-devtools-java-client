@@ -1,9 +1,9 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.types.accessibility.AXNode;
 import java.util.List;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
 
 @Experimental
 public interface Accessibility {

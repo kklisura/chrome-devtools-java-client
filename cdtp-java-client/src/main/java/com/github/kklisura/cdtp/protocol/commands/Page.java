@@ -2,20 +2,20 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
-import com.github.kklisura.cdtp.protocol.types.page.TransitionType;
-import com.github.kklisura.cdtp.protocol.types.page.NavigationHistory;
-import com.github.kklisura.cdtp.protocol.types.network.Cookie;
-import java.util.List;
-import com.github.kklisura.cdtp.protocol.types.page.FrameResourceTree;
-import com.github.kklisura.cdtp.protocol.types.page.ResourceContent;
 import com.github.kklisura.cdtp.protocol.types.debugger.SearchMatch;
 import com.github.kklisura.cdtp.protocol.types.emulation.ScreenOrientation;
+import com.github.kklisura.cdtp.protocol.types.network.Cookie;
+import com.github.kklisura.cdtp.protocol.types.page.AppManifest;
+import com.github.kklisura.cdtp.protocol.types.page.Behavior;
 import com.github.kklisura.cdtp.protocol.types.page.Configuration;
 import com.github.kklisura.cdtp.protocol.types.page.Format;
-import com.github.kklisura.cdtp.protocol.types.page.Viewport;
-import com.github.kklisura.cdtp.protocol.types.page.AppManifest;
+import com.github.kklisura.cdtp.protocol.types.page.FrameResourceTree;
 import com.github.kklisura.cdtp.protocol.types.page.LayoutMetrics;
-import com.github.kklisura.cdtp.protocol.types.page.Behavior;
+import com.github.kklisura.cdtp.protocol.types.page.NavigationHistory;
+import com.github.kklisura.cdtp.protocol.types.page.ResourceContent;
+import com.github.kklisura.cdtp.protocol.types.page.TransitionType;
+import com.github.kklisura.cdtp.protocol.types.page.Viewport;
+import java.util.List;
 
 /**
  * Actions and events related to the inspected page belong to the page domain.

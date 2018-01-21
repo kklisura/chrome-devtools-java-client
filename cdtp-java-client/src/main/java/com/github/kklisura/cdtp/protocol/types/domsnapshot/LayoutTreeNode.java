@@ -1,8 +1,8 @@
 package com.github.kklisura.cdtp.protocol.types.domsnapshot;
 
-import com.github.kklisura.cdtp.protocol.types.dom.Rect;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.types.css.InlineTextBox;
+import com.github.kklisura.cdtp.protocol.types.dom.Rect;
 import java.util.List;
 
 /**

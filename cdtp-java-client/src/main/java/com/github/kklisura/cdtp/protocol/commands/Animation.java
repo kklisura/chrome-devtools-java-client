@@ -1,8 +1,8 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import java.util.List;
 import com.github.kklisura.cdtp.protocol.types.runtime.RemoteObject;
+import java.util.List;
 
 @Experimental
 public interface Animation {

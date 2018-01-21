@@ -1,12 +1,12 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.types.dom.Node;
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
-import java.util.List;
+import com.github.kklisura.cdtp.protocol.types.dom.BoxModel;
+import com.github.kklisura.cdtp.protocol.types.dom.Node;
 import com.github.kklisura.cdtp.protocol.types.dom.PerformSearch;
 import com.github.kklisura.cdtp.protocol.types.runtime.RemoteObject;
-import com.github.kklisura.cdtp.protocol.types.dom.BoxModel;
+import java.util.List;
 
 /**
  * This domain exposes DOM read/write operations. Each DOM Node is represented with its mirror object that has an <code>id</code>. This <code>id</code> can be used to get additional information on the Node, resolve it into the JavaScript object wrapper, etc. It is important that client receives DOM events only for the nodes that are known to the client. Backend keeps track of the nodes that were sent to the client and never sends the same node twice. It is client's responsibility to collect information about the nodes that were sent to the client.<p>Note that <code>iframe</code> owner elements will return corresponding document elements as their child nodes.</p>

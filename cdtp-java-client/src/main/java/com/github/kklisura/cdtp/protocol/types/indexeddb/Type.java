@@ -1,19 +1,14 @@
 package com.github.kklisura.cdtp.protocol.types.indexeddb;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Key path type.
  */
 public enum Type {
 
-	NULL("null"), STRING("string"), ARRAY("array");
-
-	final String propertyName;
-
-	Type(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("null")
+	NULL, @JsonProperty("string")
+	STRING, @JsonProperty("array")
+	ARRAY
 }

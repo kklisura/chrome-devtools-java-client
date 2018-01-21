@@ -1,7 +1,7 @@
 package com.github.kklisura.cdtp.protocol.types.runtime;
 
-import java.util.List;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import java.util.List;
 
 public class Properties {
 

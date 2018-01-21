@@ -1,19 +1,13 @@
 package com.github.kklisura.cdtp.protocol.types.page;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Image compression format.
  */
 public enum Format {
 
-	JPEG("jpeg"), PNG("png");
-
-	final String propertyName;
-
-	Format(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("jpeg")
+	JPEG, @JsonProperty("png")
+	PNG
 }

@@ -1,19 +1,22 @@
 package com.github.kklisura.cdtp.protocol.types.accessibility;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Attributes which apply to widgets.
  */
 public enum AXWidgetAttributes {
 
-	AUTOCOMPLETE("autocomplete"), HASPOPUP("haspopup"), LEVEL("level"), MULTISELECTABLE("multiselectable"), ORIENTATION("orientation"), MULTILINE("multiline"), READONLY("readonly"), REQUIRED("required"), VALUEMIN("valuemin"), VALUEMAX("valuemax"), VALUETEXT("valuetext");
-
-	final String propertyName;
-
-	AXWidgetAttributes(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("autocomplete")
+	AUTOCOMPLETE, @JsonProperty("haspopup")
+	HASPOPUP, @JsonProperty("level")
+	LEVEL, @JsonProperty("multiselectable")
+	MULTISELECTABLE, @JsonProperty("orientation")
+	ORIENTATION, @JsonProperty("multiline")
+	MULTILINE, @JsonProperty("readonly")
+	READONLY, @JsonProperty("required")
+	REQUIRED, @JsonProperty("valuemin")
+	VALUEMIN, @JsonProperty("valuemax")
+	VALUEMAX, @JsonProperty("valuetext")
+	VALUETEXT
 }

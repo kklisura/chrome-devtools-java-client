@@ -1,19 +1,15 @@
 package com.github.kklisura.cdtp.protocol.types.network;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Type of this initiator.
  */
 public enum Type {
 
-	PARSER("parser"), SCRIPT("script"), PRELOAD("preload"), OTHER("other");
-
-	final String propertyName;
-
-	Type(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("parser")
+	PARSER, @JsonProperty("script")
+	SCRIPT, @JsonProperty("preload")
+	PRELOAD, @JsonProperty("other")
+	OTHER
 }

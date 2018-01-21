@@ -1,19 +1,24 @@
 package com.github.kklisura.cdtp.protocol.types.page;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Resource type as it was perceived by the rendering engine.
  */
 public enum ResourceType {
 
-	DOCUMENT("Document"), STYLESHEET("Stylesheet"), IMAGE("Image"), MEDIA("Media"), FONT("Font"), SCRIPT("Script"), TEXT_TRACK("TextTrack"), XHR("XHR"), FETCH("Fetch"), EVENT_SOURCE("EventSource"), WEB_SOCKET("WebSocket"), MANIFEST("Manifest"), OTHER("Other");
-
-	final String propertyName;
-
-	ResourceType(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("Document")
+	DOCUMENT, @JsonProperty("Stylesheet")
+	STYLESHEET, @JsonProperty("Image")
+	IMAGE, @JsonProperty("Media")
+	MEDIA, @JsonProperty("Font")
+	FONT, @JsonProperty("Script")
+	SCRIPT, @JsonProperty("TextTrack")
+	TEXT_TRACK, @JsonProperty("XHR")
+	XHR, @JsonProperty("Fetch")
+	FETCH, @JsonProperty("EventSource")
+	EVENT_SOURCE, @JsonProperty("WebSocket")
+	WEB_SOCKET, @JsonProperty("Manifest")
+	MANIFEST, @JsonProperty("Other")
+	OTHER
 }

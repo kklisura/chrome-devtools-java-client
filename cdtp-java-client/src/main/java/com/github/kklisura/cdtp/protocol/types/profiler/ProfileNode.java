@@ -1,8 +1,8 @@
 package com.github.kklisura.cdtp.protocol.types.profiler;
 
-import com.github.kklisura.cdtp.protocol.types.runtime.CallFrame;
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.types.runtime.CallFrame;
 import java.util.List;
 
 /**

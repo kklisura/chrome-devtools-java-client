@@ -1,19 +1,13 @@
 package com.github.kklisura.cdtp.protocol.types.memory;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Memory pressure level.
  */
 public enum PressureLevel {
 
-	MODERATE("moderate"), CRITICAL("critical");
-
-	final String propertyName;
-
-	PressureLevel(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("moderate")
+	MODERATE, @JsonProperty("critical")
+	CRITICAL
 }

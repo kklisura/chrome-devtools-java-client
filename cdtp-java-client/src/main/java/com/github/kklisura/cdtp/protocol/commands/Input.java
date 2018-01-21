@@ -1,12 +1,12 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.types.input.Type;
+import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.types.input.Button;
-import com.github.kklisura.cdtp.protocol.types.input.TouchPoint;
-import java.util.List;
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.types.input.GestureSourceType;
+import com.github.kklisura.cdtp.protocol.types.input.TouchPoint;
+import com.github.kklisura.cdtp.protocol.types.input.Type;
+import java.util.List;
 
 public interface Input {
 

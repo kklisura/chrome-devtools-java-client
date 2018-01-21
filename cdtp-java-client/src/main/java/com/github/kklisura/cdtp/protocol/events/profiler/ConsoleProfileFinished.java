@@ -1,8 +1,8 @@
 package com.github.kklisura.cdtp.protocol.events.profiler;
 
+import com.github.kklisura.cdtp.protocol.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.types.debugger.Location;
 import com.github.kklisura.cdtp.protocol.types.profiler.Profile;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
 
 public class ConsoleProfileFinished {
 

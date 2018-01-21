@@ -1,9 +1,9 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.types.browser.WindowForTarget;
-import com.github.kklisura.cdtp.protocol.types.browser.Version;
 import com.github.kklisura.cdtp.protocol.types.browser.Bounds;
+import com.github.kklisura.cdtp.protocol.types.browser.Version;
+import com.github.kklisura.cdtp.protocol.types.browser.WindowForTarget;
 
 /**
  * The Browser domain defines methods and events for browser managing.

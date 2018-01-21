@@ -1,20 +1,11 @@
 package com.github.kklisura.cdtp.definition.builder.support.java.builder.impl;
 
-import com.github.javaparser.ast.Modifier;
-import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.body.ConstructorDeclaration;
+import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.body.EnumConstantDeclaration;
 import com.github.javaparser.ast.body.EnumDeclaration;
-import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.body.Parameter;
-import com.github.javaparser.ast.expr.AssignExpr;
-import com.github.javaparser.ast.expr.FieldAccessExpr;
-import com.github.javaparser.ast.expr.NameExpr;
+import com.github.javaparser.ast.expr.Name;
+import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
-import com.github.javaparser.ast.expr.ThisExpr;
-import com.github.javaparser.ast.stmt.BlockStmt;
-import com.github.javaparser.ast.stmt.ExpressionStmt;
-import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.JavaEnumBuilder;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.utils.JavadocUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +18,8 @@ import static com.github.kklisura.cdtp.definition.builder.support.java.builder.u
  * @author Kenan Klisura
  */
 public class JavaEnumBuilderImpl extends BaseBuilder implements JavaEnumBuilder {
-	private static final String PROPERTY_NAME = "propertyName";
+	private static final String JSON_PROPERTY = "JsonProperty";
+	private static final String JSON_PROPERTY_PACKAGE = "com.fasterxml.jackson.annotation";
 
 	private EnumDeclaration declaration;
 
@@ -42,36 +34,10 @@ public class JavaEnumBuilderImpl extends BaseBuilder implements JavaEnumBuilder 
 		declaration = getCompilationUnit().addEnum(name);
 		declaration.setName(name);
 
-		declaration.addField("String", PROPERTY_NAME, Modifier.FINAL);
-
-		// Add constructor
-		ConstructorDeclaration constructorDeclaration = declaration.addConstructor();
-		Parameter parameter = new Parameter();
-		parameter.setName(PROPERTY_NAME);
-		parameter.setType("String");
-		parameter.setModifier(Modifier.FINAL, true);
-		constructorDeclaration.setParameters(NodeList.nodeList(parameter));
-
-		BlockStmt constructorBody = new BlockStmt();
-
-		FieldAccessExpr fieldAccessExpr = new FieldAccessExpr(new ThisExpr(), PROPERTY_NAME);
-		AssignExpr assignExpr = new AssignExpr(fieldAccessExpr, new NameExpr(PROPERTY_NAME), AssignExpr.Operator.ASSIGN);
-		ExpressionStmt expressionStmt = new ExpressionStmt(assignExpr);
-
-		constructorBody.setStatements(NodeList.nodeList(expressionStmt));
-		constructorDeclaration.setBody(constructorBody);
-
-		// Add getter
-		String methodName = "get" + StringUtils.capitalize(PROPERTY_NAME);
-		MethodDeclaration getterMethodDeclaration = declaration.addMethod(methodName, Modifier.PUBLIC);
-		getterMethodDeclaration.setType("String");
-
-		BlockStmt methodBody = new BlockStmt();
-
-		ReturnStmt returnStmt = new ReturnStmt(new FieldAccessExpr(new ThisExpr(), PROPERTY_NAME));
-		methodBody.setStatements(NodeList.nodeList(returnStmt));
-
-		getterMethodDeclaration.setBody(methodBody);
+		Name jsonPropertyName = new Name();
+		jsonPropertyName.setQualifier(new Name(JSON_PROPERTY_PACKAGE));
+		jsonPropertyName.setIdentifier(JSON_PROPERTY);
+		getCompilationUnit().addImport(new ImportDeclaration(jsonPropertyName, false, false));
 	}
 
 	/**
@@ -82,7 +48,12 @@ public class JavaEnumBuilderImpl extends BaseBuilder implements JavaEnumBuilder 
 	 */
 	public void addEnumConstant(String name, String value) {
 		EnumConstantDeclaration enumConstantDeclaration = new EnumConstantDeclaration(name);
-		enumConstantDeclaration.setArguments(NodeList.nodeList(new StringLiteralExpr(value)));
+
+		SingleMemberAnnotationExpr jsonPropertyAnnotation = new SingleMemberAnnotationExpr();
+		jsonPropertyAnnotation.setName(JSON_PROPERTY);
+		jsonPropertyAnnotation.setMemberValue(new StringLiteralExpr(value));
+		enumConstantDeclaration.addAnnotation(jsonPropertyAnnotation);
+
 		declaration.addEntry(enumConstantDeclaration);
 	}
 

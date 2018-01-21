@@ -1,19 +1,29 @@
 package com.github.kklisura.cdtp.protocol.events.runtime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Type of the call.
  */
 public enum Type {
 
-	LOG("log"), DEBUG("debug"), INFO("info"), ERROR("error"), WARNING("warning"), DIR("dir"), DIRXML("dirxml"), TABLE("table"), TRACE("trace"), CLEAR("clear"), START_GROUP("startGroup"), START_GROUP_COLLAPSED("startGroupCollapsed"), END_GROUP("endGroup"), ASSERT("assert"), PROFILE("profile"), PROFILE_END("profileEnd"), COUNT("count"), TIME_END("timeEnd");
-
-	final String propertyName;
-
-	Type(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("log")
+	LOG, @JsonProperty("debug")
+	DEBUG, @JsonProperty("info")
+	INFO, @JsonProperty("error")
+	ERROR, @JsonProperty("warning")
+	WARNING, @JsonProperty("dir")
+	DIR, @JsonProperty("dirxml")
+	DIRXML, @JsonProperty("table")
+	TABLE, @JsonProperty("trace")
+	TRACE, @JsonProperty("clear")
+	CLEAR, @JsonProperty("startGroup")
+	START_GROUP, @JsonProperty("startGroupCollapsed")
+	START_GROUP_COLLAPSED, @JsonProperty("endGroup")
+	END_GROUP, @JsonProperty("assert")
+	ASSERT, @JsonProperty("profile")
+	PROFILE, @JsonProperty("profileEnd")
+	PROFILE_END, @JsonProperty("count")
+	COUNT, @JsonProperty("timeEnd")
+	TIME_END
 }

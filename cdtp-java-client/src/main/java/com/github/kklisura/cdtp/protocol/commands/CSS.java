@@ -1,21 +1,21 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.types.css.MatchedStylesForNode;
-import com.github.kklisura.cdtp.protocol.types.css.InlineStylesForNode;
+import com.github.kklisura.cdtp.protocol.types.css.BackgroundColors;
 import com.github.kklisura.cdtp.protocol.types.css.CSSComputedStyleProperty;
-import java.util.List;
-import com.github.kklisura.cdtp.protocol.types.css.PlatformFontUsage;
-import com.github.kklisura.cdtp.protocol.types.css.SourceRange;
-import com.github.kklisura.cdtp.protocol.types.css.SelectorList;
-import com.github.kklisura.cdtp.protocol.types.css.Value;
-import com.github.kklisura.cdtp.protocol.types.css.StyleDeclarationEdit;
-import com.github.kklisura.cdtp.protocol.types.css.CSSStyle;
 import com.github.kklisura.cdtp.protocol.types.css.CSSMedia;
 import com.github.kklisura.cdtp.protocol.types.css.CSSRule;
+import com.github.kklisura.cdtp.protocol.types.css.CSSStyle;
 import com.github.kklisura.cdtp.protocol.types.css.ForcedPseudoClasses;
-import com.github.kklisura.cdtp.protocol.types.css.BackgroundColors;
+import com.github.kklisura.cdtp.protocol.types.css.InlineStylesForNode;
+import com.github.kklisura.cdtp.protocol.types.css.MatchedStylesForNode;
+import com.github.kklisura.cdtp.protocol.types.css.PlatformFontUsage;
 import com.github.kklisura.cdtp.protocol.types.css.RuleUsage;
+import com.github.kklisura.cdtp.protocol.types.css.SelectorList;
+import com.github.kklisura.cdtp.protocol.types.css.SourceRange;
+import com.github.kklisura.cdtp.protocol.types.css.StyleDeclarationEdit;
+import com.github.kklisura.cdtp.protocol.types.css.Value;
+import java.util.List;
 
 /**
  * This domain exposes CSS read/write operations. All CSS objects (stylesheets, rules, and styles) have an associated <code>id</code> used in subsequent operations on the related object. Each object type has a specific <code>id</code> structure, and those are not interchangeable between objects of different kinds. CSS objects can be loaded using the <code>get*ForNode()</code> calls (which accept a DOM node id). A client can also keep track of stylesheets via the <code>styleSheetAdded</code>/<code>styleSheetRemoved</code> events and subsequently load the required stylesheet contents using the <code>getStyleSheet[Text]()</code> methods.

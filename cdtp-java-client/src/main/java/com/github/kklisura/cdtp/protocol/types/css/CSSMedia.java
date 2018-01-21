@@ -1,8 +1,8 @@
 package com.github.kklisura.cdtp.protocol.types.css;
 
+import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
 import java.util.List;
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 
 /**
  * CSS media rule descriptor.

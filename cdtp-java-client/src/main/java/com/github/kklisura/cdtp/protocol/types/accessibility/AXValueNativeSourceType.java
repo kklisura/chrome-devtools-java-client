@@ -1,19 +1,19 @@
 package com.github.kklisura.cdtp.protocol.types.accessibility;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Enum of possible native property sources (as a subtype of a particular AXValueSourceType).
  */
 public enum AXValueNativeSourceType {
 
-	FIGCAPTION("figcaption"), LABEL("label"), LABELFOR("labelfor"), LABELWRAPPED("labelwrapped"), LEGEND("legend"), TABLECAPTION("tablecaption"), TITLE("title"), OTHER("other");
-
-	final String propertyName;
-
-	AXValueNativeSourceType(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("figcaption")
+	FIGCAPTION, @JsonProperty("label")
+	LABEL, @JsonProperty("labelfor")
+	LABELFOR, @JsonProperty("labelwrapped")
+	LABELWRAPPED, @JsonProperty("legend")
+	LEGEND, @JsonProperty("tablecaption")
+	TABLECAPTION, @JsonProperty("title")
+	TITLE, @JsonProperty("other")
+	OTHER
 }

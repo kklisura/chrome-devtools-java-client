@@ -1,19 +1,21 @@
 package com.github.kklisura.cdtp.protocol.events.debugger;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Pause reason.
  */
 public enum Reason {
 
-	XHR("XHR"), DOM("DOM"), EVENT_LISTENER("EventListener"), EXCEPTION("exception"), ASSERT("assert"), DEBUG_COMMAND("debugCommand"), PROMISE_REJECTION("promiseRejection"), OOM("OOM"), OTHER("other"), AMBIGUOUS("ambiguous");
-
-	final String propertyName;
-
-	Reason(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("XHR")
+	XHR, @JsonProperty("DOM")
+	DOM, @JsonProperty("EventListener")
+	EVENT_LISTENER, @JsonProperty("exception")
+	EXCEPTION, @JsonProperty("assert")
+	ASSERT, @JsonProperty("debugCommand")
+	DEBUG_COMMAND, @JsonProperty("promiseRejection")
+	PROMISE_REJECTION, @JsonProperty("OOM")
+	OOM, @JsonProperty("other")
+	OTHER, @JsonProperty("ambiguous")
+	AMBIGUOUS
 }

@@ -1,8 +1,8 @@
 package com.github.kklisura.cdtp.protocol.types.domsnapshot;
 
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
-import java.util.List;
 import com.github.kklisura.cdtp.protocol.types.dom.PseudoType;
+import java.util.List;
 
 /**
  * A Node in the DOM tree.

@@ -1,19 +1,26 @@
 package com.github.kklisura.cdtp.protocol.types.dom;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Pseudo element type.
  */
 public enum PseudoType {
 
-	FIRST_LINE("first-line"), FIRST_LETTER("first-letter"), BEFORE("before"), AFTER("after"), BACKDROP("backdrop"), SELECTION("selection"), FIRST_LINE_INHERITED("first-line-inherited"), SCROLLBAR("scrollbar"), SCROLLBAR_THUMB("scrollbar-thumb"), SCROLLBAR_BUTTON("scrollbar-button"), SCROLLBAR_TRACK("scrollbar-track"), SCROLLBAR_TRACK_PIECE("scrollbar-track-piece"), SCROLLBAR_CORNER("scrollbar-corner"), RESIZER("resizer"), INPUT_LIST_BUTTON("input-list-button");
-
-	final String propertyName;
-
-	PseudoType(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("first-line")
+	FIRST_LINE, @JsonProperty("first-letter")
+	FIRST_LETTER, @JsonProperty("before")
+	BEFORE, @JsonProperty("after")
+	AFTER, @JsonProperty("backdrop")
+	BACKDROP, @JsonProperty("selection")
+	SELECTION, @JsonProperty("first-line-inherited")
+	FIRST_LINE_INHERITED, @JsonProperty("scrollbar")
+	SCROLLBAR, @JsonProperty("scrollbar-thumb")
+	SCROLLBAR_THUMB, @JsonProperty("scrollbar-button")
+	SCROLLBAR_BUTTON, @JsonProperty("scrollbar-track")
+	SCROLLBAR_TRACK, @JsonProperty("scrollbar-track-piece")
+	SCROLLBAR_TRACK_PIECE, @JsonProperty("scrollbar-corner")
+	SCROLLBAR_CORNER, @JsonProperty("resizer")
+	RESIZER, @JsonProperty("input-list-button")
+	INPUT_LIST_BUTTON
 }

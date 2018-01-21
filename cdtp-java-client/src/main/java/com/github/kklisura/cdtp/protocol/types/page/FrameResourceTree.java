@@ -1,8 +1,8 @@
 package com.github.kklisura.cdtp.protocol.types.page;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import java.util.List;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import java.util.List;
 
 /**
  * Information about the Frame hierarchy along with their cached resources.

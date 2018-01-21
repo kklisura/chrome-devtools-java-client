@@ -1,10 +1,10 @@
 package com.github.kklisura.cdtp.protocol.events.security;
 
+import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.types.security.InsecureContentStatus;
 import com.github.kklisura.cdtp.protocol.types.security.SecurityState;
 import com.github.kklisura.cdtp.protocol.types.security.SecurityStateExplanation;
 import java.util.List;
-import com.github.kklisura.cdtp.protocol.types.security.InsecureContentStatus;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
 
 /**
  * The security state of the page changed.

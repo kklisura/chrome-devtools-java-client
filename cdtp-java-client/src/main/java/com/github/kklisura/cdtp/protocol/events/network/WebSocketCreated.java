@@ -1,8 +1,8 @@
 package com.github.kklisura.cdtp.protocol.events.network;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.types.network.Initiator;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.types.network.Initiator;
 
 /**
  * Fired upon WebSocket creation.

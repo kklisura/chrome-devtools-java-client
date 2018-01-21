@@ -1,8 +1,8 @@
 package com.github.kklisura.cdtp.protocol.events.page;
 
-import com.github.kklisura.cdtp.protocol.types.runtime.StackTrace;
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.types.runtime.StackTrace;
 
 /**
  * Fired when frame has been attached to its parent.

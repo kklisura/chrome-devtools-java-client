@@ -1,19 +1,15 @@
 package com.github.kklisura.cdtp.protocol.types.emulation;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Orientation type.
  */
 public enum Type {
 
-	PORTRAIT_PRIMARY("portraitPrimary"), PORTRAIT_SECONDARY("portraitSecondary"), LANDSCAPE_PRIMARY("landscapePrimary"), LANDSCAPE_SECONDARY("landscapeSecondary");
-
-	final String propertyName;
-
-	Type(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("portraitPrimary")
+	PORTRAIT_PRIMARY, @JsonProperty("portraitSecondary")
+	PORTRAIT_SECONDARY, @JsonProperty("landscapePrimary")
+	LANDSCAPE_PRIMARY, @JsonProperty("landscapeSecondary")
+	LANDSCAPE_SECONDARY
 }

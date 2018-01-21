@@ -1,10 +1,10 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.types.target.RemoteLocation;
-import java.util.List;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.types.target.RemoteLocation;
 import com.github.kklisura.cdtp.protocol.types.target.TargetInfo;
+import java.util.List;
 
 /**
  * Supports additional targets discovery and allows to attach to them.

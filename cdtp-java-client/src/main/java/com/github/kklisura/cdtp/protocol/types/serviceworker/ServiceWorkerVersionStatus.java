@@ -1,16 +1,14 @@
 package com.github.kklisura.cdtp.protocol.types.serviceworker;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public enum ServiceWorkerVersionStatus {
 
-	NEW("new"), INSTALLING("installing"), INSTALLED("installed"), ACTIVATING("activating"), ACTIVATED("activated"), REDUNDANT("redundant");
-
-	final String propertyName;
-
-	ServiceWorkerVersionStatus(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("new")
+	NEW, @JsonProperty("installing")
+	INSTALLING, @JsonProperty("installed")
+	INSTALLED, @JsonProperty("activating")
+	ACTIVATING, @JsonProperty("activated")
+	ACTIVATED, @JsonProperty("redundant")
+	REDUNDANT
 }

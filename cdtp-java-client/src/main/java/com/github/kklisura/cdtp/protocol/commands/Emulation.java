@@ -1,11 +1,11 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.types.emulation.ScreenOrientation;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.types.emulation.Configuration;
-import com.github.kklisura.cdtp.protocol.types.emulation.VirtualTimePolicy;
+import com.github.kklisura.cdtp.protocol.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.types.dom.RGBA;
+import com.github.kklisura.cdtp.protocol.types.emulation.Configuration;
+import com.github.kklisura.cdtp.protocol.types.emulation.ScreenOrientation;
+import com.github.kklisura.cdtp.protocol.types.emulation.VirtualTimePolicy;
 
 /**
  * This domain emulates different environments for the page.

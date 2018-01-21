@@ -1,9 +1,9 @@
 package com.github.kklisura.cdtp.protocol.events.network;
 
-import com.github.kklisura.cdtp.protocol.types.page.ResourceType;
+import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.types.network.BlockedReason;
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.types.page.ResourceType;
 
 /**
  * Fired when HTTP request has failed to load.

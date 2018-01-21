@@ -1,19 +1,14 @@
 package com.github.kklisura.cdtp.protocol.types.domdebugger;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * DOM breakpoint type.
  */
 public enum DOMBreakpointType {
 
-	SUBTREE_MODIFIED("subtree-modified"), ATTRIBUTE_MODIFIED("attribute-modified"), NODE_REMOVED("node-removed");
-
-	final String propertyName;
-
-	DOMBreakpointType(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("subtree-modified")
+	SUBTREE_MODIFIED, @JsonProperty("attribute-modified")
+	ATTRIBUTE_MODIFIED, @JsonProperty("node-removed")
+	NODE_REMOVED
 }

@@ -1,11 +1,11 @@
 package com.github.kklisura.cdtp.protocol.events.network;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.types.network.Request;
-import com.github.kklisura.cdtp.protocol.types.page.ResourceType;
-import com.github.kklisura.cdtp.protocol.types.network.Headers;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.types.network.AuthChallenge;
+import com.github.kklisura.cdtp.protocol.types.network.Headers;
+import com.github.kklisura.cdtp.protocol.types.network.Request;
+import com.github.kklisura.cdtp.protocol.types.page.ResourceType;
 
 /**
  * Details of an intercepted HTTP request, which must be either allowed, blocked, modified or mocked.

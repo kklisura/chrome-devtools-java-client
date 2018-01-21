@@ -1,8 +1,8 @@
 package com.github.kklisura.cdtp.protocol.types.domdebugger;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.types.runtime.RemoteObject;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.types.runtime.RemoteObject;
 
 /**
  * Object event listener.

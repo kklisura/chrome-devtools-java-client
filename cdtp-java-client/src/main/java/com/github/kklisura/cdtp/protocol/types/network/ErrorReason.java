@@ -1,19 +1,23 @@
 package com.github.kklisura.cdtp.protocol.types.network;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Network level fetch failure reason.
  */
 public enum ErrorReason {
 
-	FAILED("Failed"), ABORTED("Aborted"), TIMED_OUT("TimedOut"), ACCESS_DENIED("AccessDenied"), CONNECTION_CLOSED("ConnectionClosed"), CONNECTION_RESET("ConnectionReset"), CONNECTION_REFUSED("ConnectionRefused"), CONNECTION_ABORTED("ConnectionAborted"), CONNECTION_FAILED("ConnectionFailed"), NAME_NOT_RESOLVED("NameNotResolved"), INTERNET_DISCONNECTED("InternetDisconnected"), ADDRESS_UNREACHABLE("AddressUnreachable");
-
-	final String propertyName;
-
-	ErrorReason(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("Failed")
+	FAILED, @JsonProperty("Aborted")
+	ABORTED, @JsonProperty("TimedOut")
+	TIMED_OUT, @JsonProperty("AccessDenied")
+	ACCESS_DENIED, @JsonProperty("ConnectionClosed")
+	CONNECTION_CLOSED, @JsonProperty("ConnectionReset")
+	CONNECTION_RESET, @JsonProperty("ConnectionRefused")
+	CONNECTION_REFUSED, @JsonProperty("ConnectionAborted")
+	CONNECTION_ABORTED, @JsonProperty("ConnectionFailed")
+	CONNECTION_FAILED, @JsonProperty("NameNotResolved")
+	NAME_NOT_RESOLVED, @JsonProperty("InternetDisconnected")
+	INTERNET_DISCONNECTED, @JsonProperty("AddressUnreachable")
+	ADDRESS_UNREACHABLE
 }

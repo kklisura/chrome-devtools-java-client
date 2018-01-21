@@ -2,15 +2,15 @@ package com.github.kklisura.cdtp.protocol.commands;
 
 import com.github.kklisura.cdtp.protocol.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.types.network.AuthChallengeResponse;
+import com.github.kklisura.cdtp.protocol.types.network.ConnectionType;
+import com.github.kklisura.cdtp.protocol.types.network.Cookie;
+import com.github.kklisura.cdtp.protocol.types.network.CookieParam;
+import com.github.kklisura.cdtp.protocol.types.network.CookieSameSite;
+import com.github.kklisura.cdtp.protocol.types.network.ErrorReason;
 import com.github.kklisura.cdtp.protocol.types.network.Headers;
 import com.github.kklisura.cdtp.protocol.types.network.ResponseBody;
 import java.util.List;
-import com.github.kklisura.cdtp.protocol.types.network.Cookie;
-import com.github.kklisura.cdtp.protocol.types.network.CookieSameSite;
-import com.github.kklisura.cdtp.protocol.types.network.CookieParam;
-import com.github.kklisura.cdtp.protocol.types.network.ConnectionType;
-import com.github.kklisura.cdtp.protocol.types.network.ErrorReason;
-import com.github.kklisura.cdtp.protocol.types.network.AuthChallengeResponse;
 
 /**
  * Network domain allows tracking network activities of the page. It exposes information about http, file, data and other requests and responses, their headers, bodies, timing, etc.

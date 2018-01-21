@@ -1,7 +1,7 @@
 package com.github.kklisura.cdtp.protocol.events.page;
 
-import com.github.kklisura.cdtp.protocol.types.page.DialogType;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.types.page.DialogType;
 
 /**
  * Fired when a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload) is about to open.

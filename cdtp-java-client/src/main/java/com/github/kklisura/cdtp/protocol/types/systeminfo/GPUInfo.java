@@ -1,7 +1,7 @@
 package com.github.kklisura.cdtp.protocol.types.systeminfo;
 
-import java.util.List;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import java.util.List;
 
 /**
  * Provides information about the GPU(s) on the system.

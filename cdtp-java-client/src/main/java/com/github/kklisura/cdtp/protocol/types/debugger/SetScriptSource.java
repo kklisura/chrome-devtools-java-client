@@ -1,9 +1,9 @@
 package com.github.kklisura.cdtp.protocol.types.debugger;
 
-import java.util.List;
 import com.github.kklisura.cdtp.protocol.annotations.Optional;
-import com.github.kklisura.cdtp.protocol.types.runtime.StackTrace;
 import com.github.kklisura.cdtp.protocol.types.runtime.ExceptionDetails;
+import com.github.kklisura.cdtp.protocol.types.runtime.StackTrace;
+import java.util.List;
 
 public class SetScriptSource {
 

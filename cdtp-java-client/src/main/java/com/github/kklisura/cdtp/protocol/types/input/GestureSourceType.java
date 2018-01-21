@@ -1,16 +1,11 @@
 package com.github.kklisura.cdtp.protocol.types.input;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public enum GestureSourceType {
 
-	DEFAULT("default"), TOUCH("touch"), MOUSE("mouse");
-
-	final String propertyName;
-
-	GestureSourceType(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	public String getPropertyName() {
-		return this.propertyName;
-	}
+	@JsonProperty("default")
+	DEFAULT, @JsonProperty("touch")
+	TOUCH, @JsonProperty("mouse")
+	MOUSE
 }
