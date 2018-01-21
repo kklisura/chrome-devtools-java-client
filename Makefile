@@ -42,4 +42,4 @@ upgrade-protocol-definition: build-cdtp-definition-builder clean-previous-protoc
 		--protocol=$(PROTOCOL_JSON_FILE)
 
 update-protocol-definition: upgrade-protocol-definition compile-cdtp-java-client
-	# Upgraded protocol definition on cdtp-java-client
+	# Updated protocol definition on cdtp-java-client

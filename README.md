@@ -6,12 +6,12 @@ TBD
 
 ## Development
 
-### Upgrading protocol definition
+### Update protocol definition
 
 To upgrade protocol definition from current `1.3` version to `latest` version, download new `protocol.json` file to root dir and run:
 
 ```
-make upgrade-protocol-definition
+make update-protocol-definition
 ```
 
 By running, this will:
