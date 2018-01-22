@@ -1,7 +1,7 @@
-package com.github.kklisura.cdtp.client.services.impl;
+package com.github.kklisura.cdtp.services.impl;
 
-import com.github.kklisura.cdtp.client.services.WebSocketService;
-import com.github.kklisura.cdtp.client.services.exceptions.WebSocketServiceException;
+import com.github.kklisura.cdtp.services.WebSocketService;
+import com.github.kklisura.cdtp.services.exceptions.WebSocketServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

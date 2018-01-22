@@ -1,4 +1,4 @@
-package com.github.kklisura.cdtp.client.services.impl.utils;
+package com.github.kklisura.cdtp.services.impl.utils;
 
 import java.io.InputStream;
 

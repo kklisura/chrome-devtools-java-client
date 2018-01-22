@@ -1,6 +1,6 @@
-package com.github.kklisura.cdtp.client.services;
+package com.github.kklisura.cdtp.services;
 
-import com.github.kklisura.cdtp.client.services.exceptions.WebSocketServiceException;
+import com.github.kklisura.cdtp.services.exceptions.WebSocketServiceException;
 
 import java.net.URI;
 import java.util.function.Consumer;
