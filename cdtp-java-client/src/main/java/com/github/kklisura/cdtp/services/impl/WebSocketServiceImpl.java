@@ -14,7 +14,6 @@ import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 import java.io.IOException;
 import java.net.URI;
-import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 
 /**
@@ -28,6 +27,15 @@ public class WebSocketServiceImpl implements WebSocketService {
 	private static final WebSocketContainer WEB_SOCKET_CONTAINER = ContainerProvider.getWebSocketContainer();
 
 	private Session session;
+
+	/**
+	 * Instantiates a new Web socket service.
+	 *
+	 * @param session Session.
+	 */
+	public WebSocketServiceImpl(Session session) {
+		this.session = session;
+	}
 
 	/**
 	 * Private ctor.
@@ -53,8 +61,6 @@ public class WebSocketServiceImpl implements WebSocketService {
 
 	@Override
 	public void connect(URI uri) throws WebSocketServiceException {
-		final CountDownLatch countDownLatch = new CountDownLatch(1);
-
 		LOGGER.info("Connecting to ws server {}", uri);
 
 		try {
@@ -62,7 +68,6 @@ public class WebSocketServiceImpl implements WebSocketService {
 				@Override
 				public void onOpen(Session session, EndpointConfig config) {
 					LOGGER.debug("Connected to ws server {}", uri);
-					countDownLatch.countDown();
 				}
 
 				// TODO(kklisura): Add close handler.
@@ -71,13 +76,6 @@ public class WebSocketServiceImpl implements WebSocketService {
 			LOGGER.warn("Failed connecting to ws server {}...", uri, e);
 			throw new WebSocketServiceException("Failed connecting to ws server {}", e);
 		}
-
-		try {
-			countDownLatch.await();
-		} catch (InterruptedException e) {
-			LOGGER.warn("Interrupted while connecting to ws server {}...", uri, e);
-			throw new WebSocketServiceException("Failed connecting to ws server.", e);
-		}
 	}
 
 	@Override
@@ -85,7 +83,7 @@ public class WebSocketServiceImpl implements WebSocketService {
 		try {
 			LOGGER.info("Sending message {} on {}", message, session.getRequestURI());
 			session.getBasicRemote().sendText(message);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			LOGGER.error("Failed sending data to ws server {}...", session.getRequestURI(), e);
 			throw new WebSocketServiceException("Failed sending data to ws server.", e);
 		}

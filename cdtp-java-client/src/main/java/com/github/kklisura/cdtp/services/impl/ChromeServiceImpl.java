@@ -16,8 +16,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -147,12 +147,16 @@ public class ChromeServiceImpl implements ChromeService {
 
 			String webSocketDebuggerUrl = tab.getWebSocketDebuggerUrl();
 			WebSocketService webSocketService = webSocketServiceFactory.createWebSocketService(webSocketDebuggerUrl);
-
 			DevToolsService devToolsService = new DevToolsServiceImpl(webSocketService);
-			ChromeDevTools devTools = createProxy(ChromeDevTools.class, (proxy, method, args) -> {
-				Class<?> returnType = method.getReturnType();
-				return createProxy(returnType, new CommandInvocationHandler(devToolsService));
-			});
+			CommandInvocationHandler commandInvocationHandler = new CommandInvocationHandler(devToolsService);
+
+			Map<Method, Object> devToolsCommandsCache = new ConcurrentHashMap<>();
+
+			ChromeDevTools devTools = createProxy(ChromeDevTools.class, (proxy, method, args) ->
+					devToolsCommandsCache.computeIfAbsent(method, key -> {
+						Class<?> returnType = method.getReturnType();
+						return createProxy(returnType, commandInvocationHandler);
+					}));
 
 			devToolsCache.put(tab.getId(), new WeakReference<>(devTools));
 			return devTools;
@@ -199,8 +203,6 @@ public class ChromeServiceImpl implements ChromeService {
 			String message = MessageFormat.format("Server responded with non-200 code: {0} - {1}. {2}",
 					responseCode, connection.getResponseMessage(), responseBody);
 			throw new ChromeServiceException(message);
-		} catch (MalformedURLException ex) {
-			throw new ChromeServiceException("Bad url provided.", ex);
 		} catch (IOException ex) {
 			throw new ChromeServiceException("Failed sending HTTP request.", ex);
 		} finally {

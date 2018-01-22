@@ -15,7 +15,10 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+
+import static com.github.kklisura.cdtp.services.utils.ConfigurationUtils.systemProperty;
 
 /**
  * Dev tools service implementation.
@@ -24,6 +27,12 @@ import java.util.function.Consumer;
  */
 public class DevToolsServiceImpl implements DevToolsService, Consumer<String> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DevToolsServiceImpl.class);
+
+	private static final String TIMEOUT_ENV_PROPERTY = "com.github.kklisura.cdtp.websocket.readTimeout";
+
+	// Default of 10 seconds read timeout.
+	private static final long DEFAULT_READ_TIMEOUT = 10_000;
+	private static final long READ_TIMEOUT = systemProperty(TIMEOUT_ENV_PROPERTY, DEFAULT_READ_TIMEOUT);
 
 	private static final String ID_PROPERTY = "id";
 	private static final String ERROR_PROPERTY = "error";
@@ -38,6 +47,21 @@ public class DevToolsServiceImpl implements DevToolsService, Consumer<String> {
 
 	private Map<Long, InvocationResult> invocationResultMap = new ConcurrentHashMap<>();
 
+	private long readTimeout;
+
+	/**
+	 * Instantiates a new Dev tools service.
+	 *
+	 * @param webSocketService Web socket service.
+	 * @param readTimeout      Read timeout in milliseconds.
+	 * @throws WebSocketServiceException Web socket service exception.
+	 */
+	public DevToolsServiceImpl(WebSocketService webSocketService, long readTimeout) throws WebSocketServiceException {
+		this.webSocketService = webSocketService;
+		this.webSocketService.addMessageHandler(this);
+		this.readTimeout = readTimeout;
+	}
+
 	/**
 	 * Instantiates a new Dev tools service.
 	 *
@@ -45,8 +69,7 @@ public class DevToolsServiceImpl implements DevToolsService, Consumer<String> {
 	 * @throws WebSocketServiceException Web socket service exception.
 	 */
 	public DevToolsServiceImpl(WebSocketService webSocketService) throws WebSocketServiceException {
-		this.webSocketService = webSocketService;
-		this.webSocketService.addMessageHandler(this);
+		this(webSocketService, READ_TIMEOUT);
 	}
 
 	@Override
@@ -58,8 +81,12 @@ public class DevToolsServiceImpl implements DevToolsService, Consumer<String> {
 
 			webSocketService.send(OBJECT_MAPPER.writeValueAsString(methodInvocation));
 
-			invocationResult.waitForResult();
+			boolean hasReceivedResponse = invocationResult.waitForResult(readTimeout, TimeUnit.MILLISECONDS);
 			invocationResultMap.remove(methodInvocation.getId());
+
+			if (!hasReceivedResponse) {
+				throw new ChromeDevToolsException("Timeout expired while waiting for server response.");
+			}
 
 			if (invocationResult.isSuccess()) {
 				if (Void.TYPE.equals(clazz)) {
@@ -101,7 +128,7 @@ public class DevToolsServiceImpl implements DevToolsService, Consumer<String> {
 					JsonNode errorNode = jsonNode.get(ERROR_PROPERTY);
 
 					if (errorNode != null) {
-						invocationResult.signalResultReady(false, errorNode.toString());
+						invocationResult.signalResultReady(false, errorNode);
 					} else {
 						if (invocationResult.getReturnProperty() != null) {
 							if (resultNode != null) {
@@ -110,7 +137,7 @@ public class DevToolsServiceImpl implements DevToolsService, Consumer<String> {
 						}
 
 						if (resultNode != null) {
-							invocationResult.signalResultReady(true, resultNode.toString());
+							invocationResult.signalResultReady(true, resultNode);
 						} else {
 							invocationResult.signalResultReady(true, null);
 						}
@@ -130,8 +157,8 @@ public class DevToolsServiceImpl implements DevToolsService, Consumer<String> {
 		}
 	}
 
-	private <T> T readJsonObject(Class<T> clazz, String json) throws IOException {
-		return OBJECT_MAPPER.readerFor(clazz).readValue(json);
+	private <T> T readJsonObject(Class<T> clazz, JsonNode jsonNode) throws IOException {
+		return OBJECT_MAPPER.readerFor(clazz).readValue(jsonNode);
 	}
 
 	/**
@@ -160,7 +187,7 @@ public class DevToolsServiceImpl implements DevToolsService, Consumer<String> {
 	 */
 	private static class InvocationResult {
 		private String returnProperty;
-		private String result;
+		private JsonNode result;
 		private boolean isSuccess;
 		private CountDownLatch countDownLatch = new CountDownLatch(1);
 
@@ -187,7 +214,7 @@ public class DevToolsServiceImpl implements DevToolsService, Consumer<String> {
 		 *
 		 * @return the result
 		 */
-		public String getResult() {
+		public JsonNode getResult() {
 			return result;
 		}
 
@@ -203,7 +230,7 @@ public class DevToolsServiceImpl implements DevToolsService, Consumer<String> {
 		/**
 		 * Signals result is ready for consumption.
 		 */
-		public void signalResultReady(boolean isSuccess, String result) {
+		public void signalResultReady(boolean isSuccess, JsonNode result) {
 			this.isSuccess = isSuccess;
 			this.result = result;
 
@@ -213,10 +240,11 @@ public class DevToolsServiceImpl implements DevToolsService, Consumer<String> {
 		/**
 		 * Waits until result is available.
 		 *
+		 * @return False if timeout is expired.
 		 * @throws InterruptedException If wait is interrupted.
 		 */
-		public void waitForResult() throws InterruptedException {
-			countDownLatch.await();
+		public boolean waitForResult(long timeout, TimeUnit timeUnit) throws InterruptedException {
+			return countDownLatch.await(timeout, timeUnit);
 		}
 	}
 }

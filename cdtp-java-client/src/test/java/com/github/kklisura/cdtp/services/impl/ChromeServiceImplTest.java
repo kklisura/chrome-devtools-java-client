@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kklisura.cdtp.protocol.ChromeDevTools;
+import com.github.kklisura.cdtp.protocol.commands.Network;
 import com.github.kklisura.cdtp.services.WebSocketService;
 import com.github.kklisura.cdtp.services.exceptions.ChromeServiceException;
 import com.github.kklisura.cdtp.services.exceptions.WebSocketServiceException;
@@ -300,5 +301,28 @@ public class ChromeServiceImplTest extends EasyMockSupport {
 		devTools = service.getDevTools(tab);
 
 		assertNotNull(devTools);
+	}
+
+	@Test
+	public void testGetDevToolsSubTypeIsCachedPerTab() throws IOException, ChromeServiceException, WebSocketServiceException {
+		ChromeServiceImpl service = new ChromeServiceImpl(9222, webSocketServiceFactory);
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		ChromeTab tab = objectMapper.readerFor(ChromeTab.class).readValue(getFixture("chrome/tab.json"));
+
+		expect(webSocketServiceFactory.createWebSocketService(tab.getWebSocketDebuggerUrl()))
+				.andReturn(webSocketService);
+
+		webSocketService.addMessageHandler(anyObject());
+
+		replayAll();
+
+		Network network = service.getDevTools(tab).getNetwork();
+		assertTrue(network == service.getDevTools(tab).getNetwork());
+		assertTrue(network == service.getDevTools(tab).getNetwork());
+		assertTrue(network == service.getDevTools(tab).getNetwork());
+
+		verifyAll();
+		assertNotNull(network);
 	}
 }

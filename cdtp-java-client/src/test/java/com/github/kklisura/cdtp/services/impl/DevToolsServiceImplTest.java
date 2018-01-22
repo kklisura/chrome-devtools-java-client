@@ -16,8 +16,7 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.util.HashMap;
 
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 /**
@@ -48,6 +47,81 @@ public class DevToolsServiceImplTest extends EasyMockSupport {
 	@Test
 	public void testAcceptWithUnknownInvocation() {
 		resolveMessage("{\"id\":1,\"result\":{}}");
+	}
+
+	@Test
+	public void testInvokeVoidMethodThrowsWebSocketException() throws ChromeDevToolsException, WebSocketServiceException, IOException {
+		MethodInvocation methodInvocation = new MethodInvocation();
+		methodInvocation.setId(1L);
+		methodInvocation.setMethod("SomeMethod");
+		methodInvocation.setParams(new HashMap<>());
+		methodInvocation.getParams().put("param", "value");
+
+		WebSocketServiceException webSocketServiceException = new WebSocketServiceException("WS Failed");
+
+		Capture<String> messageCapture = Capture.newInstance();
+		webSocketService.send(capture(messageCapture));
+		expectLastCall().andThrow(webSocketServiceException);
+
+		replayAll();
+
+		ChromeDevToolsException capturedException = null;
+		try {
+			service.invoke(null, Void.TYPE, methodInvocation);
+		} catch (ChromeDevToolsException ex) {
+			capturedException = ex;
+		}
+		assertNotNull(capturedException);
+
+		assertEquals("Failed sending web socket message.", capturedException.getMessage());
+		assertEquals(webSocketServiceException, capturedException.getCause());
+
+		verifyAll();
+
+		MethodInvocation sentInvocation = OBJECT_MAPPER.readerFor(MethodInvocation.class).readValue(messageCapture.getValue());
+		assertEquals(methodInvocation.getId(), sentInvocation.getId());
+		assertEquals(methodInvocation.getMethod(), sentInvocation.getMethod());
+	}
+
+	@Test
+	public void testInvokeVoidMethodInterruptsWaiting() throws ChromeDevToolsException, WebSocketServiceException, IOException {
+		MethodInvocation methodInvocation = new MethodInvocation();
+		methodInvocation.setId(1L);
+		methodInvocation.setMethod("SomeMethod");
+		methodInvocation.setParams(new HashMap<>());
+		methodInvocation.getParams().put("param", "value");
+
+		Capture<String> messageCapture = Capture.newInstance();
+		webSocketService.send(capture(messageCapture));
+
+		replayAll();
+
+		final Thread currentThread = Thread.currentThread();
+		new Thread(() -> {
+			try {
+				Thread.sleep(1000);
+				currentThread.interrupt();
+			} catch (InterruptedException e) {
+				// We can ignore this
+			}
+		}).start();
+
+		ChromeDevToolsException capturedException = null;
+		try {
+			service.invoke(null, Void.TYPE, methodInvocation);
+		} catch (ChromeDevToolsException ex) {
+			capturedException = ex;
+		}
+		assertNotNull(capturedException);
+
+		assertEquals("Interrupted while waiting response.", capturedException.getMessage());
+		assertTrue(capturedException.getCause() instanceof InterruptedException);
+
+		verifyAll();
+
+		MethodInvocation sentInvocation = OBJECT_MAPPER.readerFor(MethodInvocation.class).readValue(messageCapture.getValue());
+		assertEquals(methodInvocation.getId(), sentInvocation.getId());
+		assertEquals(methodInvocation.getMethod(), sentInvocation.getMethod());
 	}
 
 	@Test
@@ -123,6 +197,46 @@ public class DevToolsServiceImplTest extends EasyMockSupport {
 		assertEquals(methodInvocation.getId(), sentInvocation.getId());
 		assertEquals(methodInvocation.getMethod(), sentInvocation.getMethod());
 		assertEquals(methodInvocation.getParams(), sentInvocation.getParams());
+	}
+
+	@Test
+	public void testInvokeTestMessageMethodWithBadJson() throws ChromeDevToolsException, WebSocketServiceException, IOException {
+		webSocketService.addMessageHandler(anyObject());
+		replayAll();
+
+		service = new DevToolsServiceImpl(webSocketService, 100);
+
+		verifyAll();
+		resetAll();
+
+
+		MethodInvocation methodInvocation = new MethodInvocation();
+		methodInvocation.setId(1L);
+		methodInvocation.setMethod("SomeMethod");
+		methodInvocation.setParams(new HashMap<>());
+		methodInvocation.getParams().put("param", "value");
+
+		Capture<String> messageCapture = Capture.newInstance();
+		webSocketService.send(capture(messageCapture));
+
+		replayAll();
+
+		resolveMessage("{\"id\":1,\"result\":{\"testProperty\":\"resultValue\",\"testProperty2\"-\"resultValue2\"}}");
+		ChromeDevToolsException capturedException = null;
+		try {
+			service.invoke(null, Void.TYPE, methodInvocation);
+		} catch (ChromeDevToolsException ex) {
+			capturedException = ex;
+		}
+		assertNotNull(capturedException);
+
+		assertEquals("Timeout expired while waiting for server response.", capturedException.getMessage());
+
+		verifyAll();
+
+		MethodInvocation sentInvocation = OBJECT_MAPPER.readerFor(MethodInvocation.class).readValue(messageCapture.getValue());
+		assertEquals(methodInvocation.getId(), sentInvocation.getId());
+		assertEquals(methodInvocation.getMethod(), sentInvocation.getMethod());
 	}
 
 	@Test

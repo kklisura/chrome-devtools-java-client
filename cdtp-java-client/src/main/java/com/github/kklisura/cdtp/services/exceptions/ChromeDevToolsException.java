@@ -11,6 +11,15 @@ public class ChromeDevToolsException extends Exception {
 	/**
 	 * Instantiates a new Chrome dev tools exception.
 	 *
+	 * @param message Error message.
+	 */
+	public ChromeDevToolsException(String message) {
+		super(message);
+	}
+
+	/**
+	 * Instantiates a new Chrome dev tools exception.
+	 *
 	 * @param code    Error code.
 	 * @param message Error message.
 	 */
