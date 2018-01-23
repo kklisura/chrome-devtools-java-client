@@ -3,15 +3,17 @@ package com.github.kklisura.cdtp.services.impl;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.kklisura.cdtp.services.DevToolsService;
+import com.github.kklisura.cdtp.services.ChromeDevToolsService;
 import com.github.kklisura.cdtp.services.WebSocketService;
-import com.github.kklisura.cdtp.services.exceptions.ChromeDevToolsException;
+import com.github.kklisura.cdtp.services.exceptions.ChromeDevToolsInvocationException;
 import com.github.kklisura.cdtp.services.exceptions.WebSocketServiceException;
+import com.github.kklisura.cdtp.services.model.chrome.ChromeTab;
 import com.github.kklisura.cdtp.services.model.chrome.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationHandler;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -25,8 +27,8 @@ import static com.github.kklisura.cdtp.services.utils.ConfigurationUtils.systemP
  *
  * @author Kenan Klisura
  */
-public class DevToolsServiceImpl implements DevToolsService, Consumer<String> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DevToolsServiceImpl.class);
+public abstract class ChromeDevToolsServiceImpl implements ChromeDevToolsService, Consumer<String>, AutoCloseable {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ChromeDevToolsServiceImpl.class);
 
 	private static final String TIMEOUT_ENV_PROPERTY = "com.github.kklisura.cdtp.websocket.readTimeout";
 
@@ -49,6 +51,9 @@ public class DevToolsServiceImpl implements DevToolsService, Consumer<String> {
 
 	private long readTimeout;
 
+	private ChromeTab chromeTab;
+	private ChromeServiceImpl chromeService;
+
 	/**
 	 * Instantiates a new Dev tools service.
 	 *
@@ -56,25 +61,46 @@ public class DevToolsServiceImpl implements DevToolsService, Consumer<String> {
 	 * @param readTimeout      Read timeout in milliseconds.
 	 * @throws WebSocketServiceException Web socket service exception.
 	 */
-	public DevToolsServiceImpl(WebSocketService webSocketService, long readTimeout) throws WebSocketServiceException {
+	public ChromeDevToolsServiceImpl(WebSocketService webSocketService, long readTimeout)
+			throws WebSocketServiceException {
 		this.webSocketService = webSocketService;
 		this.webSocketService.addMessageHandler(this);
 		this.readTimeout = readTimeout;
 	}
 
 	/**
-	 * Instantiates a new Dev tools service.
+	 * Instantiates a new Chrome dev tools service. This is used during proxy building phase.
+	 *
+	 * See {@link ChromeServiceImpl#createDevToolsService(ChromeTab)}
+	 * See {@link com.github.kklisura.cdtp.services.utils.ProxyUtils#createProxyFromAbstract(Class, Class[], Object[], InvocationHandler)}
 	 *
 	 * @param webSocketService Web socket service.
-	 * @throws WebSocketServiceException Web socket service exception.
+	 * @throws WebSocketServiceException Web socket service exception
 	 */
-	public DevToolsServiceImpl(WebSocketService webSocketService) throws WebSocketServiceException {
+	public ChromeDevToolsServiceImpl(WebSocketService webSocketService) throws WebSocketServiceException {
 		this(webSocketService, READ_TIMEOUT);
 	}
 
+	/**
+	 * Sets the chrome service container.
+	 *
+	 * @param chromeService Chrome service.
+	 */
+	public void setChromeService(ChromeServiceImpl chromeService) {
+		this.chromeService = chromeService;
+	}
+
+	/**
+	 * Sets the chrome tab for this service.
+	 *
+	 * @param chromeTab the tab
+	 */
+	public void setChromeTab(ChromeTab chromeTab) {
+		this.chromeTab = chromeTab;
+	}
+
 	@Override
-	public <T> T invoke(String returnProperty, Class<T> clazz, MethodInvocation methodInvocation)
-			throws ChromeDevToolsException {
+	public <T> T invoke(String returnProperty, Class<T> clazz, MethodInvocation methodInvocation) {
 		try {
 			InvocationResult invocationResult = new InvocationResult(returnProperty);
 			invocationResultMap.put(methodInvocation.getId(), invocationResult);
@@ -85,7 +111,7 @@ public class DevToolsServiceImpl implements DevToolsService, Consumer<String> {
 			invocationResultMap.remove(methodInvocation.getId());
 
 			if (!hasReceivedResponse) {
-				throw new ChromeDevToolsException("Timeout expired while waiting for server response.");
+				throw new ChromeDevToolsInvocationException("Timeout expired while waiting for server response.");
 			}
 
 			if (invocationResult.isSuccess()) {
@@ -102,14 +128,23 @@ public class DevToolsServiceImpl implements DevToolsService, Consumer<String> {
 					errorMessageBuilder.append(error.getData());
 				}
 
-				throw new ChromeDevToolsException(error.getCode(), errorMessageBuilder.toString());
+				throw new ChromeDevToolsInvocationException(error.getCode(), errorMessageBuilder.toString());
 			}
-		} catch (WebSocketServiceException ex) {
-			throw new ChromeDevToolsException("Failed sending web socket message.", ex);
-		} catch (InterruptedException ex) {
-			throw new ChromeDevToolsException("Interrupted while waiting response.", ex);
+		} catch (WebSocketServiceException e) {
+			throw new ChromeDevToolsInvocationException("Failed sending web socket message.", e);
+		} catch (InterruptedException e) {
+			throw new ChromeDevToolsInvocationException("Interrupted while waiting response.", e);
 		} catch (IOException ex) {
-			throw new ChromeDevToolsException("Failed reading response message.", ex);
+			throw new ChromeDevToolsInvocationException("Failed reading response message.", ex);
+		}
+	}
+
+	@Override
+	public void close() {
+		webSocketService.close();
+
+		if (chromeService != null) {
+			chromeService.clearChromeDevToolsServiceCache(chromeTab);
 		}
 	}
 
@@ -158,6 +193,10 @@ public class DevToolsServiceImpl implements DevToolsService, Consumer<String> {
 	}
 
 	private <T> T readJsonObject(Class<T> clazz, JsonNode jsonNode) throws IOException {
+		if (jsonNode == null) {
+			throw new ChromeDevToolsInvocationException("Failed converting null response to clazz " + clazz.getName());
+		}
+
 		return OBJECT_MAPPER.readerFor(clazz).readValue(jsonNode);
 	}
 

@@ -1,6 +1,5 @@
 package com.github.kklisura.cdtp.services;
 
-import com.github.kklisura.cdtp.protocol.ChromeDevTools;
 import com.github.kklisura.cdtp.services.exceptions.ChromeServiceException;
 import com.github.kklisura.cdtp.services.model.chrome.ChromeTab;
 import com.github.kklisura.cdtp.services.model.chrome.ChromeVersion;
@@ -63,10 +62,10 @@ public interface ChromeService {
 	ChromeVersion getVersion() throws ChromeServiceException;;
 
 	/**
-	 * Gets the dev tools session to specified tab.
+	 * Creates a dev tools service to specified tab.
 	 *
 	 * @param tab Tab.
 	 * @return Dev tools.
 	 */
-	ChromeDevTools getDevTools(ChromeTab tab) throws ChromeServiceException;
+	ChromeDevToolsService createDevToolsService(ChromeTab tab) throws ChromeServiceException;
 }

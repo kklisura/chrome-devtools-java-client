@@ -61,7 +61,7 @@ public class ChromeServiceImplTest extends EasyMockSupport {
 
 		ChromeServiceImpl service = new ChromeServiceImpl(9992);
 		service.setWebSocketServiceFactory(webSocketServiceFactory);
-		service.getDevTools(tab);
+		service.createDevToolsService(tab);
 	}
 
 	@Test
@@ -197,6 +197,39 @@ public class ChromeServiceImplTest extends EasyMockSupport {
 	}
 
 	@Test
+	public void testCloseTabClearsDevTools() throws IOException, ChromeServiceException, InterruptedException, WebSocketServiceException {
+		MockWebServer server = new MockWebServer();
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		ChromeTab tab = objectMapper.readerFor(ChromeTab.class).readValue(getFixture("chrome/tab.json"));
+
+		server.enqueue(new MockResponse());
+		server.start();
+
+		expect(webSocketServiceFactory.createWebSocketService(tab.getWebSocketDebuggerUrl()))
+				.andReturn(webSocketService);
+
+		webSocketService.addMessageHandler(anyObject());
+		webSocketService.close();
+
+		replayAll();
+
+		ChromeServiceImpl service = new ChromeServiceImpl(server.getHostName(), server.getPort(), webSocketServiceFactory);
+
+		service.createDevToolsService(tab);
+
+		service.closeTab(tab);
+
+		RecordedRequest request = server.takeRequest();
+		assertEquals(1, server.getRequestCount());
+		assertEquals("GET /json/close/(2C5C79DD1137419CC8839D61D91CEB2A) HTTP/1.1", request.getRequestLine());
+
+		server.shutdown();
+
+		verifyAll();
+	}
+
+	@Test
 	public void testCloseTab() throws IOException, ChromeServiceException, InterruptedException {
 		MockWebServer server = new MockWebServer();
 
@@ -258,7 +291,7 @@ public class ChromeServiceImplTest extends EasyMockSupport {
 
 		replayAll();
 
-		ChromeDevTools devTools = service.getDevTools(tab);
+		ChromeDevTools devTools = service.createDevToolsService(tab);
 
 		verifyAll();
 
@@ -279,10 +312,10 @@ public class ChromeServiceImplTest extends EasyMockSupport {
 
 		replayAll();
 
-		ChromeDevTools devTools = service.getDevTools(tab);
-		assertTrue(devTools == service.getDevTools(tab));
-		assertTrue(devTools == service.getDevTools(tab));
-		assertTrue(devTools == service.getDevTools(tab));
+		ChromeDevTools devTools = service.createDevToolsService(tab);
+		assertTrue(devTools == service.createDevToolsService(tab));
+		assertTrue(devTools == service.createDevToolsService(tab));
+		assertTrue(devTools == service.createDevToolsService(tab));
 
 		verifyAll();
 
@@ -298,7 +331,7 @@ public class ChromeServiceImplTest extends EasyMockSupport {
 
 		replayAll();
 
-		devTools = service.getDevTools(tab);
+		devTools = service.createDevToolsService(tab);
 
 		assertNotNull(devTools);
 	}
@@ -317,12 +350,44 @@ public class ChromeServiceImplTest extends EasyMockSupport {
 
 		replayAll();
 
-		Network network = service.getDevTools(tab).getNetwork();
-		assertTrue(network == service.getDevTools(tab).getNetwork());
-		assertTrue(network == service.getDevTools(tab).getNetwork());
-		assertTrue(network == service.getDevTools(tab).getNetwork());
+		Network network = service.createDevToolsService(tab).getNetwork();
+		assertTrue(network == service.createDevToolsService(tab).getNetwork());
+		assertTrue(network == service.createDevToolsService(tab).getNetwork());
+		assertTrue(network == service.createDevToolsService(tab).getNetwork());
 
 		verifyAll();
 		assertNotNull(network);
+	}
+
+	@Test
+	public void testClearChromeDevToolsServiceCacheAndCloseDevTools() throws IOException, ChromeServiceException, WebSocketServiceException {
+		ChromeServiceImpl service = new ChromeServiceImpl(9222, webSocketServiceFactory);
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		ChromeTab tab = objectMapper.readerFor(ChromeTab.class).readValue(getFixture("chrome/tab.json"));
+
+		expect(webSocketServiceFactory.createWebSocketService(tab.getWebSocketDebuggerUrl()))
+				.andReturn(webSocketService);
+
+		webSocketService.addMessageHandler(anyObject());
+		webSocketService.close();
+
+		replayAll();
+
+		service.createDevToolsService(tab);
+
+		service.clearChromeDevToolsServiceCache(tab);
+
+		verifyAll();
+	}
+
+	@Test
+	public void testClearChromeDevToolsServiceCache() throws IOException {
+		ChromeServiceImpl service = new ChromeServiceImpl(9222, webSocketServiceFactory);
+		service.clearChromeDevToolsServiceCache(createChromeTab("UNUSED"));
+	}
+
+	private static ChromeTab createChromeTab(String id) throws IOException {
+		return new ObjectMapper().readerFor(ChromeTab.class).readValue(String.format("{\"id\":\"%s\"}", id));
 	}
 }

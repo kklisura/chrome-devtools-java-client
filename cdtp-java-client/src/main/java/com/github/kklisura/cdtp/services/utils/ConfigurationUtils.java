@@ -12,6 +12,13 @@ public final class ConfigurationUtils {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationUtils.class);
 
 	/**
+	 * Empty ctor.
+	 */
+	private ConfigurationUtils() {
+		// Empty ctor.
+	}
+
+	/**
 	 * Returns name system property or default value if no property name exists or is invalid.
 	 *
 	 * @param name      Environment name.

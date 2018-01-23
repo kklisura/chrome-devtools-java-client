@@ -2,7 +2,7 @@ package com.github.kklisura.cdtp.services.invocation;
 
 import com.github.kklisura.cdtp.protocol.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.annotations.Returns;
-import com.github.kklisura.cdtp.services.DevToolsService;
+import com.github.kklisura.cdtp.services.ChromeDevToolsService;
 import com.github.kklisura.cdtp.services.model.chrome.MethodInvocation;
 import org.easymock.Capture;
 import org.easymock.EasyMockRunner;
@@ -26,19 +26,20 @@ import static org.junit.Assert.*;
 public class CommandInvocationHandlerTest extends EasyMockSupport {
 
 	@Mock
-	private DevToolsService devToolsService;
+	private ChromeDevToolsService chromeDevToolsService;
 
 	private CommandInvocationHandler invocationHandler;
 
 	@Before
 	public void setUp() throws Exception {
-		invocationHandler = new CommandInvocationHandler(devToolsService);
+		invocationHandler = new CommandInvocationHandler();
+		invocationHandler.setChromeDevToolsService(chromeDevToolsService);
 	}
 
 	@Test
 	public void testInvokeVoidMethod() throws Throwable {
 		Capture<MethodInvocation> methodInvocationCapture = Capture.newInstance();
-		expect(devToolsService.invoke(eq(null), eq(Void.TYPE), capture(methodInvocationCapture)))
+		expect(chromeDevToolsService.invoke(eq(null), eq(Void.TYPE), capture(methodInvocationCapture)))
 				.andReturn(null);
 
 		replayAll();
@@ -56,7 +57,7 @@ public class CommandInvocationHandlerTest extends EasyMockSupport {
 		resetAll();
 
 		methodInvocationCapture = Capture.newInstance();
-		expect(devToolsService.invoke(eq(null), eq(Void.TYPE), capture(methodInvocationCapture)))
+		expect(chromeDevToolsService.invoke(eq(null), eq(Void.TYPE), capture(methodInvocationCapture)))
 				.andReturn(null);
 
 		replayAll();
@@ -75,7 +76,7 @@ public class CommandInvocationHandlerTest extends EasyMockSupport {
 	@Test
 	public void testInvokeStringMethodWithParams() throws Throwable {
 		Capture<MethodInvocation> methodInvocationCapture = Capture.newInstance();
-		expect(devToolsService.invoke(eq(null), eq(String.class), capture(methodInvocationCapture)))
+		expect(chromeDevToolsService.invoke(eq(null), eq(String.class), capture(methodInvocationCapture)))
 				.andReturn(null);
 
 		replayAll();
@@ -98,7 +99,7 @@ public class CommandInvocationHandlerTest extends EasyMockSupport {
 	@Test
 	public void testInvokeStringMethodWithParamsAndReturnsAnnotation() throws Throwable {
 		Capture<MethodInvocation> methodInvocationCapture = Capture.newInstance();
-		expect(devToolsService.invoke(eq("ReturnsValue"), eq(String.class), capture(methodInvocationCapture)))
+		expect(chromeDevToolsService.invoke(eq("ReturnsValue"), eq(String.class), capture(methodInvocationCapture)))
 				.andReturn(null);
 
 		replayAll();

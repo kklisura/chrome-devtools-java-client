@@ -2,7 +2,7 @@ package com.github.kklisura.cdtp.services.invocation;
 
 import com.github.kklisura.cdtp.protocol.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.annotations.Returns;
-import com.github.kklisura.cdtp.services.DevToolsService;
+import com.github.kklisura.cdtp.services.ChromeDevToolsService;
 import com.github.kklisura.cdtp.services.model.chrome.MethodInvocation;
 
 import java.lang.reflect.InvocationHandler;
@@ -20,15 +20,15 @@ import java.util.concurrent.atomic.AtomicLong;
 public class CommandInvocationHandler implements InvocationHandler {
 	private static final AtomicLong ID_SUPPLIER = new AtomicLong(1L);
 
-	private DevToolsService devToolsService;
+	private ChromeDevToolsService chromeDevToolsService;
 
 	/**
-	 * Instantiates a new Command invocation handler with a dev tool service implementation.
+	 * Sets dev tools service.
 	 *
-	 * @param devToolsService DevTools service implementation.
+	 * @param chromeDevToolsService Chrome dev tools service.
 	 */
-	public CommandInvocationHandler(DevToolsService devToolsService) {
-		this.devToolsService = devToolsService;
+	public void setChromeDevToolsService(ChromeDevToolsService chromeDevToolsService) {
+		this.chromeDevToolsService = chromeDevToolsService;
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class CommandInvocationHandler implements InvocationHandler {
 		}
 
 		MethodInvocation methodInvocation = createMethodInvocation(method, args);
-		return devToolsService.invoke(returnProperty, returnType, methodInvocation);
+		return chromeDevToolsService.invoke(returnProperty, returnType, methodInvocation);
 	}
 
 	/**

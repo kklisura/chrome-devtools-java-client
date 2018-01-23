@@ -1,9 +1,8 @@
 package com.github.kklisura.cdtp.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.kklisura.cdtp.protocol.ChromeDevTools;
+import com.github.kklisura.cdtp.services.ChromeDevToolsService;
 import com.github.kklisura.cdtp.services.ChromeService;
-import com.github.kklisura.cdtp.services.DevToolsService;
 import com.github.kklisura.cdtp.services.WebSocketService;
 import com.github.kklisura.cdtp.services.exceptions.ChromeServiceException;
 import com.github.kklisura.cdtp.services.exceptions.WebSocketServiceException;
@@ -15,7 +14,6 @@ import com.github.kklisura.cdtp.services.model.chrome.ChromeVersion;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -27,6 +25,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.github.kklisura.cdtp.services.utils.ProxyUtils.createProxy;
+import static com.github.kklisura.cdtp.services.utils.ProxyUtils.createProxyFromAbstract;
 
 /**
  * Chrome service implementation.
@@ -52,7 +51,7 @@ public class ChromeServiceImpl implements ChromeService {
 	private int port;
 
 	private WebSocketServiceFactory webSocketServiceFactory;
-	private Map<String, WeakReference<ChromeDevTools>> devToolsCache = new ConcurrentHashMap<>();
+	private Map<String, ChromeDevToolsService> chromeDevToolServiceCache = new ConcurrentHashMap<>();
 
 	/**
 	 * Creates a new chrome service given a host, port and web service socket factory.
@@ -130,7 +129,7 @@ public class ChromeServiceImpl implements ChromeService {
 		request(Void.class, "http://%s:%d/%s/%s", host, port, CLOSE_TAB, tab.getId());
 
 		// Remove dev tools from cache.
-		devToolsCache.remove(tab.getId());
+		clearChromeDevToolsServiceCache(tab);
 	}
 
 	@Override
@@ -139,34 +138,66 @@ public class ChromeServiceImpl implements ChromeService {
 	}
 
 	@Override
-	public synchronized ChromeDevTools getDevTools(ChromeTab tab) throws ChromeServiceException {
+	public synchronized ChromeDevToolsService createDevToolsService(ChromeTab tab) throws ChromeServiceException {
 		try {
-			if (isDevToolsCached(tab)) {
-				return devToolsCache.get(tab.getId()).get();
+			if (isChromeDevToolsServiceCached(tab)) {
+				return getCachedChromeDevToolsService(tab);
 			}
 
+			// Connect to a tab via web socket
 			String webSocketDebuggerUrl = tab.getWebSocketDebuggerUrl();
 			WebSocketService webSocketService = webSocketServiceFactory.createWebSocketService(webSocketDebuggerUrl);
-			DevToolsService devToolsService = new DevToolsServiceImpl(webSocketService);
-			CommandInvocationHandler commandInvocationHandler = new CommandInvocationHandler(devToolsService);
 
-			Map<Method, Object> devToolsCommandsCache = new ConcurrentHashMap<>();
+			// Create invocation handler
+			CommandInvocationHandler commandInvocationHandler = new CommandInvocationHandler();
 
-			ChromeDevTools devTools = createProxy(ChromeDevTools.class, (proxy, method, args) ->
-					devToolsCommandsCache.computeIfAbsent(method, key -> {
-						Class<?> returnType = method.getReturnType();
-						return createProxy(returnType, commandInvocationHandler);
-					}));
+			// Setup command cache for this session
+			Map<Method, Object> commandsCache = new ConcurrentHashMap<>();
 
-			devToolsCache.put(tab.getId(), new WeakReference<>(devTools));
-			return devTools;
+			// Create dev tools service.
+			ChromeDevToolsServiceImpl chromeDevToolsService = createProxyFromAbstract(ChromeDevToolsServiceImpl.class,
+					new Class[] { WebSocketService.class }, new Object[] { webSocketService },
+					(unused, method, args) ->
+						commandsCache.computeIfAbsent(method, key -> {
+							Class<?> returnType = method.getReturnType();
+							return createProxy(returnType, commandInvocationHandler);
+						}));
+
+			// Register dev tools service with invocation handler.
+			commandInvocationHandler.setChromeDevToolsService(chromeDevToolsService);
+
+			// Cache it up.
+			cacheChromeDevToolsService(tab, chromeDevToolsService);
+
+			return chromeDevToolsService;
 		} catch (WebSocketServiceException ex) {
 			throw new ChromeServiceException("Failed connecting to tab web socket.", ex);
 		}
 	}
 
-	private boolean isDevToolsCached(ChromeTab tab) {
-		return devToolsCache.get(tab.getId()) != null && devToolsCache.get(tab.getId()).get() != null;
+	/**
+	 * Clears the chrome dev tool service cache given a tab.
+	 *
+	 * @param tab Chrome tab.
+	 */
+	public void clearChromeDevToolsServiceCache(ChromeTab tab) {
+		ChromeDevToolsService chromeDevToolsService = chromeDevToolServiceCache.remove(tab.getId());
+
+		if (chromeDevToolsService != null) {
+			chromeDevToolsService.close();
+		}
+	}
+
+	private boolean isChromeDevToolsServiceCached(ChromeTab tab) {
+		return chromeDevToolServiceCache.get(tab.getId()) != null;
+	}
+
+	private ChromeDevToolsService getCachedChromeDevToolsService(ChromeTab tab) {
+		return chromeDevToolServiceCache.get(tab.getId());
+	}
+
+	private void cacheChromeDevToolsService(ChromeTab tab, ChromeDevToolsService chromeDevToolsService) {
+		chromeDevToolServiceCache.put(tab.getId(), chromeDevToolsService);
 	}
 
 	/**

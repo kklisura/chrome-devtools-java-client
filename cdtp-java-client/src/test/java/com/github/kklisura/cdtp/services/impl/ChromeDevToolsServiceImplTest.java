@@ -2,9 +2,11 @@ package com.github.kklisura.cdtp.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kklisura.cdtp.services.WebSocketService;
-import com.github.kklisura.cdtp.services.exceptions.ChromeDevToolsException;
+import com.github.kklisura.cdtp.services.exceptions.ChromeDevToolsInvocationException;
 import com.github.kklisura.cdtp.services.exceptions.WebSocketServiceException;
+import com.github.kklisura.cdtp.services.model.chrome.ChromeTab;
 import com.github.kklisura.cdtp.services.model.chrome.MethodInvocation;
+import com.github.kklisura.cdtp.services.utils.ProxyUtils;
 import org.easymock.Capture;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
@@ -25,20 +27,25 @@ import static org.junit.Assert.*;
  * @author Kenan Klisura
  */
 @RunWith(EasyMockRunner.class)
-public class DevToolsServiceImplTest extends EasyMockSupport {
+public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
 	@Mock
 	private WebSocketService webSocketService;
 
-	private DevToolsServiceImpl service;
+	private ChromeDevToolsServiceImpl service;
 
 	@Before
 	public void setUp() throws Exception {
 		webSocketService.addMessageHandler(anyObject());
 		replayAll();
 
-		service = new DevToolsServiceImpl(webSocketService);
+		service = ProxyUtils.createProxyFromAbstract(ChromeDevToolsServiceImpl.class,
+				new Class[] { WebSocketService.class },
+				new Object[] { webSocketService },
+				(proxy, method, args) -> {
+					throw new RuntimeException("This should not be called during testing");
+				});
 
 		verifyAll();
 		resetAll();
@@ -50,7 +57,12 @@ public class DevToolsServiceImplTest extends EasyMockSupport {
 	}
 
 	@Test
-	public void testInvokeVoidMethodThrowsWebSocketException() throws ChromeDevToolsException, WebSocketServiceException, IOException {
+	public void testAcceptWithUnknownInvocation2() {
+		resolveMessage("{\"id\":1}");
+	}
+
+	@Test
+	public void testInvokeVoidMethodThrowsWebSocketException() throws WebSocketServiceException, IOException {
 		MethodInvocation methodInvocation = new MethodInvocation();
 		methodInvocation.setId(1L);
 		methodInvocation.setMethod("SomeMethod");
@@ -65,10 +77,10 @@ public class DevToolsServiceImplTest extends EasyMockSupport {
 
 		replayAll();
 
-		ChromeDevToolsException capturedException = null;
+		ChromeDevToolsInvocationException capturedException = null;
 		try {
 			service.invoke(null, Void.TYPE, methodInvocation);
-		} catch (ChromeDevToolsException ex) {
+		} catch (ChromeDevToolsInvocationException ex) {
 			capturedException = ex;
 		}
 		assertNotNull(capturedException);
@@ -84,7 +96,7 @@ public class DevToolsServiceImplTest extends EasyMockSupport {
 	}
 
 	@Test
-	public void testInvokeVoidMethodInterruptsWaiting() throws ChromeDevToolsException, WebSocketServiceException, IOException {
+	public void testInvokeVoidMethodInterruptsWaiting() throws WebSocketServiceException, IOException {
 		MethodInvocation methodInvocation = new MethodInvocation();
 		methodInvocation.setId(1L);
 		methodInvocation.setMethod("SomeMethod");
@@ -106,10 +118,10 @@ public class DevToolsServiceImplTest extends EasyMockSupport {
 			}
 		}).start();
 
-		ChromeDevToolsException capturedException = null;
+		ChromeDevToolsInvocationException capturedException = null;
 		try {
 			service.invoke(null, Void.TYPE, methodInvocation);
-		} catch (ChromeDevToolsException ex) {
+		} catch (ChromeDevToolsInvocationException ex) {
 			capturedException = ex;
 		}
 		assertNotNull(capturedException);
@@ -125,7 +137,7 @@ public class DevToolsServiceImplTest extends EasyMockSupport {
 	}
 
 	@Test
-	public void testInvokeVoidMethod() throws ChromeDevToolsException, WebSocketServiceException, IOException {
+	public void testInvokeVoidMethod() throws WebSocketServiceException, IOException {
 		MethodInvocation methodInvocation = new MethodInvocation();
 		methodInvocation.setId(1L);
 		methodInvocation.setMethod("SomeMethod");
@@ -149,7 +161,7 @@ public class DevToolsServiceImplTest extends EasyMockSupport {
 	}
 
 	@Test
-	public void testInvokeStringMethod() throws ChromeDevToolsException, WebSocketServiceException, IOException {
+	public void testInvokeStringMethod() throws WebSocketServiceException, IOException {
 		MethodInvocation methodInvocation = new MethodInvocation();
 		methodInvocation.setId(1L);
 		methodInvocation.setMethod("SomeMethod");
@@ -172,8 +184,25 @@ public class DevToolsServiceImplTest extends EasyMockSupport {
 		assertEquals(methodInvocation.getParams(), sentInvocation.getParams());
 	}
 
+	@Test(expected = ChromeDevToolsInvocationException.class)
+	public void testInvokeStringMethodWithNullResult() throws WebSocketServiceException, IOException {
+		MethodInvocation methodInvocation = new MethodInvocation();
+		methodInvocation.setId(1L);
+		methodInvocation.setMethod("SomeMethod");
+		methodInvocation.setParams(new HashMap<>());
+		methodInvocation.getParams().put("param", "value");
+
+		Capture<String> messageCapture = Capture.newInstance();
+		webSocketService.send(capture(messageCapture));
+
+		replayAll();
+
+		resolveMessage("{\"id\":1}");
+		service.invoke("resultProperty", String.class, methodInvocation);
+	}
+
 	@Test
-	public void testInvokeTestMessageMethod() throws ChromeDevToolsException, WebSocketServiceException, IOException {
+	public void testInvokeTestMessageMethod() throws WebSocketServiceException, IOException {
 		MethodInvocation methodInvocation = new MethodInvocation();
 		methodInvocation.setId(1L);
 		methodInvocation.setMethod("SomeMethod");
@@ -200,11 +229,16 @@ public class DevToolsServiceImplTest extends EasyMockSupport {
 	}
 
 	@Test
-	public void testInvokeTestMessageMethodWithBadJson() throws ChromeDevToolsException, WebSocketServiceException, IOException {
+	public void testInvokeTestMessageMethodWithBadJson() throws WebSocketServiceException, IOException {
 		webSocketService.addMessageHandler(anyObject());
 		replayAll();
 
-		service = new DevToolsServiceImpl(webSocketService, 100);
+		service = ProxyUtils.createProxyFromAbstract(ChromeDevToolsServiceImpl.class,
+				new Class[] { WebSocketService.class, Long.TYPE },
+				new Object[] { webSocketService, 100 },
+				(proxy, method, args) -> {
+					throw new RuntimeException("This should not be called during testing");
+				});
 
 		verifyAll();
 		resetAll();
@@ -222,10 +256,10 @@ public class DevToolsServiceImplTest extends EasyMockSupport {
 		replayAll();
 
 		resolveMessage("{\"id\":1,\"result\":{\"testProperty\":\"resultValue\",\"testProperty2\"-\"resultValue2\"}}");
-		ChromeDevToolsException capturedException = null;
+		ChromeDevToolsInvocationException capturedException = null;
 		try {
 			service.invoke(null, Void.TYPE, methodInvocation);
-		} catch (ChromeDevToolsException ex) {
+		} catch (ChromeDevToolsInvocationException ex) {
 			capturedException = ex;
 		}
 		assertNotNull(capturedException);
@@ -254,10 +288,10 @@ public class DevToolsServiceImplTest extends EasyMockSupport {
 
 		resolveMessage("{\"id\":1,\"error\":{\"code\":1,\"message\":\"Error message for id 1\",\"data\": \"Test data\"}}");
 
-		ChromeDevToolsException capturedException = null;
+		ChromeDevToolsInvocationException capturedException = null;
 		try {
 			service.invoke(null, Void.TYPE, methodInvocation);
-		} catch (ChromeDevToolsException ex) {
+		} catch (ChromeDevToolsInvocationException ex) {
 			capturedException = ex;
 		}
 
@@ -284,10 +318,10 @@ public class DevToolsServiceImplTest extends EasyMockSupport {
 
 		resolveMessage("{\"id\":1,\"error\":{\"code\":1,\"message\":\"Error message for id 1\"}}");
 
-		ChromeDevToolsException capturedException = null;
+		ChromeDevToolsInvocationException capturedException = null;
 		try {
 			service.invoke(null, Void.TYPE, methodInvocation);
-		} catch (ChromeDevToolsException ex) {
+		} catch (ChromeDevToolsInvocationException ex) {
 			capturedException = ex;
 		}
 
@@ -297,6 +331,25 @@ public class DevToolsServiceImplTest extends EasyMockSupport {
 
 		assertEquals(1, (long) capturedException.getCode());
 		assertEquals("Error message for id 1", capturedException.getMessage());
+	}
+
+	@Test
+	public void testClose() {
+		service.close();
+
+		ChromeTab chromeTab = new ChromeTab();
+
+		ChromeServiceImpl chromeService = mock(ChromeServiceImpl.class);
+		service.setChromeService(chromeService);
+		service.setChromeTab(chromeTab);
+
+		chromeService.clearChromeDevToolsServiceCache(chromeTab);
+
+		replay(chromeService);
+
+		service.close();
+
+		verify(chromeService);
 	}
 
 	private void resolveMessage(String message) {
