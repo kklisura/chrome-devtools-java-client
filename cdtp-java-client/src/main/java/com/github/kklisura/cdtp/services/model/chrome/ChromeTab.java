@@ -1,11 +1,11 @@
-package com.github.kklisura.cdtp.client.services.model.chrome;
+package com.github.kklisura.cdtp.services.model.chrome;
 
 /**
  * Chrome tab.
  *
  * @author Kenan Klisura
  */
-public class ChromeTab {
+public final class ChromeTab {
 	public static final String PAGE_TYPE = "page";
 
 	private String id;

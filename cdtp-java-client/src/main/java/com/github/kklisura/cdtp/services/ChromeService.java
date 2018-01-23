@@ -1,8 +1,8 @@
-package com.github.kklisura.cdtp.client.services;
+package com.github.kklisura.cdtp.services;
 
-import com.github.kklisura.cdtp.client.services.exceptions.ChromeServiceException;
-import com.github.kklisura.cdtp.client.services.model.chrome.ChromeTab;
-import com.github.kklisura.cdtp.client.services.model.chrome.ChromeVersion;
+import com.github.kklisura.cdtp.services.exceptions.ChromeServiceException;
+import com.github.kklisura.cdtp.services.model.chrome.ChromeTab;
+import com.github.kklisura.cdtp.services.model.chrome.ChromeVersion;
 
 import java.util.List;
 
@@ -19,6 +19,14 @@ public interface ChromeService {
 	 * @throws ChromeServiceException the chrome service exception
 	 */
 	List<ChromeTab> getTabs() throws ChromeServiceException;
+
+	/**
+	 * Creates a new chrome tab that points to about:blank
+	 *
+	 * @return Chrome tab.
+	 * @throws ChromeServiceException If creation fails for any reason.
+	 */
+	ChromeTab createTab() throws ChromeServiceException;
 
 	/**
 	 * Creates a new chrome tab.
@@ -52,4 +60,12 @@ public interface ChromeService {
 	 * @throws ChromeServiceException If request fails for any reason.
 	 */
 	ChromeVersion getVersion() throws ChromeServiceException;;
+
+	/**
+	 * Creates a dev tools service to specified tab.
+	 *
+	 * @param tab Tab.
+	 * @return Dev tools.
+	 */
+	ChromeDevToolsService createDevToolsService(ChromeTab tab) throws ChromeServiceException;
 }

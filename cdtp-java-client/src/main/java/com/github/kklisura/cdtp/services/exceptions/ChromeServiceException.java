@@ -1,4 +1,4 @@
-package com.github.kklisura.cdtp.client.services.exceptions;
+package com.github.kklisura.cdtp.services.exceptions;
 
 /**
  * Chrome service exception.
