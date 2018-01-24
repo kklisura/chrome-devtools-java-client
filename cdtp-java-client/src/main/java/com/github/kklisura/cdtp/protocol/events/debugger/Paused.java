@@ -1,9 +1,10 @@
 package com.github.kklisura.cdtp.protocol.events.debugger;
 
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.types.debugger.CallFrame;
 import com.github.kklisura.cdtp.protocol.types.runtime.StackTrace;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Fired when the virtual machine stopped on breakpoint or exception or any other stop criteria.
@@ -15,7 +16,7 @@ public class Paused {
 	private Reason reason;
 
 	@Optional
-	private Object data;
+	private Map<String, Object> data;
 
 	@Optional
 	private List<String> hitBreakpoints;
@@ -54,14 +55,14 @@ public class Paused {
 	/**
 	 * Object containing break-specific auxiliary properties.
 	 */
-	public Object getData() {
+	public Map<String, Object> getData() {
 		return data;
 	}
 
 	/**
 	 * Object containing break-specific auxiliary properties.
 	 */
-	public void setData(Object data) {
+	public void setData(Map<String, Object> data) {
 		this.data = data;
 	}
 

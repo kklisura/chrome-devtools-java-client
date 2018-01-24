@@ -3,18 +3,26 @@ package com.github.kklisura.cdtp.services.impl;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.services.ChromeDevToolsService;
 import com.github.kklisura.cdtp.services.WebSocketService;
 import com.github.kklisura.cdtp.services.exceptions.ChromeDevToolsInvocationException;
 import com.github.kklisura.cdtp.services.exceptions.WebSocketServiceException;
-import com.github.kklisura.cdtp.services.model.chrome.ChromeTab;
-import com.github.kklisura.cdtp.services.model.chrome.MethodInvocation;
+import com.github.kklisura.cdtp.services.types.ChromeTab;
+import com.github.kklisura.cdtp.services.types.EventListenerImpl;
+import com.github.kklisura.cdtp.services.types.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -53,6 +61,8 @@ public abstract class ChromeDevToolsServiceImpl implements ChromeDevToolsService
 
 	private ChromeTab chromeTab;
 	private ChromeServiceImpl chromeService;
+
+	private Map<String, Set<EventListenerImpl>> eventNameToHandlersMap = new HashMap<>();
 
 	/**
 	 * Instantiates a new Dev tools service.
@@ -149,6 +159,31 @@ public abstract class ChromeDevToolsServiceImpl implements ChromeDevToolsService
 	}
 
 	@Override
+	public EventListener addEventListener(String domainName, String eventName, EventHandler eventHandler) {
+		String name = domainName + "." + eventName;
+
+		Class<?> eventHandlerType = getEventHandlerType(eventHandler);
+
+		EventListenerImpl eventListener = new EventListenerImpl(name, eventHandler, eventHandlerType, this);
+		eventNameToHandlersMap.computeIfAbsent(name, this::createEventHandlerSet).add(eventListener);
+
+		return eventListener;
+	}
+
+	@Override
+	public void removeEventListener(EventListener eventListener) {
+		EventListenerImpl eventListenerImpl = (EventListenerImpl) eventListener;
+
+		String name = eventListenerImpl.getKey();
+		EventHandler eventHandler = eventListenerImpl.getHandler();
+
+		Set<EventListenerImpl> listeners = eventNameToHandlersMap.computeIfAbsent(name, this::createEventHandlerSet);
+		synchronized (listeners) {
+			listeners.removeIf(next -> eventHandler.equals(next.getHandler()));
+		}
+	}
+
+	@Override
 	public void accept(String message) {
 		try {
 			JsonNode jsonNode = OBJECT_MAPPER.readTree(message);
@@ -181,14 +216,42 @@ public abstract class ChromeDevToolsServiceImpl implements ChromeDevToolsService
 					LOGGER.warn("Received result response with unknown invocation id {}. {}", id, jsonNode.asText());
 				}
 			} else {
-				// TODO(kklisura): Handle dev tools events.
-//				JsonNode methodNode = jsonNode.get(METHOD_PROPERTY);
-//				JsonNode paramsNode = jsonNode.get(PARAMS_PROPERTY);
+				JsonNode methodNode = jsonNode.get(METHOD_PROPERTY);
+				JsonNode paramsNode = jsonNode.get(PARAMS_PROPERTY);
+
+				if (methodNode != null) {
+					handleEvent(methodNode.asText(), paramsNode);
+				}
 			}
 		} catch (IOException ex) {
 			LOGGER.error("Failed reading web socket message!", ex);
 		} catch (Exception ex) {
 			LOGGER.error("Failed receiving web socket message!", ex);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void handleEvent(String name, JsonNode params) {
+		Set<EventListenerImpl> listeners = eventNameToHandlersMap.get(name);
+
+		if (listeners != null) {
+			synchronized (listeners) {
+				if (!listeners.isEmpty()) {
+					Object event = null;
+
+					for (EventListenerImpl listener : listeners) {
+						try {
+							if (event == null) {
+								event = readJsonObject(listener.getParamType(), params);
+							}
+
+							listener.getHandler().onEvent(event);
+						} catch (Exception e) {
+							LOGGER.error("Error while processing event {}", name, e);
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -198,6 +261,15 @@ public abstract class ChromeDevToolsServiceImpl implements ChromeDevToolsService
 		}
 
 		return OBJECT_MAPPER.readerFor(clazz).readValue(jsonNode);
+	}
+
+	private Set<EventListenerImpl> createEventHandlerSet(String unused) {
+		return Collections.synchronizedSet(new HashSet<>());
+	}
+
+	private static Class<?> getEventHandlerType(EventHandler<?> eventHandler) {
+		return (Class<?>) ((ParameterizedTypeImpl) eventHandler.getClass().getGenericInterfaces()[0])
+				.getActualTypeArguments()[0];
 	}
 
 	/**

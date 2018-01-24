@@ -1,6 +1,6 @@
 package com.github.kklisura.cdtp.protocol.types.accessibility;
 
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
 
 /**
  * A single source for a computed AX property.

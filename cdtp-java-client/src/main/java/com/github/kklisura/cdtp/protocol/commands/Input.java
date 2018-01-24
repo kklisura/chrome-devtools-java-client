@@ -1,8 +1,8 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.types.input.Button;
 import com.github.kklisura.cdtp.protocol.types.input.GestureSourceType;
 import com.github.kklisura.cdtp.protocol.types.input.TouchPoint;

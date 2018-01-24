@@ -1,7 +1,7 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.types.memory.DOMCounters;
 import com.github.kklisura.cdtp.protocol.types.memory.PressureLevel;
 

@@ -1,13 +1,20 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.events.overlay.InspectNodeRequested;
+import com.github.kklisura.cdtp.protocol.events.overlay.NodeHighlightRequested;
+import com.github.kklisura.cdtp.protocol.events.overlay.ScreenshotRequested;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.protocol.types.dom.RGBA;
 import com.github.kklisura.cdtp.protocol.types.overlay.HighlightConfig;
 import com.github.kklisura.cdtp.protocol.types.overlay.InspectMode;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This domain provides various functionality related to drawing atop the inspected page.
@@ -115,5 +122,23 @@ public interface Overlay {
 	 * For testing.
 	 */
 	@Returns("highlight")
-	Object getHighlightObjectForTest(@ParamName("nodeId") Integer nodeId);
+	Map<String, Object> getHighlightObjectForTest(@ParamName("nodeId") Integer nodeId);
+
+	/**
+	 * Fired when the node should be highlighted. This happens after call to <code>setInspectMode</code>.
+	 */
+	@EventName("nodeHighlightRequested")
+	EventListener onNodeHighlightRequested(EventHandler<NodeHighlightRequested> eventListener);
+
+	/**
+	 * Fired when the node should be inspected. This happens after call to <code>setInspectMode</code> or when user manually inspects an element.
+	 */
+	@EventName("inspectNodeRequested")
+	EventListener onInspectNodeRequested(EventHandler<InspectNodeRequested> eventListener);
+
+	/**
+	 * Fired when user asks to capture screenshot of some area on the page.
+	 */
+	@EventName("screenshotRequested")
+	EventListener onScreenshotRequested(EventHandler<ScreenshotRequested> eventListener);
 }

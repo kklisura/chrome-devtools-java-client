@@ -1,6 +1,6 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.schema.Domain;
 import java.util.List;
 

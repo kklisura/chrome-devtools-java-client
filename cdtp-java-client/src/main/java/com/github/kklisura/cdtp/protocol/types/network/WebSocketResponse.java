@@ -1,7 +1,8 @@
 package com.github.kklisura.cdtp.protocol.types.network;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
+import java.util.Map;
 
 /**
  * WebSocket response data.
@@ -13,13 +14,13 @@ public class WebSocketResponse {
 
 	private String statusText;
 
-	private Headers headers;
+	private Map<String, Object> headers;
 
 	@Optional
 	private String headersText;
 
 	@Optional
-	private Headers requestHeaders;
+	private Map<String, Object> requestHeaders;
 
 	@Optional
 	private String requestHeadersText;
@@ -55,14 +56,14 @@ public class WebSocketResponse {
 	/**
 	 * HTTP response headers.
 	 */
-	public Headers getHeaders() {
+	public Map<String, Object> getHeaders() {
 		return headers;
 	}
 
 	/**
 	 * HTTP response headers.
 	 */
-	public void setHeaders(Headers headers) {
+	public void setHeaders(Map<String, Object> headers) {
 		this.headers = headers;
 	}
 
@@ -83,14 +84,14 @@ public class WebSocketResponse {
 	/**
 	 * HTTP request headers.
 	 */
-	public Headers getRequestHeaders() {
+	public Map<String, Object> getRequestHeaders() {
 		return requestHeaders;
 	}
 
 	/**
 	 * HTTP request headers.
 	 */
-	public void setRequestHeaders(Headers requestHeaders) {
+	public void setRequestHeaders(Map<String, Object> requestHeaders) {
 		this.requestHeaders = requestHeaders;
 	}
 

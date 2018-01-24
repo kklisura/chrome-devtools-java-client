@@ -1,7 +1,11 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.events.tethering.Accepted;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 
 /**
  * The Tethering domain defines methods and events for browser port binding.
@@ -18,4 +22,10 @@ public interface Tethering {
 	 * Request browser port unbinding.
 	 */
 	void unbind(@ParamName("port") Integer port);
+
+	/**
+	 * Informs that port was successfully bound and got a specified connection id.
+	 */
+	@EventName("accepted")
+	EventListener onAccepted(EventHandler<Accepted> eventListener);
 }

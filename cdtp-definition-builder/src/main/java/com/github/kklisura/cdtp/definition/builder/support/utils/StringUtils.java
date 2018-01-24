@@ -66,8 +66,17 @@ public class StringUtils {
 	 * @param packageName     Package name.
 	 * @return Package name.
 	 */
-	public static String buildPackageName(String basePackageName, String packageName) {
-		return basePackageName + "." + packageName;
+	public static String buildPackageName(String basePackageName, String packageName, String... subPackageNames) {
+		StringBuilder stringBuilder = new StringBuilder(basePackageName + "." + packageName);
+
+		if (subPackageNames != null) {
+			for (String subPackageName : subPackageNames) {
+				stringBuilder.append(".");
+				stringBuilder.append(subPackageName);
+			}
+		}
+
+		return stringBuilder.toString();
 	}
 
 	/**

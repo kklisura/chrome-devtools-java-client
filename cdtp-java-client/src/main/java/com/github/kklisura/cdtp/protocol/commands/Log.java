@@ -1,7 +1,11 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.events.log.EntryAdded;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.protocol.types.log.ViolationSetting;
 import java.util.List;
 
@@ -35,4 +39,10 @@ public interface Log {
 	 * Stop violation reporting.
 	 */
 	void stopViolationsReport();
+
+	/**
+	 * Issued when new message was logged.
+	 */
+	@EventName("entryAdded")
+	EventListener onEntryAdded(EventHandler<EntryAdded> eventListener);
 }

@@ -1,6 +1,6 @@
 package com.github.kklisura.cdtp.protocol.events.security;
 
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.types.security.InsecureContentStatus;
 import com.github.kklisura.cdtp.protocol.types.security.SecurityState;
 import com.github.kklisura.cdtp.protocol.types.security.SecurityStateExplanation;

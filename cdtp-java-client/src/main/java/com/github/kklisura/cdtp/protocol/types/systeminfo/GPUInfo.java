@@ -1,7 +1,8 @@
 package com.github.kklisura.cdtp.protocol.types.systeminfo;
 
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Provides information about the GPU(s) on the system.
@@ -11,10 +12,10 @@ public class GPUInfo {
 	private List<GPUDevice> devices;
 
 	@Optional
-	private Object auxAttributes;
+	private Map<String, Object> auxAttributes;
 
 	@Optional
-	private Object featureStatus;
+	private Map<String, Object> featureStatus;
 
 	private List<String> driverBugWorkarounds;
 
@@ -35,28 +36,28 @@ public class GPUInfo {
 	/**
 	 * An optional dictionary of additional GPU related attributes.
 	 */
-	public Object getAuxAttributes() {
+	public Map<String, Object> getAuxAttributes() {
 		return auxAttributes;
 	}
 
 	/**
 	 * An optional dictionary of additional GPU related attributes.
 	 */
-	public void setAuxAttributes(Object auxAttributes) {
+	public void setAuxAttributes(Map<String, Object> auxAttributes) {
 		this.auxAttributes = auxAttributes;
 	}
 
 	/**
 	 * An optional dictionary of graphics features and their status.
 	 */
-	public Object getFeatureStatus() {
+	public Map<String, Object> getFeatureStatus() {
 		return featureStatus;
 	}
 
 	/**
 	 * An optional dictionary of graphics features and their status.
 	 */
-	public void setFeatureStatus(Object featureStatus) {
+	public void setFeatureStatus(Map<String, Object> featureStatus) {
 		this.featureStatus = featureStatus;
 	}
 

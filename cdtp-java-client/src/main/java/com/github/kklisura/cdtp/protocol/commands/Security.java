@@ -1,7 +1,12 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.events.security.CertificateError;
+import com.github.kklisura.cdtp.protocol.events.security.SecurityStateChanged;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.protocol.types.security.CertificateErrorAction;
 
 /**
@@ -29,4 +34,16 @@ public interface Security {
 	 * Enable/disable overriding certificate errors. If enabled, all certificate error events need to be handled by the DevTools client and should be answered with handleCertificateError commands.
 	 */
 	void setOverrideCertificateErrors(@ParamName("override") Boolean override);
+
+	/**
+	 * The security state of the page changed.
+	 */
+	@EventName("securityStateChanged")
+	EventListener onSecurityStateChanged(EventHandler<SecurityStateChanged> eventListener);
+
+	/**
+	 * There is a certificate error. If overriding certificate errors is enabled, then it should be handled with the handleCertificateError command. Note: this event does not fire if the certificate error has been allowed internally.
+	 */
+	@EventName("certificateError")
+	EventListener onCertificateError(EventHandler<CertificateError> eventListener);
 }

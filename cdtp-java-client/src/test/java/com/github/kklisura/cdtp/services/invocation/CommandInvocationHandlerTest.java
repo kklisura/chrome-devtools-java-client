@@ -1,9 +1,11 @@
 package com.github.kklisura.cdtp.services.invocation;
 
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.services.ChromeDevToolsService;
-import com.github.kklisura.cdtp.services.model.chrome.MethodInvocation;
+import com.github.kklisura.cdtp.services.types.MethodInvocation;
 import org.easymock.Capture;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
@@ -119,6 +121,17 @@ public class CommandInvocationHandlerTest extends EasyMockSupport {
 		assertEquals(1, (int) methodInvocation.getParams().get("paramTest1"));
 	}
 
+	@Test
+	public void testIsEventSubscription() {
+		assertFalse(CommandInvocationHandler.isEventSubscription(getMethodByName("voidMethod")));
+		assertFalse(CommandInvocationHandler.isEventSubscription(getMethodByName("stringMethodWithParams")));
+
+		assertFalse(CommandInvocationHandler.isEventSubscription(getMethodByName("onEventListenerTestMethod")));
+		assertFalse(CommandInvocationHandler.isEventSubscription(getMethodByName("onEventListenerTestMethod1")));
+		assertFalse(CommandInvocationHandler.isEventSubscription(getMethodByName("onEventListenerTestMethod2")));
+		assertTrue(CommandInvocationHandler.isEventSubscription(getMethodByName("onEventListenerTestMethod3")));
+	}
+
 	private Method getMethodByName(String name) {
 		Method[] declaredMethods = this.getClass().getDeclaredMethods();
 		for (Method method : declaredMethods) {
@@ -128,6 +141,21 @@ public class CommandInvocationHandlerTest extends EasyMockSupport {
 		}
 
 		throw new RuntimeException("Could not find method " + name);
+	}
+
+	private void onEventListenerTestMethod() {
+	}
+
+	private EventListener onEventListenerTestMethod1() {
+		return null;
+	}
+
+	private EventListener onEventListenerTestMethod2(String param, String param2) {
+		return null;
+	}
+
+	private EventListener onEventListenerTestMethod3(EventHandler<String> handler) {
+		return null;
 	}
 
 	private void voidMethod() {}

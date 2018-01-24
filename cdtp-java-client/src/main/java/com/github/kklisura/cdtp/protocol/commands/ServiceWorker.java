@@ -1,7 +1,13 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.events.serviceworker.WorkerErrorReported;
+import com.github.kklisura.cdtp.protocol.events.serviceworker.WorkerRegistrationUpdated;
+import com.github.kklisura.cdtp.protocol.events.serviceworker.WorkerVersionUpdated;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 
 @Experimental
 public interface ServiceWorker {
@@ -29,4 +35,13 @@ public interface ServiceWorker {
 	void deliverPushMessage(@ParamName("origin") String origin, @ParamName("registrationId") String registrationId, @ParamName("data") String data);
 
 	void dispatchSyncEvent(@ParamName("origin") String origin, @ParamName("registrationId") String registrationId, @ParamName("tag") String tag, @ParamName("lastChance") Boolean lastChance);
+
+	@EventName("workerRegistrationUpdated")
+	EventListener onWorkerRegistrationUpdated(EventHandler<WorkerRegistrationUpdated> eventListener);
+
+	@EventName("workerVersionUpdated")
+	EventListener onWorkerVersionUpdated(EventHandler<WorkerVersionUpdated> eventListener);
+
+	@EventName("workerErrorReported")
+	EventListener onWorkerErrorReported(EventHandler<WorkerErrorReported> eventListener);
 }

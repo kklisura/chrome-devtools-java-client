@@ -1,5 +1,10 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
+import com.github.kklisura.cdtp.protocol.events.console.MessageAdded;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
+
 /**
  * This domain is deprecated - use Runtime or Log instead.
  */
@@ -20,4 +25,10 @@ public interface Console {
 	 * Does nothing.
 	 */
 	void clearMessages();
+
+	/**
+	 * Issued when new console message is added.
+	 */
+	@EventName("messageAdded")
+	EventListener onMessageAdded(EventHandler<MessageAdded> eventListener);
 }

@@ -40,7 +40,8 @@ public class Application {
 	private static final String TYPES_PACKAGE = "types";
 	private static final String EVENTS_PACKAGE = "events";
 	private static final String COMMANDS_PACKAGE = "commands";
-	private static final String ANNOTATIONS_PACKAGE = "annotations";
+	private static final String SUPPORT_ANNOTATIONS_PACKAGE = "support.annotations";
+	private static final String SUPPORT_TYPE_PACKAGE = "support.types";
 
 	private static final String COMMAND_FACTORY_NAME = "ChromeDevTools";
 
@@ -69,7 +70,9 @@ public class Application {
 		final String typesPackageName = buildPackageName(configuration.getBasePackage(), TYPES_PACKAGE);
 		final String eventPackageName = buildPackageName(configuration.getBasePackage(), EVENTS_PACKAGE);
 		final String commandPackageName = buildPackageName(configuration.getBasePackage(), COMMANDS_PACKAGE);
-		final String annotationsPackageName = buildPackageName(configuration.getBasePackage(), ANNOTATIONS_PACKAGE);
+
+		final String supportTypesPackageName = buildPackageName(configuration.getBasePackage(), SUPPORT_TYPE_PACKAGE);
+		final String supportAnnotationsPackageName = buildPackageName(configuration.getBasePackage(), SUPPORT_ANNOTATIONS_PACKAGE);
 
 		final InputStream inputStream = new FileInputStream(configuration.getProtocolFile());
 		final  DevToolsProtocol protocol = DevToolsProtocolUtils.readJson(inputStream);
@@ -80,7 +83,7 @@ public class Application {
 		JavaBuilderFactory javaBuilderFactory = new JavaBuilderFactory() {
 			@Override
 			public JavaClassBuilder createClassBuilder(String packageName, String className) {
-				return new JavaClassBuilderImpl(packageName, className, annotationsPackageName);
+				return new JavaClassBuilderImpl(packageName, className, supportAnnotationsPackageName);
 			}
 
 			@Override
@@ -90,13 +93,13 @@ public class Application {
 
 			@Override
 			public JavaInterfaceBuilder createInterfaceBuilder(String packageName, String interfaceName) {
-				return new JavaInterfaceBuilderImpl(packageName, interfaceName, annotationsPackageName);
+				return new JavaInterfaceBuilderImpl(packageName, interfaceName, supportAnnotationsPackageName);
 			}
 		};
 
 		final TypesBuilder typesBuilder = new TypesBuilder(typesPackageName, javaBuilderFactory);
 		final EventBuilder eventBuilder = new EventBuilder(eventPackageName, javaBuilderFactory, typesPackageName);
-		final CommandBuilder commandBuilder = new CommandBuilder(commandPackageName, javaBuilderFactory, typesPackageName, eventPackageName);
+		final CommandBuilder commandBuilder = new CommandBuilder(commandPackageName, javaBuilderFactory, typesPackageName, eventPackageName, supportTypesPackageName);
 
 		List<Builder> builderList = new ArrayList<>();
 

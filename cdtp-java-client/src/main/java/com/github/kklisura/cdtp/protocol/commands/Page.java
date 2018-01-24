@@ -1,9 +1,29 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.events.page.DomContentEventFired;
+import com.github.kklisura.cdtp.protocol.events.page.FrameAttached;
+import com.github.kklisura.cdtp.protocol.events.page.FrameClearedScheduledNavigation;
+import com.github.kklisura.cdtp.protocol.events.page.FrameDetached;
+import com.github.kklisura.cdtp.protocol.events.page.FrameNavigated;
+import com.github.kklisura.cdtp.protocol.events.page.FrameResized;
+import com.github.kklisura.cdtp.protocol.events.page.FrameScheduledNavigation;
+import com.github.kklisura.cdtp.protocol.events.page.FrameStartedLoading;
+import com.github.kklisura.cdtp.protocol.events.page.FrameStoppedLoading;
+import com.github.kklisura.cdtp.protocol.events.page.InterstitialHidden;
+import com.github.kklisura.cdtp.protocol.events.page.InterstitialShown;
+import com.github.kklisura.cdtp.protocol.events.page.JavascriptDialogClosed;
+import com.github.kklisura.cdtp.protocol.events.page.JavascriptDialogOpening;
+import com.github.kklisura.cdtp.protocol.events.page.LifecycleEvent;
+import com.github.kklisura.cdtp.protocol.events.page.LoadEventFired;
+import com.github.kklisura.cdtp.protocol.events.page.ScreencastFrame;
+import com.github.kklisura.cdtp.protocol.events.page.ScreencastVisibilityChanged;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.protocol.types.debugger.SearchMatch;
 import com.github.kklisura.cdtp.protocol.types.page.AppManifest;
 import com.github.kklisura.cdtp.protocol.types.page.Behavior;
@@ -248,4 +268,104 @@ public interface Page {
 	 */
 	@Experimental
 	void setDownloadBehavior(@ParamName("behavior") Behavior behavior, @Optional @ParamName("downloadPath") String downloadPath);
+
+	@EventName("domContentEventFired")
+	EventListener onDomContentEventFired(EventHandler<DomContentEventFired> eventListener);
+
+	@EventName("loadEventFired")
+	EventListener onLoadEventFired(EventHandler<LoadEventFired> eventListener);
+
+	/**
+	 * Fired for top level page lifecycle events such as navigation, load, paint, etc.
+	 */
+	@EventName("lifecycleEvent")
+	EventListener onLifecycleEvent(EventHandler<LifecycleEvent> eventListener);
+
+	/**
+	 * Fired when frame has been attached to its parent.
+	 */
+	@EventName("frameAttached")
+	EventListener onFrameAttached(EventHandler<FrameAttached> eventListener);
+
+	/**
+	 * Fired once navigation of the frame has completed. Frame is now associated with the new loader.
+	 */
+	@EventName("frameNavigated")
+	EventListener onFrameNavigated(EventHandler<FrameNavigated> eventListener);
+
+	/**
+	 * Fired when frame has been detached from its parent.
+	 */
+	@EventName("frameDetached")
+	EventListener onFrameDetached(EventHandler<FrameDetached> eventListener);
+
+	/**
+	 * Fired when frame has started loading.
+	 */
+	@EventName("frameStartedLoading")
+	@Experimental
+	EventListener onFrameStartedLoading(EventHandler<FrameStartedLoading> eventListener);
+
+	/**
+	 * Fired when frame has stopped loading.
+	 */
+	@EventName("frameStoppedLoading")
+	@Experimental
+	EventListener onFrameStoppedLoading(EventHandler<FrameStoppedLoading> eventListener);
+
+	/**
+	 * Fired when frame schedules a potential navigation.
+	 */
+	@EventName("frameScheduledNavigation")
+	@Experimental
+	EventListener onFrameScheduledNavigation(EventHandler<FrameScheduledNavigation> eventListener);
+
+	/**
+	 * Fired when frame no longer has a scheduled navigation.
+	 */
+	@EventName("frameClearedScheduledNavigation")
+	@Experimental
+	EventListener onFrameClearedScheduledNavigation(EventHandler<FrameClearedScheduledNavigation> eventListener);
+
+	@EventName("frameResized")
+	@Experimental
+	EventListener onFrameResized(EventHandler<FrameResized> eventListener);
+
+	/**
+	 * Fired when a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload) is about to open.
+	 */
+	@EventName("javascriptDialogOpening")
+	EventListener onJavascriptDialogOpening(EventHandler<JavascriptDialogOpening> eventListener);
+
+	/**
+	 * Fired when a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload) has been closed.
+	 */
+	@EventName("javascriptDialogClosed")
+	EventListener onJavascriptDialogClosed(EventHandler<JavascriptDialogClosed> eventListener);
+
+	/**
+	 * Compressed image data requested by the <code>startScreencast</code>.
+	 */
+	@EventName("screencastFrame")
+	@Experimental
+	EventListener onScreencastFrame(EventHandler<ScreencastFrame> eventListener);
+
+	/**
+	 * Fired when the page with currently enabled screencast was shown or hidden </code>.
+	 */
+	@EventName("screencastVisibilityChanged")
+	@Experimental
+	EventListener onScreencastVisibilityChanged(EventHandler<ScreencastVisibilityChanged> eventListener);
+
+	/**
+	 * Fired when interstitial page was shown
+	 */
+	@EventName("interstitialShown")
+	EventListener onInterstitialShown(EventHandler<InterstitialShown> eventListener);
+
+	/**
+	 * Fired when interstitial page was hidden
+	 */
+	@EventName("interstitialHidden")
+	EventListener onInterstitialHidden(EventHandler<InterstitialHidden> eventListener);
 }

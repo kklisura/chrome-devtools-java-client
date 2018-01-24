@@ -1,8 +1,12 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.events.database.AddDatabase;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.protocol.types.database.ExecuteSQL;
 import java.util.List;
 
@@ -23,4 +27,7 @@ public interface Database {
 	List<String> getDatabaseTableNames(@ParamName("databaseId") String databaseId);
 
 	ExecuteSQL executeSQL(@ParamName("databaseId") String databaseId, @ParamName("query") String query);
+
+	@EventName("addDatabase")
+	EventListener onAddDatabase(EventHandler<AddDatabase> eventListener);
 }

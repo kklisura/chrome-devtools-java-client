@@ -1,6 +1,6 @@
 package com.github.kklisura.cdtp.protocol.types.profiler;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
 
 /**
  * Specifies a number of samples attributed to a certain source position.

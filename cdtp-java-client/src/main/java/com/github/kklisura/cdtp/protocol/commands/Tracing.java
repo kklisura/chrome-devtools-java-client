@@ -1,9 +1,15 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.events.tracing.BufferUsage;
+import com.github.kklisura.cdtp.protocol.events.tracing.DataCollected;
+import com.github.kklisura.cdtp.protocol.events.tracing.TracingComplete;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.protocol.types.tracing.RequestMemoryDump;
 import com.github.kklisura.cdtp.protocol.types.tracing.TraceConfig;
 import com.github.kklisura.cdtp.protocol.types.tracing.TransferMode;
@@ -42,4 +48,19 @@ public interface Tracing {
 	 * Record a clock sync marker in the trace.
 	 */
 	void recordClockSyncMarker(@ParamName("syncId") String syncId);
+
+	/**
+	 * Contains an bucket of collected trace events. When tracing is stopped collected events will be send as a sequence of dataCollected events followed by tracingComplete event.
+	 */
+	@EventName("dataCollected")
+	EventListener onDataCollected(EventHandler<DataCollected> eventListener);
+
+	/**
+	 * Signals that tracing is stopped and there is no trace buffers pending flush, all data were delivered via dataCollected events.
+	 */
+	@EventName("tracingComplete")
+	EventListener onTracingComplete(EventHandler<TracingComplete> eventListener);
+
+	@EventName("bufferUsage")
+	EventListener onBufferUsage(EventHandler<BufferUsage> eventListener);
 }

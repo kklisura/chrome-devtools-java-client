@@ -1,6 +1,6 @@
 package com.github.kklisura.cdtp.protocol.events.dom;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.types.dom.BackendNode;
 import java.util.List;
 

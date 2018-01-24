@@ -1,8 +1,9 @@
 package com.github.kklisura.cdtp.protocol.events.debugger;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.types.runtime.StackTrace;
+import java.util.Map;
 
 /**
  * Fired when virtual machine parses script. This event is also fired for all known and uncollected scripts upon enabling debugger.
@@ -26,7 +27,7 @@ public class ScriptParsed {
 	private String hash;
 
 	@Optional
-	private Object executionContextAuxData;
+	private Map<String, Object> executionContextAuxData;
 
 	@Experimental
 	@Optional
@@ -166,14 +167,14 @@ public class ScriptParsed {
 	/**
 	 * Embedder-specific auxiliary data.
 	 */
-	public Object getExecutionContextAuxData() {
+	public Map<String, Object> getExecutionContextAuxData() {
 		return executionContextAuxData;
 	}
 
 	/**
 	 * Embedder-specific auxiliary data.
 	 */
-	public void setExecutionContextAuxData(Object executionContextAuxData) {
+	public void setExecutionContextAuxData(Map<String, Object> executionContextAuxData) {
 		this.executionContextAuxData = executionContextAuxData;
 	}
 

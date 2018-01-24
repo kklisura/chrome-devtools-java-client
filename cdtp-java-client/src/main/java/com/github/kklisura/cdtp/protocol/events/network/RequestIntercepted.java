@@ -1,11 +1,11 @@
 package com.github.kklisura.cdtp.protocol.events.network;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.types.network.AuthChallenge;
-import com.github.kklisura.cdtp.protocol.types.network.Headers;
 import com.github.kklisura.cdtp.protocol.types.network.Request;
 import com.github.kklisura.cdtp.protocol.types.page.ResourceType;
+import java.util.Map;
 
 /**
  * Details of an intercepted HTTP request, which must be either allowed, blocked, modified or mocked.
@@ -22,7 +22,7 @@ public class RequestIntercepted {
 	private Boolean isNavigationRequest;
 
 	@Optional
-	private Headers redirectHeaders;
+	private Map<String, Object> redirectHeaders;
 
 	@Optional
 	private Integer redirectStatusCode;
@@ -86,14 +86,14 @@ public class RequestIntercepted {
 	/**
 	 * HTTP response headers, only sent if a redirect was intercepted.
 	 */
-	public Headers getRedirectHeaders() {
+	public Map<String, Object> getRedirectHeaders() {
 		return redirectHeaders;
 	}
 
 	/**
 	 * HTTP response headers, only sent if a redirect was intercepted.
 	 */
-	public void setRedirectHeaders(Headers redirectHeaders) {
+	public void setRedirectHeaders(Map<String, Object> redirectHeaders) {
 		this.redirectHeaders = redirectHeaders;
 	}
 

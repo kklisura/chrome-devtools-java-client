@@ -1,6 +1,6 @@
 package com.github.kklisura.cdtp.protocol.events.network;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
 
 /**
  * Fired when WebSocket frame error occurs.

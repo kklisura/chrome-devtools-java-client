@@ -1,6 +1,6 @@
 package com.github.kklisura.cdtp.protocol.types.css;
 
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
 
 /**
  * Data for a simple selector (these are delimited by commas in a selector list).

@@ -1,9 +1,18 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.events.target.AttachedToTarget;
+import com.github.kklisura.cdtp.protocol.events.target.DetachedFromTarget;
+import com.github.kklisura.cdtp.protocol.events.target.ReceivedMessageFromTarget;
+import com.github.kklisura.cdtp.protocol.events.target.TargetCreated;
+import com.github.kklisura.cdtp.protocol.events.target.TargetDestroyed;
+import com.github.kklisura.cdtp.protocol.events.target.TargetInfoChanged;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.protocol.types.target.RemoteLocation;
 import com.github.kklisura.cdtp.protocol.types.target.TargetInfo;
 import java.util.List;
@@ -103,4 +112,40 @@ public interface Target {
 	 */
 	@Returns("targetInfos")
 	List<TargetInfo> getTargets();
+
+	/**
+	 * Issued when a possible inspection target is created.
+	 */
+	@EventName("targetCreated")
+	EventListener onTargetCreated(EventHandler<TargetCreated> eventListener);
+
+	/**
+	 * Issued when some information about a target has changed. This only happens between <code>targetCreated</code> and <code>targetDestroyed</code>.
+	 */
+	@EventName("targetInfoChanged")
+	EventListener onTargetInfoChanged(EventHandler<TargetInfoChanged> eventListener);
+
+	/**
+	 * Issued when a target is destroyed.
+	 */
+	@EventName("targetDestroyed")
+	EventListener onTargetDestroyed(EventHandler<TargetDestroyed> eventListener);
+
+	/**
+	 * Issued when attached to target because of auto-attach or <code>attachToTarget</code> command.
+	 */
+	@EventName("attachedToTarget")
+	EventListener onAttachedToTarget(EventHandler<AttachedToTarget> eventListener);
+
+	/**
+	 * Issued when detached from target for any reason (including <code>detachFromTarget</code> command). Can be issued multiple times per target if multiple sessions have been attached to it.
+	 */
+	@EventName("detachedFromTarget")
+	EventListener onDetachedFromTarget(EventHandler<DetachedFromTarget> eventListener);
+
+	/**
+	 * Notifies about a new protocol message received from the session (as reported in <code>attachedToTarget</code> event).
+	 */
+	@EventName("receivedMessageFromTarget")
+	EventListener onReceivedMessageFromTarget(EventHandler<ReceivedMessageFromTarget> eventListener);
 }

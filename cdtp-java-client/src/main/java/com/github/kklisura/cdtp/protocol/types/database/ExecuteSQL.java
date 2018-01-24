@@ -1,6 +1,6 @@
 package com.github.kklisura.cdtp.protocol.types.database;
 
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
 import java.util.List;
 
 public class ExecuteSQL {

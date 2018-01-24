@@ -1,6 +1,6 @@
 package com.github.kklisura.cdtp.protocol.types.domsnapshot;
 
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.types.dom.PseudoType;
 import java.util.List;
 

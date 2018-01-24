@@ -1,9 +1,17 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.events.debugger.BreakpointResolved;
+import com.github.kklisura.cdtp.protocol.events.debugger.Paused;
+import com.github.kklisura.cdtp.protocol.events.debugger.Resumed;
+import com.github.kklisura.cdtp.protocol.events.debugger.ScriptFailedToParse;
+import com.github.kklisura.cdtp.protocol.events.debugger.ScriptParsed;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.protocol.types.debugger.BreakLocation;
 import com.github.kklisura.cdtp.protocol.types.debugger.EvaluateOnCallFrame;
 import com.github.kklisura.cdtp.protocol.types.debugger.Location;
@@ -194,4 +202,34 @@ public interface Debugger {
 	 */
 	@Experimental
 	void setBlackboxedRanges(@ParamName("scriptId") String scriptId, @ParamName("positions") List<ScriptPosition> positions);
+
+	/**
+	 * Fired when virtual machine parses script. This event is also fired for all known and uncollected scripts upon enabling debugger.
+	 */
+	@EventName("scriptParsed")
+	EventListener onScriptParsed(EventHandler<ScriptParsed> eventListener);
+
+	/**
+	 * Fired when virtual machine fails to parse the script.
+	 */
+	@EventName("scriptFailedToParse")
+	EventListener onScriptFailedToParse(EventHandler<ScriptFailedToParse> eventListener);
+
+	/**
+	 * Fired when breakpoint is resolved to an actual script and location.
+	 */
+	@EventName("breakpointResolved")
+	EventListener onBreakpointResolved(EventHandler<BreakpointResolved> eventListener);
+
+	/**
+	 * Fired when the virtual machine stopped on breakpoint or exception or any other stop criteria.
+	 */
+	@EventName("paused")
+	EventListener onPaused(EventHandler<Paused> eventListener);
+
+	/**
+	 * Fired when the virtual machine resumed execution.
+	 */
+	@EventName("resumed")
+	EventListener onResumed(EventHandler<Resumed> eventListener);
 }

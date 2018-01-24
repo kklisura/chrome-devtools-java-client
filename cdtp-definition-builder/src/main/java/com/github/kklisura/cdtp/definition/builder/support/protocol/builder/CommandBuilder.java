@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.definition.builder.support.protocol.builder;
 
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Command;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Domain;
+import com.github.kklisura.cdtp.definition.builder.protocol.types.Event;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.ObjectType;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.Property;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.Builder;
@@ -16,6 +17,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -30,26 +32,36 @@ import static com.github.kklisura.cdtp.definition.builder.support.utils.StringUt
  * @author Kenan Klisura
  */
 public class CommandBuilder {
+	private static final String EVENT_PREFIX = "on";
+	private static final String EVENT_LISTENER_ARGUMENT_NAME = "eventListener";
+	private static final String EVENT_LISTENER_ARGUMENT_TYPE = "EventHandler";
+	private static final String EVENT_LISTENER_RESULT = "EventListener";
+
 	private String basePackageName;
 	private String typesPackageName;
 	private String eventPackageName;
+
+	private String supportTypesPackageName;
 
 	private JavaBuilderFactory javaBuilderFactory;
 
 	/**
 	 * Creates a new command builder.
-	 *
-	 * @param basePackageName  Base package name for this command.
+	 *  @param basePackageName  Base package name for this command.
 	 * @param javaBuilderFactory Java builder factory.
 	 * @param typesPackageName Package name for types.
 	 * @param eventPackageName Package name for events.
+	 * @param supportTypesPackageName Support types package name.
 	 */
 	public CommandBuilder(String basePackageName, JavaBuilderFactory javaBuilderFactory, String typesPackageName,
-						  String eventPackageName) {
+						  String eventPackageName, String supportTypesPackageName) {
+		this.javaBuilderFactory = javaBuilderFactory;
+
 		this.basePackageName = basePackageName;
 		this.typesPackageName = typesPackageName;
 		this.eventPackageName = eventPackageName;
-		this.javaBuilderFactory = javaBuilderFactory;
+
+		this.supportTypesPackageName = supportTypesPackageName;
 	}
 
 	/**
@@ -76,6 +88,54 @@ public class CommandBuilder {
 
 		List<Builder> builders = new LinkedList<>();
 
+		addCommands(domain, interfaceBuilder, domainTypeResolver, builders);
+		addEvents(domain, interfaceBuilder);
+
+		if (builders.isEmpty()) {
+			return interfaceBuilder;
+		}
+		builders.add(interfaceBuilder);
+		return new CombinedBuilders(builders);
+	}
+
+	private void addEvents(Domain domain, JavaInterfaceBuilder interfaceBuilder) {
+		List<Event> events = domain.getEvents();
+		if (CollectionUtils.isNotEmpty(events)) {
+			for (Event event : events) {
+				final String method = EVENT_PREFIX + StringUtils.capitalize(event.getName());
+
+				interfaceBuilder.addImport(supportTypesPackageName, EVENT_LISTENER_RESULT);
+				interfaceBuilder.addImport(supportTypesPackageName, EVENT_LISTENER_ARGUMENT_TYPE);
+
+				final String eventsPackageName = buildPackageName(eventPackageName, domain.getDomain().toLowerCase());
+
+				interfaceBuilder.addImport(eventsPackageName, toEnumClass(event.getName()));
+
+				MethodParam methodParam = new MethodParam();
+				methodParam.setName(EVENT_LISTENER_ARGUMENT_NAME);
+				methodParam.setType(EVENT_LISTENER_ARGUMENT_TYPE + "<" + toEnumClass(event.getName()) + ">");
+
+				interfaceBuilder.addMethod(method, event.getDescription(), Collections.singletonList(methodParam),
+						EVENT_LISTENER_RESULT);
+
+				interfaceBuilder.addParametrizedMethodAnnotation(method, EVENT_NAME, event.getName());
+
+				if (Boolean.TRUE.equals(event.getDeprecated())) {
+					interfaceBuilder.addMethodAnnotation(method, DEPRECATED_ANNOTATION);
+				}
+
+				if (Boolean.TRUE.equals(event.getExperimental())) {
+					interfaceBuilder.addMethodAnnotation(method, EXPERIMENTAL_ANNOTATION);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Adds commands to this interface.
+	 */
+	private void addCommands(Domain domain, JavaInterfaceBuilder interfaceBuilder,
+							 DomainTypeResolver domainTypeResolver, List<Builder> builders) {
 		List<Command> commands = domain.getCommands();
 		if (CollectionUtils.isNotEmpty(commands)) {
 			for (Command command : commands) {
@@ -85,12 +145,6 @@ public class CommandBuilder {
 				}
 			}
 		}
-
-		if (builders.isEmpty()) {
-			return interfaceBuilder;
-		}
-		builders.add(interfaceBuilder);
-		return new CombinedBuilders(builders);
 	}
 
 	private void processCommand(Command command, Domain domain, JavaInterfaceBuilder interfaceBuilder,

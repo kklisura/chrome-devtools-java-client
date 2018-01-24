@@ -1,6 +1,6 @@
 package com.github.kklisura.cdtp.protocol.types.network;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
 
 /**
  * Timing information for the request.

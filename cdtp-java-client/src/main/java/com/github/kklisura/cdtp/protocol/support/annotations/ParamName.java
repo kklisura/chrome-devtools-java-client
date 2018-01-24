@@ -1,4 +1,4 @@
-package com.github.kklisura.cdtp.protocol.annotations;
+package com.github.kklisura.cdtp.protocol.support.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

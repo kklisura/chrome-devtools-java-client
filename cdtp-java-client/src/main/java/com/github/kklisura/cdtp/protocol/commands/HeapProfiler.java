@@ -1,9 +1,17 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.events.heapprofiler.AddHeapSnapshotChunk;
+import com.github.kklisura.cdtp.protocol.events.heapprofiler.HeapStatsUpdate;
+import com.github.kklisura.cdtp.protocol.events.heapprofiler.LastSeenObjectId;
+import com.github.kklisura.cdtp.protocol.events.heapprofiler.ReportHeapSnapshotProgress;
+import com.github.kklisura.cdtp.protocol.events.heapprofiler.ResetProfiles;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.protocol.types.heapprofiler.SamplingHeapProfile;
 import com.github.kklisura.cdtp.protocol.types.runtime.RemoteObject;
 
@@ -48,4 +56,25 @@ public interface HeapProfiler {
 
 	@Returns("profile")
 	SamplingHeapProfile stopSampling();
+
+	@EventName("addHeapSnapshotChunk")
+	EventListener onAddHeapSnapshotChunk(EventHandler<AddHeapSnapshotChunk> eventListener);
+
+	@EventName("resetProfiles")
+	EventListener onResetProfiles(EventHandler<ResetProfiles> eventListener);
+
+	@EventName("reportHeapSnapshotProgress")
+	EventListener onReportHeapSnapshotProgress(EventHandler<ReportHeapSnapshotProgress> eventListener);
+
+	/**
+	 * If heap objects tracking has been started then backend regularly sends a current value for last seen object id and corresponding timestamp. If the were changes in the heap since last event then one or more heapStatsUpdate events will be sent before a new lastSeenObjectId event.
+	 */
+	@EventName("lastSeenObjectId")
+	EventListener onLastSeenObjectId(EventHandler<LastSeenObjectId> eventListener);
+
+	/**
+	 * If heap objects tracking has been started then backend may send update for one or more fragments
+	 */
+	@EventName("heapStatsUpdate")
+	EventListener onHeapStatsUpdate(EventHandler<HeapStatsUpdate> eventListener);
 }

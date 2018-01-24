@@ -1,8 +1,14 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.events.animation.AnimationCanceled;
+import com.github.kklisura.cdtp.protocol.events.animation.AnimationCreated;
+import com.github.kklisura.cdtp.protocol.events.animation.AnimationStarted;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.protocol.types.runtime.RemoteObject;
 import java.util.List;
 
@@ -61,4 +67,22 @@ public interface Animation {
 	 */
 	@Returns("remoteObject")
 	RemoteObject resolveAnimation(@ParamName("animationId") String animationId);
+
+	/**
+	 * Event for each animation that has been created.
+	 */
+	@EventName("animationCreated")
+	EventListener onAnimationCreated(EventHandler<AnimationCreated> eventListener);
+
+	/**
+	 * Event for animation that has been started.
+	 */
+	@EventName("animationStarted")
+	EventListener onAnimationStarted(EventHandler<AnimationStarted> eventListener);
+
+	/**
+	 * Event for when an animation has been cancelled.
+	 */
+	@EventName("animationCanceled")
+	EventListener onAnimationCanceled(EventHandler<AnimationCanceled> eventListener);
 }

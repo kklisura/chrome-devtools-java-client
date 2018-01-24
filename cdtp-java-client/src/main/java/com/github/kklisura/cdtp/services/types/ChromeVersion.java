@@ -1,4 +1,4 @@
-package com.github.kklisura.cdtp.services.model.chrome;
+package com.github.kklisura.cdtp.services.types;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

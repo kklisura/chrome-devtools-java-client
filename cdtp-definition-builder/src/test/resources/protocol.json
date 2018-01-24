@@ -3398,18 +3398,22 @@
           "experimental": true
         },
         {
+          "id": "AuthChallengeResponseType",
+          "type": "string",
+          "enum": [
+            "Default",
+            "CancelAuth",
+            "ProvideCredentials"
+          ]
+        },
+        {
           "id": "AuthChallengeResponse",
           "type": "object",
           "description": "Response to an AuthChallenge.",
           "properties": [
             {
               "name": "response",
-              "type": "string",
-              "enum": [
-                "Default",
-                "CancelAuth",
-                "ProvideCredentials"
-              ],
+              "$ref": "AuthChallengeResponseType",
               "description": "The decision on what to do in response to the authorization challenge.  Default means deferring to the default behavior of the net stack, which will likely either the Cancel authentication or display a popup dialog box."
             },
             {

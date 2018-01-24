@@ -3,6 +3,7 @@ package com.github.kklisura.cdtp.definition.builder.support.protocol.builder;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Command;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Domain;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.ObjectType;
+import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.Property;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.ArrayProperty;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.BooleanProperty;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.NumberProperty;
@@ -45,6 +46,7 @@ public class CommandBuilderTest extends EasyMockSupport {
 	private static final String BASE_PACKAGE_NAME = "com.github.kklisura.test";
 	private static final String TYPE_PACKAGE_NAME = "com.github.kklisura.types";
 	private static final String EVENTS_PACKAGE_NAME = "com.github.kklisura.events";
+	private static final String SUPPORT_TYPES_PACKAGE_NAME = "com.github.kklisura.support.types";
 
 	@Mock
 	private JavaBuilderFactory javaBuilderFactory;
@@ -65,7 +67,7 @@ public class CommandBuilderTest extends EasyMockSupport {
 
 	@Before
 	public void setUp() throws Exception {
-		commandBuilder = new CommandBuilder(BASE_PACKAGE_NAME, javaBuilderFactory, TYPE_PACKAGE_NAME, EVENTS_PACKAGE_NAME);
+		commandBuilder = new CommandBuilder(BASE_PACKAGE_NAME, javaBuilderFactory, TYPE_PACKAGE_NAME, EVENTS_PACKAGE_NAME, SUPPORT_TYPES_PACKAGE_NAME);
 	}
 
 	@Test
@@ -210,7 +212,7 @@ public class CommandBuilderTest extends EasyMockSupport {
 	}
 
 	@Test
-	public void testBuildCommandWithMethodWithComplexParams() {
+	public void testBuildCommandWithMethodWithComplexParams() throws InstantiationException, IllegalAccessException {
 		final Domain domain = new Domain();
 		domain.setDomain("domainName");
 		domain.setDescription("Description");
@@ -239,7 +241,7 @@ public class CommandBuilderTest extends EasyMockSupport {
 		command.setParameters(Arrays.asList(refParam, arrayProperty));
 		command.setReturns(Collections.singletonList(booleanReturnParam));
 
-		domain.setCommands(Arrays.asList(command));
+		domain.setCommands(Collections.singletonList(command));
 
 		expect(javaBuilderFactory.createEnumBuilder("com.github.kklisura.types.domainname", "EnumParam1"))
 				.andReturn(javaEnumBuilder);
@@ -259,6 +261,7 @@ public class CommandBuilderTest extends EasyMockSupport {
 
 		final ObjectType resolvedRefType = new ObjectType();
 		resolvedRefType.setId("TestRef");
+		resolvedRefType.setProperties(Collections.singletonList(createProperty(StringProperty.class, "stringPropertyTestRef")));
 
 		expect(resolver.resolve("domainName", "TestRef"))
 				.andReturn(resolvedRefType)
@@ -366,5 +369,13 @@ public class CommandBuilderTest extends EasyMockSupport {
 		assertEquals(interfaceBuilder, builderList.get(1));
 
 		assertTrue(methodParamCapture.getValue().isEmpty());
+	}
+
+	private <T extends Property> T createProperty(Class<T> clazz, String name)
+			throws IllegalAccessException, InstantiationException {
+		T property = clazz.newInstance();
+		property.setName(name);
+		property.setDescription(name + "Description");
+		return property;
 	}
 }

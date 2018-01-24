@@ -50,6 +50,9 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.buildPackageName;
+import static com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.toEnumClass;
+
 /**
  * TypesBuilder builds a types for a domain.
  *
@@ -60,9 +63,13 @@ public class TypesBuilder {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TypesBuilder.class);
 
-	public static final String LIST_PACKAGE = "java.util";
+	public static final String UTILS_PACKAGE = "java.util";
 	public static final String LIST_CLASS_NAME = "List";
+	public static final String MAP_CLASS_NAME = "Map";
 
+	public static final String MAP_OBJECT_TYPE = "<String, Object>";
+
+	public static final String EVENT_NAME = "EventName";
 	public static final String DEPRECATED_ANNOTATION = "Deprecated";
 	public static final String EXPERIMENTAL_ANNOTATION = "Experimental";
 	public static final String RETURNS_ANNOTATION = "Returns";
@@ -81,6 +88,8 @@ public class TypesBuilder {
 	private String basePackageName;
 	private JavaBuilderFactory javaBuilderFactory;
 
+	private boolean generateEmptyClasses;
+
 	// Register property class to java type mapping.
 	static {
 		registerProperty(StringProperty.class, "String");
@@ -88,11 +97,11 @@ public class TypesBuilder {
 		registerProperty(BooleanProperty.class, "Boolean");
 		registerProperty(AnyProperty.class, "Object");
 		registerProperty(IntegerProperty.class, "Integer");
-		registerProperty(ObjectProperty.class, "Object");
 	}
 
 	// Register handlers of properties. These types are special and require special handling.
 	{
+		registerProperty(ObjectProperty.class, this::addObjectProperty);
 		registerProperty(EnumProperty.class, this::addEnumProperty);
 		registerProperty(RefProperty.class, this::addRefProperty);
 		registerProperty(ArrayProperty.class, this::addArrayProperty);
@@ -139,9 +148,20 @@ public class TypesBuilder {
 	 * @param basePackageName Package name for all types.
 	 * @param javaBuilderFactory Builder factory.
 	 */
-	public TypesBuilder(String basePackageName, JavaBuilderFactory javaBuilderFactory) {
+	public TypesBuilder(String basePackageName, JavaBuilderFactory javaBuilderFactory, boolean generateEmptyClasses) {
 		this.basePackageName = basePackageName;
 		this.javaBuilderFactory = javaBuilderFactory;
+		this.generateEmptyClasses = generateEmptyClasses;
+	}
+
+	/**
+	 * Ctor.
+	 *
+	 * @param basePackageName Package name for all types.
+	 * @param javaBuilderFactory Builder factory.
+	 */
+	public TypesBuilder(String basePackageName, JavaBuilderFactory javaBuilderFactory) {
+		this(basePackageName, javaBuilderFactory, false);
 	}
 
 	/**
@@ -181,8 +201,8 @@ public class TypesBuilder {
 		final Domain domain = request.getDomain();
 		final EnumType type = request.getType();
 
-		String packageName = com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.buildPackageName(basePackageName, domain.getDomain().toLowerCase());
-		String name = com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.toEnumClass(type.getId());
+		String packageName = buildPackageName(basePackageName, domain.getDomain().toLowerCase());
+		String name = toEnumClass(type.getId());
 
 		TypeHandlerResult result = new TypeHandlerResult();
 		result.setBuilder(buildEnum(packageName, name, type.getDescription(), type.getEnumValues()));
@@ -193,8 +213,8 @@ public class TypesBuilder {
 		final Domain domain = request.getDomain();
 		final ObjectType type = request.getType();
 
-		String packageName = com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.buildPackageName(basePackageName, domain.getDomain().toLowerCase());
-		String name = com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.toEnumClass(type.getId());
+		String packageName = buildPackageName(basePackageName, domain.getDomain().toLowerCase());
+		String name = toEnumClass(type.getId());
 
 		JavaClassBuilder classBuilder = javaBuilderFactory.createClassBuilder(packageName, name);
 		if (StringUtils.isNotEmpty(type.getDescription())) {
@@ -210,7 +230,7 @@ public class TypesBuilder {
 		}
 
 		List<Builder> additionalBuilders = new ArrayList<>();
-		addProperties(request, classBuilder, additionalBuilders);
+		boolean hasProperties = addProperties(request, classBuilder, additionalBuilders);
 
 		classBuilder.generateGettersAndSetters();
 
@@ -222,22 +242,31 @@ public class TypesBuilder {
 			additionalBuilders.add(classBuilder);
 			result.setBuilder(new CombinedBuilders(additionalBuilders));
 		}
+		if (generateEmptyClasses || hasProperties) {
+			return result;
+		}
 
-		return result;
+		// Empty result.
+		return new TypeHandlerResult();
 	}
 
-	private void addProperties(TypeBuildRequest<ObjectType> request, JavaClassBuilder javaClassBuilder,
+	private boolean addProperties(TypeBuildRequest<ObjectType> request, JavaClassBuilder javaClassBuilder,
 							   List<Builder> additionalBuilders) {
 		final ObjectType type = request.getType();
+		boolean hasProperties = false;
 
 		if (CollectionUtils.isNotEmpty(type.getProperties())) {
 			for (Property property : type.getProperties()) {
+				hasProperties = true;
+
 				PropertyHandlerResult result = addProperty(property, request, javaClassBuilder);
 				if (result.getBuilder() != null) {
 					additionalBuilders.add(result.getBuilder());
 				}
 			}
 		}
+
+		return hasProperties;
 	}
 
 	private PropertyHandlerResult addProperty(Property property, TypeBuildRequest<ObjectType> request,
@@ -285,12 +314,21 @@ public class TypesBuilder {
 		final Domain domain = request.getDomain();
 		final EnumProperty property = request.getProperty();
 
-		String packageName = com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.buildPackageName(basePackageName, domain.getDomain().toLowerCase());
-		String name = com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.toEnumClass(property.getName());
+		String packageName = buildPackageName(basePackageName, domain.getDomain().toLowerCase());
+		String name = toEnumClass(property.getName());
 
 		PropertyHandlerResult result = new PropertyHandlerResult();
 		result.setBuilder(buildEnum(packageName, name, property.getDescription(), property.getEnumValues()));
 		result.setType(name);
+
+		return result;
+	}
+
+	private PropertyHandlerResult addObjectProperty(PropertyBuildRequest<ObjectProperty> request) {
+		request.getImportAwareBuilder().addImport(UTILS_PACKAGE, MAP_CLASS_NAME);
+
+		PropertyHandlerResult result = new PropertyHandlerResult();
+		result.setType(MAP_CLASS_NAME + MAP_OBJECT_TYPE);
 
 		return result;
 	}
@@ -331,7 +369,7 @@ public class TypesBuilder {
 			result.setType(buildArrayJavaType(getArrayItemJavaType(arrayItem)));
 		}
 
-		request.getImportAwareBuilder().addImport(LIST_PACKAGE, LIST_CLASS_NAME);
+		request.getImportAwareBuilder().addImport(UTILS_PACKAGE, LIST_CLASS_NAME);
 
 		return result;
 	}
@@ -351,8 +389,8 @@ public class TypesBuilder {
 		final Domain domain = request.getDomain();
 		final EnumArrayItem property = request.getProperty();
 
-		String packageName = com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.buildPackageName(basePackageName, domain.getDomain().toLowerCase());
-		String name = com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.toEnumClass(request.getArrayProperty().getName());
+		String packageName = buildPackageName(basePackageName, domain.getDomain().toLowerCase());
+		String name = toEnumClass(request.getArrayProperty().getName());
 
 		ArrayItemHandlerResult result = new ArrayItemHandlerResult();
 		result.setBuilder(buildEnum(packageName, name, property.getDescription(), property.getEnumValues()));
@@ -381,7 +419,7 @@ public class TypesBuilder {
 		// If this ref is pointing to some primitive type (integer, number, string...) we return their java types.
 		Type type = domainTypeResolver.resolve(namespace, ref);
 		if (isArrayType(type)) {
-			importAwareBuilder.addImport(LIST_PACKAGE, LIST_CLASS_NAME);
+			importAwareBuilder.addImport(UTILS_PACKAGE, LIST_CLASS_NAME);
 
 			ArrayType arrayType = (ArrayType) type;
 			return buildArrayJavaType(getArrayItemJavaType(arrayType.getItems()));
@@ -390,9 +428,19 @@ public class TypesBuilder {
 			return getTypeJavaType(type);
 		}
 
-		String importPackageName = com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.buildPackageName(packageName, namespace.toLowerCase());
+		if (isObjectType(type)) {
+			ObjectType refObjectType = (ObjectType) type;
 
-		String currentObjectName = com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.toEnumClass(objectType.getId());
+			// Objects with empty properties - special case
+			if (CollectionUtils.isEmpty(refObjectType.getProperties())) {
+				importAwareBuilder.addImport(UTILS_PACKAGE, MAP_CLASS_NAME);
+				return MAP_CLASS_NAME + MAP_OBJECT_TYPE;
+			}
+		}
+
+		String importPackageName = buildPackageName(packageName, namespace.toLowerCase());
+
+		String currentObjectName = toEnumClass(objectType.getId());
 		if (currentObjectName.equals(ref)) {
 			return importPackageName + "." + ref;
 		}
@@ -525,6 +573,16 @@ public class TypesBuilder {
 	 */
 	protected boolean isComplexType(Type type) {
 		return typeHandlers.containsKey(type.getClass());
+	}
+
+	/**
+	 * Returns true if given type is object type.
+	 *
+	 * @param type Type.
+	 * @return True if type is an object type.
+	 */
+	protected boolean isObjectType(Type type) {
+		return ObjectType.class.isInstance(type);
 	}
 
 	/**

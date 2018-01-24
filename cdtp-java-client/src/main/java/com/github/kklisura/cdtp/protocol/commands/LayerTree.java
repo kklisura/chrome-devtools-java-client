@@ -1,9 +1,14 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.events.layertree.LayerPainted;
+import com.github.kklisura.cdtp.protocol.events.layertree.LayerTreeDidChange;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.protocol.types.dom.Rect;
 import com.github.kklisura.cdtp.protocol.types.layertree.PictureTile;
 import java.util.List;
@@ -67,4 +72,10 @@ public interface LayerTree {
 	 */
 	@Returns("commandLog")
 	List<Object> snapshotCommandLog(@ParamName("snapshotId") String snapshotId);
+
+	@EventName("layerTreeDidChange")
+	EventListener onLayerTreeDidChange(EventHandler<LayerTreeDidChange> eventListener);
+
+	@EventName("layerPainted")
+	EventListener onLayerPainted(EventHandler<LayerPainted> eventListener);
 }

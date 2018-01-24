@@ -1,7 +1,11 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.events.performance.Metrics;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.protocol.types.performance.Metric;
 import java.util.List;
 
@@ -23,4 +27,10 @@ public interface Performance {
 	 */
 	@Returns("metrics")
 	List<Metric> getMetrics();
+
+	/**
+	 * Current values of the metrics.
+	 */
+	@EventName("metrics")
+	EventListener onMetrics(EventHandler<Metrics> eventListener);
 }

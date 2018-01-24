@@ -1,7 +1,8 @@
 package com.github.kklisura.cdtp.protocol.types.network;
 
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.types.security.MixedContentType;
+import java.util.Map;
 
 /**
  * HTTP request data.
@@ -12,7 +13,7 @@ public class Request {
 
 	private String method;
 
-	private Headers headers;
+	private Map<String, Object> headers;
 
 	@Optional
 	private String postData;
@@ -58,14 +59,14 @@ public class Request {
 	/**
 	 * HTTP request headers.
 	 */
-	public Headers getHeaders() {
+	public Map<String, Object> getHeaders() {
 		return headers;
 	}
 
 	/**
 	 * HTTP request headers.
 	 */
-	public void setHeaders(Headers headers) {
+	public void setHeaders(Map<String, Object> headers) {
 		this.headers = headers;
 	}
 

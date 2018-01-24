@@ -1,9 +1,12 @@
 package com.github.kklisura.cdtp.services.invocation;
 
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.services.ChromeDevToolsService;
-import com.github.kklisura.cdtp.services.model.chrome.MethodInvocation;
+import com.github.kklisura.cdtp.services.types.MethodInvocation;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -18,6 +21,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author Kenan Klisura
  */
 public class CommandInvocationHandler implements InvocationHandler {
+	private static final String EVENT_LISTENER_PREFIX = "on";
+
 	private static final AtomicLong ID_SUPPLIER = new AtomicLong(1L);
 
 	private ChromeDevToolsService chromeDevToolsService;
@@ -33,6 +38,13 @@ public class CommandInvocationHandler implements InvocationHandler {
 
 	@Override
 	public Object invoke(Object unused, Method method, Object[] args) throws Throwable {
+		if (isEventSubscription(method)) {
+			String domainName = method.getDeclaringClass().getSimpleName();
+			String eventName = getEventName(method);
+
+			return chromeDevToolsService.addEventListener(domainName, eventName, (EventHandler) args[0]);
+		}
+
 		Class<?> returnType = method.getReturnType();
 
 		String returnProperty = null;
@@ -82,5 +94,30 @@ public class CommandInvocationHandler implements InvocationHandler {
 		}
 
 		return params;
+	}
+
+	/**
+	 * Returns event name given an event subscription method.
+	 *
+	 * @param method Method.
+	 * @return Event name.
+	 */
+	private static String getEventName(Method method) {
+		return method.getAnnotation(EventName.class).value();
+	}
+
+	/**
+	 * Checks if given method has signature of event subscription.
+	 *
+	 * @param method Method to check.
+	 * @return True if this is event subscription method that is: EventListener on*(EventHandler)
+	 */
+	public static boolean isEventSubscription(Method method) {
+		String name = method.getName();
+		Parameter[] parameters = method.getParameters();
+
+		return name.startsWith(EVENT_LISTENER_PREFIX) && EventListener.class.equals(method.getReturnType()) &&
+				(parameters != null && parameters.length == 1 &&
+						EventHandler.class.isAssignableFrom(parameters[0].getType()));
 	}
 }

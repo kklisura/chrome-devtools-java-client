@@ -1,7 +1,7 @@
 package com.github.kklisura.cdtp.protocol.types.network;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
 
 /**
  * Response to an AuthChallenge.
@@ -9,7 +9,7 @@ import com.github.kklisura.cdtp.protocol.annotations.Optional;
 @Experimental
 public class AuthChallengeResponse {
 
-	private Response response;
+	private AuthChallengeResponseType response;
 
 	@Optional
 	private String username;
@@ -20,14 +20,14 @@ public class AuthChallengeResponse {
 	/**
 	 * The decision on what to do in response to the authorization challenge.  Default means deferring to the default behavior of the net stack, which will likely either the Cancel authentication or display a popup dialog box.
 	 */
-	public Response getResponse() {
+	public AuthChallengeResponseType getResponse() {
 		return response;
 	}
 
 	/**
 	 * The decision on what to do in response to the authorization challenge.  Default means deferring to the default behavior of the net stack, which will likely either the Cancel authentication or display a popup dialog box.
 	 */
-	public void setResponse(Response response) {
+	public void setResponse(AuthChallengeResponseType response) {
 		this.response = response;
 	}
 

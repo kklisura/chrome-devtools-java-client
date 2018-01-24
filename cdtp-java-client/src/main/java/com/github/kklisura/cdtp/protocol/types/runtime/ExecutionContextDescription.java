@@ -1,6 +1,7 @@
 package com.github.kklisura.cdtp.protocol.types.runtime;
 
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
+import java.util.Map;
 
 /**
  * Description of an isolated world.
@@ -14,7 +15,7 @@ public class ExecutionContextDescription {
 	private String name;
 
 	@Optional
-	private Object auxData;
+	private Map<String, Object> auxData;
 
 	/**
 	 * Unique id of the execution context. It can be used to specify in which execution context script evaluation should be performed.
@@ -61,14 +62,14 @@ public class ExecutionContextDescription {
 	/**
 	 * Embedder-specific auxiliary data.
 	 */
-	public Object getAuxData() {
+	public Map<String, Object> getAuxData() {
 		return auxData;
 	}
 
 	/**
 	 * Embedder-specific auxiliary data.
 	 */
-	public void setAuxData(Object auxData) {
+	public void setAuxData(Map<String, Object> auxData) {
 		this.auxData = auxData;
 	}
 }

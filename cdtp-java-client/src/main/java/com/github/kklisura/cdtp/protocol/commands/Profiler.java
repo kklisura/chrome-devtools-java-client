@@ -1,9 +1,14 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.events.profiler.ConsoleProfileFinished;
+import com.github.kklisura.cdtp.protocol.events.profiler.ConsoleProfileStarted;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.protocol.types.profiler.Profile;
 import com.github.kklisura.cdtp.protocol.types.profiler.ScriptCoverage;
 import com.github.kklisura.cdtp.protocol.types.profiler.ScriptTypeProfile;
@@ -75,4 +80,13 @@ public interface Profiler {
 	@Experimental
 	@Returns("result")
 	List<ScriptTypeProfile> takeTypeProfile();
+
+	/**
+	 * Sent when new profile recording is started using console.profile() call.
+	 */
+	@EventName("consoleProfileStarted")
+	EventListener onConsoleProfileStarted(EventHandler<ConsoleProfileStarted> eventListener);
+
+	@EventName("consoleProfileFinished")
+	EventListener onConsoleProfileFinished(EventHandler<ConsoleProfileFinished> eventListener);
 }

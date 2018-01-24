@@ -1,7 +1,8 @@
 package com.github.kklisura.cdtp.protocol.types.tracing;
 
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
 import java.util.List;
+import java.util.Map;
 
 public class TraceConfig {
 
@@ -27,7 +28,7 @@ public class TraceConfig {
 	private List<String> syntheticDelays;
 
 	@Optional
-	private MemoryDumpConfig memoryDumpConfig;
+	private Map<String, Object> memoryDumpConfig;
 
 	/**
 	 * Controls how the trace buffer stores data.
@@ -130,14 +131,14 @@ public class TraceConfig {
 	/**
 	 * Configuration for memory dump triggers. Used only when "memory-infra" category is enabled.
 	 */
-	public MemoryDumpConfig getMemoryDumpConfig() {
+	public Map<String, Object> getMemoryDumpConfig() {
 		return memoryDumpConfig;
 	}
 
 	/**
 	 * Configuration for memory dump triggers. Used only when "memory-infra" category is enabled.
 	 */
-	public void setMemoryDumpConfig(MemoryDumpConfig memoryDumpConfig) {
+	public void setMemoryDumpConfig(Map<String, Object> memoryDumpConfig) {
 		this.memoryDumpConfig = memoryDumpConfig;
 	}
 }

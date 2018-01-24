@@ -8,8 +8,8 @@ import com.github.kklisura.cdtp.services.exceptions.ChromeServiceException;
 import com.github.kklisura.cdtp.services.exceptions.WebSocketServiceException;
 import com.github.kklisura.cdtp.services.factory.WebSocketServiceFactory;
 import com.github.kklisura.cdtp.services.invocation.CommandInvocationHandler;
-import com.github.kklisura.cdtp.services.model.chrome.ChromeTab;
-import com.github.kklisura.cdtp.services.model.chrome.ChromeVersion;
+import com.github.kklisura.cdtp.services.types.ChromeTab;
+import com.github.kklisura.cdtp.services.types.ChromeVersion;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

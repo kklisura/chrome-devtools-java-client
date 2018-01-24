@@ -1,9 +1,19 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.events.runtime.ConsoleAPICalled;
+import com.github.kklisura.cdtp.protocol.events.runtime.ExceptionRevoked;
+import com.github.kklisura.cdtp.protocol.events.runtime.ExceptionThrown;
+import com.github.kklisura.cdtp.protocol.events.runtime.ExecutionContextCreated;
+import com.github.kklisura.cdtp.protocol.events.runtime.ExecutionContextDestroyed;
+import com.github.kklisura.cdtp.protocol.events.runtime.ExecutionContextsCleared;
+import com.github.kklisura.cdtp.protocol.events.runtime.InspectRequested;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.protocol.types.runtime.AwaitPromise;
 import com.github.kklisura.cdtp.protocol.types.runtime.CallArgument;
 import com.github.kklisura.cdtp.protocol.types.runtime.CallFunctionOn;
@@ -115,4 +125,46 @@ public interface Runtime {
 	@Experimental
 	@Returns("objects")
 	RemoteObject queryObjects(@ParamName("prototypeObjectId") String prototypeObjectId);
+
+	/**
+	 * Issued when new execution context is created.
+	 */
+	@EventName("executionContextCreated")
+	EventListener onExecutionContextCreated(EventHandler<ExecutionContextCreated> eventListener);
+
+	/**
+	 * Issued when execution context is destroyed.
+	 */
+	@EventName("executionContextDestroyed")
+	EventListener onExecutionContextDestroyed(EventHandler<ExecutionContextDestroyed> eventListener);
+
+	/**
+	 * Issued when all executionContexts were cleared in browser
+	 */
+	@EventName("executionContextsCleared")
+	EventListener onExecutionContextsCleared(EventHandler<ExecutionContextsCleared> eventListener);
+
+	/**
+	 * Issued when exception was thrown and unhandled.
+	 */
+	@EventName("exceptionThrown")
+	EventListener onExceptionThrown(EventHandler<ExceptionThrown> eventListener);
+
+	/**
+	 * Issued when unhandled exception was revoked.
+	 */
+	@EventName("exceptionRevoked")
+	EventListener onExceptionRevoked(EventHandler<ExceptionRevoked> eventListener);
+
+	/**
+	 * Issued when console API was called.
+	 */
+	@EventName("consoleAPICalled")
+	EventListener onConsoleAPICalled(EventHandler<ConsoleAPICalled> eventListener);
+
+	/**
+	 * Issued when object should be inspected (for example, as a result of inspect() command line API call).
+	 */
+	@EventName("inspectRequested")
+	EventListener onInspectRequested(EventHandler<InspectRequested> eventListener);
 }

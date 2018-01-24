@@ -1,8 +1,13 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.events.applicationcache.ApplicationCacheStatusUpdated;
+import com.github.kklisura.cdtp.protocol.events.applicationcache.NetworkStateUpdated;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.protocol.types.applicationcache.FrameWithManifest;
 import java.util.List;
 
@@ -31,4 +36,10 @@ public interface ApplicationCache {
 	 */
 	@Returns("applicationCache")
 	com.github.kklisura.cdtp.protocol.types.applicationcache.ApplicationCache getApplicationCacheForFrame(@ParamName("frameId") String frameId);
+
+	@EventName("applicationCacheStatusUpdated")
+	EventListener onApplicationCacheStatusUpdated(EventHandler<ApplicationCacheStatusUpdated> eventListener);
+
+	@EventName("networkStateUpdated")
+	EventListener onNetworkStateUpdated(EventHandler<NetworkStateUpdated> eventListener);
 }

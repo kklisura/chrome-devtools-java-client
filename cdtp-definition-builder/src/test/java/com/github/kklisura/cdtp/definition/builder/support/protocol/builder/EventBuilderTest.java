@@ -4,6 +4,7 @@ import com.github.kklisura.cdtp.definition.builder.protocol.DevToolsProtocol;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Domain;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Event;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.ObjectType;
+import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.Property;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.RefProperty;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.StringProperty;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.Builder;
@@ -56,7 +57,7 @@ public class EventBuilderTest extends EasyMockSupport {
 	}
 
 	@Test
-	public void testBuild() {
+	public void testBuild() throws InstantiationException, IllegalAccessException {
 		final DevToolsProtocol devToolsProtocol = new DevToolsProtocol();
 		final Domain domain1 = new Domain();
 		domain1.setDomain("Domain1");
@@ -68,6 +69,7 @@ public class EventBuilderTest extends EasyMockSupport {
 
 		final ObjectType refObjectProperty = new ObjectType();
 		refObjectProperty.setId("Domain2RefProperty");
+		refObjectProperty.setProperties(java.util.Collections.singletonList(createProperty(StringProperty.class, "stringDomain2RefProperty")));
 		domain2.setTypes(java.util.Collections.singletonList(refObjectProperty));
 
 		final StringProperty stringProperty = new StringProperty();
@@ -115,5 +117,13 @@ public class EventBuilderTest extends EasyMockSupport {
 
 		assertEquals(1, build.size());
 		assertEquals(javaClassBuilder, build.get(0));
+	}
+
+	private <T extends Property> T createProperty(Class<T> clazz, String name)
+			throws IllegalAccessException, InstantiationException {
+		T property = clazz.newInstance();
+		property.setName(name);
+		property.setDescription(name + "Description");
+		return property;
 	}
 }

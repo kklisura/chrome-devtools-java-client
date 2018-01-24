@@ -1,9 +1,26 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.events.dom.AttributeModified;
+import com.github.kklisura.cdtp.protocol.events.dom.AttributeRemoved;
+import com.github.kklisura.cdtp.protocol.events.dom.CharacterDataModified;
+import com.github.kklisura.cdtp.protocol.events.dom.ChildNodeCountUpdated;
+import com.github.kklisura.cdtp.protocol.events.dom.ChildNodeInserted;
+import com.github.kklisura.cdtp.protocol.events.dom.ChildNodeRemoved;
+import com.github.kklisura.cdtp.protocol.events.dom.DistributedNodesUpdated;
+import com.github.kklisura.cdtp.protocol.events.dom.DocumentUpdated;
+import com.github.kklisura.cdtp.protocol.events.dom.InlineStyleInvalidated;
+import com.github.kklisura.cdtp.protocol.events.dom.PseudoElementAdded;
+import com.github.kklisura.cdtp.protocol.events.dom.PseudoElementRemoved;
+import com.github.kklisura.cdtp.protocol.events.dom.SetChildNodes;
+import com.github.kklisura.cdtp.protocol.events.dom.ShadowRootPopped;
+import com.github.kklisura.cdtp.protocol.events.dom.ShadowRootPushed;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.protocol.types.dom.BoxModel;
 import com.github.kklisura.cdtp.protocol.types.dom.Node;
 import com.github.kklisura.cdtp.protocol.types.dom.PerformSearch;
@@ -314,4 +331,94 @@ public interface DOM {
 	 */
 	@Returns("node")
 	Node describeNode(@Optional @ParamName("nodeId") Integer nodeId, @Optional @ParamName("backendNodeId") Integer backendNodeId, @Optional @ParamName("objectId") String objectId, @Experimental @Optional @ParamName("depth") Integer depth, @Experimental @Optional @ParamName("pierce") Boolean pierce);
+
+	/**
+	 * Fired when <code>Document</code> has been totally updated. Node ids are no longer valid.
+	 */
+	@EventName("documentUpdated")
+	EventListener onDocumentUpdated(EventHandler<DocumentUpdated> eventListener);
+
+	/**
+	 * Fired when backend wants to provide client with the missing DOM structure. This happens upon most of the calls requesting node ids.
+	 */
+	@EventName("setChildNodes")
+	EventListener onSetChildNodes(EventHandler<SetChildNodes> eventListener);
+
+	/**
+	 * Fired when <code>Element</code>'s attribute is modified.
+	 */
+	@EventName("attributeModified")
+	EventListener onAttributeModified(EventHandler<AttributeModified> eventListener);
+
+	/**
+	 * Fired when <code>Element</code>'s attribute is removed.
+	 */
+	@EventName("attributeRemoved")
+	EventListener onAttributeRemoved(EventHandler<AttributeRemoved> eventListener);
+
+	/**
+	 * Fired when <code>Element</code>'s inline style is modified via a CSS property modification.
+	 */
+	@EventName("inlineStyleInvalidated")
+	@Experimental
+	EventListener onInlineStyleInvalidated(EventHandler<InlineStyleInvalidated> eventListener);
+
+	/**
+	 * Mirrors <code>DOMCharacterDataModified</code> event.
+	 */
+	@EventName("characterDataModified")
+	EventListener onCharacterDataModified(EventHandler<CharacterDataModified> eventListener);
+
+	/**
+	 * Fired when <code>Container</code>'s child node count has changed.
+	 */
+	@EventName("childNodeCountUpdated")
+	EventListener onChildNodeCountUpdated(EventHandler<ChildNodeCountUpdated> eventListener);
+
+	/**
+	 * Mirrors <code>DOMNodeInserted</code> event.
+	 */
+	@EventName("childNodeInserted")
+	EventListener onChildNodeInserted(EventHandler<ChildNodeInserted> eventListener);
+
+	/**
+	 * Mirrors <code>DOMNodeRemoved</code> event.
+	 */
+	@EventName("childNodeRemoved")
+	EventListener onChildNodeRemoved(EventHandler<ChildNodeRemoved> eventListener);
+
+	/**
+	 * Called when shadow root is pushed into the element.
+	 */
+	@EventName("shadowRootPushed")
+	@Experimental
+	EventListener onShadowRootPushed(EventHandler<ShadowRootPushed> eventListener);
+
+	/**
+	 * Called when shadow root is popped from the element.
+	 */
+	@EventName("shadowRootPopped")
+	@Experimental
+	EventListener onShadowRootPopped(EventHandler<ShadowRootPopped> eventListener);
+
+	/**
+	 * Called when a pseudo element is added to an element.
+	 */
+	@EventName("pseudoElementAdded")
+	@Experimental
+	EventListener onPseudoElementAdded(EventHandler<PseudoElementAdded> eventListener);
+
+	/**
+	 * Called when a pseudo element is removed from an element.
+	 */
+	@EventName("pseudoElementRemoved")
+	@Experimental
+	EventListener onPseudoElementRemoved(EventHandler<PseudoElementRemoved> eventListener);
+
+	/**
+	 * Called when distrubution is changed.
+	 */
+	@EventName("distributedNodesUpdated")
+	@Experimental
+	EventListener onDistributedNodesUpdated(EventHandler<DistributedNodesUpdated> eventListener);
 }

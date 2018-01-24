@@ -1,8 +1,16 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.events.css.FontsUpdated;
+import com.github.kklisura.cdtp.protocol.events.css.MediaQueryResultChanged;
+import com.github.kklisura.cdtp.protocol.events.css.StyleSheetAdded;
+import com.github.kklisura.cdtp.protocol.events.css.StyleSheetChanged;
+import com.github.kklisura.cdtp.protocol.events.css.StyleSheetRemoved;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.protocol.types.css.BackgroundColors;
 import com.github.kklisura.cdtp.protocol.types.css.CSSComputedStyleProperty;
 import com.github.kklisura.cdtp.protocol.types.css.CSSMedia;
@@ -153,4 +161,34 @@ public interface CSS {
 	@Experimental
 	@Returns("ruleUsage")
 	List<RuleUsage> stopRuleUsageTracking();
+
+	/**
+	 * Fires whenever a MediaQuery result changes (for example, after a browser window has been resized.) The current implementation considers only viewport-dependent media features.
+	 */
+	@EventName("mediaQueryResultChanged")
+	EventListener onMediaQueryResultChanged(EventHandler<MediaQueryResultChanged> eventListener);
+
+	/**
+	 * Fires whenever a web font gets loaded.
+	 */
+	@EventName("fontsUpdated")
+	EventListener onFontsUpdated(EventHandler<FontsUpdated> eventListener);
+
+	/**
+	 * Fired whenever a stylesheet is changed as a result of the client operation.
+	 */
+	@EventName("styleSheetChanged")
+	EventListener onStyleSheetChanged(EventHandler<StyleSheetChanged> eventListener);
+
+	/**
+	 * Fired whenever an active document stylesheet is added.
+	 */
+	@EventName("styleSheetAdded")
+	EventListener onStyleSheetAdded(EventHandler<StyleSheetAdded> eventListener);
+
+	/**
+	 * Fired whenever an active document stylesheet is removed.
+	 */
+	@EventName("styleSheetRemoved")
+	EventListener onStyleSheetRemoved(EventHandler<StyleSheetRemoved> eventListener);
 }

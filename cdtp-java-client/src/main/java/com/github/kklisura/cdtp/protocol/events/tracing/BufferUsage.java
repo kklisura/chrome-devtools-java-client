@@ -1,6 +1,6 @@
 package com.github.kklisura.cdtp.protocol.events.tracing;
 
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
 
 public class BufferUsage {
 

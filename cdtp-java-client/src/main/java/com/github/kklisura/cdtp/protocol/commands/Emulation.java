@@ -1,9 +1,14 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.events.emulation.VirtualTimeBudgetExpired;
+import com.github.kklisura.cdtp.protocol.events.emulation.VirtualTimePaused;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.protocol.types.dom.RGBA;
 import com.github.kklisura.cdtp.protocol.types.emulation.Configuration;
 import com.github.kklisura.cdtp.protocol.types.emulation.ScreenOrientation;
@@ -135,4 +140,18 @@ public interface Emulation {
 	 */
 	@Experimental
 	void setDefaultBackgroundColorOverride(@Optional @ParamName("color") RGBA color);
+
+	/**
+	 * Notification sent after the virtual time budget for the current VirtualTimePolicy has run out.
+	 */
+	@EventName("virtualTimeBudgetExpired")
+	@Experimental
+	EventListener onVirtualTimeBudgetExpired(EventHandler<VirtualTimeBudgetExpired> eventListener);
+
+	/**
+	 * Notification sent after the virtual time has paused.
+	 */
+	@EventName("virtualTimePaused")
+	@Experimental
+	EventListener onVirtualTimePaused(EventHandler<VirtualTimePaused> eventListener);
 }

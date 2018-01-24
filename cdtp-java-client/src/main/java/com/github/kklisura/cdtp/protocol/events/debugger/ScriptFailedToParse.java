@@ -1,8 +1,9 @@
 package com.github.kklisura.cdtp.protocol.events.debugger;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
 import com.github.kklisura.cdtp.protocol.types.runtime.StackTrace;
+import java.util.Map;
 
 /**
  * Fired when virtual machine fails to parse the script.
@@ -26,7 +27,7 @@ public class ScriptFailedToParse {
 	private String hash;
 
 	@Optional
-	private Object executionContextAuxData;
+	private Map<String, Object> executionContextAuxData;
 
 	@Optional
 	private String sourceMapURL;
@@ -162,14 +163,14 @@ public class ScriptFailedToParse {
 	/**
 	 * Embedder-specific auxiliary data.
 	 */
-	public Object getExecutionContextAuxData() {
+	public Map<String, Object> getExecutionContextAuxData() {
 		return executionContextAuxData;
 	}
 
 	/**
 	 * Embedder-specific auxiliary data.
 	 */
-	public void setExecutionContextAuxData(Object executionContextAuxData) {
+	public void setExecutionContextAuxData(Map<String, Object> executionContextAuxData) {
 		this.executionContextAuxData = executionContextAuxData;
 	}
 

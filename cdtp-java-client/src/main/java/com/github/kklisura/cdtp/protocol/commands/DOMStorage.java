@@ -1,8 +1,15 @@
 package com.github.kklisura.cdtp.protocol.commands;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
-import com.github.kklisura.cdtp.protocol.annotations.ParamName;
-import com.github.kklisura.cdtp.protocol.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.events.domstorage.DomStorageItemAdded;
+import com.github.kklisura.cdtp.protocol.events.domstorage.DomStorageItemRemoved;
+import com.github.kklisura.cdtp.protocol.events.domstorage.DomStorageItemUpdated;
+import com.github.kklisura.cdtp.protocol.events.domstorage.DomStorageItemsCleared;
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.protocol.types.domstorage.StorageId;
 import java.util.List;
 
@@ -30,4 +37,16 @@ public interface DOMStorage {
 	void setDOMStorageItem(@ParamName("storageId") StorageId storageId, @ParamName("key") String key, @ParamName("value") String value);
 
 	void removeDOMStorageItem(@ParamName("storageId") StorageId storageId, @ParamName("key") String key);
+
+	@EventName("domStorageItemsCleared")
+	EventListener onDomStorageItemsCleared(EventHandler<DomStorageItemsCleared> eventListener);
+
+	@EventName("domStorageItemRemoved")
+	EventListener onDomStorageItemRemoved(EventHandler<DomStorageItemRemoved> eventListener);
+
+	@EventName("domStorageItemAdded")
+	EventListener onDomStorageItemAdded(EventHandler<DomStorageItemAdded> eventListener);
+
+	@EventName("domStorageItemUpdated")
+	EventListener onDomStorageItemUpdated(EventHandler<DomStorageItemUpdated> eventListener);
 }

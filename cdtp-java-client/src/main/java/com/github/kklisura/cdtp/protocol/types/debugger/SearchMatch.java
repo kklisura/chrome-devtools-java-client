@@ -1,6 +1,6 @@
 package com.github.kklisura.cdtp.protocol.types.debugger;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
 
 /**
  * Search match for resource.

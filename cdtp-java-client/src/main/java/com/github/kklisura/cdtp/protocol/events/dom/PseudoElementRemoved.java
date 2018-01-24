@@ -1,6 +1,6 @@
 package com.github.kklisura.cdtp.protocol.events.dom;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
 
 /**
  * Called when a pseudo element is removed from an element.

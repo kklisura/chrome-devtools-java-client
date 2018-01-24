@@ -1,6 +1,6 @@
 package com.github.kklisura.cdtp.protocol.types.runtime;
 
-import com.github.kklisura.cdtp.protocol.annotations.Optional;
+import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
 
 /**
  * Object internal property descriptor. This property isn't normally visible in JavaScript code.

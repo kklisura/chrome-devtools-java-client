@@ -33,7 +33,7 @@ public class EventBuilder extends TypesBuilder {
 	 * @param typesPackageName   Package name where types reside.
 	 */
 	public EventBuilder(String basePackageName, JavaBuilderFactory javaBuilderFactory, String typesPackageName) {
-		super(basePackageName, javaBuilderFactory);
+		super(basePackageName, javaBuilderFactory, true);
 		this.typesPackageName = typesPackageName;
 	}
 

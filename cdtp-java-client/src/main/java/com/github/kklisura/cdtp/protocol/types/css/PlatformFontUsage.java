@@ -1,6 +1,6 @@
 package com.github.kklisura.cdtp.protocol.types.css;
 
-import com.github.kklisura.cdtp.protocol.annotations.Experimental;
+import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
 
 /**
  * Information about amount of glyphs that were rendered with given font.
