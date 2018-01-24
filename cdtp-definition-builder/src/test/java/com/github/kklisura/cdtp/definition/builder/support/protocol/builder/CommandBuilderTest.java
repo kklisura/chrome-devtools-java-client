@@ -2,6 +2,7 @@ package com.github.kklisura.cdtp.definition.builder.support.protocol.builder;
 
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Command;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Domain;
+import com.github.kklisura.cdtp.definition.builder.protocol.types.Event;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.ObjectType;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.Property;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.ArrayProperty;
@@ -332,7 +333,7 @@ public class CommandBuilderTest extends EasyMockSupport {
 		numberParam.setExperimental(Boolean.TRUE);
 
 		command.setReturns(Arrays.asList(stringParam, numberParam));
-		domain.setCommands(Arrays.asList(command));
+		domain.setCommands(Collections.singletonList(command));
 
 		expect(javaBuilderFactory.createClassBuilder(TYPE_PACKAGE_NAME + ".domainname", "CommandSomeResult"))
 				.andReturn(javaClassBuilder);
@@ -369,6 +370,67 @@ public class CommandBuilderTest extends EasyMockSupport {
 		assertEquals(interfaceBuilder, builderList.get(1));
 
 		assertTrue(methodParamCapture.getValue().isEmpty());
+	}
+
+	@Test
+	public void testBuildCommandWithEvents() {
+		final Domain domain = new Domain();
+		domain.setDomain("domainName");
+		domain.setDescription("Description");
+
+		final Event event = new Event();
+		event.setName("someEvent");
+		event.setDescription("event description");
+
+		final Event event1 = new Event();
+		event1.setName("someEvent1");
+		event1.setDescription("event description");
+		event1.setDeprecated(Boolean.TRUE);
+		event1.setExperimental(Boolean.TRUE);
+
+		domain.setEvents(Arrays.asList(event, event1));
+
+		expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
+				.andReturn(interfaceBuilder);
+		interfaceBuilder.setJavaDoc("Description");
+
+		interfaceBuilder.addImport("com.github.kklisura.support.types", "EventListener");
+		interfaceBuilder.addImport("com.github.kklisura.support.types", "EventHandler");
+		interfaceBuilder.addImport("com.github.kklisura.events.domainname", "SomeEvent");
+
+		interfaceBuilder.addImport("com.github.kklisura.support.types", "EventListener");
+		interfaceBuilder.addImport("com.github.kklisura.support.types", "EventHandler");
+		interfaceBuilder.addImport("com.github.kklisura.events.domainname", "SomeEvent1");
+
+		Capture<List<MethodParam>> methodParamCapture = Capture.newInstance();
+		interfaceBuilder.addMethod(eq("onSomeEvent"), eq("event description"), capture(methodParamCapture), eq("EventListener"));
+
+		Capture<List<MethodParam>> methodParamCapture1 = Capture.newInstance();
+		interfaceBuilder.addMethod(eq("onSomeEvent1"), eq("event description"), capture(methodParamCapture1), eq("EventListener"));
+
+		interfaceBuilder.addParametrizedMethodAnnotation("onSomeEvent", "EventName", "someEvent");
+		interfaceBuilder.addParametrizedMethodAnnotation("onSomeEvent1", "EventName", "someEvent1");
+
+		interfaceBuilder.addMethodAnnotation("onSomeEvent1", "Deprecated");
+		interfaceBuilder.addMethodAnnotation("onSomeEvent1", "Experimental");
+
+		replayAll();
+
+		Builder build = commandBuilder.build(domain, resolver);
+
+		verifyAll();
+
+		assertEquals(interfaceBuilder, build);
+
+		List<MethodParam> value = methodParamCapture.getValue();
+		assertEquals(1, value.size());
+		assertEquals("eventListener", value.get(0).getName());
+		assertEquals("EventHandler<SomeEvent>", value.get(0).getType());
+
+		List<MethodParam> value1 = methodParamCapture1.getValue();
+		assertEquals(1, value1.size());
+		assertEquals("eventListener", value1.get(0).getName());
+		assertEquals("EventHandler<SomeEvent1>", value1.get(0).getType());
 	}
 
 	private <T extends Property> T createProperty(Class<T> clazz, String name)
