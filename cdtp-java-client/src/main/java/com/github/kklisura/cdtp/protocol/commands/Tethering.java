@@ -15,11 +15,15 @@ public interface Tethering {
 
 	/**
 	 * Request browser port binding.
+	 *
+	 * @param port Port number to bind.
 	 */
 	void bind(@ParamName("port") Integer port);
 
 	/**
 	 * Request browser port unbinding.
+	 *
+	 * @param port Port number to unbind.
 	 */
 	void unbind(@ParamName("port") Integer port);
 

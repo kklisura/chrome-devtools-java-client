@@ -163,7 +163,8 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
 		expect(sourceRoot.add(capture(compilationUnitCapture)))
 				.andReturn(sourceRoot);
 
-		interfaceBuilder.addMethod("someMethod1", "Method description", Collections.emptyList(), null);
+		String description = "Method description\r\n\r\n@param test Test param\r\n@return Returns nothing";
+		interfaceBuilder.addMethod("someMethod1", description, Collections.emptyList(), null);
 
 		replayAll();
 
@@ -175,6 +176,9 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
 				"\n" +
 				"    /**\n" +
 				"     * Method description\n" +
+				"     *\n" +
+				"     * @param test Test param\n" +
+				"     * @return Returns nothing\n" +
 				"     */\n" +
 				"    void someMethod1();" +
 				"\n" +

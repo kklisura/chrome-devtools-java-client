@@ -168,10 +168,12 @@ public class CommandBuilderTest extends EasyMockSupport {
 		final StringProperty stringParam = new StringProperty();
 		stringParam.setName("stringParam1");
 		stringParam.setDeprecated(Boolean.TRUE);
+		stringParam.setDescription("String param 1 description");
 
 		final NumberProperty numberParam = new NumberProperty();
 		numberParam.setName("numberParam1");
 		numberParam.setExperimental(Boolean.TRUE);
+		numberParam.setDescription("Number param 1 description");
 
 		final BooleanProperty booleanReturnParam = new BooleanProperty();
 		booleanReturnParam.setName("booleanReturn");
@@ -186,16 +188,18 @@ public class CommandBuilderTest extends EasyMockSupport {
 		interfaceBuilder.setJavaDoc("Description");
 
 		Capture<List<MethodParam>> methodParamCapture = Capture.newInstance();
-		interfaceBuilder.addMethod(eq("command"), eq("command description"), capture(methodParamCapture), eq("Boolean"));
+		Capture<String> methodDescriptionCapture = Capture.newInstance();
+		interfaceBuilder.addMethod(eq("command"), capture(methodDescriptionCapture), capture(methodParamCapture), eq("Boolean"));
 
 		interfaceBuilder.addParametrizedMethodAnnotation("command", "Returns", "booleanReturn");
-
 
 		replayAll();
 
 		assertEquals(interfaceBuilder, commandBuilder.build(domain, resolver));
 
 		verifyAll();
+
+		assertEquals("command description\r\n\r\n@param stringParam1 String param 1 description\r\n@param numberParam1 Number param 1 description", methodDescriptionCapture.getValue());
 
 		List<MethodParam> params = methodParamCapture.getValue();
 		assertEquals(2, params.size());
@@ -231,6 +235,7 @@ public class CommandBuilderTest extends EasyMockSupport {
 		arrayProperty.setName("enumParam1");
 		arrayProperty.setExperimental(Boolean.TRUE);
 		arrayProperty.setOptional(Boolean.TRUE);
+		arrayProperty.setDescription("enum param 1 description");
 
 		EnumArrayItem enumArrayItem = new EnumArrayItem();
 		enumArrayItem.setEnumValues(Arrays.asList("enum1", "enum2"));
@@ -254,11 +259,13 @@ public class CommandBuilderTest extends EasyMockSupport {
 				.andReturn(interfaceBuilder);
 		interfaceBuilder.setJavaDoc("Description");
 
+		Capture<String> mandatoryMethodDescriptionCapture = Capture.newInstance();
 		Capture<List<MethodParam>> mandatoryMethodParamCapture = Capture.newInstance();
-		interfaceBuilder.addMethod(eq("command"), eq("command description"), capture(mandatoryMethodParamCapture), eq("Boolean"));
+		interfaceBuilder.addMethod(eq("command"), capture(mandatoryMethodDescriptionCapture), capture(mandatoryMethodParamCapture), eq("Boolean"));
 
+		Capture<String> allMethodDescriptionCapture = Capture.newInstance();
 		Capture<List<MethodParam>> allMethodParamCapture = Capture.newInstance();
-		interfaceBuilder.addMethod(eq("command"), eq("command description"), capture(allMethodParamCapture), eq("Boolean"));
+		interfaceBuilder.addMethod(eq("command"), capture(allMethodDescriptionCapture), capture(allMethodParamCapture), eq("Boolean"));
 
 		final ObjectType resolvedRefType = new ObjectType();
 		resolvedRefType.setId("TestRef");
@@ -289,6 +296,10 @@ public class CommandBuilderTest extends EasyMockSupport {
 
 		assertEquals(javaEnumBuilder, builderList.get(0));
 		assertEquals(interfaceBuilder, builderList.get(1));
+
+		assertEquals("command description\r\n\r\n@param stringParam1", mandatoryMethodDescriptionCapture.getValue());
+
+		assertEquals("command description\r\n\r\n@param stringParam1\r\n@param enumParam1 enum param 1 description", allMethodDescriptionCapture.getValue());
 
 		List<MethodParam> mandatoryParams = mandatoryMethodParamCapture.getValue();
 		assertEquals(1, mandatoryParams.size());

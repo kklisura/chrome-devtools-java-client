@@ -25,6 +25,12 @@ public interface Tracing {
 
 	/**
 	 * Start trace events collection.
+	 *
+	 * @param categories Category/tag filter
+	 * @param options Tracing options
+	 * @param bufferUsageReportingInterval If set, the agent will issue bufferUsage events at this interval, specified in milliseconds
+	 * @param transferMode Whether to report trace events as series of dataCollected events or to save trace to a stream (defaults to <code>ReportEvents</code>).
+	 * @param traceConfig
 	 */
 	void start(@Deprecated @Optional @ParamName("categories") String categories, @Deprecated @Optional @ParamName("options") String options, @Optional @ParamName("bufferUsageReportingInterval") Double bufferUsageReportingInterval, @Optional @ParamName("transferMode") TransferMode transferMode, @Optional @ParamName("traceConfig") TraceConfig traceConfig);
 
@@ -46,6 +52,8 @@ public interface Tracing {
 
 	/**
 	 * Record a clock sync marker in the trace.
+	 *
+	 * @param syncId The ID of this clock sync marker
 	 */
 	void recordClockSyncMarker(@ParamName("syncId") String syncId);
 

@@ -32,6 +32,8 @@ public interface Log {
 
 	/**
 	 * start violation reporting.
+	 *
+	 * @param config Configuration for violations.
 	 */
 	void startViolationsReport(@ParamName("config") List<ViolationSetting> config);
 

@@ -14,11 +14,15 @@ public interface Memory {
 
 	/**
 	 * Enable/disable suppressing memory pressure notifications in all processes.
+	 *
+	 * @param suppressed If true, memory pressure notifications will be suppressed.
 	 */
 	void setPressureNotificationsSuppressed(@ParamName("suppressed") Boolean suppressed);
 
 	/**
 	 * Simulate a memory pressure notification in all processes.
+	 *
+	 * @param level Memory pressure level of the notification.
 	 */
 	void simulatePressureNotification(@ParamName("level") PressureLevel level);
 }

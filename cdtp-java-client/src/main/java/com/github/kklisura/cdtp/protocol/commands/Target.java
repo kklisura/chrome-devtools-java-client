@@ -25,50 +25,74 @@ public interface Target {
 
 	/**
 	 * Controls whether to discover available targets and notify via <code>targetCreated/targetInfoChanged/targetDestroyed</code> events.
+	 *
+	 * @param discover Whether to discover available targets.
 	 */
 	void setDiscoverTargets(@ParamName("discover") Boolean discover);
 
 	/**
 	 * Controls whether to automatically attach to new targets which are considered to be related to this one. When turned on, attaches to all existing related targets as well. When turned off, automatically detaches from all currently attached targets.
+	 *
+	 * @param autoAttach Whether to auto-attach to related targets.
+	 * @param waitForDebuggerOnStart Whether to pause new targets when attaching to them. Use <code>Runtime.runIfWaitingForDebugger</code> to run paused targets.
 	 */
 	void setAutoAttach(@ParamName("autoAttach") Boolean autoAttach, @ParamName("waitForDebuggerOnStart") Boolean waitForDebuggerOnStart);
 
+	/**
+	 * @param value Whether to attach to frames.
+	 */
 	void setAttachToFrames(@ParamName("value") Boolean value);
 
 	/**
 	 * Enables target discovery for the specified locations, when <code>setDiscoverTargets</code> was set to <code>true</code>.
+	 *
+	 * @param locations List of remote locations.
 	 */
 	void setRemoteLocations(@ParamName("locations") List<RemoteLocation> locations);
 
 	/**
 	 * Sends protocol message over session with given id.
+	 *
+	 * @param message
 	 */
 	void sendMessageToTarget(@ParamName("message") String message);
 
 	/**
 	 * Sends protocol message over session with given id.
+	 *
+	 * @param message
+	 * @param sessionId Identifier of the session.
+	 * @param targetId Deprecated.
 	 */
 	void sendMessageToTarget(@ParamName("message") String message, @Optional @ParamName("sessionId") String sessionId, @Deprecated @Optional @ParamName("targetId") String targetId);
 
 	/**
 	 * Returns information about a target.
+	 *
+	 * @param targetId
 	 */
 	@Returns("targetInfo")
 	TargetInfo getTargetInfo(@ParamName("targetId") String targetId);
 
 	/**
 	 * Activates (focuses) the target.
+	 *
+	 * @param targetId
 	 */
 	void activateTarget(@ParamName("targetId") String targetId);
 
 	/**
 	 * Closes the target. If the target is a page that gets closed too.
+	 *
+	 * @param targetId
 	 */
 	@Returns("success")
 	Boolean closeTarget(@ParamName("targetId") String targetId);
 
 	/**
 	 * Attaches to the target with given id.
+	 *
+	 * @param targetId
 	 */
 	@Returns("sessionId")
 	String attachToTarget(@ParamName("targetId") String targetId);
@@ -80,6 +104,9 @@ public interface Target {
 
 	/**
 	 * Detaches session with given id.
+	 *
+	 * @param sessionId Session to detach.
+	 * @param targetId Deprecated.
 	 */
 	void detachFromTarget(@Optional @ParamName("sessionId") String sessionId, @Deprecated @Optional @ParamName("targetId") String targetId);
 
@@ -91,18 +118,27 @@ public interface Target {
 
 	/**
 	 * Deletes a BrowserContext, will fail of any open page uses it.
+	 *
+	 * @param browserContextId
 	 */
 	@Returns("success")
 	Boolean disposeBrowserContext(@ParamName("browserContextId") String browserContextId);
 
 	/**
 	 * Creates a new page.
+	 *
+	 * @param url The initial URL the page will be navigated to.
 	 */
 	@Returns("targetId")
 	String createTarget(@ParamName("url") String url);
 
 	/**
 	 * Creates a new page.
+	 *
+	 * @param url The initial URL the page will be navigated to.
+	 * @param width Frame width in DIP (headless chrome only).
+	 * @param height Frame height in DIP (headless chrome only).
+	 * @param browserContextId The browser context to create the page in (headless chrome only).
 	 */
 	@Returns("targetId")
 	String createTarget(@ParamName("url") String url, @Optional @ParamName("width") Integer width, @Optional @ParamName("height") Integer height, @Optional @ParamName("browserContextId") String browserContextId);

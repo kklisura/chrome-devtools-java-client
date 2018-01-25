@@ -45,22 +45,30 @@ public interface CSS {
 
 	/**
 	 * Returns requested styles for a DOM node identified by <code>nodeId</code>.
+	 *
+	 * @param nodeId
 	 */
 	MatchedStylesForNode getMatchedStylesForNode(@ParamName("nodeId") Integer nodeId);
 
 	/**
 	 * Returns the styles defined inline (explicitly in the "style" attribute and implicitly, using DOM attributes) for a DOM node identified by <code>nodeId</code>.
+	 *
+	 * @param nodeId
 	 */
 	InlineStylesForNode getInlineStylesForNode(@ParamName("nodeId") Integer nodeId);
 
 	/**
 	 * Returns the computed style for a DOM node identified by <code>nodeId</code>.
+	 *
+	 * @param nodeId
 	 */
 	@Returns("computedStyle")
 	List<CSSComputedStyleProperty> getComputedStyleForNode(@ParamName("nodeId") Integer nodeId);
 
 	/**
 	 * Requests information about platform fonts which we used to render child TextNodes in the given node.
+	 *
+	 * @param nodeId
 	 */
 	@Experimental
 	@Returns("fonts")
@@ -68,12 +76,16 @@ public interface CSS {
 
 	/**
 	 * Returns the current textual content and the URL for a stylesheet.
+	 *
+	 * @param styleSheetId
 	 */
 	@Returns("text")
 	String getStyleSheetText(@ParamName("styleSheetId") String styleSheetId);
 
 	/**
 	 * Returns all class names from specified stylesheet.
+	 *
+	 * @param styleSheetId
 	 */
 	@Experimental
 	@Returns("classNames")
@@ -81,48 +93,74 @@ public interface CSS {
 
 	/**
 	 * Sets the new stylesheet text.
+	 *
+	 * @param styleSheetId
+	 * @param text
 	 */
 	@Returns("sourceMapURL")
 	String setStyleSheetText(@ParamName("styleSheetId") String styleSheetId, @ParamName("text") String text);
 
 	/**
 	 * Modifies the rule selector.
+	 *
+	 * @param styleSheetId
+	 * @param range
+	 * @param selector
 	 */
 	@Returns("selectorList")
 	SelectorList setRuleSelector(@ParamName("styleSheetId") String styleSheetId, @ParamName("range") SourceRange range, @ParamName("selector") String selector);
 
 	/**
 	 * Modifies the keyframe rule key text.
+	 *
+	 * @param styleSheetId
+	 * @param range
+	 * @param keyText
 	 */
 	@Returns("keyText")
 	Value setKeyframeKey(@ParamName("styleSheetId") String styleSheetId, @ParamName("range") SourceRange range, @ParamName("keyText") String keyText);
 
 	/**
 	 * Applies specified style edits one after another in the given order.
+	 *
+	 * @param edits
 	 */
 	@Returns("styles")
 	List<CSSStyle> setStyleTexts(@ParamName("edits") List<StyleDeclarationEdit> edits);
 
 	/**
 	 * Modifies the rule selector.
+	 *
+	 * @param styleSheetId
+	 * @param range
+	 * @param text
 	 */
 	@Returns("media")
 	CSSMedia setMediaText(@ParamName("styleSheetId") String styleSheetId, @ParamName("range") SourceRange range, @ParamName("text") String text);
 
 	/**
 	 * Creates a new special "via-inspector" stylesheet in the frame with given <code>frameId</code>.
+	 *
+	 * @param frameId Identifier of the frame where "via-inspector" stylesheet should be created.
 	 */
 	@Returns("styleSheetId")
 	String createStyleSheet(@ParamName("frameId") String frameId);
 
 	/**
 	 * Inserts a new rule with the given <code>ruleText</code> in a stylesheet with given <code>styleSheetId</code>, at the position specified by <code>location</code>.
+	 *
+	 * @param styleSheetId The css style sheet identifier where a new rule should be inserted.
+	 * @param ruleText The text of a new rule.
+	 * @param location Text position of a new rule in the target style sheet.
 	 */
 	@Returns("rule")
 	CSSRule addRule(@ParamName("styleSheetId") String styleSheetId, @ParamName("ruleText") String ruleText, @ParamName("location") SourceRange location);
 
 	/**
 	 * Ensures that the given node will have specified pseudo-classes whenever its style is computed by the browser.
+	 *
+	 * @param nodeId The element id for which to force the pseudo state.
+	 * @param forcedPseudoClasses Element pseudo classes to force when computing the element's style.
 	 */
 	void forcePseudoState(@ParamName("nodeId") Integer nodeId, @ParamName("forcedPseudoClasses") List<ForcedPseudoClasses> forcedPseudoClasses);
 
@@ -135,10 +173,17 @@ public interface CSS {
 
 	/**
 	 * Find a rule with the given active property for the given node and set the new value for this property
+	 *
+	 * @param nodeId The element id for which to set property.
+	 * @param propertyName
+	 * @param value
 	 */
 	@Experimental
 	void setEffectivePropertyValueForNode(@ParamName("nodeId") Integer nodeId, @ParamName("propertyName") String propertyName, @ParamName("value") String value);
 
+	/**
+	 * @param nodeId Id of the node to get background colors for.
+	 */
 	@Experimental
 	BackgroundColors getBackgroundColors(@ParamName("nodeId") Integer nodeId);
 

@@ -27,11 +27,16 @@ public interface Security {
 
 	/**
 	 * Handles a certificate error that fired a certificateError event.
+	 *
+	 * @param eventId The ID of the event.
+	 * @param action The action to take on the certificate error.
 	 */
 	void handleCertificateError(@ParamName("eventId") Integer eventId, @ParamName("action") CertificateErrorAction action);
 
 	/**
 	 * Enable/disable overriding certificate errors. If enabled, all certificate error events need to be handled by the DevTools client and should be answered with handleCertificateError commands.
+	 *
+	 * @param override If true, certificate errors will be overridden.
 	 */
 	void setOverrideCertificateErrors(@ParamName("override") Boolean override);
 

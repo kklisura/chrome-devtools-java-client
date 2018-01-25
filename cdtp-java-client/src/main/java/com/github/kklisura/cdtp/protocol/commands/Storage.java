@@ -14,21 +14,30 @@ public interface Storage {
 
 	/**
 	 * Clears storage for origin.
+	 *
+	 * @param origin Security origin.
+	 * @param storageTypes Comma separated origin names.
 	 */
 	void clearDataForOrigin(@ParamName("origin") String origin, @ParamName("storageTypes") String storageTypes);
 
 	/**
 	 * Returns usage and quota in bytes.
+	 *
+	 * @param origin Security origin.
 	 */
 	UsageAndQuota getUsageAndQuota(@ParamName("origin") String origin);
 
 	/**
 	 * Registers origin to be notified when an update occurs to its cache storage list.
+	 *
+	 * @param origin Security origin.
 	 */
 	void trackCacheStorageForOrigin(@ParamName("origin") String origin);
 
 	/**
 	 * Unregisters origin from receiving notifications for cache storage.
+	 *
+	 * @param origin Security origin.
 	 */
 	void untrackCacheStorageForOrigin(@ParamName("origin") String origin);
 

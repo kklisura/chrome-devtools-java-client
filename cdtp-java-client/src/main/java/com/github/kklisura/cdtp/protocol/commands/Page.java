@@ -53,6 +53,8 @@ public interface Page {
 
 	/**
 	 * Deprecated, please use addScriptToEvaluateOnNewDocument instead.
+	 *
+	 * @param scriptSource
 	 */
 	@Deprecated
 	@Experimental
@@ -61,6 +63,8 @@ public interface Page {
 
 	/**
 	 * Deprecated, please use removeScriptToEvaluateOnNewDocument instead.
+	 *
+	 * @param identifier
 	 */
 	@Deprecated
 	@Experimental
@@ -68,6 +72,8 @@ public interface Page {
 
 	/**
 	 * Evaluates given script in every frame upon creation (before loading frame's scripts).
+	 *
+	 * @param source
 	 */
 	@Experimental
 	@Returns("identifier")
@@ -75,12 +81,16 @@ public interface Page {
 
 	/**
 	 * Removes given script from the list.
+	 *
+	 * @param identifier
 	 */
 	@Experimental
 	void removeScriptToEvaluateOnNewDocument(@ParamName("identifier") String identifier);
 
 	/**
 	 * Controls whether browser will open a new inspector window for connected pages.
+	 *
+	 * @param autoAttach If true, browser will open a new inspector window for every page created from this one.
 	 */
 	@Experimental
 	void setAutoAttachToCreatedPages(@ParamName("autoAttach") Boolean autoAttach);
@@ -92,23 +102,34 @@ public interface Page {
 
 	/**
 	 * Reloads given page optionally ignoring the cache.
+	 *
+	 * @param ignoreCache If true, browser cache is ignored (as if the user pressed Shift+refresh).
+	 * @param scriptToEvaluateOnLoad If set, the script will be injected into all frames of the inspected page after reload.
 	 */
 	void reload(@Optional @ParamName("ignoreCache") Boolean ignoreCache, @Optional @ParamName("scriptToEvaluateOnLoad") String scriptToEvaluateOnLoad);
 
 	/**
 	 * Enable Chrome's experimental ad filter on all sites.
+	 *
+	 * @param enabled Whether to block ads.
 	 */
 	@Experimental
 	void setAdBlockingEnabled(@ParamName("enabled") Boolean enabled);
 
 	/**
 	 * Navigates current page to the given URL.
+	 *
+	 * @param url URL to navigate the page to.
 	 */
 	@Returns("frameId")
 	String navigate(@ParamName("url") String url);
 
 	/**
 	 * Navigates current page to the given URL.
+	 *
+	 * @param url URL to navigate the page to.
+	 * @param referrer Referrer URL.
+	 * @param transitionType Intended transition type.
 	 */
 	@Returns("frameId")
 	String navigate(@ParamName("url") String url, @Experimental @Optional @ParamName("referrer") String referrer, @Experimental @Optional @ParamName("transitionType") TransitionType transitionType);
@@ -127,6 +148,8 @@ public interface Page {
 
 	/**
 	 * Navigates current page to the given history entry.
+	 *
+	 * @param entryId Unique id of the entry to navigate to.
 	 */
 	@Experimental
 	void navigateToHistoryEntry(@ParamName("entryId") Integer entryId);
@@ -140,12 +163,19 @@ public interface Page {
 
 	/**
 	 * Returns content of the given resource.
+	 *
+	 * @param frameId Frame id to get resource for.
+	 * @param url URL of the resource to get content for.
 	 */
 	@Experimental
 	ResourceContent getResourceContent(@ParamName("frameId") String frameId, @ParamName("url") String url);
 
 	/**
 	 * Searches for given string in resource content.
+	 *
+	 * @param frameId Frame id for resource to search in.
+	 * @param url URL of the resource to search in.
+	 * @param query String to search for.
 	 */
 	@Experimental
 	@Returns("result")
@@ -153,6 +183,12 @@ public interface Page {
 
 	/**
 	 * Searches for given string in resource content.
+	 *
+	 * @param frameId Frame id for resource to search in.
+	 * @param url URL of the resource to search in.
+	 * @param query String to search for.
+	 * @param caseSensitive If true, search is case sensitive.
+	 * @param isRegex If true, treats string parameter as regex.
 	 */
 	@Experimental
 	@Returns("result")
@@ -160,6 +196,9 @@ public interface Page {
 
 	/**
 	 * Sets given markup as the document's HTML.
+	 *
+	 * @param frameId Frame id to set HTML for.
+	 * @param html HTML content to set.
 	 */
 	@Experimental
 	void setDocumentContent(@ParamName("frameId") String frameId, @ParamName("html") String html);
@@ -173,6 +212,11 @@ public interface Page {
 
 	/**
 	 * Capture page screenshot.
+	 *
+	 * @param format Image compression format (defaults to png).
+	 * @param quality Compression quality from range [0..100] (jpeg only).
+	 * @param clip Capture the screenshot of a given region only.
+	 * @param fromSurface Capture the screenshot from the surface, rather than the view. Defaults to true.
 	 */
 	@Experimental
 	@Returns("data")
@@ -187,6 +231,19 @@ public interface Page {
 
 	/**
 	 * Print page as PDF.
+	 *
+	 * @param landscape Paper orientation. Defaults to false.
+	 * @param displayHeaderFooter Display header and footer. Defaults to false.
+	 * @param printBackground Print background graphics. Defaults to false.
+	 * @param scale Scale of the webpage rendering. Defaults to 1.
+	 * @param paperWidth Paper width in inches. Defaults to 8.5 inches.
+	 * @param paperHeight Paper height in inches. Defaults to 11 inches.
+	 * @param marginTop Top margin in inches. Defaults to 1cm (~0.4 inches).
+	 * @param marginBottom Bottom margin in inches. Defaults to 1cm (~0.4 inches).
+	 * @param marginLeft Left margin in inches. Defaults to 1cm (~0.4 inches).
+	 * @param marginRight Right margin in inches. Defaults to 1cm (~0.4 inches).
+	 * @param pageRanges Paper ranges to print, e.g., '1-5, 8, 11-13'. Defaults to the empty string, which means print all pages.
+	 * @param ignoreInvalidPageRanges Whether to silently ignore invalid but successfully parsed page ranges, such as '3-2'. Defaults to false.
 	 */
 	@Experimental
 	@Returns("data")
@@ -200,6 +257,12 @@ public interface Page {
 
 	/**
 	 * Starts sending each frame using the <code>screencastFrame</code> event.
+	 *
+	 * @param format Image compression format.
+	 * @param quality Compression quality from range [0..100].
+	 * @param maxWidth Maximum screenshot width.
+	 * @param maxHeight Maximum screenshot height.
+	 * @param everyNthFrame Send every n-th frame.
 	 */
 	@Experimental
 	void startScreencast(@Optional @ParamName("format") Format format, @Optional @ParamName("quality") Integer quality, @Optional @ParamName("maxWidth") Integer maxWidth, @Optional @ParamName("maxHeight") Integer maxHeight, @Optional @ParamName("everyNthFrame") Integer everyNthFrame);
@@ -212,17 +275,24 @@ public interface Page {
 
 	/**
 	 * Acknowledges that a screencast frame has been received by the frontend.
+	 *
+	 * @param sessionId Frame number.
 	 */
 	@Experimental
 	void screencastFrameAck(@ParamName("sessionId") Integer sessionId);
 
 	/**
 	 * Accepts or dismisses a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload).
+	 *
+	 * @param accept Whether to accept or dismiss the dialog.
 	 */
 	void handleJavaScriptDialog(@ParamName("accept") Boolean accept);
 
 	/**
 	 * Accepts or dismisses a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload).
+	 *
+	 * @param accept Whether to accept or dismiss the dialog.
+	 * @param promptText The text to enter into the dialog prompt before accepting. Used only if this is a prompt dialog.
 	 */
 	void handleJavaScriptDialog(@ParamName("accept") Boolean accept, @Optional @ParamName("promptText") String promptText);
 
@@ -240,6 +310,8 @@ public interface Page {
 
 	/**
 	 * Creates an isolated world for the given frame.
+	 *
+	 * @param frameId Id of the frame in which the isolated world should be created.
 	 */
 	@Experimental
 	@Returns("executionContextId")
@@ -247,6 +319,10 @@ public interface Page {
 
 	/**
 	 * Creates an isolated world for the given frame.
+	 *
+	 * @param frameId Id of the frame in which the isolated world should be created.
+	 * @param worldName An optional name which is reported in the Execution Context.
+	 * @param grantUniveralAccess Whether or not universal access should be granted to the isolated world. This is a powerful option, use with caution.
 	 */
 	@Experimental
 	@Returns("executionContextId")
@@ -259,12 +335,17 @@ public interface Page {
 
 	/**
 	 * Set the behavior when downloading a file.
+	 *
+	 * @param behavior Whether to allow all or deny all download requests, or use default Chrome behavior if available (otherwise deny).
 	 */
 	@Experimental
 	void setDownloadBehavior(@ParamName("behavior") Behavior behavior);
 
 	/**
 	 * Set the behavior when downloading a file.
+	 *
+	 * @param behavior Whether to allow all or deny all download requests, or use default Chrome behavior if available (otherwise deny).
+	 * @param downloadPath The default path to save downloaded files to. This is requred if behavior is set to 'allow'
 	 */
 	@Experimental
 	void setDownloadBehavior(@ParamName("behavior") Behavior behavior, @Optional @ParamName("downloadPath") String downloadPath);

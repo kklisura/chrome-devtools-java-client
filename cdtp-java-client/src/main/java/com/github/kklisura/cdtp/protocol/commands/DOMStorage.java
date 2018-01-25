@@ -29,13 +29,28 @@ public interface DOMStorage {
 	 */
 	void disable();
 
+	/**
+	 * @param storageId
+	 */
 	void clear(@ParamName("storageId") StorageId storageId);
 
+	/**
+	 * @param storageId
+	 */
 	@Returns("entries")
 	List<List<String>> getDOMStorageItems(@ParamName("storageId") StorageId storageId);
 
+	/**
+	 * @param storageId
+	 * @param key
+	 * @param value
+	 */
 	void setDOMStorageItem(@ParamName("storageId") StorageId storageId, @ParamName("key") String key, @ParamName("value") String value);
 
+	/**
+	 * @param storageId
+	 * @param key
+	 */
 	void removeDOMStorageItem(@ParamName("storageId") StorageId storageId, @ParamName("key") String key);
 
 	@EventName("domStorageItemsCleared")

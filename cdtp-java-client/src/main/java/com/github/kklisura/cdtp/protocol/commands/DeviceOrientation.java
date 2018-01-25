@@ -8,6 +8,10 @@ public interface DeviceOrientation {
 
 	/**
 	 * Overrides the Device Orientation.
+	 *
+	 * @param alpha Mock alpha
+	 * @param beta Mock beta
+	 * @param gamma Mock gamma
 	 */
 	void setDeviceOrientationOverride(@ParamName("alpha") Double alpha, @ParamName("beta") Double beta, @ParamName("gamma") Double gamma);
 

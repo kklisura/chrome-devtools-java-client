@@ -37,6 +37,11 @@ public class CommandBuilder {
 	private static final String EVENT_LISTENER_ARGUMENT_TYPE = "EventHandler";
 	private static final String EVENT_LISTENER_RESULT = "EventListener";
 
+	private static final String NEW_LINE = "\r\n";
+
+	private static final String COMMENT_PARAM = "@param";
+	private static final String EMPTY_SPACE = " ";
+
 	private String basePackageName;
 	private String typesPackageName;
 	private String eventPackageName;
@@ -175,8 +180,9 @@ public class CommandBuilder {
 				builders);
 
 		String returnType = buildReturnType(command, domain, interfaceBuilder, domainTypeResolver, builders);
+		String description = buildMethodParamDescription(command.getDescription(), command.getParameters());
 
-		interfaceBuilder.addMethod(method, command.getDescription(), methodParams, returnType);
+		interfaceBuilder.addMethod(method, description, methodParams, returnType);
 
 		if (Boolean.TRUE.equals(command.getDeprecated())) {
 			interfaceBuilder.addMethodAnnotation(method, DEPRECATED_ANNOTATION);
@@ -192,6 +198,29 @@ public class CommandBuilder {
 				interfaceBuilder.addParametrizedMethodAnnotation(method, RETURNS_ANNOTATION, returns.get(0).getName());
 			}
 		}
+	}
+
+	private String buildMethodParamDescription(String description, List<Property> parameters) {
+		StringBuilder result = new StringBuilder();
+		if (StringUtils.isNotEmpty(description)) {
+			result.append(description);
+		}
+
+		if (CollectionUtils.isNotEmpty(parameters)) {
+			result.append(NEW_LINE);
+
+			for (Property property : parameters) {
+				result.append(NEW_LINE);
+				result.append(COMMENT_PARAM + EMPTY_SPACE);
+				result.append(property.getName());
+				if (StringUtils.isNotEmpty(property.getDescription())) {
+					result.append(EMPTY_SPACE);
+					result.append(property.getDescription());
+				}
+			}
+		}
+
+		return result.toString();
 	}
 
 	private String buildReturnType(Command command, Domain domain, JavaInterfaceBuilder interfaceBuilder,

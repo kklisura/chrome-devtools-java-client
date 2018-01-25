@@ -31,51 +31,93 @@ public interface Runtime {
 
 	/**
 	 * Evaluates expression on global object.
+	 *
+	 * @param expression Expression to evaluate.
 	 */
 	Evaluate evaluate(@ParamName("expression") String expression);
 
 	/**
 	 * Evaluates expression on global object.
+	 *
+	 * @param expression Expression to evaluate.
+	 * @param objectGroup Symbolic group name that can be used to release multiple objects.
+	 * @param includeCommandLineAPI Determines whether Command Line API should be available during the evaluation.
+	 * @param silent In silent mode exceptions thrown during evaluation are not reported and do not pause execution. Overrides <code>setPauseOnException</code> state.
+	 * @param contextId Specifies in which execution context to perform evaluation. If the parameter is omitted the evaluation will be performed in the context of the inspected page.
+	 * @param returnByValue Whether the result is expected to be a JSON object that should be sent by value.
+	 * @param generatePreview Whether preview should be generated for the result.
+	 * @param userGesture Whether execution should be treated as initiated by user in the UI.
+	 * @param awaitPromise Whether execution should <code>await</code> for resulting value and return once awaited promise is resolved.
 	 */
 	Evaluate evaluate(@ParamName("expression") String expression, @Optional @ParamName("objectGroup") String objectGroup, @Optional @ParamName("includeCommandLineAPI") Boolean includeCommandLineAPI, @Optional @ParamName("silent") Boolean silent, @Optional @ParamName("contextId") Integer contextId, @Optional @ParamName("returnByValue") Boolean returnByValue, @Experimental @Optional @ParamName("generatePreview") Boolean generatePreview, @Experimental @Optional @ParamName("userGesture") Boolean userGesture, @Optional @ParamName("awaitPromise") Boolean awaitPromise);
 
 	/**
 	 * Add handler to promise with given promise object id.
+	 *
+	 * @param promiseObjectId Identifier of the promise.
 	 */
 	AwaitPromise awaitPromise(@ParamName("promiseObjectId") String promiseObjectId);
 
 	/**
 	 * Add handler to promise with given promise object id.
+	 *
+	 * @param promiseObjectId Identifier of the promise.
+	 * @param returnByValue Whether the result is expected to be a JSON object that should be sent by value.
+	 * @param generatePreview Whether preview should be generated for the result.
 	 */
 	AwaitPromise awaitPromise(@ParamName("promiseObjectId") String promiseObjectId, @Optional @ParamName("returnByValue") Boolean returnByValue, @Optional @ParamName("generatePreview") Boolean generatePreview);
 
 	/**
 	 * Calls function with given declaration on the given object. Object group of the result is inherited from the target object.
+	 *
+	 * @param functionDeclaration Declaration of the function to call.
 	 */
 	CallFunctionOn callFunctionOn(@ParamName("functionDeclaration") String functionDeclaration);
 
 	/**
 	 * Calls function with given declaration on the given object. Object group of the result is inherited from the target object.
+	 *
+	 * @param functionDeclaration Declaration of the function to call.
+	 * @param objectId Identifier of the object to call function on. Either objectId or executionContextId should be specified.
+	 * @param arguments Call arguments. All call arguments must belong to the same JavaScript world as the target object.
+	 * @param silent In silent mode exceptions thrown during evaluation are not reported and do not pause execution. Overrides <code>setPauseOnException</code> state.
+	 * @param returnByValue Whether the result is expected to be a JSON object which should be sent by value.
+	 * @param generatePreview Whether preview should be generated for the result.
+	 * @param userGesture Whether execution should be treated as initiated by user in the UI.
+	 * @param awaitPromise Whether execution should <code>await</code> for resulting value and return once awaited promise is resolved.
+	 * @param executionContextId Specifies execution context which global object will be used to call function on. Either executionContextId or objectId should be specified.
+	 * @param objectGroup Symbolic group name that can be used to release multiple objects. If objectGroup is not specified and objectId is, objectGroup will be inherited from object.
 	 */
 	CallFunctionOn callFunctionOn(@ParamName("functionDeclaration") String functionDeclaration, @Optional @ParamName("objectId") String objectId, @Optional @ParamName("arguments") List<CallArgument> arguments, @Optional @ParamName("silent") Boolean silent, @Optional @ParamName("returnByValue") Boolean returnByValue, @Experimental @Optional @ParamName("generatePreview") Boolean generatePreview, @Experimental @Optional @ParamName("userGesture") Boolean userGesture, @Optional @ParamName("awaitPromise") Boolean awaitPromise, @Optional @ParamName("executionContextId") Integer executionContextId, @Optional @ParamName("objectGroup") String objectGroup);
 
 	/**
 	 * Returns properties of a given object. Object group of the result is inherited from the target object.
+	 *
+	 * @param objectId Identifier of the object to return properties for.
 	 */
 	Properties getProperties(@ParamName("objectId") String objectId);
 
 	/**
 	 * Returns properties of a given object. Object group of the result is inherited from the target object.
+	 *
+	 * @param objectId Identifier of the object to return properties for.
+	 * @param ownProperties If true, returns properties belonging only to the element itself, not to its prototype chain.
+	 * @param accessorPropertiesOnly If true, returns accessor properties (with getter/setter) only; internal properties are not returned either.
+	 * @param generatePreview Whether preview should be generated for the results.
 	 */
 	Properties getProperties(@ParamName("objectId") String objectId, @Optional @ParamName("ownProperties") Boolean ownProperties, @Experimental @Optional @ParamName("accessorPropertiesOnly") Boolean accessorPropertiesOnly, @Experimental @Optional @ParamName("generatePreview") Boolean generatePreview);
 
 	/**
 	 * Releases remote object with given id.
+	 *
+	 * @param objectId Identifier of the object to release.
 	 */
 	void releaseObject(@ParamName("objectId") String objectId);
 
 	/**
 	 * Releases all remote objects that belong to a given group.
+	 *
+	 * @param objectGroup Symbolic object group name.
 	 */
 	void releaseObjectGroup(@ParamName("objectGroup") String objectGroup);
 
@@ -99,29 +141,55 @@ public interface Runtime {
 	 */
 	void discardConsoleEntries();
 
+	/**
+	 * @param enabled
+	 */
 	@Experimental
 	void setCustomObjectFormatterEnabled(@ParamName("enabled") Boolean enabled);
 
 	/**
 	 * Compiles expression.
+	 *
+	 * @param expression Expression to compile.
+	 * @param sourceURL Source url to be set for the script.
+	 * @param persistScript Specifies whether the compiled script should be persisted.
 	 */
 	CompileScript compileScript(@ParamName("expression") String expression, @ParamName("sourceURL") String sourceURL, @ParamName("persistScript") Boolean persistScript);
 
 	/**
 	 * Compiles expression.
+	 *
+	 * @param expression Expression to compile.
+	 * @param sourceURL Source url to be set for the script.
+	 * @param persistScript Specifies whether the compiled script should be persisted.
+	 * @param executionContextId Specifies in which execution context to perform script run. If the parameter is omitted the evaluation will be performed in the context of the inspected page.
 	 */
 	CompileScript compileScript(@ParamName("expression") String expression, @ParamName("sourceURL") String sourceURL, @ParamName("persistScript") Boolean persistScript, @Optional @ParamName("executionContextId") Integer executionContextId);
 
 	/**
 	 * Runs script with given id in a given context.
+	 *
+	 * @param scriptId Id of the script to run.
 	 */
 	RunScript runScript(@ParamName("scriptId") String scriptId);
 
 	/**
 	 * Runs script with given id in a given context.
+	 *
+	 * @param scriptId Id of the script to run.
+	 * @param executionContextId Specifies in which execution context to perform script run. If the parameter is omitted the evaluation will be performed in the context of the inspected page.
+	 * @param objectGroup Symbolic group name that can be used to release multiple objects.
+	 * @param silent In silent mode exceptions thrown during evaluation are not reported and do not pause execution. Overrides <code>setPauseOnException</code> state.
+	 * @param includeCommandLineAPI Determines whether Command Line API should be available during the evaluation.
+	 * @param returnByValue Whether the result is expected to be a JSON object which should be sent by value.
+	 * @param generatePreview Whether preview should be generated for the result.
+	 * @param awaitPromise Whether execution should <code>await</code> for resulting value and return once awaited promise is resolved.
 	 */
 	RunScript runScript(@ParamName("scriptId") String scriptId, @Optional @ParamName("executionContextId") Integer executionContextId, @Optional @ParamName("objectGroup") String objectGroup, @Optional @ParamName("silent") Boolean silent, @Optional @ParamName("includeCommandLineAPI") Boolean includeCommandLineAPI, @Optional @ParamName("returnByValue") Boolean returnByValue, @Optional @ParamName("generatePreview") Boolean generatePreview, @Optional @ParamName("awaitPromise") Boolean awaitPromise);
 
+	/**
+	 * @param prototypeObjectId Identifier of the prototype to return objects for.
+	 */
 	@Experimental
 	@Returns("objects")
 	RemoteObject queryObjects(@ParamName("prototypeObjectId") String prototypeObjectId);

@@ -27,12 +27,16 @@ public interface ApplicationCache {
 
 	/**
 	 * Returns manifest URL for document in the given frame.
+	 *
+	 * @param frameId Identifier of the frame containing document whose manifest is retrieved.
 	 */
 	@Returns("manifestURL")
 	String getManifestForFrame(@ParamName("frameId") String frameId);
 
 	/**
 	 * Returns relevant application cache data for the document in given frame.
+	 *
+	 * @param frameId Identifier of the frame containing document whose application cache is retrieved.
 	 */
 	@Returns("applicationCache")
 	com.github.kklisura.cdtp.protocol.types.applicationcache.ApplicationCache getApplicationCacheForFrame(@ParamName("frameId") String frameId);

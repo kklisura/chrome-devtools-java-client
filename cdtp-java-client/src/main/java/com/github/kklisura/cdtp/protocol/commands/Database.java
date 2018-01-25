@@ -23,9 +23,16 @@ public interface Database {
 	 */
 	void disable();
 
+	/**
+	 * @param databaseId
+	 */
 	@Returns("tableNames")
 	List<String> getDatabaseTableNames(@ParamName("databaseId") String databaseId);
 
+	/**
+	 * @param databaseId
+	 * @param query
+	 */
 	ExecuteSQL executeSQL(@ParamName("databaseId") String databaseId, @ParamName("query") String query);
 
 	@EventName("addDatabase")

@@ -24,34 +24,58 @@ public interface HeapProfiler {
 
 	void startTrackingHeapObjects();
 
+	/**
+	 * @param trackAllocations
+	 */
 	void startTrackingHeapObjects(@Optional @ParamName("trackAllocations") Boolean trackAllocations);
 
 	void stopTrackingHeapObjects();
 
+	/**
+	 * @param reportProgress If true 'reportHeapSnapshotProgress' events will be generated while snapshot is being taken when the tracking is stopped.
+	 */
 	void stopTrackingHeapObjects(@Optional @ParamName("reportProgress") Boolean reportProgress);
 
 	void takeHeapSnapshot();
 
+	/**
+	 * @param reportProgress If true 'reportHeapSnapshotProgress' events will be generated while snapshot is being taken.
+	 */
 	void takeHeapSnapshot(@Optional @ParamName("reportProgress") Boolean reportProgress);
 
 	void collectGarbage();
 
+	/**
+	 * @param objectId
+	 */
 	@Returns("result")
 	RemoteObject getObjectByHeapObjectId(@ParamName("objectId") String objectId);
 
+	/**
+	 * @param objectId
+	 * @param objectGroup Symbolic group name that can be used to release multiple objects.
+	 */
 	@Returns("result")
 	RemoteObject getObjectByHeapObjectId(@ParamName("objectId") String objectId, @Optional @ParamName("objectGroup") String objectGroup);
 
 	/**
 	 * Enables console to refer to the node with given id via $x (see Command Line API for more details $x functions).
+	 *
+	 * @param heapObjectId Heap snapshot object id to be accessible by means of $x command line API.
 	 */
 	void addInspectedHeapObject(@ParamName("heapObjectId") String heapObjectId);
 
+	/**
+	 * @param objectId Identifier of the object to get heap object id for.
+	 */
 	@Returns("heapSnapshotObjectId")
 	String getHeapObjectId(@ParamName("objectId") String objectId);
 
 	void startSampling();
 
+	/**
+	 * @param samplingInterval Average sample interval in bytes. Poisson distribution is used for the intervals. The default value is 32768 bytes.
+	 */
 	void startSampling(@Optional @ParamName("samplingInterval") Double samplingInterval);
 
 	@Returns("profile")

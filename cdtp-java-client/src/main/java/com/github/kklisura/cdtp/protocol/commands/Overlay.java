@@ -34,82 +34,134 @@ public interface Overlay {
 
 	/**
 	 * Requests that backend shows paint rectangles
+	 *
+	 * @param result True for showing paint rectangles
 	 */
 	void setShowPaintRects(@ParamName("result") Boolean result);
 
 	/**
 	 * Requests that backend shows debug borders on layers
+	 *
+	 * @param show True for showing debug borders
 	 */
 	void setShowDebugBorders(@ParamName("show") Boolean show);
 
 	/**
 	 * Requests that backend shows the FPS counter
+	 *
+	 * @param show True for showing the FPS counter
 	 */
 	void setShowFPSCounter(@ParamName("show") Boolean show);
 
 	/**
 	 * Requests that backend shows scroll bottleneck rects
+	 *
+	 * @param show True for showing scroll bottleneck rects
 	 */
 	void setShowScrollBottleneckRects(@ParamName("show") Boolean show);
 
 	/**
 	 * Paints viewport size upon main frame resize.
+	 *
+	 * @param show Whether to paint size or not.
 	 */
 	void setShowViewportSizeOnResize(@ParamName("show") Boolean show);
 
 	void setPausedInDebuggerMessage();
 
+	/**
+	 * @param message The message to display, also triggers resume and step over controls.
+	 */
 	void setPausedInDebuggerMessage(@Optional @ParamName("message") String message);
 
+	/**
+	 * @param suspended Whether overlay should be suspended and not consume any resources until resumed.
+	 */
 	void setSuspended(@ParamName("suspended") Boolean suspended);
 
 	/**
 	 * Enters the 'inspect' mode. In this mode, elements that user is hovering over are highlighted. Backend then generates 'inspectNodeRequested' event upon element selection.
+	 *
+	 * @param mode Set an inspection mode.
 	 */
 	void setInspectMode(@ParamName("mode") InspectMode mode);
 
 	/**
 	 * Enters the 'inspect' mode. In this mode, elements that user is hovering over are highlighted. Backend then generates 'inspectNodeRequested' event upon element selection.
+	 *
+	 * @param mode Set an inspection mode.
+	 * @param highlightConfig A descriptor for the highlight appearance of hovered-over nodes. May be omitted if <code>enabled == false</code>.
 	 */
 	void setInspectMode(@ParamName("mode") InspectMode mode, @Optional @ParamName("highlightConfig") HighlightConfig highlightConfig);
 
 	/**
 	 * Highlights given rectangle. Coordinates are absolute with respect to the main frame viewport.
+	 *
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @param width Rectangle width
+	 * @param height Rectangle height
 	 */
 	void highlightRect(@ParamName("x") Integer x, @ParamName("y") Integer y, @ParamName("width") Integer width, @ParamName("height") Integer height);
 
 	/**
 	 * Highlights given rectangle. Coordinates are absolute with respect to the main frame viewport.
+	 *
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @param width Rectangle width
+	 * @param height Rectangle height
+	 * @param color The highlight fill color (default: transparent).
+	 * @param outlineColor The highlight outline color (default: transparent).
 	 */
 	void highlightRect(@ParamName("x") Integer x, @ParamName("y") Integer y, @ParamName("width") Integer width, @ParamName("height") Integer height, @Optional @ParamName("color") RGBA color, @Optional @ParamName("outlineColor") RGBA outlineColor);
 
 	/**
 	 * Highlights given quad. Coordinates are absolute with respect to the main frame viewport.
+	 *
+	 * @param quad Quad to highlight
 	 */
 	void highlightQuad(@ParamName("quad") List<Double> quad);
 
 	/**
 	 * Highlights given quad. Coordinates are absolute with respect to the main frame viewport.
+	 *
+	 * @param quad Quad to highlight
+	 * @param color The highlight fill color (default: transparent).
+	 * @param outlineColor The highlight outline color (default: transparent).
 	 */
 	void highlightQuad(@ParamName("quad") List<Double> quad, @Optional @ParamName("color") RGBA color, @Optional @ParamName("outlineColor") RGBA outlineColor);
 
 	/**
 	 * Highlights DOM node with given id or with the given JavaScript object wrapper. Either nodeId or objectId must be specified.
+	 *
+	 * @param highlightConfig A descriptor for the highlight appearance.
 	 */
 	void highlightNode(@ParamName("highlightConfig") HighlightConfig highlightConfig);
 
 	/**
 	 * Highlights DOM node with given id or with the given JavaScript object wrapper. Either nodeId or objectId must be specified.
+	 *
+	 * @param highlightConfig A descriptor for the highlight appearance.
+	 * @param nodeId Identifier of the node to highlight.
+	 * @param backendNodeId Identifier of the backend node to highlight.
+	 * @param objectId JavaScript object id of the node to be highlighted.
 	 */
 	void highlightNode(@ParamName("highlightConfig") HighlightConfig highlightConfig, @Optional @ParamName("nodeId") Integer nodeId, @Optional @ParamName("backendNodeId") Integer backendNodeId, @Optional @ParamName("objectId") String objectId);
 
 	/**
 	 * Highlights owner element of the frame with given id.
+	 *
+	 * @param frameId Identifier of the frame to highlight.
 	 */
 	void highlightFrame(@ParamName("frameId") String frameId);
 
 	/**
 	 * Highlights owner element of the frame with given id.
+	 *
+	 * @param frameId Identifier of the frame to highlight.
+	 * @param contentColor The content box highlight fill color (default: transparent).
+	 * @param contentOutlineColor The content box highlight outline color (default: transparent).
 	 */
 	void highlightFrame(@ParamName("frameId") String frameId, @Optional @ParamName("contentColor") RGBA contentColor, @Optional @ParamName("contentOutlineColor") RGBA contentOutlineColor);
 
@@ -120,6 +172,8 @@ public interface Overlay {
 
 	/**
 	 * For testing.
+	 *
+	 * @param nodeId Id of the node to get highlight object for.
 	 */
 	@Returns("highlight")
 	Map<String, Object> getHighlightObjectForTest(@ParamName("nodeId") Integer nodeId);
