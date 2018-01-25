@@ -1,10 +1,13 @@
 package com.github.kklisura.cdtp.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.services.WebSocketService;
 import com.github.kklisura.cdtp.services.exceptions.ChromeDevToolsInvocationException;
 import com.github.kklisura.cdtp.services.exceptions.WebSocketServiceException;
 import com.github.kklisura.cdtp.services.types.ChromeTab;
+import com.github.kklisura.cdtp.services.types.EventListenerImpl;
 import com.github.kklisura.cdtp.services.types.MethodInvocation;
 import com.github.kklisura.cdtp.services.utils.ProxyUtils;
 import org.easymock.Capture;
@@ -350,6 +353,123 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
 		service.close();
 
 		verify(chromeService);
+	}
+
+	@Test
+	public void testAddEventListener() {
+		EventHandler<String> eventHandler = event -> {};
+
+		EventListener eventListener = service.addEventListener("domain", "event", eventHandler,
+				String.class);
+		assertNotNull(eventListener);
+
+		assertEquals(eventHandler, ((EventListenerImpl) eventListener).getHandler());
+		assertEquals("domain.event", ((EventListenerImpl) eventListener).getKey());
+		assertEquals(String.class, ((EventListenerImpl) eventListener).getParamType());
+
+		service.removeEventListener(eventListener);
+	}
+
+	@Test
+	public void testEventReceivedWithOff() throws InterruptedException {
+		// Non existing event handler
+		service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+		Capture<TestMessage> testMessageCapture = Capture.newInstance();
+
+		EventHandler<TestMessage> eventHandler = testMessageCapture::setValue;
+
+		EventListener eventListener = service.addEventListener("Domain", "name", eventHandler, TestMessage.class);
+		service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+		assertNotNull(testMessageCapture.getValue());
+		assertEquals("testValue", testMessageCapture.getValue().getTestProperty());
+
+		testMessageCapture.reset();
+
+		eventListener.off();
+
+		service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+		assertFalse(testMessageCapture.hasCaptured());
+	}
+
+	@Test
+	public void testEventReceivedWithUnsubscribe() throws InterruptedException {
+		// Non existing event handler
+		service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+		Capture<TestMessage> testMessageCapture = Capture.newInstance();
+
+		EventHandler<TestMessage> eventHandler = testMessageCapture::setValue;
+
+		EventListener eventListener = service.addEventListener("Domain", "name", eventHandler, TestMessage.class);
+		service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+		assertNotNull(testMessageCapture.getValue());
+		assertEquals("testValue", testMessageCapture.getValue().getTestProperty());
+
+		testMessageCapture.reset();
+
+		eventListener.unsubscribe();
+
+		service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+		assertFalse(testMessageCapture.hasCaptured());
+	}
+
+	@Test
+	public void testEventReceivedWithUnsubscribeOnService() throws InterruptedException {
+		// Non existing event handler
+		service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+		Capture<TestMessage> testMessageCapture = Capture.newInstance();
+
+		EventHandler<TestMessage> eventHandler = testMessageCapture::setValue;
+
+		EventListener eventListener = service.addEventListener("Domain", "name", eventHandler, TestMessage.class);
+		service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+		assertNotNull(testMessageCapture.getValue());
+		assertEquals("testValue", testMessageCapture.getValue().getTestProperty());
+
+		service.removeEventListener(eventListener);
+
+		testMessageCapture.reset();
+
+		service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+		assertFalse(testMessageCapture.hasCaptured());
+	}
+
+	@Test
+	public void testEventReceivedHandlerThrowsExeption() throws InterruptedException {
+		// Non existing event handler
+		service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+		Capture<TestMessage> testMessageCapture = Capture.newInstance();
+
+		EventHandler<TestMessage> eventHandlerThrowsException = event -> {
+			throw new RuntimeException("test");
+		};
+		EventHandler<TestMessage> eventHandler = testMessageCapture::setValue;
+
+		EventListener eventListenerWithException = service.addEventListener("Domain", "name", eventHandlerThrowsException, TestMessage.class);
+		EventListener eventListener = service.addEventListener("Domain", "name", eventHandler, TestMessage.class);
+
+		service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+		assertNotNull(testMessageCapture.getValue());
+		assertEquals("testValue", testMessageCapture.getValue().getTestProperty());
+
+		service.removeEventListener(eventListenerWithException);
+
+		testMessageCapture.reset();
+
+		service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+		assertNotNull(testMessageCapture.getValue());
+		assertEquals("testValue", testMessageCapture.getValue().getTestProperty());
 	}
 
 	private void resolveMessage(String message) {

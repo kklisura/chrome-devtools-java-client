@@ -43,3 +43,8 @@ upgrade-protocol-definition: build-cdtp-definition-builder clean-previous-protoc
 
 update-protocol-definition: upgrade-protocol-definition compile-cdtp-java-client
 	# Updated protocol definition on cdtp-java-client
+
+sonar-analysis:
+	# Running sonar analysis
+	cd $(DEFINITION_BUILDER_DIR)/ && make sonar-analysis
+	cd $(JAVA_CLIENT_DIR)/ && make sonar-analysis

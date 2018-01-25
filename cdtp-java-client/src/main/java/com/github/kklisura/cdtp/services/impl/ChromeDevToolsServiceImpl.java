@@ -14,7 +14,6 @@ import com.github.kklisura.cdtp.services.types.EventListenerImpl;
 import com.github.kklisura.cdtp.services.types.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
@@ -159,12 +158,11 @@ public abstract class ChromeDevToolsServiceImpl implements ChromeDevToolsService
 	}
 
 	@Override
-	public EventListener addEventListener(String domainName, String eventName, EventHandler eventHandler) {
+	public EventListener addEventListener(String domainName, String eventName, EventHandler eventHandler,
+										  Class<?> eventType) {
 		String name = domainName + "." + eventName;
 
-		Class<?> eventHandlerType = getEventHandlerType(eventHandler);
-
-		EventListenerImpl eventListener = new EventListenerImpl(name, eventHandler, eventHandlerType, this);
+		EventListenerImpl eventListener = new EventListenerImpl(name, eventHandler, eventType, this);
 		eventNameToHandlersMap.computeIfAbsent(name, this::createEventHandlerSet).add(eventListener);
 
 		return eventListener;
@@ -265,11 +263,6 @@ public abstract class ChromeDevToolsServiceImpl implements ChromeDevToolsService
 
 	private Set<EventListenerImpl> createEventHandlerSet(String unused) {
 		return Collections.synchronizedSet(new HashSet<>());
-	}
-
-	private static Class<?> getEventHandlerType(EventHandler<?> eventHandler) {
-		return (Class<?>) ((ParameterizedTypeImpl) eventHandler.getClass().getGenericInterfaces()[0])
-				.getActualTypeArguments()[0];
 	}
 
 	/**

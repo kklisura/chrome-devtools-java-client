@@ -35,9 +35,10 @@ public interface ChromeDevToolsService extends ChromeDevTools, AutoCloseable {
 	 * @param domainName Domain.
 	 * @param eventName Event.
 	 * @param eventHandler Event handler.
+	 * @param eventType Event type.
 	 * @return Event listener.
 	 */
-	EventListener addEventListener(String domainName, String eventName, EventHandler eventHandler);
+	EventListener addEventListener(String domainName, String eventName, EventHandler eventHandler, Class<?> eventType);
 
 	/**
 	 * Removes an event listener.

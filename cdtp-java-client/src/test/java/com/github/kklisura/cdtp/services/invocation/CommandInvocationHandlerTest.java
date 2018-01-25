@@ -1,5 +1,6 @@
 package com.github.kklisura.cdtp.services.invocation;
 
+import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
 import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
@@ -129,7 +130,25 @@ public class CommandInvocationHandlerTest extends EasyMockSupport {
 		assertFalse(CommandInvocationHandler.isEventSubscription(getMethodByName("onEventListenerTestMethod")));
 		assertFalse(CommandInvocationHandler.isEventSubscription(getMethodByName("onEventListenerTestMethod1")));
 		assertFalse(CommandInvocationHandler.isEventSubscription(getMethodByName("onEventListenerTestMethod2")));
-		assertTrue(CommandInvocationHandler.isEventSubscription(getMethodByName("onEventListenerTestMethod3")));
+		assertFalse(CommandInvocationHandler.isEventSubscription(getMethodByName("onEventListenerTestMethod3")));
+		assertTrue(CommandInvocationHandler.isEventSubscription(getMethodByName("onEventListenerTestMethod4")));
+	}
+
+	@Test
+	public void testInvokeWithEvent() throws Throwable {
+		EventHandler<String> eventHandler = event -> {};
+		EventListener eventListener = mock(EventListener.class);
+
+		expect(chromeDevToolsService.addEventListener("CommandInvocationHandlerTest",
+				"someEventName", eventHandler, String.class))
+				.andReturn(eventListener);
+
+		replayAll();
+
+		assertEquals(eventListener, invocationHandler.invoke(null,
+				getMethodByName("onEventListenerTestMethod4"), new Object[] { eventHandler }));
+
+		verifyAll();
 	}
 
 	private Method getMethodByName(String name) {
@@ -150,11 +169,15 @@ public class CommandInvocationHandlerTest extends EasyMockSupport {
 		return null;
 	}
 
-	private EventListener onEventListenerTestMethod2(String param, String param2) {
+
+	private void onEventListenerTestMethod2(String param, String param2) {}
+
+	private EventListener onEventListenerTestMethod3(String param, String param2) {
 		return null;
 	}
 
-	private EventListener onEventListenerTestMethod3(EventHandler<String> handler) {
+	@EventName("someEventName")
+	private EventListener onEventListenerTestMethod4(EventHandler<String> handler) {
 		return null;
 	}
 

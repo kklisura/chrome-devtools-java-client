@@ -11,6 +11,7 @@ import com.github.kklisura.cdtp.services.types.MethodInvocation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -42,7 +43,9 @@ public class CommandInvocationHandler implements InvocationHandler {
 			String domainName = method.getDeclaringClass().getSimpleName();
 			String eventName = getEventName(method);
 
-			return chromeDevToolsService.addEventListener(domainName, eventName, (EventHandler) args[0]);
+			Class<?> eventHandlerType = getEventHandlerType(method);
+			return chromeDevToolsService.addEventListener(domainName, eventName, (EventHandler) args[0],
+					eventHandlerType);
 		}
 
 		Class<?> returnType = method.getReturnType();
@@ -104,6 +107,10 @@ public class CommandInvocationHandler implements InvocationHandler {
 	 */
 	private static String getEventName(Method method) {
 		return method.getAnnotation(EventName.class).value();
+	}
+
+	private static Class<?> getEventHandlerType(Method method) {
+		return (Class<?>) ((ParameterizedType) method.getGenericParameterTypes()[0]).getActualTypeArguments()[0];
 	}
 
 	/**
