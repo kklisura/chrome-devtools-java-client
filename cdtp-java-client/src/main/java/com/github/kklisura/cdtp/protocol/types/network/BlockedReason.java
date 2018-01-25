@@ -8,10 +8,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum BlockedReason {
 
 	@JsonProperty("csp")
-	CSP, @JsonProperty("mixed-content")
-	MIXED_CONTENT, @JsonProperty("origin")
-	ORIGIN, @JsonProperty("inspector")
-	INSPECTOR, @JsonProperty("subresource-filter")
-	SUBRESOURCE_FILTER, @JsonProperty("other")
+	CSP,
+	@JsonProperty("mixed-content")
+	MIXED_CONTENT,
+	@JsonProperty("origin")
+	ORIGIN,
+	@JsonProperty("inspector")
+	INSPECTOR,
+	@JsonProperty("subresource-filter")
+	SUBRESOURCE_FILTER,
+	@JsonProperty("other")
 	OTHER
 }

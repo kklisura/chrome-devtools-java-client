@@ -5,10 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum ServiceWorkerVersionStatus {
 
 	@JsonProperty("new")
-	NEW, @JsonProperty("installing")
-	INSTALLING, @JsonProperty("installed")
-	INSTALLED, @JsonProperty("activating")
-	ACTIVATING, @JsonProperty("activated")
-	ACTIVATED, @JsonProperty("redundant")
+	NEW,
+	@JsonProperty("installing")
+	INSTALLING,
+	@JsonProperty("installed")
+	INSTALLED,
+	@JsonProperty("activating")
+	ACTIVATING,
+	@JsonProperty("activated")
+	ACTIVATED,
+	@JsonProperty("redundant")
 	REDUNDANT
 }

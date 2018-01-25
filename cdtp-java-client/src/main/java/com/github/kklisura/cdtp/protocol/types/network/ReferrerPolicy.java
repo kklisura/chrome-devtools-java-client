@@ -8,12 +8,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum ReferrerPolicy {
 
 	@JsonProperty("unsafe-url")
-	UNSAFE_URL, @JsonProperty("no-referrer-when-downgrade")
-	NO_REFERRER_WHEN_DOWNGRADE, @JsonProperty("no-referrer")
-	NO_REFERRER, @JsonProperty("origin")
-	ORIGIN, @JsonProperty("origin-when-cross-origin")
-	ORIGIN_WHEN_CROSS_ORIGIN, @JsonProperty("same-origin")
-	SAME_ORIGIN, @JsonProperty("strict-origin")
-	STRICT_ORIGIN, @JsonProperty("strict-origin-when-cross-origin")
+	UNSAFE_URL,
+	@JsonProperty("no-referrer-when-downgrade")
+	NO_REFERRER_WHEN_DOWNGRADE,
+	@JsonProperty("no-referrer")
+	NO_REFERRER,
+	@JsonProperty("origin")
+	ORIGIN,
+	@JsonProperty("origin-when-cross-origin")
+	ORIGIN_WHEN_CROSS_ORIGIN,
+	@JsonProperty("same-origin")
+	SAME_ORIGIN,
+	@JsonProperty("strict-origin")
+	STRICT_ORIGIN,
+	@JsonProperty("strict-origin-when-cross-origin")
 	STRICT_ORIGIN_WHEN_CROSS_ORIGIN
 }

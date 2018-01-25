@@ -8,17 +8,29 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum ResourceType {
 
 	@JsonProperty("Document")
-	DOCUMENT, @JsonProperty("Stylesheet")
-	STYLESHEET, @JsonProperty("Image")
-	IMAGE, @JsonProperty("Media")
-	MEDIA, @JsonProperty("Font")
-	FONT, @JsonProperty("Script")
-	SCRIPT, @JsonProperty("TextTrack")
-	TEXT_TRACK, @JsonProperty("XHR")
-	XHR, @JsonProperty("Fetch")
-	FETCH, @JsonProperty("EventSource")
-	EVENT_SOURCE, @JsonProperty("WebSocket")
-	WEB_SOCKET, @JsonProperty("Manifest")
-	MANIFEST, @JsonProperty("Other")
+	DOCUMENT,
+	@JsonProperty("Stylesheet")
+	STYLESHEET,
+	@JsonProperty("Image")
+	IMAGE,
+	@JsonProperty("Media")
+	MEDIA,
+	@JsonProperty("Font")
+	FONT,
+	@JsonProperty("Script")
+	SCRIPT,
+	@JsonProperty("TextTrack")
+	TEXT_TRACK,
+	@JsonProperty("XHR")
+	XHR,
+	@JsonProperty("Fetch")
+	FETCH,
+	@JsonProperty("EventSource")
+	EVENT_SOURCE,
+	@JsonProperty("WebSocket")
+	WEB_SOCKET,
+	@JsonProperty("Manifest")
+	MANIFEST,
+	@JsonProperty("Other")
 	OTHER
 }

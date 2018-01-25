@@ -8,12 +8,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum AXValueNativeSourceType {
 
 	@JsonProperty("figcaption")
-	FIGCAPTION, @JsonProperty("label")
-	LABEL, @JsonProperty("labelfor")
-	LABELFOR, @JsonProperty("labelwrapped")
-	LABELWRAPPED, @JsonProperty("legend")
-	LEGEND, @JsonProperty("tablecaption")
-	TABLECAPTION, @JsonProperty("title")
-	TITLE, @JsonProperty("other")
+	FIGCAPTION,
+	@JsonProperty("label")
+	LABEL,
+	@JsonProperty("labelfor")
+	LABELFOR,
+	@JsonProperty("labelwrapped")
+	LABELWRAPPED,
+	@JsonProperty("legend")
+	LEGEND,
+	@JsonProperty("tablecaption")
+	TABLECAPTION,
+	@JsonProperty("title")
+	TITLE,
+	@JsonProperty("other")
 	OTHER
 }

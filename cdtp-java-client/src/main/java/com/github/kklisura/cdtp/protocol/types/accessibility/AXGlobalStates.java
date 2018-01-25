@@ -8,11 +8,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum AXGlobalStates {
 
 	@JsonProperty("busy")
-	BUSY, @JsonProperty("disabled")
-	DISABLED, @JsonProperty("hidden")
-	HIDDEN, @JsonProperty("hiddenRoot")
-	HIDDEN_ROOT, @JsonProperty("invalid")
-	INVALID, @JsonProperty("keyshortcuts")
-	KEYSHORTCUTS, @JsonProperty("roledescription")
+	BUSY,
+	@JsonProperty("disabled")
+	DISABLED,
+	@JsonProperty("hidden")
+	HIDDEN,
+	@JsonProperty("hiddenRoot")
+	HIDDEN_ROOT,
+	@JsonProperty("invalid")
+	INVALID,
+	@JsonProperty("keyshortcuts")
+	KEYSHORTCUTS,
+	@JsonProperty("roledescription")
 	ROLEDESCRIPTION
 }

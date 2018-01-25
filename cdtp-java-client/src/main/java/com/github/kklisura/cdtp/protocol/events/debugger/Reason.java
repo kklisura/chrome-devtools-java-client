@@ -8,14 +8,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum Reason {
 
 	@JsonProperty("XHR")
-	XHR, @JsonProperty("DOM")
-	DOM, @JsonProperty("EventListener")
-	EVENT_LISTENER, @JsonProperty("exception")
-	EXCEPTION, @JsonProperty("assert")
-	ASSERT, @JsonProperty("debugCommand")
-	DEBUG_COMMAND, @JsonProperty("promiseRejection")
-	PROMISE_REJECTION, @JsonProperty("OOM")
-	OOM, @JsonProperty("other")
-	OTHER, @JsonProperty("ambiguous")
+	XHR,
+	@JsonProperty("DOM")
+	DOM,
+	@JsonProperty("EventListener")
+	EVENT_LISTENER,
+	@JsonProperty("exception")
+	EXCEPTION,
+	@JsonProperty("assert")
+	ASSERT,
+	@JsonProperty("debugCommand")
+	DEBUG_COMMAND,
+	@JsonProperty("promiseRejection")
+	PROMISE_REJECTION,
+	@JsonProperty("OOM")
+	OOM,
+	@JsonProperty("other")
+	OTHER,
+	@JsonProperty("ambiguous")
 	AMBIGUOUS
 }

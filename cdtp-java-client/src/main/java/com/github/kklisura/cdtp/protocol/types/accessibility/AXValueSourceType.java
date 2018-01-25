@@ -8,10 +8,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum AXValueSourceType {
 
 	@JsonProperty("attribute")
-	ATTRIBUTE, @JsonProperty("implicit")
-	IMPLICIT, @JsonProperty("style")
-	STYLE, @JsonProperty("contents")
-	CONTENTS, @JsonProperty("placeholder")
-	PLACEHOLDER, @JsonProperty("relatedElement")
+	ATTRIBUTE,
+	@JsonProperty("implicit")
+	IMPLICIT,
+	@JsonProperty("style")
+	STYLE,
+	@JsonProperty("contents")
+	CONTENTS,
+	@JsonProperty("placeholder")
+	PLACEHOLDER,
+	@JsonProperty("relatedElement")
 	RELATED_ELEMENT
 }

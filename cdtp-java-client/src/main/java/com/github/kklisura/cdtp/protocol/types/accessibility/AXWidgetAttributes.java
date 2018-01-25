@@ -8,15 +8,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum AXWidgetAttributes {
 
 	@JsonProperty("autocomplete")
-	AUTOCOMPLETE, @JsonProperty("haspopup")
-	HASPOPUP, @JsonProperty("level")
-	LEVEL, @JsonProperty("multiselectable")
-	MULTISELECTABLE, @JsonProperty("orientation")
-	ORIENTATION, @JsonProperty("multiline")
-	MULTILINE, @JsonProperty("readonly")
-	READONLY, @JsonProperty("required")
-	REQUIRED, @JsonProperty("valuemin")
-	VALUEMIN, @JsonProperty("valuemax")
-	VALUEMAX, @JsonProperty("valuetext")
+	AUTOCOMPLETE,
+	@JsonProperty("haspopup")
+	HASPOPUP,
+	@JsonProperty("level")
+	LEVEL,
+	@JsonProperty("multiselectable")
+	MULTISELECTABLE,
+	@JsonProperty("orientation")
+	ORIENTATION,
+	@JsonProperty("multiline")
+	MULTILINE,
+	@JsonProperty("readonly")
+	READONLY,
+	@JsonProperty("required")
+	REQUIRED,
+	@JsonProperty("valuemin")
+	VALUEMIN,
+	@JsonProperty("valuemax")
+	VALUEMAX,
+	@JsonProperty("valuetext")
 	VALUETEXT
 }

@@ -61,7 +61,6 @@ public class JavaEnumBuilderImplTest extends EasyMockSupport {
 				"import com.fasterxml.jackson.annotation.JsonProperty;\n" +
 				"\n" +
 				"public enum EnumName {\n" +
-				"\n" +
 				"}\n", compilationUnitCapture.getValue().toString());
 
 		verifyAll();

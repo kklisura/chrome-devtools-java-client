@@ -8,12 +8,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum AXRelationshipAttributes {
 
 	@JsonProperty("activedescendant")
-	ACTIVEDESCENDANT, @JsonProperty("controls")
-	CONTROLS, @JsonProperty("describedby")
-	DESCRIBEDBY, @JsonProperty("details")
-	DETAILS, @JsonProperty("errormessage")
-	ERRORMESSAGE, @JsonProperty("flowto")
-	FLOWTO, @JsonProperty("labelledby")
-	LABELLEDBY, @JsonProperty("owns")
+	ACTIVEDESCENDANT,
+	@JsonProperty("controls")
+	CONTROLS,
+	@JsonProperty("describedby")
+	DESCRIBEDBY,
+	@JsonProperty("details")
+	DETAILS,
+	@JsonProperty("errormessage")
+	ERRORMESSAGE,
+	@JsonProperty("flowto")
+	FLOWTO,
+	@JsonProperty("labelledby")
+	LABELLEDBY,
+	@JsonProperty("owns")
 	OWNS
 }
