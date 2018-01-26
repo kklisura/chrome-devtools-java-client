@@ -9,7 +9,7 @@ import com.github.kklisura.cdtp.definition.builder.protocol.types.Type;
  * @author Kenan Klisura
  */
 public class TypeSubTypeJsonDeserializer extends BaseSubTypeJsonDeserializer<Type> {
-	public TypeSubTypeJsonDeserializer() {
-		super(Type.class);
-	}
+  public TypeSubTypeJsonDeserializer() {
+    super(Type.class);
+  }
 }

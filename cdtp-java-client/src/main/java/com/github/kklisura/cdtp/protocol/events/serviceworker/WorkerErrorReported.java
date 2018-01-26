@@ -4,13 +4,13 @@ import com.github.kklisura.cdtp.protocol.types.serviceworker.ServiceWorkerErrorM
 
 public class WorkerErrorReported {
 
-	private ServiceWorkerErrorMessage errorMessage;
+  private ServiceWorkerErrorMessage errorMessage;
 
-	public ServiceWorkerErrorMessage getErrorMessage() {
-		return errorMessage;
-	}
+  public ServiceWorkerErrorMessage getErrorMessage() {
+    return errorMessage;
+  }
 
-	public void setErrorMessage(ServiceWorkerErrorMessage errorMessage) {
-		this.errorMessage = errorMessage;
-	}
+  public void setErrorMessage(ServiceWorkerErrorMessage errorMessage) {
+    this.errorMessage = errorMessage;
+  }
 }

@@ -13,28 +13,23 @@ import java.util.List;
 @Experimental
 public interface Database {
 
-	/**
-	 * Enables database tracking, database events will now be delivered to the client.
-	 */
-	void enable();
+  /** Enables database tracking, database events will now be delivered to the client. */
+  void enable();
 
-	/**
-	 * Disables database tracking, prevents database events from being sent to the client.
-	 */
-	void disable();
+  /** Disables database tracking, prevents database events from being sent to the client. */
+  void disable();
 
-	/**
-	 * @param databaseId
-	 */
-	@Returns("tableNames")
-	List<String> getDatabaseTableNames(@ParamName("databaseId") String databaseId);
+  /** @param databaseId */
+  @Returns("tableNames")
+  List<String> getDatabaseTableNames(@ParamName("databaseId") String databaseId);
 
-	/**
-	 * @param databaseId
-	 * @param query
-	 */
-	ExecuteSQL executeSQL(@ParamName("databaseId") String databaseId, @ParamName("query") String query);
+  /**
+   * @param databaseId
+   * @param query
+   */
+  ExecuteSQL executeSQL(
+      @ParamName("databaseId") String databaseId, @ParamName("query") String query);
 
-	@EventName("addDatabase")
-	EventListener onAddDatabase(EventHandler<AddDatabase> eventListener);
+  @EventName("addDatabase")
+  EventListener onAddDatabase(EventHandler<AddDatabase> eventListener);
 }

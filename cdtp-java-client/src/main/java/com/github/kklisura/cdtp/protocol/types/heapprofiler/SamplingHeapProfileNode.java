@@ -8,51 +8,42 @@ import java.util.List;
  */
 public class SamplingHeapProfileNode {
 
-	private CallFrame callFrame;
+  private CallFrame callFrame;
 
-	private Double selfSize;
+  private Double selfSize;
 
-	private List<com.github.kklisura.cdtp.protocol.types.heapprofiler.SamplingHeapProfileNode> children;
+  private List<com.github.kklisura.cdtp.protocol.types.heapprofiler.SamplingHeapProfileNode>
+      children;
 
-	/**
-	 * Function location.
-	 */
-	public CallFrame getCallFrame() {
-		return callFrame;
-	}
+  /** Function location. */
+  public CallFrame getCallFrame() {
+    return callFrame;
+  }
 
-	/**
-	 * Function location.
-	 */
-	public void setCallFrame(CallFrame callFrame) {
-		this.callFrame = callFrame;
-	}
+  /** Function location. */
+  public void setCallFrame(CallFrame callFrame) {
+    this.callFrame = callFrame;
+  }
 
-	/**
-	 * Allocations size in bytes for the node excluding children.
-	 */
-	public Double getSelfSize() {
-		return selfSize;
-	}
+  /** Allocations size in bytes for the node excluding children. */
+  public Double getSelfSize() {
+    return selfSize;
+  }
 
-	/**
-	 * Allocations size in bytes for the node excluding children.
-	 */
-	public void setSelfSize(Double selfSize) {
-		this.selfSize = selfSize;
-	}
+  /** Allocations size in bytes for the node excluding children. */
+  public void setSelfSize(Double selfSize) {
+    this.selfSize = selfSize;
+  }
 
-	/**
-	 * Child nodes.
-	 */
-	public List<com.github.kklisura.cdtp.protocol.types.heapprofiler.SamplingHeapProfileNode> getChildren() {
-		return children;
-	}
+  /** Child nodes. */
+  public List<com.github.kklisura.cdtp.protocol.types.heapprofiler.SamplingHeapProfileNode>
+      getChildren() {
+    return children;
+  }
 
-	/**
-	 * Child nodes.
-	 */
-	public void setChildren(List<com.github.kklisura.cdtp.protocol.types.heapprofiler.SamplingHeapProfileNode> children) {
-		this.children = children;
-	}
+  /** Child nodes. */
+  public void setChildren(
+      List<com.github.kklisura.cdtp.protocol.types.heapprofiler.SamplingHeapProfileNode> children) {
+    this.children = children;
+  }
 }

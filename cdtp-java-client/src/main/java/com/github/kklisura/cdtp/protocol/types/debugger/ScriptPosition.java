@@ -2,29 +2,27 @@ package com.github.kklisura.cdtp.protocol.types.debugger;
 
 import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
 
-/**
- * Location in the source code.
- */
+/** Location in the source code. */
 @Experimental
 public class ScriptPosition {
 
-	private Integer lineNumber;
+  private Integer lineNumber;
 
-	private Integer columnNumber;
+  private Integer columnNumber;
 
-	public Integer getLineNumber() {
-		return lineNumber;
-	}
+  public Integer getLineNumber() {
+    return lineNumber;
+  }
 
-	public void setLineNumber(Integer lineNumber) {
-		this.lineNumber = lineNumber;
-	}
+  public void setLineNumber(Integer lineNumber) {
+    this.lineNumber = lineNumber;
+  }
 
-	public Integer getColumnNumber() {
-		return columnNumber;
-	}
+  public Integer getColumnNumber() {
+    return columnNumber;
+  }
 
-	public void setColumnNumber(Integer columnNumber) {
-		this.columnNumber = columnNumber;
-	}
+  public void setColumnNumber(Integer columnNumber) {
+    this.columnNumber = columnNumber;
+  }
 }

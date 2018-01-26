@@ -10,5 +10,4 @@ import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.Pr
  * @author Kenan Klisura
  */
 @JsonDeserialize(using = JsonDeserializer.None.class)
-public class IntegerProperty extends Property {
-}
+public class IntegerProperty extends Property {}

@@ -6,18 +6,18 @@ package com.github.kklisura.cdtp.definition.builder.support.java.builder;
  * @author Kenan Klisura
  */
 public interface JavaEnumBuilder extends Builder {
-	/**
-	 * Adds new enum constant. This constant is in form CONSTANT_NAME("constant_value").
-	 *
-	 * @param name Constant name.
-	 * @param value Constant value.
-	 */
-	void addEnumConstant(String name, String value);
+  /**
+   * Adds new enum constant. This constant is in form CONSTANT_NAME("constant_value").
+   *
+   * @param name Constant name.
+   * @param value Constant value.
+   */
+  void addEnumConstant(String name, String value);
 
-	/**
-	 * Sets the java doc for this class.
-	 *
-	 * @param comment Comment.
-	 */
-	void setJavaDoc(String comment);
+  /**
+   * Sets the java doc for this class.
+   *
+   * @param comment Comment.
+   */
+  void setJavaDoc(String comment);
 }

@@ -10,11 +10,11 @@ import com.github.kklisura.cdtp.services.exceptions.WebSocketServiceException;
  */
 @FunctionalInterface
 public interface WebSocketServiceFactory {
-	/**
-	 * Creates a web socket service given a web socket url.
-	 *
-	 * @param wsUrl Web socket url.
-	 * @return Web socket service.
-	 */
-	WebSocketService createWebSocketService(String wsUrl) throws WebSocketServiceException;
+  /**
+   * Creates a web socket service given a web socket url.
+   *
+   * @param wsUrl Web socket url.
+   * @return Web socket service.
+   */
+  WebSocketService createWebSocketService(String wsUrl) throws WebSocketServiceException;
 }

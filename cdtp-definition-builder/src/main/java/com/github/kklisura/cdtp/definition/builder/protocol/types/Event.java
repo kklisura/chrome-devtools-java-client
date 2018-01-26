@@ -14,13 +14,13 @@ import java.util.List;
 @Getter
 @Setter
 public class Event {
-	private String name;
+  private String name;
 
-	private String description;
+  private String description;
 
-	private Boolean experimental;
+  private Boolean experimental;
 
-	private Boolean deprecated;
+  private Boolean deprecated;
 
-	private List<Property> parameters;
+  private List<Property> parameters;
 }

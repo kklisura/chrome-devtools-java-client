@@ -14,23 +14,23 @@ import org.apache.commons.collections4.CollectionUtils;
  */
 @UtilityClass
 public class CompilationUnitUtils {
-	/**
-	 * Checks if given name is already imported on compilation unit.
-	 *
-	 * @param compilationUnit Compilation unit.
-	 * @param name            Name to check for.
-	 * @return True if name is already imported.
-	 */
-	public static boolean isImported(CompilationUnit compilationUnit, Name name) {
-		NodeList<ImportDeclaration> imports = compilationUnit.getImports();
-		if (CollectionUtils.isNotEmpty(imports)) {
-			for (ImportDeclaration importDeclaration : imports) {
-				if (name.equals(importDeclaration.getName())) {
-					return true;
-				}
-			}
-		}
+  /**
+   * Checks if given name is already imported on compilation unit.
+   *
+   * @param compilationUnit Compilation unit.
+   * @param name Name to check for.
+   * @return True if name is already imported.
+   */
+  public static boolean isImported(CompilationUnit compilationUnit, Name name) {
+    NodeList<ImportDeclaration> imports = compilationUnit.getImports();
+    if (CollectionUtils.isNotEmpty(imports)) {
+      for (ImportDeclaration importDeclaration : imports) {
+        if (name.equals(importDeclaration.getName())) {
+          return true;
+        }
+      }
+    }
 
-		return false;
-	}
+    return false;
+  }
 }

@@ -12,68 +12,61 @@ import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 @Experimental
 public interface ServiceWorker {
 
-	void enable();
+  void enable();
 
-	void disable();
+  void disable();
 
-	/**
-	 * @param scopeURL
-	 */
-	void unregister(@ParamName("scopeURL") String scopeURL);
+  /** @param scopeURL */
+  void unregister(@ParamName("scopeURL") String scopeURL);
 
-	/**
-	 * @param scopeURL
-	 */
-	void updateRegistration(@ParamName("scopeURL") String scopeURL);
+  /** @param scopeURL */
+  void updateRegistration(@ParamName("scopeURL") String scopeURL);
 
-	/**
-	 * @param scopeURL
-	 */
-	void startWorker(@ParamName("scopeURL") String scopeURL);
+  /** @param scopeURL */
+  void startWorker(@ParamName("scopeURL") String scopeURL);
 
-	/**
-	 * @param scopeURL
-	 */
-	void skipWaiting(@ParamName("scopeURL") String scopeURL);
+  /** @param scopeURL */
+  void skipWaiting(@ParamName("scopeURL") String scopeURL);
 
-	/**
-	 * @param versionId
-	 */
-	void stopWorker(@ParamName("versionId") String versionId);
+  /** @param versionId */
+  void stopWorker(@ParamName("versionId") String versionId);
 
-	void stopAllWorkers();
+  void stopAllWorkers();
 
-	/**
-	 * @param versionId
-	 */
-	void inspectWorker(@ParamName("versionId") String versionId);
+  /** @param versionId */
+  void inspectWorker(@ParamName("versionId") String versionId);
 
-	/**
-	 * @param forceUpdateOnPageLoad
-	 */
-	void setForceUpdateOnPageLoad(@ParamName("forceUpdateOnPageLoad") Boolean forceUpdateOnPageLoad);
+  /** @param forceUpdateOnPageLoad */
+  void setForceUpdateOnPageLoad(@ParamName("forceUpdateOnPageLoad") Boolean forceUpdateOnPageLoad);
 
-	/**
-	 * @param origin
-	 * @param registrationId
-	 * @param data
-	 */
-	void deliverPushMessage(@ParamName("origin") String origin, @ParamName("registrationId") String registrationId, @ParamName("data") String data);
+  /**
+   * @param origin
+   * @param registrationId
+   * @param data
+   */
+  void deliverPushMessage(
+      @ParamName("origin") String origin,
+      @ParamName("registrationId") String registrationId,
+      @ParamName("data") String data);
 
-	/**
-	 * @param origin
-	 * @param registrationId
-	 * @param tag
-	 * @param lastChance
-	 */
-	void dispatchSyncEvent(@ParamName("origin") String origin, @ParamName("registrationId") String registrationId, @ParamName("tag") String tag, @ParamName("lastChance") Boolean lastChance);
+  /**
+   * @param origin
+   * @param registrationId
+   * @param tag
+   * @param lastChance
+   */
+  void dispatchSyncEvent(
+      @ParamName("origin") String origin,
+      @ParamName("registrationId") String registrationId,
+      @ParamName("tag") String tag,
+      @ParamName("lastChance") Boolean lastChance);
 
-	@EventName("workerRegistrationUpdated")
-	EventListener onWorkerRegistrationUpdated(EventHandler<WorkerRegistrationUpdated> eventListener);
+  @EventName("workerRegistrationUpdated")
+  EventListener onWorkerRegistrationUpdated(EventHandler<WorkerRegistrationUpdated> eventListener);
 
-	@EventName("workerVersionUpdated")
-	EventListener onWorkerVersionUpdated(EventHandler<WorkerVersionUpdated> eventListener);
+  @EventName("workerVersionUpdated")
+  EventListener onWorkerVersionUpdated(EventHandler<WorkerVersionUpdated> eventListener);
 
-	@EventName("workerErrorReported")
-	EventListener onWorkerErrorReported(EventHandler<WorkerErrorReported> eventListener);
+  @EventName("workerErrorReported")
+  EventListener onWorkerErrorReported(EventHandler<WorkerErrorReported> eventListener);
 }

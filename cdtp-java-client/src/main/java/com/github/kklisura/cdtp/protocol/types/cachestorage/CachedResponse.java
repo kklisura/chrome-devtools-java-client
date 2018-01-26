@@ -1,23 +1,17 @@
 package com.github.kklisura.cdtp.protocol.types.cachestorage;
 
-/**
- * Cached response
- */
+/** Cached response */
 public class CachedResponse {
 
-	private String body;
+  private String body;
 
-	/**
-	 * Entry content, base64-encoded.
-	 */
-	public String getBody() {
-		return body;
-	}
+  /** Entry content, base64-encoded. */
+  public String getBody() {
+    return body;
+  }
 
-	/**
-	 * Entry content, base64-encoded.
-	 */
-	public void setBody(String body) {
-		this.body = body;
-	}
+  /** Entry content, base64-encoded. */
+  public void setBody(String body) {
+    this.body = body;
+  }
 }

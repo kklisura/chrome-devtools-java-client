@@ -10,5 +10,5 @@ import lombok.Getter;
  */
 @Getter
 public abstract class TypedArrayItem extends ArrayItem {
-	private String type;
+  private String type;
 }

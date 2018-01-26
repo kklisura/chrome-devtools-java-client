@@ -5,46 +5,37 @@ import java.util.List;
 
 public class AppManifest {
 
-	private String url;
+  private String url;
 
-	private List<AppManifestError> errors;
+  private List<AppManifestError> errors;
 
-	@Optional
-	private String data;
+  @Optional private String data;
 
-	/**
-	 * Manifest location.
-	 */
-	public String getUrl() {
-		return url;
-	}
+  /** Manifest location. */
+  public String getUrl() {
+    return url;
+  }
 
-	/**
-	 * Manifest location.
-	 */
-	public void setUrl(String url) {
-		this.url = url;
-	}
+  /** Manifest location. */
+  public void setUrl(String url) {
+    this.url = url;
+  }
 
-	public List<AppManifestError> getErrors() {
-		return errors;
-	}
+  public List<AppManifestError> getErrors() {
+    return errors;
+  }
 
-	public void setErrors(List<AppManifestError> errors) {
-		this.errors = errors;
-	}
+  public void setErrors(List<AppManifestError> errors) {
+    this.errors = errors;
+  }
 
-	/**
-	 * Manifest content.
-	 */
-	public String getData() {
-		return data;
-	}
+  /** Manifest content. */
+  public String getData() {
+    return data;
+  }
 
-	/**
-	 * Manifest content.
-	 */
-	public void setData(String data) {
-		this.data = data;
-	}
+  /** Manifest content. */
+  public void setData(String data) {
+    this.data = data;
+  }
 }

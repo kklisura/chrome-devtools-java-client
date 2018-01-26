@@ -10,25 +10,17 @@ import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 @Experimental
 public interface Inspector {
 
-	/**
-	 * Enables inspector domain notifications.
-	 */
-	void enable();
+  /** Enables inspector domain notifications. */
+  void enable();
 
-	/**
-	 * Disables inspector domain notifications.
-	 */
-	void disable();
+  /** Disables inspector domain notifications. */
+  void disable();
 
-	/**
-	 * Fired when remote debugging connection is about to be terminated. Contains detach reason.
-	 */
-	@EventName("detached")
-	EventListener onDetached(EventHandler<Detached> eventListener);
+  /** Fired when remote debugging connection is about to be terminated. Contains detach reason. */
+  @EventName("detached")
+  EventListener onDetached(EventHandler<Detached> eventListener);
 
-	/**
-	 * Fired when debugging target has crashed
-	 */
-	@EventName("targetCrashed")
-	EventListener onTargetCrashed(EventHandler<TargetCrashed> eventListener);
+  /** Fired when debugging target has crashed */
+  @EventName("targetCrashed")
+  EventListener onTargetCrashed(EventHandler<TargetCrashed> eventListener);
 }

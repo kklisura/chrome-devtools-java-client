@@ -4,13 +4,13 @@ import com.github.kklisura.cdtp.protocol.types.domstorage.StorageId;
 
 public class DomStorageItemsCleared {
 
-	private StorageId storageId;
+  private StorageId storageId;
 
-	public StorageId getStorageId() {
-		return storageId;
-	}
+  public StorageId getStorageId() {
+    return storageId;
+  }
 
-	public void setStorageId(StorageId storageId) {
-		this.storageId = storageId;
-	}
+  public void setStorageId(StorageId storageId) {
+    this.storageId = storageId;
+  }
 }

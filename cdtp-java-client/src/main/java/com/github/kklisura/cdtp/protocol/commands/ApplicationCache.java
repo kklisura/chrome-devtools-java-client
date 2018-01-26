@@ -14,36 +14,38 @@ import java.util.List;
 @Experimental
 public interface ApplicationCache {
 
-	/**
-	 * Returns array of frame identifiers with manifest urls for each frame containing a document associated with some application cache.
-	 */
-	@Returns("frameIds")
-	List<FrameWithManifest> getFramesWithManifests();
+  /**
+   * Returns array of frame identifiers with manifest urls for each frame containing a document
+   * associated with some application cache.
+   */
+  @Returns("frameIds")
+  List<FrameWithManifest> getFramesWithManifests();
 
-	/**
-	 * Enables application cache domain notifications.
-	 */
-	void enable();
+  /** Enables application cache domain notifications. */
+  void enable();
 
-	/**
-	 * Returns manifest URL for document in the given frame.
-	 *
-	 * @param frameId Identifier of the frame containing document whose manifest is retrieved.
-	 */
-	@Returns("manifestURL")
-	String getManifestForFrame(@ParamName("frameId") String frameId);
+  /**
+   * Returns manifest URL for document in the given frame.
+   *
+   * @param frameId Identifier of the frame containing document whose manifest is retrieved.
+   */
+  @Returns("manifestURL")
+  String getManifestForFrame(@ParamName("frameId") String frameId);
 
-	/**
-	 * Returns relevant application cache data for the document in given frame.
-	 *
-	 * @param frameId Identifier of the frame containing document whose application cache is retrieved.
-	 */
-	@Returns("applicationCache")
-	com.github.kklisura.cdtp.protocol.types.applicationcache.ApplicationCache getApplicationCacheForFrame(@ParamName("frameId") String frameId);
+  /**
+   * Returns relevant application cache data for the document in given frame.
+   *
+   * @param frameId Identifier of the frame containing document whose application cache is
+   *     retrieved.
+   */
+  @Returns("applicationCache")
+  com.github.kklisura.cdtp.protocol.types.applicationcache.ApplicationCache
+      getApplicationCacheForFrame(@ParamName("frameId") String frameId);
 
-	@EventName("applicationCacheStatusUpdated")
-	EventListener onApplicationCacheStatusUpdated(EventHandler<ApplicationCacheStatusUpdated> eventListener);
+  @EventName("applicationCacheStatusUpdated")
+  EventListener onApplicationCacheStatusUpdated(
+      EventHandler<ApplicationCacheStatusUpdated> eventListener);
 
-	@EventName("networkStateUpdated")
-	EventListener onNetworkStateUpdated(EventHandler<NetworkStateUpdated> eventListener);
+  @EventName("networkStateUpdated")
+  EventListener onNetworkStateUpdated(EventHandler<NetworkStateUpdated> eventListener);
 }

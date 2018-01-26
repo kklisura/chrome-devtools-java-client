@@ -12,25 +12,17 @@ import java.util.List;
 @Experimental
 public interface Performance {
 
-	/**
-	 * Enable collecting and reporting metrics.
-	 */
-	void enable();
+  /** Enable collecting and reporting metrics. */
+  void enable();
 
-	/**
-	 * Disable collecting and reporting metrics.
-	 */
-	void disable();
+  /** Disable collecting and reporting metrics. */
+  void disable();
 
-	/**
-	 * Retrieve current values of run-time metrics.
-	 */
-	@Returns("metrics")
-	List<Metric> getMetrics();
+  /** Retrieve current values of run-time metrics. */
+  @Returns("metrics")
+  List<Metric> getMetrics();
 
-	/**
-	 * Current values of the metrics.
-	 */
-	@EventName("metrics")
-	EventListener onMetrics(EventHandler<Metrics> eventListener);
+  /** Current values of the metrics. */
+  @EventName("metrics")
+  EventListener onMetrics(EventHandler<Metrics> eventListener);
 }

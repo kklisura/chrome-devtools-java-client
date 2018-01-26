@@ -36,358 +36,400 @@ import static org.junit.Assert.*;
 @RunWith(EasyMockRunner.class)
 public class ChromeServiceImplTest extends EasyMockSupport {
 
-	@Mock
-	private WebSocketService webSocketService;
+  @Mock private WebSocketService webSocketService;
+
+  @Mock private WebSocketServiceFactory webSocketServiceFactory;
+
+  @Test(expected = ChromeServiceException.class)
+  public void testGetTabsOnBadHost()
+      throws IOException, ChromeServiceException, InterruptedException {
+    ChromeServiceImpl service = new ChromeServiceImpl("unknown-schema://unknown-host", 9922);
+    service.getTabs();
+  }
+
+  @Test(expected = ChromeServiceException.class)
+  public void testGetDevToolsFailsConnectToWebSocket()
+      throws ChromeServiceException, IOException, WebSocketServiceException {
+    InputStream fixture = getFixture("chrome/tab.json");
+    ObjectMapper objectMapper = new ObjectMapper();
+    ChromeTab tab = objectMapper.readerFor(ChromeTab.class).readValue(fixture);
+
+    expect(webSocketServiceFactory.createWebSocketService(tab.getWebSocketDebuggerUrl()))
+        .andThrow(new WebSocketServiceException("Failed connecting to websocket."));
+
+    replayAll();
+
+    ChromeServiceImpl service = new ChromeServiceImpl(9992);
+    service.setWebSocketServiceFactory(webSocketServiceFactory);
+    service.createDevToolsService(tab);
+  }
+
+  @Test
+  public void testGetTabs() throws IOException, ChromeServiceException, InterruptedException {
+    MockWebServer server = new MockWebServer();
+
+    InputStream fixture = getFixture("chrome/tabs.json");
+    server.enqueue(new MockResponse().setBody(ChromeServiceImpl.inputStreamToString(fixture)));
+
+    server.start();
+
+    ChromeServiceImpl service = new ChromeServiceImpl(server.getHostName(), server.getPort());
+
+    List<ChromeTab> tabs = service.getTabs();
+
+    RecordedRequest request = server.takeRequest();
+    assertEquals(1, server.getRequestCount());
+    assertEquals("GET /json/list HTTP/1.1", request.getRequestLine());
+
+    assertFalse(tabs.isEmpty());
+    assertEquals(2, tabs.size());
+
+    assertEquals("", tabs.get(0).getDescription());
+    assertEquals(
+        "/devtools/inspector.html?ws=localhost:9222/devtools/page/(2C5C79DD1137419CC8839D61D91CEB2A)",
+        tabs.get(0).getDevtoolsFrontendUrl());
+    assertEquals(
+        "https://www.google.ba/images/branding/product/ico/googleg_lodp.ico",
+        tabs.get(0).getFaviconUrl());
+    assertEquals("(2C5C79DD1137419CC8839D61D91CEB2A)", tabs.get(0).getId());
+    assertEquals("Google", tabs.get(0).getTitle());
+    assertEquals("page", tabs.get(0).getType());
+    assertTrue(tabs.get(0).isPageType());
+    assertEquals(
+        "https://www.google.ba/?gws_rd=cr&dcr=0&ei=93piWq2oKqqJmgWIzbdg", tabs.get(0).getUrl());
+    assertEquals(
+        "ws://localhost:9222/devtools/page/(2C5C79DD1137419CC8839D61D91CEB2A)",
+        tabs.get(0).getWebSocketDebuggerUrl());
+
+    server.shutdown();
+  }
+
+  @Test
+  public void testCreateTab() throws IOException, ChromeServiceException, InterruptedException {
+    MockWebServer server = new MockWebServer();
+
+    InputStream fixture = getFixture("chrome/tab.json");
+    server.enqueue(new MockResponse().setBody(ChromeServiceImpl.inputStreamToString(fixture)));
+
+    server.start();
+
+    ChromeServiceImpl service = new ChromeServiceImpl(server.getHostName(), server.getPort());
+
+    ChromeTab tab = service.createTab("some-tab-name");
+
+    RecordedRequest request = server.takeRequest();
+    assertEquals(1, server.getRequestCount());
+    assertEquals("GET /json/new?some-tab-name HTTP/1.1", request.getRequestLine());
+
+    assertEquals("", tab.getDescription());
+    assertEquals(
+        "/devtools/inspector.html?ws=localhost:9222/devtools/page/(2C5C79DD1137419CC8839D61D91CEB2A)",
+        tab.getDevtoolsFrontendUrl());
+    assertEquals(
+        "https://www.google.ba/images/branding/product/ico/googleg_lodp.ico", tab.getFaviconUrl());
+    assertEquals("(2C5C79DD1137419CC8839D61D91CEB2A)", tab.getId());
+    assertEquals("Google", tab.getTitle());
+    assertEquals("page", tab.getType());
+    assertTrue(tab.isPageType());
+    assertEquals("https://www.google.ba/?gws_rd=cr&dcr=0&ei=93piWq2oKqqJmgWIzbdg", tab.getUrl());
+    assertEquals(
+        "ws://localhost:9222/devtools/page/(2C5C79DD1137419CC8839D61D91CEB2A)",
+        tab.getWebSocketDebuggerUrl());
+
+    server.shutdown();
+  }
 
-	@Mock
-	private WebSocketServiceFactory webSocketServiceFactory;
+  @Test
+  public void testCreateTabWithAboutBlankPage()
+      throws IOException, ChromeServiceException, InterruptedException {
+    MockWebServer server = new MockWebServer();
 
-	@Test(expected = ChromeServiceException.class)
-	public void testGetTabsOnBadHost() throws IOException, ChromeServiceException, InterruptedException {
-		ChromeServiceImpl service = new ChromeServiceImpl("unknown-schema://unknown-host", 9922);
-		service.getTabs();
-	}
+    InputStream fixture = getFixture("chrome/tab.json");
+    server.enqueue(new MockResponse().setBody(ChromeServiceImpl.inputStreamToString(fixture)));
 
-	@Test(expected = ChromeServiceException.class)
-	public void testGetDevToolsFailsConnectToWebSocket() throws ChromeServiceException, IOException, WebSocketServiceException {
-		InputStream fixture = getFixture("chrome/tab.json");
-		ObjectMapper objectMapper = new ObjectMapper();
-		ChromeTab tab = objectMapper.readerFor(ChromeTab.class).readValue(fixture);
+    server.start();
 
-		expect(webSocketServiceFactory.createWebSocketService(tab.getWebSocketDebuggerUrl()))
-				.andThrow(new WebSocketServiceException("Failed connecting to websocket."));
+    ChromeServiceImpl service = new ChromeServiceImpl(server.getHostName(), server.getPort());
 
-		replayAll();
+    ChromeTab tab = service.createTab();
 
-		ChromeServiceImpl service = new ChromeServiceImpl(9992);
-		service.setWebSocketServiceFactory(webSocketServiceFactory);
-		service.createDevToolsService(tab);
-	}
+    RecordedRequest request = server.takeRequest();
+    assertEquals(1, server.getRequestCount());
+    assertEquals("GET /json/new?about:blank HTTP/1.1", request.getRequestLine());
 
-	@Test
-	public void testGetTabs() throws IOException, ChromeServiceException, InterruptedException {
-		MockWebServer server = new MockWebServer();
+    assertEquals("", tab.getDescription());
+    assertEquals(
+        "/devtools/inspector.html?ws=localhost:9222/devtools/page/(2C5C79DD1137419CC8839D61D91CEB2A)",
+        tab.getDevtoolsFrontendUrl());
+    assertEquals(
+        "https://www.google.ba/images/branding/product/ico/googleg_lodp.ico", tab.getFaviconUrl());
+    assertEquals("(2C5C79DD1137419CC8839D61D91CEB2A)", tab.getId());
+    assertEquals("Google", tab.getTitle());
+    assertEquals("page", tab.getType());
+    assertTrue(tab.isPageType());
+    assertEquals("https://www.google.ba/?gws_rd=cr&dcr=0&ei=93piWq2oKqqJmgWIzbdg", tab.getUrl());
+    assertEquals(
+        "ws://localhost:9222/devtools/page/(2C5C79DD1137419CC8839D61D91CEB2A)",
+        tab.getWebSocketDebuggerUrl());
 
-		InputStream fixture = getFixture("chrome/tabs.json");
-		server.enqueue(new MockResponse().setBody(ChromeServiceImpl.inputStreamToString(fixture)));
+    server.shutdown();
+  }
 
-		server.start();
+  @Test
+  public void testActivateTab() throws IOException, ChromeServiceException, InterruptedException {
+    MockWebServer server = new MockWebServer();
+    ObjectMapper objectMapper = new ObjectMapper();
 
-		ChromeServiceImpl service = new ChromeServiceImpl(server.getHostName(), server.getPort());
+    ChromeTab tab =
+        objectMapper.readerFor(ChromeTab.class).readValue(getFixture("chrome/tab.json"));
 
-		List<ChromeTab> tabs = service.getTabs();
+    server.enqueue(new MockResponse());
+    server.start();
 
-		RecordedRequest request = server.takeRequest();
-		assertEquals(1, server.getRequestCount());
-		assertEquals("GET /json/list HTTP/1.1", request.getRequestLine());
+    ChromeServiceImpl service = new ChromeServiceImpl(server.getHostName(), server.getPort());
 
-		assertFalse(tabs.isEmpty());
-		assertEquals(2, tabs.size());
+    service.activateTab(tab);
 
-		assertEquals("", tabs.get(0).getDescription());
-		assertEquals("/devtools/inspector.html?ws=localhost:9222/devtools/page/(2C5C79DD1137419CC8839D61D91CEB2A)", tabs.get(0).getDevtoolsFrontendUrl());
-		assertEquals("https://www.google.ba/images/branding/product/ico/googleg_lodp.ico", tabs.get(0).getFaviconUrl());
-		assertEquals("(2C5C79DD1137419CC8839D61D91CEB2A)", tabs.get(0).getId());
-		assertEquals("Google", tabs.get(0).getTitle());
-		assertEquals("page", tabs.get(0).getType());
-		assertTrue(tabs.get(0).isPageType());
-		assertEquals("https://www.google.ba/?gws_rd=cr&dcr=0&ei=93piWq2oKqqJmgWIzbdg", tabs.get(0).getUrl());
-		assertEquals("ws://localhost:9222/devtools/page/(2C5C79DD1137419CC8839D61D91CEB2A)", tabs.get(0).getWebSocketDebuggerUrl());
+    RecordedRequest request = server.takeRequest();
+    assertEquals(1, server.getRequestCount());
+    assertEquals(
+        "GET /json/activate/(2C5C79DD1137419CC8839D61D91CEB2A) HTTP/1.1", request.getRequestLine());
 
-		server.shutdown();
-	}
+    server.shutdown();
+  }
 
-	@Test
-	public void testCreateTab() throws IOException, ChromeServiceException, InterruptedException {
-		MockWebServer server = new MockWebServer();
+  @Test(expected = ChromeServiceException.class)
+  public void testActivateTabOnNotFoundResponse()
+      throws IOException, ChromeServiceException, InterruptedException {
+    MockWebServer server = new MockWebServer();
+    ObjectMapper objectMapper = new ObjectMapper();
 
-		InputStream fixture = getFixture("chrome/tab.json");
-		server.enqueue(new MockResponse().setBody(ChromeServiceImpl.inputStreamToString(fixture)));
+    ChromeTab tab =
+        objectMapper.readerFor(ChromeTab.class).readValue(getFixture("chrome/tab.json"));
 
-		server.start();
+    server.enqueue(new MockResponse().setResponseCode(HttpURLConnection.HTTP_NOT_FOUND));
+    server.start();
 
-		ChromeServiceImpl service = new ChromeServiceImpl(server.getHostName(), server.getPort());
+    try {
+      ChromeServiceImpl service = new ChromeServiceImpl(server.getHostName(), server.getPort());
+      service.activateTab(tab);
+    } finally {
+      server.shutdown();
+    }
+  }
 
-		ChromeTab tab = service.createTab("some-tab-name");
+  @Test
+  public void testCloseTabClearsDevTools()
+      throws IOException, ChromeServiceException, InterruptedException, WebSocketServiceException {
+    MockWebServer server = new MockWebServer();
 
-		RecordedRequest request = server.takeRequest();
-		assertEquals(1, server.getRequestCount());
-		assertEquals("GET /json/new?some-tab-name HTTP/1.1", request.getRequestLine());
+    ObjectMapper objectMapper = new ObjectMapper();
+    ChromeTab tab =
+        objectMapper.readerFor(ChromeTab.class).readValue(getFixture("chrome/tab.json"));
 
-		assertEquals("", tab.getDescription());
-		assertEquals("/devtools/inspector.html?ws=localhost:9222/devtools/page/(2C5C79DD1137419CC8839D61D91CEB2A)", tab.getDevtoolsFrontendUrl());
-		assertEquals("https://www.google.ba/images/branding/product/ico/googleg_lodp.ico", tab.getFaviconUrl());
-		assertEquals("(2C5C79DD1137419CC8839D61D91CEB2A)", tab.getId());
-		assertEquals("Google", tab.getTitle());
-		assertEquals("page", tab.getType());
-		assertTrue(tab.isPageType());
-		assertEquals("https://www.google.ba/?gws_rd=cr&dcr=0&ei=93piWq2oKqqJmgWIzbdg", tab.getUrl());
-		assertEquals("ws://localhost:9222/devtools/page/(2C5C79DD1137419CC8839D61D91CEB2A)", tab.getWebSocketDebuggerUrl());
+    server.enqueue(new MockResponse());
+    server.start();
 
-		server.shutdown();
-	}
+    expect(webSocketServiceFactory.createWebSocketService(tab.getWebSocketDebuggerUrl()))
+        .andReturn(webSocketService);
 
-	@Test
-	public void testCreateTabWithAboutBlankPage() throws IOException, ChromeServiceException, InterruptedException {
-		MockWebServer server = new MockWebServer();
+    webSocketService.addMessageHandler(anyObject());
+    webSocketService.close();
 
-		InputStream fixture = getFixture("chrome/tab.json");
-		server.enqueue(new MockResponse().setBody(ChromeServiceImpl.inputStreamToString(fixture)));
+    replayAll();
 
-		server.start();
+    ChromeServiceImpl service =
+        new ChromeServiceImpl(server.getHostName(), server.getPort(), webSocketServiceFactory);
 
-		ChromeServiceImpl service = new ChromeServiceImpl(server.getHostName(), server.getPort());
+    service.createDevToolsService(tab);
 
-		ChromeTab tab = service.createTab();
+    service.closeTab(tab);
 
-		RecordedRequest request = server.takeRequest();
-		assertEquals(1, server.getRequestCount());
-		assertEquals("GET /json/new?about:blank HTTP/1.1", request.getRequestLine());
+    RecordedRequest request = server.takeRequest();
+    assertEquals(1, server.getRequestCount());
+    assertEquals(
+        "GET /json/close/(2C5C79DD1137419CC8839D61D91CEB2A) HTTP/1.1", request.getRequestLine());
 
-		assertEquals("", tab.getDescription());
-		assertEquals("/devtools/inspector.html?ws=localhost:9222/devtools/page/(2C5C79DD1137419CC8839D61D91CEB2A)", tab.getDevtoolsFrontendUrl());
-		assertEquals("https://www.google.ba/images/branding/product/ico/googleg_lodp.ico", tab.getFaviconUrl());
-		assertEquals("(2C5C79DD1137419CC8839D61D91CEB2A)", tab.getId());
-		assertEquals("Google", tab.getTitle());
-		assertEquals("page", tab.getType());
-		assertTrue(tab.isPageType());
-		assertEquals("https://www.google.ba/?gws_rd=cr&dcr=0&ei=93piWq2oKqqJmgWIzbdg", tab.getUrl());
-		assertEquals("ws://localhost:9222/devtools/page/(2C5C79DD1137419CC8839D61D91CEB2A)", tab.getWebSocketDebuggerUrl());
+    server.shutdown();
 
-		server.shutdown();
-	}
+    verifyAll();
+  }
 
-	@Test
-	public void testActivateTab() throws IOException, ChromeServiceException, InterruptedException {
-		MockWebServer server = new MockWebServer();
-		ObjectMapper objectMapper = new ObjectMapper();
+  @Test
+  public void testCloseTab() throws IOException, ChromeServiceException, InterruptedException {
+    MockWebServer server = new MockWebServer();
 
-		ChromeTab tab = objectMapper.readerFor(ChromeTab.class).readValue(getFixture("chrome/tab.json"));
+    ObjectMapper objectMapper = new ObjectMapper();
+    ChromeTab tab =
+        objectMapper.readerFor(ChromeTab.class).readValue(getFixture("chrome/tab.json"));
 
-		server.enqueue(new MockResponse());
-		server.start();
+    server.enqueue(new MockResponse());
+    server.start();
 
-		ChromeServiceImpl service = new ChromeServiceImpl(server.getHostName(), server.getPort());
+    ChromeServiceImpl service = new ChromeServiceImpl(server.getHostName(), server.getPort());
 
-		service.activateTab(tab);
+    service.closeTab(tab);
 
-		RecordedRequest request = server.takeRequest();
-		assertEquals(1, server.getRequestCount());
-		assertEquals("GET /json/activate/(2C5C79DD1137419CC8839D61D91CEB2A) HTTP/1.1", request.getRequestLine());
+    RecordedRequest request = server.takeRequest();
+    assertEquals(1, server.getRequestCount());
+    assertEquals(
+        "GET /json/close/(2C5C79DD1137419CC8839D61D91CEB2A) HTTP/1.1", request.getRequestLine());
 
-		server.shutdown();
-	}
+    server.shutdown();
+  }
 
-	@Test(expected = ChromeServiceException.class)
-	public void testActivateTabOnNotFoundResponse() throws IOException, ChromeServiceException, InterruptedException {
-		MockWebServer server = new MockWebServer();
-		ObjectMapper objectMapper = new ObjectMapper();
+  @Test
+  public void testVersion() throws IOException, ChromeServiceException, InterruptedException {
+    MockWebServer server = new MockWebServer();
 
-		ChromeTab tab = objectMapper.readerFor(ChromeTab.class).readValue(getFixture("chrome/tab.json"));
+    InputStream fixture = getFixture("chrome/version.json");
+    server.enqueue(new MockResponse().setBody(ChromeServiceImpl.inputStreamToString(fixture)));
 
-		server.enqueue(new MockResponse().setResponseCode(HttpURLConnection.HTTP_NOT_FOUND));
-		server.start();
+    server.start();
 
-		try {
-			ChromeServiceImpl service = new ChromeServiceImpl(server.getHostName(), server.getPort());
-			service.activateTab(tab);
-		} finally {
-			server.shutdown();
-		}
-	}
+    ChromeServiceImpl service = new ChromeServiceImpl(server.getHostName(), server.getPort());
 
-	@Test
-	public void testCloseTabClearsDevTools() throws IOException, ChromeServiceException, InterruptedException, WebSocketServiceException {
-		MockWebServer server = new MockWebServer();
+    ChromeVersion version = service.getVersion();
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		ChromeTab tab = objectMapper.readerFor(ChromeTab.class).readValue(getFixture("chrome/tab.json"));
+    RecordedRequest request = server.takeRequest();
+    assertEquals(1, server.getRequestCount());
+    assertEquals("GET /json/version HTTP/1.1", request.getRequestLine());
 
-		server.enqueue(new MockResponse());
-		server.start();
+    assertEquals("Chrome/63.0.3239.132", version.getBrowser());
+    assertEquals("1.2", version.getProtocolVersion());
+    assertEquals(
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36",
+        version.getUserAgent());
+    assertEquals("6.3.292.49", version.getV8Version());
+    assertEquals("537.36 (@2e6edcfee630baa3775f37cb11796b1603a64360)", version.getWebKitVersion());
+    assertEquals(
+        "ws://localhost:9222/devtools/browser/63318df0-09e4-4143-910e-f89525dda26b",
+        version.getWebSocketDebuggerUrl());
 
-		expect(webSocketServiceFactory.createWebSocketService(tab.getWebSocketDebuggerUrl()))
-				.andReturn(webSocketService);
+    server.shutdown();
+  }
 
-		webSocketService.addMessageHandler(anyObject());
-		webSocketService.close();
+  @Test
+  public void testGetDevTools()
+      throws IOException, ChromeServiceException, WebSocketServiceException {
+    ChromeServiceImpl service = new ChromeServiceImpl(9222, webSocketServiceFactory);
 
-		replayAll();
+    ObjectMapper objectMapper = new ObjectMapper();
+    ChromeTab tab =
+        objectMapper.readerFor(ChromeTab.class).readValue(getFixture("chrome/tab.json"));
 
-		ChromeServiceImpl service = new ChromeServiceImpl(server.getHostName(), server.getPort(), webSocketServiceFactory);
+    expect(webSocketServiceFactory.createWebSocketService(tab.getWebSocketDebuggerUrl()))
+        .andReturn(webSocketService);
 
-		service.createDevToolsService(tab);
+    webSocketService.addMessageHandler(anyObject());
 
-		service.closeTab(tab);
+    replayAll();
 
-		RecordedRequest request = server.takeRequest();
-		assertEquals(1, server.getRequestCount());
-		assertEquals("GET /json/close/(2C5C79DD1137419CC8839D61D91CEB2A) HTTP/1.1", request.getRequestLine());
+    ChromeDevTools devTools = service.createDevToolsService(tab);
 
-		server.shutdown();
+    verifyAll();
 
-		verifyAll();
-	}
+    assertNotNull(devTools);
+  }
 
-	@Test
-	public void testCloseTab() throws IOException, ChromeServiceException, InterruptedException {
-		MockWebServer server = new MockWebServer();
+  @Test
+  public void testGetDevToolsIsCachedPerTab()
+      throws IOException, ChromeServiceException, WebSocketServiceException {
+    ChromeServiceImpl service = new ChromeServiceImpl(9222, webSocketServiceFactory);
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		ChromeTab tab = objectMapper.readerFor(ChromeTab.class).readValue(getFixture("chrome/tab.json"));
+    ObjectMapper objectMapper = new ObjectMapper();
+    ChromeTab tab =
+        objectMapper.readerFor(ChromeTab.class).readValue(getFixture("chrome/tab.json"));
 
-		server.enqueue(new MockResponse());
-		server.start();
+    expect(webSocketServiceFactory.createWebSocketService(tab.getWebSocketDebuggerUrl()))
+        .andReturn(webSocketService);
 
-		ChromeServiceImpl service = new ChromeServiceImpl(server.getHostName(), server.getPort());
+    webSocketService.addMessageHandler(anyObject());
 
-		service.closeTab(tab);
+    replayAll();
 
-		RecordedRequest request = server.takeRequest();
-		assertEquals(1, server.getRequestCount());
-		assertEquals("GET /json/close/(2C5C79DD1137419CC8839D61D91CEB2A) HTTP/1.1", request.getRequestLine());
+    ChromeDevTools devTools = service.createDevToolsService(tab);
+    assertTrue(devTools == service.createDevToolsService(tab));
+    assertTrue(devTools == service.createDevToolsService(tab));
+    assertTrue(devTools == service.createDevToolsService(tab));
 
-		server.shutdown();
-	}
+    verifyAll();
 
-	@Test
-	public void testVersion() throws IOException, ChromeServiceException, InterruptedException {
-		MockWebServer server = new MockWebServer();
+    devTools = null;
+    System.gc();
 
-		InputStream fixture = getFixture("chrome/version.json");
-		server.enqueue(new MockResponse().setBody(ChromeServiceImpl.inputStreamToString(fixture)));
+    resetAll();
 
-		server.start();
+    expect(webSocketServiceFactory.createWebSocketService(tab.getWebSocketDebuggerUrl()))
+        .andReturn(webSocketService);
 
-		ChromeServiceImpl service = new ChromeServiceImpl(server.getHostName(), server.getPort());
+    webSocketService.addMessageHandler(anyObject());
 
-		ChromeVersion version = service.getVersion();
+    replayAll();
 
-		RecordedRequest request = server.takeRequest();
-		assertEquals(1, server.getRequestCount());
-		assertEquals("GET /json/version HTTP/1.1", request.getRequestLine());
+    devTools = service.createDevToolsService(tab);
 
-		assertEquals("Chrome/63.0.3239.132", version.getBrowser());
-		assertEquals("1.2", version.getProtocolVersion());
-		assertEquals("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36", version.getUserAgent());
-		assertEquals("6.3.292.49", version.getV8Version());
-		assertEquals("537.36 (@2e6edcfee630baa3775f37cb11796b1603a64360)", version.getWebKitVersion());
-		assertEquals("ws://localhost:9222/devtools/browser/63318df0-09e4-4143-910e-f89525dda26b", version.getWebSocketDebuggerUrl());
+    assertNotNull(devTools);
+  }
 
-		server.shutdown();
-	}
+  @Test
+  public void testGetDevToolsSubTypeIsCachedPerTab()
+      throws IOException, ChromeServiceException, WebSocketServiceException {
+    ChromeServiceImpl service = new ChromeServiceImpl(9222, webSocketServiceFactory);
 
-	@Test
-	public void testGetDevTools() throws IOException, ChromeServiceException, WebSocketServiceException {
-		ChromeServiceImpl service = new ChromeServiceImpl(9222, webSocketServiceFactory);
+    ObjectMapper objectMapper = new ObjectMapper();
+    ChromeTab tab =
+        objectMapper.readerFor(ChromeTab.class).readValue(getFixture("chrome/tab.json"));
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		ChromeTab tab = objectMapper.readerFor(ChromeTab.class).readValue(getFixture("chrome/tab.json"));
+    expect(webSocketServiceFactory.createWebSocketService(tab.getWebSocketDebuggerUrl()))
+        .andReturn(webSocketService);
 
-		expect(webSocketServiceFactory.createWebSocketService(tab.getWebSocketDebuggerUrl()))
-				.andReturn(webSocketService);
+    webSocketService.addMessageHandler(anyObject());
 
-		webSocketService.addMessageHandler(anyObject());
+    replayAll();
 
-		replayAll();
+    Network network = service.createDevToolsService(tab).getNetwork();
+    assertTrue(network == service.createDevToolsService(tab).getNetwork());
+    assertTrue(network == service.createDevToolsService(tab).getNetwork());
+    assertTrue(network == service.createDevToolsService(tab).getNetwork());
 
-		ChromeDevTools devTools = service.createDevToolsService(tab);
+    verifyAll();
+    assertNotNull(network);
+  }
 
-		verifyAll();
+  @Test
+  public void testClearChromeDevToolsServiceCacheAndCloseDevTools()
+      throws IOException, ChromeServiceException, WebSocketServiceException {
+    ChromeServiceImpl service = new ChromeServiceImpl(9222, webSocketServiceFactory);
 
-		assertNotNull(devTools);
-	}
+    ObjectMapper objectMapper = new ObjectMapper();
+    ChromeTab tab =
+        objectMapper.readerFor(ChromeTab.class).readValue(getFixture("chrome/tab.json"));
 
-	@Test
-	public void testGetDevToolsIsCachedPerTab() throws IOException, ChromeServiceException, WebSocketServiceException {
-		ChromeServiceImpl service = new ChromeServiceImpl(9222, webSocketServiceFactory);
+    expect(webSocketServiceFactory.createWebSocketService(tab.getWebSocketDebuggerUrl()))
+        .andReturn(webSocketService);
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		ChromeTab tab = objectMapper.readerFor(ChromeTab.class).readValue(getFixture("chrome/tab.json"));
+    webSocketService.addMessageHandler(anyObject());
+    webSocketService.close();
 
-		expect(webSocketServiceFactory.createWebSocketService(tab.getWebSocketDebuggerUrl()))
-				.andReturn(webSocketService);
+    replayAll();
 
-		webSocketService.addMessageHandler(anyObject());
+    service.createDevToolsService(tab);
 
-		replayAll();
+    service.clearChromeDevToolsServiceCache(tab);
 
-		ChromeDevTools devTools = service.createDevToolsService(tab);
-		assertTrue(devTools == service.createDevToolsService(tab));
-		assertTrue(devTools == service.createDevToolsService(tab));
-		assertTrue(devTools == service.createDevToolsService(tab));
+    verifyAll();
+  }
 
-		verifyAll();
+  @Test
+  public void testClearChromeDevToolsServiceCache() throws IOException {
+    ChromeServiceImpl service = new ChromeServiceImpl(9222, webSocketServiceFactory);
+    service.clearChromeDevToolsServiceCache(createChromeTab("UNUSED"));
+  }
 
-		devTools = null;
-		System.gc();
-
-		resetAll();
-
-		expect(webSocketServiceFactory.createWebSocketService(tab.getWebSocketDebuggerUrl()))
-				.andReturn(webSocketService);
-
-		webSocketService.addMessageHandler(anyObject());
-
-		replayAll();
-
-		devTools = service.createDevToolsService(tab);
-
-		assertNotNull(devTools);
-	}
-
-	@Test
-	public void testGetDevToolsSubTypeIsCachedPerTab() throws IOException, ChromeServiceException, WebSocketServiceException {
-		ChromeServiceImpl service = new ChromeServiceImpl(9222, webSocketServiceFactory);
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		ChromeTab tab = objectMapper.readerFor(ChromeTab.class).readValue(getFixture("chrome/tab.json"));
-
-		expect(webSocketServiceFactory.createWebSocketService(tab.getWebSocketDebuggerUrl()))
-				.andReturn(webSocketService);
-
-		webSocketService.addMessageHandler(anyObject());
-
-		replayAll();
-
-		Network network = service.createDevToolsService(tab).getNetwork();
-		assertTrue(network == service.createDevToolsService(tab).getNetwork());
-		assertTrue(network == service.createDevToolsService(tab).getNetwork());
-		assertTrue(network == service.createDevToolsService(tab).getNetwork());
-
-		verifyAll();
-		assertNotNull(network);
-	}
-
-	@Test
-	public void testClearChromeDevToolsServiceCacheAndCloseDevTools() throws IOException, ChromeServiceException, WebSocketServiceException {
-		ChromeServiceImpl service = new ChromeServiceImpl(9222, webSocketServiceFactory);
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		ChromeTab tab = objectMapper.readerFor(ChromeTab.class).readValue(getFixture("chrome/tab.json"));
-
-		expect(webSocketServiceFactory.createWebSocketService(tab.getWebSocketDebuggerUrl()))
-				.andReturn(webSocketService);
-
-		webSocketService.addMessageHandler(anyObject());
-		webSocketService.close();
-
-		replayAll();
-
-		service.createDevToolsService(tab);
-
-		service.clearChromeDevToolsServiceCache(tab);
-
-		verifyAll();
-	}
-
-	@Test
-	public void testClearChromeDevToolsServiceCache() throws IOException {
-		ChromeServiceImpl service = new ChromeServiceImpl(9222, webSocketServiceFactory);
-		service.clearChromeDevToolsServiceCache(createChromeTab("UNUSED"));
-	}
-
-	private static ChromeTab createChromeTab(String id) throws IOException {
-		return new ObjectMapper().readerFor(ChromeTab.class).readValue(String.format("{\"id\":\"%s\"}", id));
-	}
+  private static ChromeTab createChromeTab(String id) throws IOException {
+    return new ObjectMapper()
+        .readerFor(ChromeTab.class)
+        .readValue(String.format("{\"id\":\"%s\"}", id));
+  }
 }

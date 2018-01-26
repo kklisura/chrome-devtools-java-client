@@ -1,37 +1,35 @@
 package com.github.kklisura.cdtp.protocol.types.serviceworker;
 
-/**
- * ServiceWorker registration.
- */
+/** ServiceWorker registration. */
 public class ServiceWorkerRegistration {
 
-	private String registrationId;
+  private String registrationId;
 
-	private String scopeURL;
+  private String scopeURL;
 
-	private Boolean isDeleted;
+  private Boolean isDeleted;
 
-	public String getRegistrationId() {
-		return registrationId;
-	}
+  public String getRegistrationId() {
+    return registrationId;
+  }
 
-	public void setRegistrationId(String registrationId) {
-		this.registrationId = registrationId;
-	}
+  public void setRegistrationId(String registrationId) {
+    this.registrationId = registrationId;
+  }
 
-	public String getScopeURL() {
-		return scopeURL;
-	}
+  public String getScopeURL() {
+    return scopeURL;
+  }
 
-	public void setScopeURL(String scopeURL) {
-		this.scopeURL = scopeURL;
-	}
+  public void setScopeURL(String scopeURL) {
+    this.scopeURL = scopeURL;
+  }
 
-	public Boolean getIsDeleted() {
-		return isDeleted;
-	}
+  public Boolean getIsDeleted() {
+    return isDeleted;
+  }
 
-	public void setIsDeleted(Boolean isDeleted) {
-		this.isDeleted = isDeleted;
-	}
+  public void setIsDeleted(Boolean isDeleted) {
+    this.isDeleted = isDeleted;
+  }
 }

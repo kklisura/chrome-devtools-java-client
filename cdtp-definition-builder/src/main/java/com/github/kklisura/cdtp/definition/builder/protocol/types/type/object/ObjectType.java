@@ -17,5 +17,5 @@ import java.util.List;
 @Getter
 @JsonDeserialize(using = JsonDeserializer.None.class)
 public class ObjectType extends Type {
-	private List<Property> properties;
+  private List<Property> properties;
 }

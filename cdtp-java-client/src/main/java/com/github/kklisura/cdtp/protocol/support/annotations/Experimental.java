@@ -12,6 +12,5 @@ import static java.lang.annotation.ElementType.*;
  * @author Kenan Klisura
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value={ FIELD, METHOD, PARAMETER, TYPE })
-public @interface Experimental {
-}
+@Target(value = {FIELD, METHOD, PARAMETER, TYPE})
+public @interface Experimental {}

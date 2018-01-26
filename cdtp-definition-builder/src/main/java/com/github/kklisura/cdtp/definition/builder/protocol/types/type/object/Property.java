@@ -2,9 +2,9 @@ package com.github.kklisura.cdtp.definition.builder.protocol.types.type.object;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.ArrayProperty;
 import com.github.kklisura.cdtp.definition.builder.protocol.deserializers.impl.properties.PropertySubTypeJsonDeserializer;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.AnyProperty;
+import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.ArrayProperty;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.BooleanProperty;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.EnumProperty;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.properties.IntegerProperty;
@@ -23,27 +23,27 @@ import lombok.Setter;
 @Setter
 @Getter
 @JsonSubTypes({
-		@JsonSubTypes.Type(value = StringProperty.class, name = "string"),
-		@JsonSubTypes.Type(value = NumberProperty.class, name = "number"),
-		@JsonSubTypes.Type(value = BooleanProperty.class, name = "boolean"),
-		@JsonSubTypes.Type(value = AnyProperty.class, name = "any"),
-		@JsonSubTypes.Type(value = ArrayProperty.class, name = "array"),
-		@JsonSubTypes.Type(value = RefProperty.class, name = "ref"),
-		@JsonSubTypes.Type(value = IntegerProperty.class, name = "integer"),
-		@JsonSubTypes.Type(value = EnumProperty.class, name = "enum"),
-		@JsonSubTypes.Type(value = ObjectProperty.class, name = "object")
+  @JsonSubTypes.Type(value = StringProperty.class, name = "string"),
+  @JsonSubTypes.Type(value = NumberProperty.class, name = "number"),
+  @JsonSubTypes.Type(value = BooleanProperty.class, name = "boolean"),
+  @JsonSubTypes.Type(value = AnyProperty.class, name = "any"),
+  @JsonSubTypes.Type(value = ArrayProperty.class, name = "array"),
+  @JsonSubTypes.Type(value = RefProperty.class, name = "ref"),
+  @JsonSubTypes.Type(value = IntegerProperty.class, name = "integer"),
+  @JsonSubTypes.Type(value = EnumProperty.class, name = "enum"),
+  @JsonSubTypes.Type(value = ObjectProperty.class, name = "object")
 })
 @JsonDeserialize(using = PropertySubTypeJsonDeserializer.class)
 public abstract class Property {
-	private String name;
+  private String name;
 
-	private String type;
+  private String type;
 
-	private String description;
+  private String description;
 
-	private Boolean optional;
+  private Boolean optional;
 
-	private Boolean experimental;
+  private Boolean experimental;
 
-	private Boolean deprecated;
+  private Boolean deprecated;
 }

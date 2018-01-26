@@ -12,44 +12,42 @@ import com.github.kklisura.cdtp.protocol.types.storage.UsageAndQuota;
 @Experimental
 public interface Storage {
 
-	/**
-	 * Clears storage for origin.
-	 *
-	 * @param origin Security origin.
-	 * @param storageTypes Comma separated origin names.
-	 */
-	void clearDataForOrigin(@ParamName("origin") String origin, @ParamName("storageTypes") String storageTypes);
+  /**
+   * Clears storage for origin.
+   *
+   * @param origin Security origin.
+   * @param storageTypes Comma separated origin names.
+   */
+  void clearDataForOrigin(
+      @ParamName("origin") String origin, @ParamName("storageTypes") String storageTypes);
 
-	/**
-	 * Returns usage and quota in bytes.
-	 *
-	 * @param origin Security origin.
-	 */
-	UsageAndQuota getUsageAndQuota(@ParamName("origin") String origin);
+  /**
+   * Returns usage and quota in bytes.
+   *
+   * @param origin Security origin.
+   */
+  UsageAndQuota getUsageAndQuota(@ParamName("origin") String origin);
 
-	/**
-	 * Registers origin to be notified when an update occurs to its cache storage list.
-	 *
-	 * @param origin Security origin.
-	 */
-	void trackCacheStorageForOrigin(@ParamName("origin") String origin);
+  /**
+   * Registers origin to be notified when an update occurs to its cache storage list.
+   *
+   * @param origin Security origin.
+   */
+  void trackCacheStorageForOrigin(@ParamName("origin") String origin);
 
-	/**
-	 * Unregisters origin from receiving notifications for cache storage.
-	 *
-	 * @param origin Security origin.
-	 */
-	void untrackCacheStorageForOrigin(@ParamName("origin") String origin);
+  /**
+   * Unregisters origin from receiving notifications for cache storage.
+   *
+   * @param origin Security origin.
+   */
+  void untrackCacheStorageForOrigin(@ParamName("origin") String origin);
 
-	/**
-	 * A cache has been added/deleted.
-	 */
-	@EventName("cacheStorageListUpdated")
-	EventListener onCacheStorageListUpdated(EventHandler<CacheStorageListUpdated> eventListener);
+  /** A cache has been added/deleted. */
+  @EventName("cacheStorageListUpdated")
+  EventListener onCacheStorageListUpdated(EventHandler<CacheStorageListUpdated> eventListener);
 
-	/**
-	 * A cache's contents have been modified.
-	 */
-	@EventName("cacheStorageContentUpdated")
-	EventListener onCacheStorageContentUpdated(EventHandler<CacheStorageContentUpdated> eventListener);
+  /** A cache's contents have been modified. */
+  @EventName("cacheStorageContentUpdated")
+  EventListener onCacheStorageContentUpdated(
+      EventHandler<CacheStorageContentUpdated> eventListener);
 }

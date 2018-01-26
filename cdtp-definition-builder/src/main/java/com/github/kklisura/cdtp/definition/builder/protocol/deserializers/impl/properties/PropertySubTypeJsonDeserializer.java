@@ -9,7 +9,7 @@ import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.Pr
  * @author Kenan Klisura
  */
 public class PropertySubTypeJsonDeserializer extends BaseSubTypeJsonDeserializer<Property> {
-	public PropertySubTypeJsonDeserializer() {
-		super(Property.class);
-	}
+  public PropertySubTypeJsonDeserializer() {
+    super(Property.class);
+  }
 }

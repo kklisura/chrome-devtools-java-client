@@ -28,217 +28,219 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(EasyMockRunner.class)
 public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
-	private static final String NAME = "InterfaceTest";
-	private static final String BASE_PACKAGE_NAME = "com.github.kklisura";
-	private static final String ANNOTATIONS_PACKAGE_NAME = "com.github.kklisura.annotations";
+  private static final String NAME = "InterfaceTest";
+  private static final String BASE_PACKAGE_NAME = "com.github.kklisura";
+  private static final String ANNOTATIONS_PACKAGE_NAME = "com.github.kklisura.annotations";
 
-	private JavaInterfaceBuilderImpl interfaceBuilder;
+  private JavaInterfaceBuilderImpl interfaceBuilder;
 
-	@Mock
-	private SourceRoot sourceRoot;
+  @Mock private SourceRoot sourceRoot;
 
-	private Path rootPath;
+  private Path rootPath;
 
-	@Before
-	public void setUp() throws Exception {
-		rootPath = new File("/tmp/test-class-builder").toPath();
-		interfaceBuilder = new JavaInterfaceBuilderImpl(BASE_PACKAGE_NAME, NAME, ANNOTATIONS_PACKAGE_NAME);
-	}
+  @Before
+  public void setUp() throws Exception {
+    rootPath = new File("/tmp/test-class-builder").toPath();
+    interfaceBuilder =
+        new JavaInterfaceBuilderImpl(BASE_PACKAGE_NAME, NAME, ANNOTATIONS_PACKAGE_NAME);
+  }
 
-	@Test
-	public void testBasicInterface() throws IOException {
-		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
+  @Test
+  public void testBasicInterface() throws IOException {
+    Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-		expect(sourceRoot.getRoot())
-				.andReturn(rootPath);
-		expect(sourceRoot.add(capture(compilationUnitCapture)))
-				.andReturn(sourceRoot);
+    expect(sourceRoot.getRoot()).andReturn(rootPath);
+    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
 
-		interfaceBuilder.setJavaDoc("");
+    interfaceBuilder.setJavaDoc("");
 
-		replayAll();
+    replayAll();
 
-		interfaceBuilder.build(sourceRoot);
+    interfaceBuilder.build(sourceRoot);
 
-		assertEquals("package com.github.kklisura;\n" +
-				"\n" +
-				"public interface InterfaceTest {\n" +
-				"}\n" +
-				"", compilationUnitCapture.getValue().toString());
+    assertEquals(
+        "package com.github.kklisura;\n" + "\n" + "public interface InterfaceTest {\n" + "}\n" + "",
+        compilationUnitCapture.getValue().toString());
 
-		verifyAll();
-	}
+    verifyAll();
+  }
 
-	@Test
-	public void testBasicInterfaceWithAnnotation() throws IOException {
-		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
+  @Test
+  public void testBasicInterfaceWithAnnotation() throws IOException {
+    Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-		expect(sourceRoot.getRoot())
-				.andReturn(rootPath);
-		expect(sourceRoot.add(capture(compilationUnitCapture)))
-				.andReturn(sourceRoot);
+    expect(sourceRoot.getRoot()).andReturn(rootPath);
+    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
 
-		interfaceBuilder.addAnnotation("Annotation");
-		interfaceBuilder.addAnnotation("Annotation");
-		interfaceBuilder.addAnnotation("Deprecated");
-		interfaceBuilder.addAnnotation("Deprecated");
+    interfaceBuilder.addAnnotation("Annotation");
+    interfaceBuilder.addAnnotation("Annotation");
+    interfaceBuilder.addAnnotation("Deprecated");
+    interfaceBuilder.addAnnotation("Deprecated");
 
-		replayAll();
+    replayAll();
 
-		interfaceBuilder.build(sourceRoot);
+    interfaceBuilder.build(sourceRoot);
 
-		assertEquals("package com.github.kklisura;\n" +
-				"\n" +
-				"import com.github.kklisura.annotations.Annotation;\n" +
-				"\n" +
-				"@Annotation\n" +
-				"@Deprecated\n" +
-				"public interface InterfaceTest {\n" +
-				"}\n" +
-				"", compilationUnitCapture.getValue().toString());
+    assertEquals(
+        "package com.github.kklisura;\n"
+            + "\n"
+            + "import com.github.kklisura.annotations.Annotation;\n"
+            + "\n"
+            + "@Annotation\n"
+            + "@Deprecated\n"
+            + "public interface InterfaceTest {\n"
+            + "}\n"
+            + "",
+        compilationUnitCapture.getValue().toString());
 
-		verifyAll();
-	}
+    verifyAll();
+  }
 
-	@Test
-	public void testSetJavadoc() throws IOException {
-		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
+  @Test
+  public void testSetJavadoc() throws IOException {
+    Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-		expect(sourceRoot.getRoot())
-				.andReturn(rootPath);
-		expect(sourceRoot.add(capture(compilationUnitCapture)))
-				.andReturn(sourceRoot);
+    expect(sourceRoot.getRoot()).andReturn(rootPath);
+    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
 
-		interfaceBuilder.setJavaDoc("Java doc.");
+    interfaceBuilder.setJavaDoc("Java doc.");
 
-		replayAll();
+    replayAll();
 
-		interfaceBuilder.build(sourceRoot);
+    interfaceBuilder.build(sourceRoot);
 
-		assertEquals("package com.github.kklisura;\n" +
-				"\n" +
-				"/**\n" +
-				" * Java doc.\n" +
-				" */\n" +
-				"public interface InterfaceTest {\n" +
-				"}\n", compilationUnitCapture.getValue().toString());
+    assertEquals(
+        "package com.github.kklisura;\n"
+            + "\n"
+            + "/**\n"
+            + " * Java doc.\n"
+            + " */\n"
+            + "public interface InterfaceTest {\n"
+            + "}\n",
+        compilationUnitCapture.getValue().toString());
 
-		verifyAll();
-	}
+    verifyAll();
+  }
 
-	@Test
-	public void testAddingImportsOnSamePackage() throws IOException {
-		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
+  @Test
+  public void testAddingImportsOnSamePackage() throws IOException {
+    Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-		expect(sourceRoot.getRoot())
-				.andReturn(rootPath);
-		expect(sourceRoot.add(capture(compilationUnitCapture)))
-				.andReturn(sourceRoot);
+    expect(sourceRoot.getRoot()).andReturn(rootPath);
+    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
 
-		replayAll();
+    replayAll();
 
-		interfaceBuilder.addImport(BASE_PACKAGE_NAME, "Test");
-		interfaceBuilder.addImport("java.util", "List");
-		interfaceBuilder.addImport("java.util", "List");
-		interfaceBuilder.addImport("java.util", "List");
+    interfaceBuilder.addImport(BASE_PACKAGE_NAME, "Test");
+    interfaceBuilder.addImport("java.util", "List");
+    interfaceBuilder.addImport("java.util", "List");
+    interfaceBuilder.addImport("java.util", "List");
 
-		interfaceBuilder.build(sourceRoot);
+    interfaceBuilder.build(sourceRoot);
 
-		assertEquals("package com.github.kklisura;\n\n" +
-				"import java.util.List;\n" +
-				"\n" +
-				"public interface InterfaceTest {\n" +
-				"}\n" +
-				"", compilationUnitCapture.getValue().toString());
+    assertEquals(
+        "package com.github.kklisura;\n\n"
+            + "import java.util.List;\n"
+            + "\n"
+            + "public interface InterfaceTest {\n"
+            + "}\n"
+            + "",
+        compilationUnitCapture.getValue().toString());
 
-		verifyAll();
-	}
+    verifyAll();
+  }
 
-	@Test
-	public void testBasicInterfaceWithSimpleMethod() throws IOException {
-		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
+  @Test
+  public void testBasicInterfaceWithSimpleMethod() throws IOException {
+    Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-		expect(sourceRoot.getRoot())
-				.andReturn(rootPath);
-		expect(sourceRoot.add(capture(compilationUnitCapture)))
-				.andReturn(sourceRoot);
+    expect(sourceRoot.getRoot()).andReturn(rootPath);
+    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
 
-		String description = "Method description\r\n\r\n@param test Test param\r\n@return Returns nothing";
-		interfaceBuilder.addMethod("someMethod1", description, Collections.emptyList(), null);
+    String description =
+        "Method description\r\n\r\n@param test Test param\r\n@return Returns nothing";
+    interfaceBuilder.addMethod("someMethod1", description, Collections.emptyList(), null);
 
-		replayAll();
+    replayAll();
 
-		interfaceBuilder.build(sourceRoot);
+    interfaceBuilder.build(sourceRoot);
 
-		assertEquals("package com.github.kklisura;\n" +
-				"\n" +
-				"public interface InterfaceTest {\n" +
-				"\n" +
-				"    /**\n" +
-				"     * Method description\n" +
-				"     *\n" +
-				"     * @param test Test param\n" +
-				"     * @return Returns nothing\n" +
-				"     */\n" +
-				"    void someMethod1();" +
-				"\n" +
-				"}\n" +
-				"", compilationUnitCapture.getValue().toString());
+    assertEquals(
+        "package com.github.kklisura;\n"
+            + "\n"
+            + "public interface InterfaceTest {\n"
+            + "\n"
+            + "    /**\n"
+            + "     * Method description\n"
+            + "     *\n"
+            + "     * @param test Test param\n"
+            + "     * @return Returns nothing\n"
+            + "     */\n"
+            + "    void someMethod1();"
+            + "\n"
+            + "}\n"
+            + "",
+        compilationUnitCapture.getValue().toString());
 
-		verifyAll();
-	}
+    verifyAll();
+  }
 
-	@Test
-	public void testBasicInterfaceWithSimpleMethod2() throws IOException {
-		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
+  @Test
+  public void testBasicInterfaceWithSimpleMethod2() throws IOException {
+    Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-		expect(sourceRoot.getRoot())
-				.andReturn(rootPath);
-		expect(sourceRoot.add(capture(compilationUnitCapture)))
-				.andReturn(sourceRoot);
+    expect(sourceRoot.getRoot()).andReturn(rootPath);
+    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
 
-		final MethodParam param1 = new MethodParam();
-		param1.setType("Integer");
-		param1.setName("param1");
+    final MethodParam param1 = new MethodParam();
+    param1.setType("Integer");
+    param1.setName("param1");
 
-		final MethodParam param2 = new MethodParam();
-		param2.setType("String");
-		param2.setName("param2");
-		param2.setAnnotations(Arrays.asList(createAnnotation("Annotation"), createAnnotation("Annotation1"),
-				createAnnotation("Annotation1"), createAnnotation("Deprecated"), createAnnotation("ParamValue", "paramValueName")));
+    final MethodParam param2 = new MethodParam();
+    param2.setType("String");
+    param2.setName("param2");
+    param2.setAnnotations(
+        Arrays.asList(
+            createAnnotation("Annotation"),
+            createAnnotation("Annotation1"),
+            createAnnotation("Annotation1"),
+            createAnnotation("Deprecated"),
+            createAnnotation("ParamValue", "paramValueName")));
 
-		interfaceBuilder.addMethod("someMethod1", "", Arrays.asList(param1, param2), "String");
-		interfaceBuilder.addMethodAnnotation("someMethod1", "Annotation");
-		interfaceBuilder.addMethodAnnotation("someMethod1", "Annotation");
-		interfaceBuilder.addParametrizedMethodAnnotation("someMethod1", "Annotation2", "param");
-		interfaceBuilder.addParametrizedMethodAnnotation("someMethod1", "Annotation2", "param");
+    interfaceBuilder.addMethod("someMethod1", "", Arrays.asList(param1, param2), "String");
+    interfaceBuilder.addMethodAnnotation("someMethod1", "Annotation");
+    interfaceBuilder.addMethodAnnotation("someMethod1", "Annotation");
+    interfaceBuilder.addParametrizedMethodAnnotation("someMethod1", "Annotation2", "param");
+    interfaceBuilder.addParametrizedMethodAnnotation("someMethod1", "Annotation2", "param");
 
-		replayAll();
+    replayAll();
 
-		interfaceBuilder.build(sourceRoot);
+    interfaceBuilder.build(sourceRoot);
 
-		assertEquals("package com.github.kklisura;\n" +
-				"\n" +
-				"import com.github.kklisura.annotations.Annotation;\n" +
-				"import com.github.kklisura.annotations.Annotation1;\n" +
-				"import com.github.kklisura.annotations.ParamValue;\n" +
-				"import com.github.kklisura.annotations.Annotation2;\n" +
-				"\n" +
-				"public interface InterfaceTest {\n" +
-				"\n" +
-				"    @Annotation\n" +
-				"    @Annotation2(\"param\")\n" +
-				"    String someMethod1(Integer param1, @Annotation @Annotation1 @Deprecated @ParamValue(\"paramValueName\") String param2);\n" +
-				"}\n", compilationUnitCapture.getValue().toString());
+    assertEquals(
+        "package com.github.kklisura;\n"
+            + "\n"
+            + "import com.github.kklisura.annotations.Annotation;\n"
+            + "import com.github.kklisura.annotations.Annotation1;\n"
+            + "import com.github.kklisura.annotations.ParamValue;\n"
+            + "import com.github.kklisura.annotations.Annotation2;\n"
+            + "\n"
+            + "public interface InterfaceTest {\n"
+            + "\n"
+            + "    @Annotation\n"
+            + "    @Annotation2(\"param\")\n"
+            + "    String someMethod1(Integer param1, @Annotation @Annotation1 @Deprecated @ParamValue(\"paramValueName\") String param2);\n"
+            + "}\n",
+        compilationUnitCapture.getValue().toString());
 
-		verifyAll();
-	}
+    verifyAll();
+  }
 
-	private MethodParam.Annotation createAnnotation(String name) {
-		return new MethodParam.Annotation(name);
-	}
+  private MethodParam.Annotation createAnnotation(String name) {
+    return new MethodParam.Annotation(name);
+  }
 
-	private MethodParam.Annotation createAnnotation(String name, String value) {
-		return new MethodParam.Annotation(name, value);
-	}
+  private MethodParam.Annotation createAnnotation(String name, String value) {
+    return new MethodParam.Annotation(name, value);
+  }
 }

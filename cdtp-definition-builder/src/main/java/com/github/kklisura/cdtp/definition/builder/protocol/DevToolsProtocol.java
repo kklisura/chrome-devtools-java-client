@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 public class DevToolsProtocol {
-	private Version version;
+  private Version version;
 
-	private List<Domain> domains;
+  private List<Domain> domains;
 }

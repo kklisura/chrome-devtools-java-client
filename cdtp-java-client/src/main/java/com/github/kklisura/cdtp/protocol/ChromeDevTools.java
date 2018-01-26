@@ -41,193 +41,117 @@ import com.github.kklisura.cdtp.protocol.commands.Tracing;
 
 public interface ChromeDevTools {
 
-	/**
-	 * Returns the Inspector command.
-	 */
-	Inspector getInspector();
+  /** Returns the Inspector command. */
+  Inspector getInspector();
 
-	/**
-	 * Returns the Memory command.
-	 */
-	Memory getMemory();
+  /** Returns the Memory command. */
+  Memory getMemory();
 
-	/**
-	 * Returns the Performance command.
-	 */
-	Performance getPerformance();
+  /** Returns the Performance command. */
+  Performance getPerformance();
 
-	/**
-	 * Returns the Page command.
-	 */
-	Page getPage();
+  /** Returns the Page command. */
+  Page getPage();
 
-	/**
-	 * Returns the Overlay command.
-	 */
-	Overlay getOverlay();
+  /** Returns the Overlay command. */
+  Overlay getOverlay();
 
-	/**
-	 * Returns the Emulation command.
-	 */
-	Emulation getEmulation();
+  /** Returns the Emulation command. */
+  Emulation getEmulation();
 
-	/**
-	 * Returns the Security command.
-	 */
-	Security getSecurity();
+  /** Returns the Security command. */
+  Security getSecurity();
 
-	/**
-	 * Returns the Audits command.
-	 */
-	Audits getAudits();
+  /** Returns the Audits command. */
+  Audits getAudits();
 
-	/**
-	 * Returns the Network command.
-	 */
-	Network getNetwork();
+  /** Returns the Network command. */
+  Network getNetwork();
 
-	/**
-	 * Returns the Database command.
-	 */
-	Database getDatabase();
+  /** Returns the Database command. */
+  Database getDatabase();
 
-	/**
-	 * Returns the IndexedDB command.
-	 */
-	IndexedDB getIndexedDB();
+  /** Returns the IndexedDB command. */
+  IndexedDB getIndexedDB();
 
-	/**
-	 * Returns the CacheStorage command.
-	 */
-	CacheStorage getCacheStorage();
+  /** Returns the CacheStorage command. */
+  CacheStorage getCacheStorage();
 
-	/**
-	 * Returns the DOMStorage command.
-	 */
-	DOMStorage getDOMStorage();
+  /** Returns the DOMStorage command. */
+  DOMStorage getDOMStorage();
 
-	/**
-	 * Returns the ApplicationCache command.
-	 */
-	ApplicationCache getApplicationCache();
+  /** Returns the ApplicationCache command. */
+  ApplicationCache getApplicationCache();
 
-	/**
-	 * Returns the DOM command.
-	 */
-	DOM getDOM();
+  /** Returns the DOM command. */
+  DOM getDOM();
 
-	/**
-	 * Returns the CSS command.
-	 */
-	CSS getCSS();
+  /** Returns the CSS command. */
+  CSS getCSS();
 
-	/**
-	 * Returns the DOMSnapshot command.
-	 */
-	DOMSnapshot getDOMSnapshot();
+  /** Returns the DOMSnapshot command. */
+  DOMSnapshot getDOMSnapshot();
 
-	/**
-	 * Returns the IO command.
-	 */
-	IO getIO();
+  /** Returns the IO command. */
+  IO getIO();
 
-	/**
-	 * Returns the DOMDebugger command.
-	 */
-	DOMDebugger getDOMDebugger();
+  /** Returns the DOMDebugger command. */
+  DOMDebugger getDOMDebugger();
 
-	/**
-	 * Returns the Target command.
-	 */
-	Target getTarget();
+  /** Returns the Target command. */
+  Target getTarget();
 
-	/**
-	 * Returns the ServiceWorker command.
-	 */
-	ServiceWorker getServiceWorker();
+  /** Returns the ServiceWorker command. */
+  ServiceWorker getServiceWorker();
 
-	/**
-	 * Returns the Input command.
-	 */
-	Input getInput();
+  /** Returns the Input command. */
+  Input getInput();
 
-	/**
-	 * Returns the LayerTree command.
-	 */
-	LayerTree getLayerTree();
+  /** Returns the LayerTree command. */
+  LayerTree getLayerTree();
 
-	/**
-	 * Returns the DeviceOrientation command.
-	 */
-	DeviceOrientation getDeviceOrientation();
+  /** Returns the DeviceOrientation command. */
+  DeviceOrientation getDeviceOrientation();
 
-	/**
-	 * Returns the Tracing command.
-	 */
-	Tracing getTracing();
+  /** Returns the Tracing command. */
+  Tracing getTracing();
 
-	/**
-	 * Returns the Animation command.
-	 */
-	Animation getAnimation();
+  /** Returns the Animation command. */
+  Animation getAnimation();
 
-	/**
-	 * Returns the Accessibility command.
-	 */
-	Accessibility getAccessibility();
+  /** Returns the Accessibility command. */
+  Accessibility getAccessibility();
 
-	/**
-	 * Returns the Storage command.
-	 */
-	Storage getStorage();
+  /** Returns the Storage command. */
+  Storage getStorage();
 
-	/**
-	 * Returns the Log command.
-	 */
-	Log getLog();
+  /** Returns the Log command. */
+  Log getLog();
 
-	/**
-	 * Returns the SystemInfo command.
-	 */
-	SystemInfo getSystemInfo();
+  /** Returns the SystemInfo command. */
+  SystemInfo getSystemInfo();
 
-	/**
-	 * Returns the Tethering command.
-	 */
-	Tethering getTethering();
+  /** Returns the Tethering command. */
+  Tethering getTethering();
 
-	/**
-	 * Returns the Browser command.
-	 */
-	Browser getBrowser();
+  /** Returns the Browser command. */
+  Browser getBrowser();
 
-	/**
-	 * Returns the Schema command.
-	 */
-	Schema getSchema();
+  /** Returns the Schema command. */
+  Schema getSchema();
 
-	/**
-	 * Returns the Runtime command.
-	 */
-	Runtime getRuntime();
+  /** Returns the Runtime command. */
+  Runtime getRuntime();
 
-	/**
-	 * Returns the Debugger command.
-	 */
-	Debugger getDebugger();
+  /** Returns the Debugger command. */
+  Debugger getDebugger();
 
-	/**
-	 * Returns the Console command.
-	 */
-	Console getConsole();
+  /** Returns the Console command. */
+  Console getConsole();
 
-	/**
-	 * Returns the Profiler command.
-	 */
-	Profiler getProfiler();
+  /** Returns the Profiler command. */
+  Profiler getProfiler();
 
-	/**
-	 * Returns the HeapProfiler command.
-	 */
-	HeapProfiler getHeapProfiler();
+  /** Returns the HeapProfiler command. */
+  HeapProfiler getHeapProfiler();
 }

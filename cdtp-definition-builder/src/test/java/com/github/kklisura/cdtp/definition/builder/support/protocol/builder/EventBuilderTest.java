@@ -33,97 +33,101 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(EasyMockRunner.class)
 public class EventBuilderTest extends EasyMockSupport {
-	private static final String BASE_PACKAGE_NAME = "com.github.kklisura.events";
-	private static final String TYPES_PACKAGE_NAME = "com.github.kklisura.types";
+  private static final String BASE_PACKAGE_NAME = "com.github.kklisura.events";
+  private static final String TYPES_PACKAGE_NAME = "com.github.kklisura.types";
 
-	@Mock
-	private JavaBuilderFactory javaBuilderFactory;
+  @Mock private JavaBuilderFactory javaBuilderFactory;
 
-	@Mock
-	private JavaClassBuilder javaClassBuilder;
+  @Mock private JavaClassBuilder javaClassBuilder;
 
-	private EventBuilder eventBuilder;
+  private EventBuilder eventBuilder;
 
-	@Before
-	public void setUp() throws Exception {
-		eventBuilder = new EventBuilder(BASE_PACKAGE_NAME, javaBuilderFactory, TYPES_PACKAGE_NAME);
-	}
+  @Before
+  public void setUp() throws Exception {
+    eventBuilder = new EventBuilder(BASE_PACKAGE_NAME, javaBuilderFactory, TYPES_PACKAGE_NAME);
+  }
 
-	@Test
-	public void testBuildOnEmptyEvents() {
-		final DevToolsProtocol devToolsProtocol = new DevToolsProtocol();
-		final Domain domain = new Domain();
-		assertTrue(eventBuilder.build(domain, DomainUtils.devToolsProtocolResolver(devToolsProtocol)).isEmpty());
-	}
+  @Test
+  public void testBuildOnEmptyEvents() {
+    final DevToolsProtocol devToolsProtocol = new DevToolsProtocol();
+    final Domain domain = new Domain();
+    assertTrue(
+        eventBuilder
+            .build(domain, DomainUtils.devToolsProtocolResolver(devToolsProtocol))
+            .isEmpty());
+  }
 
-	@Test
-	public void testBuild() throws InstantiationException, IllegalAccessException {
-		final DevToolsProtocol devToolsProtocol = new DevToolsProtocol();
-		final Domain domain1 = new Domain();
-		domain1.setDomain("Domain1");
-		domain1.setDescription("Domain1 description");
+  @Test
+  public void testBuild() throws InstantiationException, IllegalAccessException {
+    final DevToolsProtocol devToolsProtocol = new DevToolsProtocol();
+    final Domain domain1 = new Domain();
+    domain1.setDomain("Domain1");
+    domain1.setDescription("Domain1 description");
 
-		final Domain domain2 = new Domain();
-		domain2.setDomain("Domain2");
-		domain2.setDescription("Domain2 description");
+    final Domain domain2 = new Domain();
+    domain2.setDomain("Domain2");
+    domain2.setDescription("Domain2 description");
 
-		final ObjectType refObjectProperty = new ObjectType();
-		refObjectProperty.setId("Domain2RefProperty");
-		refObjectProperty.setProperties(java.util.Collections.singletonList(createProperty(StringProperty.class, "stringDomain2RefProperty")));
-		domain2.setTypes(java.util.Collections.singletonList(refObjectProperty));
+    final ObjectType refObjectProperty = new ObjectType();
+    refObjectProperty.setId("Domain2RefProperty");
+    refObjectProperty.setProperties(
+        java.util.Collections.singletonList(
+            createProperty(StringProperty.class, "stringDomain2RefProperty")));
+    domain2.setTypes(java.util.Collections.singletonList(refObjectProperty));
 
-		final StringProperty stringProperty = new StringProperty();
-		stringProperty.setName("stringProperty");
-		stringProperty.setExperimental(Boolean.TRUE);
-		stringProperty.setDescription("String property description.");
+    final StringProperty stringProperty = new StringProperty();
+    stringProperty.setName("stringProperty");
+    stringProperty.setExperimental(Boolean.TRUE);
+    stringProperty.setDescription("String property description.");
 
-		final RefProperty refProperty = new RefProperty();
-		refProperty.setName("refProperty");
-		refProperty.setRef("Domain2.Domain2RefProperty");
-		refProperty.setOptional(Boolean.TRUE);
+    final RefProperty refProperty = new RefProperty();
+    refProperty.setName("refProperty");
+    refProperty.setRef("Domain2.Domain2RefProperty");
+    refProperty.setOptional(Boolean.TRUE);
 
-		final Event event = new Event();
-		event.setName("eventName");
-		event.setDescription("Event description.");
-		event.setExperimental(Boolean.TRUE);
-		event.setDeprecated(Boolean.TRUE);
-		event.setParameters(Arrays.asList(stringProperty, refProperty));
+    final Event event = new Event();
+    event.setName("eventName");
+    event.setDescription("Event description.");
+    event.setExperimental(Boolean.TRUE);
+    event.setDeprecated(Boolean.TRUE);
+    event.setParameters(Arrays.asList(stringProperty, refProperty));
 
-		domain1.setEvents(Collections.singletonList(event));
-		devToolsProtocol.setDomains(Arrays.asList(domain1, domain2));
+    domain1.setEvents(Collections.singletonList(event));
+    devToolsProtocol.setDomains(Arrays.asList(domain1, domain2));
 
-		expect(javaBuilderFactory.createClassBuilder(BASE_PACKAGE_NAME + ".domain1", "EventName"))
-				.andStubReturn(javaClassBuilder);
+    expect(javaBuilderFactory.createClassBuilder(BASE_PACKAGE_NAME + ".domain1", "EventName"))
+        .andStubReturn(javaClassBuilder);
 
-		javaClassBuilder.setJavaDoc("Event description.");
-		javaClassBuilder.addAnnotation("Experimental");
-		javaClassBuilder.addAnnotation("Deprecated");
+    javaClassBuilder.setJavaDoc("Event description.");
+    javaClassBuilder.addAnnotation("Experimental");
+    javaClassBuilder.addAnnotation("Deprecated");
 
-		javaClassBuilder.addImport(TYPES_PACKAGE_NAME + ".domain2", "Domain2RefProperty");
+    javaClassBuilder.addImport(TYPES_PACKAGE_NAME + ".domain2", "Domain2RefProperty");
 
-		javaClassBuilder.addPrivateField("stringProperty", "String", "String property description.");
-		javaClassBuilder.addFieldAnnotation("stringProperty", "Experimental");
+    javaClassBuilder.addPrivateField("stringProperty", "String", "String property description.");
+    javaClassBuilder.addFieldAnnotation("stringProperty", "Experimental");
 
-		javaClassBuilder.addPrivateField("refProperty", "Domain2RefProperty", null);
-		javaClassBuilder.addFieldAnnotation("refProperty", "Optional");
+    javaClassBuilder.addPrivateField("refProperty", "Domain2RefProperty", null);
+    javaClassBuilder.addFieldAnnotation("refProperty", "Optional");
 
-		javaClassBuilder.generateGettersAndSetters();
+    javaClassBuilder.generateGettersAndSetters();
 
-		replayAll();
+    replayAll();
 
-		List<Builder> build = eventBuilder.build(domain1, DomainUtils.devToolsProtocolResolver(devToolsProtocol));
+    List<Builder> build =
+        eventBuilder.build(domain1, DomainUtils.devToolsProtocolResolver(devToolsProtocol));
 
-		verifyAll();
+    verifyAll();
 
-		assertEquals(1, build.size());
-		assertEquals(javaClassBuilder, build.get(0));
-	}
+    assertEquals(1, build.size());
+    assertEquals(javaClassBuilder, build.get(0));
+  }
 
-	private <T extends Property> T createProperty(Class<T> clazz, String name)
-			throws IllegalAccessException, InstantiationException {
-		T property = clazz.newInstance();
-		property.setName(name);
-		property.setDescription(name + "Description");
-		return property;
-	}
+  private <T extends Property> T createProperty(Class<T> clazz, String name)
+      throws IllegalAccessException, InstantiationException {
+    T property = clazz.newInstance();
+    property.setName(name);
+    property.setDescription(name + "Description");
+    return property;
+  }
 }

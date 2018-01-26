@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * @author Kenan Klisura
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value={ElementType.METHOD})
+@Target(value = {ElementType.METHOD})
 public @interface EventName {
-	String value();
+  String value();
 }

@@ -25,230 +25,225 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(EasyMockRunner.class)
 public class JavaClassBuilderImplTest extends EasyMockSupport {
-	private static final String PACKAGE_NAME = "com.github.kklisura";
-	private static final String CLASS_NAME = "ClassName";
-	private static final String ANNOTATIONS_PACKAGE_NAME = "com.github.kklisura.annotations";
+  private static final String PACKAGE_NAME = "com.github.kklisura";
+  private static final String CLASS_NAME = "ClassName";
+  private static final String ANNOTATIONS_PACKAGE_NAME = "com.github.kklisura.annotations";
 
-	@Mock
-	private SourceRoot sourceRoot;
+  @Mock private SourceRoot sourceRoot;
 
-	private Path rootPath;
+  private Path rootPath;
 
-	private JavaClassBuilderImpl javaClassBuilder;
+  private JavaClassBuilderImpl javaClassBuilder;
 
-	@Before
-	public void setUp() throws Exception {
-		rootPath = new File("/tmp/test-class-builder").toPath();
-		javaClassBuilder = new JavaClassBuilderImpl(PACKAGE_NAME, CLASS_NAME, ANNOTATIONS_PACKAGE_NAME);
-	}
+  @Before
+  public void setUp() throws Exception {
+    rootPath = new File("/tmp/test-class-builder").toPath();
+    javaClassBuilder = new JavaClassBuilderImpl(PACKAGE_NAME, CLASS_NAME, ANNOTATIONS_PACKAGE_NAME);
+  }
 
-	@Test
-	public void testBasicClass() throws IOException {
-		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
+  @Test
+  public void testBasicClass() throws IOException {
+    Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-		expect(sourceRoot.getRoot())
-				.andReturn(rootPath);
-		expect(sourceRoot.add(capture(compilationUnitCapture)))
-				.andReturn(sourceRoot);
+    expect(sourceRoot.getRoot()).andReturn(rootPath);
+    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
 
-		javaClassBuilder.setJavaDoc("");
+    javaClassBuilder.setJavaDoc("");
 
-		replayAll();
+    replayAll();
 
-		javaClassBuilder.build(sourceRoot);
+    javaClassBuilder.build(sourceRoot);
 
-		assertEquals("package com.github.kklisura;\n" +
-				"\n" +
-				"public class ClassName {\n" +
-				"}\n" +
-				"", compilationUnitCapture.getValue().toString());
+    assertEquals(
+        "package com.github.kklisura;\n" + "\n" + "public class ClassName {\n" + "}\n" + "",
+        compilationUnitCapture.getValue().toString());
 
-		verifyAll();
-	}
+    verifyAll();
+  }
 
-	@Test
-	public void testBasicClassWithAnnotation() throws IOException {
-		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
+  @Test
+  public void testBasicClassWithAnnotation() throws IOException {
+    Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-		expect(sourceRoot.getRoot())
-				.andReturn(rootPath);
-		expect(sourceRoot.add(capture(compilationUnitCapture)))
-				.andReturn(sourceRoot);
+    expect(sourceRoot.getRoot()).andReturn(rootPath);
+    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
 
-		javaClassBuilder.addAnnotation("Annotation");
-		javaClassBuilder.addAnnotation("Deprecated");
+    javaClassBuilder.addAnnotation("Annotation");
+    javaClassBuilder.addAnnotation("Deprecated");
 
-		replayAll();
+    replayAll();
 
-		javaClassBuilder.build(sourceRoot);
+    javaClassBuilder.build(sourceRoot);
 
-		assertEquals("package com.github.kklisura;\n" +
-				"\n" +
-				"import com.github.kklisura.annotations.Annotation;\n" +
-				"\n" +
-				"@Annotation\n" +
-				"@Deprecated\n" +
-				"public class ClassName {\n" +
-				"}\n" +
-				"", compilationUnitCapture.getValue().toString());
+    assertEquals(
+        "package com.github.kklisura;\n"
+            + "\n"
+            + "import com.github.kklisura.annotations.Annotation;\n"
+            + "\n"
+            + "@Annotation\n"
+            + "@Deprecated\n"
+            + "public class ClassName {\n"
+            + "}\n"
+            + "",
+        compilationUnitCapture.getValue().toString());
 
-		verifyAll();
-	}
+    verifyAll();
+  }
 
-	@Test
-	public void testSetJavadoc() throws IOException {
-		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
+  @Test
+  public void testSetJavadoc() throws IOException {
+    Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-		expect(sourceRoot.getRoot())
-				.andReturn(rootPath);
-		expect(sourceRoot.add(capture(compilationUnitCapture)))
-				.andReturn(sourceRoot);
+    expect(sourceRoot.getRoot()).andReturn(rootPath);
+    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
 
-		javaClassBuilder.setJavaDoc("Java doc.");
+    javaClassBuilder.setJavaDoc("Java doc.");
 
-		replayAll();
+    replayAll();
 
-		javaClassBuilder.build(sourceRoot);
+    javaClassBuilder.build(sourceRoot);
 
-		assertEquals("package com.github.kklisura;\n" +
-				"\n" +
-				"/**\n" +
-				" * Java doc.\n" +
-				" */\n" +
-				"public class ClassName {\n" +
-				"}\n", compilationUnitCapture.getValue().toString());
+    assertEquals(
+        "package com.github.kklisura;\n"
+            + "\n"
+            + "/**\n"
+            + " * Java doc.\n"
+            + " */\n"
+            + "public class ClassName {\n"
+            + "}\n",
+        compilationUnitCapture.getValue().toString());
 
-		verifyAll();
-	}
+    verifyAll();
+  }
 
-	@Test
-	public void testAddingImports() throws IOException {
-		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
+  @Test
+  public void testAddingImports() throws IOException {
+    Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-		expect(sourceRoot.getRoot())
-				.andReturn(rootPath);
-		expect(sourceRoot.add(capture(compilationUnitCapture)))
-				.andReturn(sourceRoot);
+    expect(sourceRoot.getRoot()).andReturn(rootPath);
+    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
 
-		replayAll();
+    replayAll();
 
-		javaClassBuilder.addImport("java.util", "List");
-		javaClassBuilder.addImport("java.util", "List");
-		javaClassBuilder.addImport("java.util", "List");
+    javaClassBuilder.addImport("java.util", "List");
+    javaClassBuilder.addImport("java.util", "List");
+    javaClassBuilder.addImport("java.util", "List");
 
-		javaClassBuilder.build(sourceRoot);
+    javaClassBuilder.build(sourceRoot);
 
-		assertEquals("package com.github.kklisura;\n\n" +
-				"import java.util.List;\n" +
-				"\n" +
-				"public class ClassName {\n" +
-				"}\n" +
-				"", compilationUnitCapture.getValue().toString());
+    assertEquals(
+        "package com.github.kklisura;\n\n"
+            + "import java.util.List;\n"
+            + "\n"
+            + "public class ClassName {\n"
+            + "}\n"
+            + "",
+        compilationUnitCapture.getValue().toString());
 
-		verifyAll();
-	}
+    verifyAll();
+  }
 
-	@Test
-	public void testAddingImportsOnSamePackage() throws IOException {
-		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
+  @Test
+  public void testAddingImportsOnSamePackage() throws IOException {
+    Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-		expect(sourceRoot.getRoot())
-				.andReturn(rootPath);
-		expect(sourceRoot.add(capture(compilationUnitCapture)))
-				.andReturn(sourceRoot);
+    expect(sourceRoot.getRoot()).andReturn(rootPath);
+    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
 
-		replayAll();
+    replayAll();
 
-		javaClassBuilder.addImport(PACKAGE_NAME, "Test");
-		javaClassBuilder.addImport("java.util", "List");
+    javaClassBuilder.addImport(PACKAGE_NAME, "Test");
+    javaClassBuilder.addImport("java.util", "List");
 
-		javaClassBuilder.build(sourceRoot);
+    javaClassBuilder.build(sourceRoot);
 
-		assertEquals("package com.github.kklisura;\n\n" +
-				"import java.util.List;\n" +
-				"\n" +
-				"public class ClassName {\n" +
-				"}\n" +
-				"", compilationUnitCapture.getValue().toString());
+    assertEquals(
+        "package com.github.kklisura;\n\n"
+            + "import java.util.List;\n"
+            + "\n"
+            + "public class ClassName {\n"
+            + "}\n"
+            + "",
+        compilationUnitCapture.getValue().toString());
 
-		verifyAll();
-	}
+    verifyAll();
+  }
 
-	@Test
-	public void testGenerateGettersAndSetters() throws IOException {
-		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
+  @Test
+  public void testGenerateGettersAndSetters() throws IOException {
+    Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-		expect(sourceRoot.getRoot())
-				.andReturn(rootPath);
-		expect(sourceRoot.add(capture(compilationUnitCapture)))
-				.andReturn(sourceRoot);
+    expect(sourceRoot.getRoot()).andReturn(rootPath);
+    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
 
-		replayAll();
+    replayAll();
 
-		javaClassBuilder.addPrivateField("privateField", "String", "Private field description");
+    javaClassBuilder.addPrivateField("privateField", "String", "Private field description");
 
-		javaClassBuilder.generateGettersAndSetters();
+    javaClassBuilder.generateGettersAndSetters();
 
-		javaClassBuilder.build(sourceRoot);
+    javaClassBuilder.build(sourceRoot);
 
-		assertEquals("package com.github.kklisura;\n" +
-				"\n" +
-				"public class ClassName {\n" +
-				"\n" +
-				"    private String privateField;\n" +
-				"\n" +
-				"    /**\n" +
-				"     * Private field description\n" +
-				"     */\n" +
-				"    public String getPrivateField() {\n" +
-				"        return privateField;\n" +
-				"    }\n" +
-				"\n" +
-				"    /**\n" +
-				"     * Private field description\n" +
-				"     */\n" +
-				"    public void setPrivateField(String privateField) {\n" +
-				"        this.privateField = privateField;\n" +
-				"    }\n" +
-				"}\n", compilationUnitCapture.getValue().toString());
+    assertEquals(
+        "package com.github.kklisura;\n"
+            + "\n"
+            + "public class ClassName {\n"
+            + "\n"
+            + "    private String privateField;\n"
+            + "\n"
+            + "    /**\n"
+            + "     * Private field description\n"
+            + "     */\n"
+            + "    public String getPrivateField() {\n"
+            + "        return privateField;\n"
+            + "    }\n"
+            + "\n"
+            + "    /**\n"
+            + "     * Private field description\n"
+            + "     */\n"
+            + "    public void setPrivateField(String privateField) {\n"
+            + "        this.privateField = privateField;\n"
+            + "    }\n"
+            + "}\n",
+        compilationUnitCapture.getValue().toString());
 
-		verifyAll();
-	}
+    verifyAll();
+  }
 
-	@Test
-	public void testGenerateFieldAnnotation() throws IOException {
-		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
+  @Test
+  public void testGenerateFieldAnnotation() throws IOException {
+    Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-		expect(sourceRoot.getRoot())
-				.andReturn(rootPath);
-		expect(sourceRoot.add(capture(compilationUnitCapture)))
-				.andReturn(sourceRoot);
+    expect(sourceRoot.getRoot()).andReturn(rootPath);
+    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
 
-		replayAll();
+    replayAll();
 
-		javaClassBuilder.addPrivateField("privateField", "String", "Private field description");
+    javaClassBuilder.addPrivateField("privateField", "String", "Private field description");
 
-		javaClassBuilder.addAnnotation("Annotation");
-		javaClassBuilder.addFieldAnnotation("privateField", "Annotation");
-		javaClassBuilder.addFieldAnnotation("privateField", "Annotation1");
-		javaClassBuilder.addFieldAnnotation("privateField", "Deprecated");
+    javaClassBuilder.addAnnotation("Annotation");
+    javaClassBuilder.addFieldAnnotation("privateField", "Annotation");
+    javaClassBuilder.addFieldAnnotation("privateField", "Annotation1");
+    javaClassBuilder.addFieldAnnotation("privateField", "Deprecated");
 
-		javaClassBuilder.build(sourceRoot);
+    javaClassBuilder.build(sourceRoot);
 
-		assertEquals("package com.github.kklisura;\n" +
-				"\n" +
-				"import com.github.kklisura.annotations.Annotation;\n" +
-				"import com.github.kklisura.annotations.Annotation1;\n" +
-				"\n" +
-				"@Annotation\n" +
-				"public class ClassName {\n" +
-				"\n" +
-				"    @Annotation\n" +
-				"    @Annotation1\n" +
-				"    @Deprecated\n" +
-				"    private String privateField;\n" +
-				"}\n", compilationUnitCapture.getValue().toString());
+    assertEquals(
+        "package com.github.kklisura;\n"
+            + "\n"
+            + "import com.github.kklisura.annotations.Annotation;\n"
+            + "import com.github.kklisura.annotations.Annotation1;\n"
+            + "\n"
+            + "@Annotation\n"
+            + "public class ClassName {\n"
+            + "\n"
+            + "    @Annotation\n"
+            + "    @Annotation1\n"
+            + "    @Deprecated\n"
+            + "    private String privateField;\n"
+            + "}\n",
+        compilationUnitCapture.getValue().toString());
 
-		verifyAll();
-	}
+    verifyAll();
+  }
 }

@@ -18,6 +18,6 @@ import java.util.List;
 @Getter
 @JsonDeserialize(using = JsonDeserializer.None.class)
 public class EnumType extends Type {
-	@JsonProperty("enum")
-	private List<String> enumValues;
+  @JsonProperty("enum")
+  private List<String> enumValues;
 }

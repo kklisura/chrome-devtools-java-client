@@ -15,8 +15,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class TypeBuildRequest<T extends Type> {
-	private Domain domain;
-	private T type;
+  private Domain domain;
+  private T type;
 
-	DomainTypeResolver domainTypeResolver;
+  DomainTypeResolver domainTypeResolver;
 }

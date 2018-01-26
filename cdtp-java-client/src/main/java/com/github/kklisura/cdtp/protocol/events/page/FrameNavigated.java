@@ -7,19 +7,15 @@ import com.github.kklisura.cdtp.protocol.types.page.Frame;
  */
 public class FrameNavigated {
 
-	private Frame frame;
+  private Frame frame;
 
-	/**
-	 * Frame object.
-	 */
-	public Frame getFrame() {
-		return frame;
-	}
+  /** Frame object. */
+  public Frame getFrame() {
+    return frame;
+  }
 
-	/**
-	 * Frame object.
-	 */
-	public void setFrame(Frame frame) {
-		this.frame = frame;
-	}
+  /** Frame object. */
+  public void setFrame(Frame frame) {
+    this.frame = frame;
+  }
 }

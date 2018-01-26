@@ -10,5 +10,4 @@ import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.pr
  * @author Kenan Klisura
  */
 @JsonDeserialize(using = JsonDeserializer.None.class)
-public class ObjectArrayItem extends ArrayItem {
-}
+public class ObjectArrayItem extends ArrayItem {}

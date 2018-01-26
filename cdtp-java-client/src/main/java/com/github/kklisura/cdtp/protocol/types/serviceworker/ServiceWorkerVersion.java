@@ -3,114 +3,106 @@ package com.github.kklisura.cdtp.protocol.types.serviceworker;
 import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
 import java.util.List;
 
-/**
- * ServiceWorker version.
- */
+/** ServiceWorker version. */
 public class ServiceWorkerVersion {
 
-	private String versionId;
+  private String versionId;
 
-	private String registrationId;
+  private String registrationId;
 
-	private String scriptURL;
+  private String scriptURL;
 
-	private ServiceWorkerVersionRunningStatus runningStatus;
+  private ServiceWorkerVersionRunningStatus runningStatus;
 
-	private ServiceWorkerVersionStatus status;
+  private ServiceWorkerVersionStatus status;
 
-	@Optional
-	private Double scriptLastModified;
+  @Optional private Double scriptLastModified;
 
-	@Optional
-	private Double scriptResponseTime;
+  @Optional private Double scriptResponseTime;
 
-	@Optional
-	private List<String> controlledClients;
+  @Optional private List<String> controlledClients;
 
-	@Optional
-	private String targetId;
+  @Optional private String targetId;
 
-	public String getVersionId() {
-		return versionId;
-	}
+  public String getVersionId() {
+    return versionId;
+  }
 
-	public void setVersionId(String versionId) {
-		this.versionId = versionId;
-	}
+  public void setVersionId(String versionId) {
+    this.versionId = versionId;
+  }
 
-	public String getRegistrationId() {
-		return registrationId;
-	}
+  public String getRegistrationId() {
+    return registrationId;
+  }
 
-	public void setRegistrationId(String registrationId) {
-		this.registrationId = registrationId;
-	}
+  public void setRegistrationId(String registrationId) {
+    this.registrationId = registrationId;
+  }
 
-	public String getScriptURL() {
-		return scriptURL;
-	}
+  public String getScriptURL() {
+    return scriptURL;
+  }
 
-	public void setScriptURL(String scriptURL) {
-		this.scriptURL = scriptURL;
-	}
+  public void setScriptURL(String scriptURL) {
+    this.scriptURL = scriptURL;
+  }
 
-	public ServiceWorkerVersionRunningStatus getRunningStatus() {
-		return runningStatus;
-	}
+  public ServiceWorkerVersionRunningStatus getRunningStatus() {
+    return runningStatus;
+  }
 
-	public void setRunningStatus(ServiceWorkerVersionRunningStatus runningStatus) {
-		this.runningStatus = runningStatus;
-	}
+  public void setRunningStatus(ServiceWorkerVersionRunningStatus runningStatus) {
+    this.runningStatus = runningStatus;
+  }
 
-	public ServiceWorkerVersionStatus getStatus() {
-		return status;
-	}
+  public ServiceWorkerVersionStatus getStatus() {
+    return status;
+  }
 
-	public void setStatus(ServiceWorkerVersionStatus status) {
-		this.status = status;
-	}
+  public void setStatus(ServiceWorkerVersionStatus status) {
+    this.status = status;
+  }
 
-	/**
-	 * The Last-Modified header value of the main script.
-	 */
-	public Double getScriptLastModified() {
-		return scriptLastModified;
-	}
+  /** The Last-Modified header value of the main script. */
+  public Double getScriptLastModified() {
+    return scriptLastModified;
+  }
 
-	/**
-	 * The Last-Modified header value of the main script.
-	 */
-	public void setScriptLastModified(Double scriptLastModified) {
-		this.scriptLastModified = scriptLastModified;
-	}
+  /** The Last-Modified header value of the main script. */
+  public void setScriptLastModified(Double scriptLastModified) {
+    this.scriptLastModified = scriptLastModified;
+  }
 
-	/**
-	 * The time at which the response headers of the main script were received from the server.  For cached script it is the last time the cache entry was validated.
-	 */
-	public Double getScriptResponseTime() {
-		return scriptResponseTime;
-	}
+  /**
+   * The time at which the response headers of the main script were received from the server. For
+   * cached script it is the last time the cache entry was validated.
+   */
+  public Double getScriptResponseTime() {
+    return scriptResponseTime;
+  }
 
-	/**
-	 * The time at which the response headers of the main script were received from the server.  For cached script it is the last time the cache entry was validated.
-	 */
-	public void setScriptResponseTime(Double scriptResponseTime) {
-		this.scriptResponseTime = scriptResponseTime;
-	}
+  /**
+   * The time at which the response headers of the main script were received from the server. For
+   * cached script it is the last time the cache entry was validated.
+   */
+  public void setScriptResponseTime(Double scriptResponseTime) {
+    this.scriptResponseTime = scriptResponseTime;
+  }
 
-	public List<String> getControlledClients() {
-		return controlledClients;
-	}
+  public List<String> getControlledClients() {
+    return controlledClients;
+  }
 
-	public void setControlledClients(List<String> controlledClients) {
-		this.controlledClients = controlledClients;
-	}
+  public void setControlledClients(List<String> controlledClients) {
+    this.controlledClients = controlledClients;
+  }
 
-	public String getTargetId() {
-		return targetId;
-	}
+  public String getTargetId() {
+    return targetId;
+  }
 
-	public void setTargetId(String targetId) {
-		this.targetId = targetId;
-	}
+  public void setTargetId(String targetId) {
+    this.targetId = targetId;
+  }
 }

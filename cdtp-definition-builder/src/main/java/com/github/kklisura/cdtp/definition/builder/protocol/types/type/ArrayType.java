@@ -16,9 +16,9 @@ import lombok.Setter;
 @Setter
 @JsonDeserialize(using = JsonDeserializer.None.class)
 public class ArrayType extends Type {
-	private ArrayItem items;
+  private ArrayItem items;
 
-	private Long minItems;
+  private Long minItems;
 
-	private Long maxItems;
+  private Long maxItems;
 }

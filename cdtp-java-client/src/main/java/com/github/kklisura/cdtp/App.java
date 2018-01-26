@@ -7,34 +7,34 @@ import com.github.kklisura.cdtp.services.ChromeService;
 import com.github.kklisura.cdtp.services.impl.ChromeServiceImpl;
 import com.github.kklisura.cdtp.services.types.ChromeTab;
 
-/**
- * Hello world!
- *
- */
+/** Hello world! */
 public class App {
-	public static void main( String[] args ) throws Exception {
-		final ChromeService chromeService = new ChromeServiceImpl(9222);
-		final ChromeTab tab = chromeService.createTab();
+  public static void main(String[] args) throws Exception {
+    final ChromeService chromeService = new ChromeServiceImpl(9222);
+    final ChromeTab tab = chromeService.createTab();
 
-		try (ChromeDevToolsService cdtpService = chromeService.createDevToolsService(tab)) {
+    try (ChromeDevToolsService cdtpService = chromeService.createDevToolsService(tab)) {
 
-			cdtpService.getNetwork().onRequestWillBeSent(new EventHandler<RequestWillBeSent>() {
-				@Override
-				public void onEvent(RequestWillBeSent event) {
-					System.out.println(event.getRequest().getUrl());
-				}
-			});
+      cdtpService
+          .getNetwork()
+          .onRequestWillBeSent(
+              new EventHandler<RequestWillBeSent>() {
+                @Override
+                public void onEvent(RequestWillBeSent event) {
+                  System.out.println(event.getRequest().getUrl());
+                }
+              });
 
-			cdtpService.getNetwork().enable();
+      cdtpService.getNetwork().enable();
 
-			// Network requestWillBeSent event
-			// Page loadEventFired
+      // Network requestWillBeSent event
+      // Page loadEventFired
 
-			cdtpService.getPage().navigate("http://google.com");
+      cdtpService.getPage().navigate("http://google.com");
 
-			Thread.sleep(10000);
-		}
+      Thread.sleep(10000);
+    }
 
-		chromeService.closeTab(tab);
-	}
+    chromeService.closeTab(tab);
+  }
 }

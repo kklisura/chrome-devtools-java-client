@@ -25,77 +25,75 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(EasyMockRunner.class)
 public class JavaEnumBuilderImplTest extends EasyMockSupport {
-	private static final String PACKAGE = "com.github.kklisura";
-	private static final String NAME = "EnumName";
+  private static final String PACKAGE = "com.github.kklisura";
+  private static final String NAME = "EnumName";
 
-	private JavaEnumBuilderImpl javaEnumBuilder;
+  private JavaEnumBuilderImpl javaEnumBuilder;
 
-	@Mock
-	private SourceRoot sourceRoot;
+  @Mock private SourceRoot sourceRoot;
 
-	private Path rootPath;
+  private Path rootPath;
 
-	@Before
-	public void setUp() throws Exception {
-		rootPath = new File("/tmp/test-class-builder").toPath();
-		javaEnumBuilder = new JavaEnumBuilderImpl(PACKAGE, NAME);
-	}
+  @Before
+  public void setUp() throws Exception {
+    rootPath = new File("/tmp/test-class-builder").toPath();
+    javaEnumBuilder = new JavaEnumBuilderImpl(PACKAGE, NAME);
+  }
 
-	@Test
-	public void testBasicEnum() throws IOException {
-		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
+  @Test
+  public void testBasicEnum() throws IOException {
+    Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-		expect(sourceRoot.getRoot())
-				.andReturn(rootPath);
-		expect(sourceRoot.add(capture(compilationUnitCapture)))
-				.andReturn(sourceRoot);
+    expect(sourceRoot.getRoot()).andReturn(rootPath);
+    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
 
-		javaEnumBuilder.setJavaDoc("");
+    javaEnumBuilder.setJavaDoc("");
 
-		replayAll();
+    replayAll();
 
-		javaEnumBuilder.build(sourceRoot);
+    javaEnumBuilder.build(sourceRoot);
 
-		assertEquals("package com.github.kklisura;\n" +
-				"\n" +
-				"import com.fasterxml.jackson.annotation.JsonProperty;\n" +
-				"\n" +
-				"public enum EnumName {\n" +
-				"}\n", compilationUnitCapture.getValue().toString());
+    assertEquals(
+        "package com.github.kklisura;\n"
+            + "\n"
+            + "import com.fasterxml.jackson.annotation.JsonProperty;\n"
+            + "\n"
+            + "public enum EnumName {\n"
+            + "}\n",
+        compilationUnitCapture.getValue().toString());
 
-		verifyAll();
-	}
+    verifyAll();
+  }
 
-	@Test
-	public void testBasicEnumWithJavadocAndConstant() throws IOException {
-		Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
+  @Test
+  public void testBasicEnumWithJavadocAndConstant() throws IOException {
+    Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-		expect(sourceRoot.getRoot())
-				.andReturn(rootPath);
-		expect(sourceRoot.add(capture(compilationUnitCapture)))
-				.andReturn(sourceRoot);
+    expect(sourceRoot.getRoot()).andReturn(rootPath);
+    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
 
-		javaEnumBuilder.addEnumConstant("ENUM_CONSTANT", "enumConstant");
-		javaEnumBuilder.setJavaDoc("Java doc.");
+    javaEnumBuilder.addEnumConstant("ENUM_CONSTANT", "enumConstant");
+    javaEnumBuilder.setJavaDoc("Java doc.");
 
-		replayAll();
+    replayAll();
 
-		javaEnumBuilder.build(sourceRoot);
+    javaEnumBuilder.build(sourceRoot);
 
-		assertEquals("package com.github.kklisura;\n" +
-				"\n" +
-				"import com.fasterxml.jackson.annotation.JsonProperty;\n" +
-				"\n" +
-				"/**\n" +
-				" * Java doc.\n" +
-				" */\n" +
-				"public enum EnumName {\n" +
-				"\n" +
-				"    @JsonProperty(\"enumConstant\")\n" +
-				"    ENUM_CONSTANT\n" +
-				"}\n", compilationUnitCapture.getValue().toString());
+    assertEquals(
+        "package com.github.kklisura;\n"
+            + "\n"
+            + "import com.fasterxml.jackson.annotation.JsonProperty;\n"
+            + "\n"
+            + "/**\n"
+            + " * Java doc.\n"
+            + " */\n"
+            + "public enum EnumName {\n"
+            + "\n"
+            + "    @JsonProperty(\"enumConstant\")\n"
+            + "    ENUM_CONSTANT\n"
+            + "}\n",
+        compilationUnitCapture.getValue().toString());
 
-		verifyAll();
-	}
-
+    verifyAll();
+  }
 }

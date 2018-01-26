@@ -6,11 +6,11 @@ package com.github.kklisura.cdtp.services.exceptions;
  * @author Kenan Klisura
  */
 public class WebSocketServiceException extends Exception {
-	public WebSocketServiceException(String message) {
-		super(message);
-	}
+  public WebSocketServiceException(String message) {
+    super(message);
+  }
 
-	public WebSocketServiceException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  public WebSocketServiceException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

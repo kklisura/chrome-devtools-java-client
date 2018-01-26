@@ -15,39 +15,39 @@ import java.io.InputStream;
  */
 @UtilityClass
 public class DevToolsProtocolUtils {
-	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
-			.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+  private static final ObjectMapper OBJECT_MAPPER =
+      new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-	/**
-	 * Deserializes dev tools protocol from string value.
-	 *
-	 * @param value Json string value.
-	 * @return DevToolsProtocol
-	 * @throws IOException If any serialization exception occurs.
-	 */
-	public static DevToolsProtocol readJson(String value) throws IOException {
-		return OBJECT_MAPPER.readerFor(DevToolsProtocol.class).readValue(value);
-	}
+  /**
+   * Deserializes dev tools protocol from string value.
+   *
+   * @param value Json string value.
+   * @return DevToolsProtocol
+   * @throws IOException If any serialization exception occurs.
+   */
+  public static DevToolsProtocol readJson(String value) throws IOException {
+    return OBJECT_MAPPER.readerFor(DevToolsProtocol.class).readValue(value);
+  }
 
-	/**
-	 * Deserializes dev tools protocol from input stream.
-	 *
-	 * @param inputStream Input stream.
-	 * @return DevToolsProtocol
-	 * @throws IOException If any deserialization exception occurs.
-	 */
-	public static DevToolsProtocol readJson(InputStream inputStream) throws IOException {
-		return OBJECT_MAPPER.readerFor(DevToolsProtocol.class).readValue(inputStream);
-	}
+  /**
+   * Deserializes dev tools protocol from input stream.
+   *
+   * @param inputStream Input stream.
+   * @return DevToolsProtocol
+   * @throws IOException If any deserialization exception occurs.
+   */
+  public static DevToolsProtocol readJson(InputStream inputStream) throws IOException {
+    return OBJECT_MAPPER.readerFor(DevToolsProtocol.class).readValue(inputStream);
+  }
 
-	/**
-	 * Serializes protocol as json string.
-	 *
-	 * @param protocol Protocol object.
-	 * @return Json string.
-	 * @throws IOException If any serialization exceptions occur.
-	 */
-	public static String writeJson(DevToolsProtocol protocol) throws IOException {
-		return OBJECT_MAPPER.writeValueAsString(protocol);
-	}
+  /**
+   * Serializes protocol as json string.
+   *
+   * @param protocol Protocol object.
+   * @return Json string.
+   * @throws IOException If any serialization exceptions occur.
+   */
+  public static String writeJson(DevToolsProtocol protocol) throws IOException {
+    return OBJECT_MAPPER.writeValueAsString(protocol);
+  }
 }

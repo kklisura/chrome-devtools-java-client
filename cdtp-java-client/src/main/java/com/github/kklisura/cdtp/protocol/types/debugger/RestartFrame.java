@@ -6,36 +6,27 @@ import java.util.List;
 
 public class RestartFrame {
 
-	private List<CallFrame> callFrames;
+  private List<CallFrame> callFrames;
 
-	@Optional
-	private StackTrace asyncStackTrace;
+  @Optional private StackTrace asyncStackTrace;
 
-	/**
-	 * New stack trace.
-	 */
-	public List<CallFrame> getCallFrames() {
-		return callFrames;
-	}
+  /** New stack trace. */
+  public List<CallFrame> getCallFrames() {
+    return callFrames;
+  }
 
-	/**
-	 * New stack trace.
-	 */
-	public void setCallFrames(List<CallFrame> callFrames) {
-		this.callFrames = callFrames;
-	}
+  /** New stack trace. */
+  public void setCallFrames(List<CallFrame> callFrames) {
+    this.callFrames = callFrames;
+  }
 
-	/**
-	 * Async stack trace, if any.
-	 */
-	public StackTrace getAsyncStackTrace() {
-		return asyncStackTrace;
-	}
+  /** Async stack trace, if any. */
+  public StackTrace getAsyncStackTrace() {
+    return asyncStackTrace;
+  }
 
-	/**
-	 * Async stack trace, if any.
-	 */
-	public void setAsyncStackTrace(StackTrace asyncStackTrace) {
-		this.asyncStackTrace = asyncStackTrace;
-	}
+  /** Async stack trace, if any. */
+  public void setAsyncStackTrace(StackTrace asyncStackTrace) {
+    this.asyncStackTrace = asyncStackTrace;
+  }
 }

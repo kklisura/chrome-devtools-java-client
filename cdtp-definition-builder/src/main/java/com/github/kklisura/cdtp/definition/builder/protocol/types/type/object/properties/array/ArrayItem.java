@@ -21,17 +21,17 @@ import lombok.Setter;
 @Setter
 @Getter
 @JsonSubTypes({
-		@JsonSubTypes.Type(value = RefArrayItem.class, name = "ref"),
-		@JsonSubTypes.Type(value = AnyArrayItem.class, name = "any"),
-		@JsonSubTypes.Type(value = EnumArrayItem.class, name = "enum"),
-		@JsonSubTypes.Type(value = StringArrayItem.class, name = "string"),
-		@JsonSubTypes.Type(value = IntegerArrayItem.class, name = "integer"),
-		@JsonSubTypes.Type(value = NumberArrayItem.class, name = "number"),
-		@JsonSubTypes.Type(value = ObjectArrayItem.class, name = "object")
+  @JsonSubTypes.Type(value = RefArrayItem.class, name = "ref"),
+  @JsonSubTypes.Type(value = AnyArrayItem.class, name = "any"),
+  @JsonSubTypes.Type(value = EnumArrayItem.class, name = "enum"),
+  @JsonSubTypes.Type(value = StringArrayItem.class, name = "string"),
+  @JsonSubTypes.Type(value = IntegerArrayItem.class, name = "integer"),
+  @JsonSubTypes.Type(value = NumberArrayItem.class, name = "number"),
+  @JsonSubTypes.Type(value = ObjectArrayItem.class, name = "object")
 })
 @JsonDeserialize(using = PropertyArrayItemSubTypeJsonDeserializer.class)
 public abstract class ArrayItem {
-	private String type;
+  private String type;
 
-	private String description;
+  private String description;
 }

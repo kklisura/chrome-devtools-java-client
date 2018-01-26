@@ -22,57 +22,58 @@ import java.util.List;
  * @author Kenan Klisura
  */
 public class BaseSubTypeJsonDeserializer<T> extends StdDeserializer<T> {
-	private static final String TYPE_PROPERTY = "type";
-	private static final String REF_PROPERTY = "$ref";
-	private static final String ENUM_PROPERTY = "enum";
+  private static final String TYPE_PROPERTY = "type";
+  private static final String REF_PROPERTY = "$ref";
+  private static final String ENUM_PROPERTY = "enum";
 
-	private static final String STRING_PROPERTY_VALUE = "string";
+  private static final String STRING_PROPERTY_VALUE = "string";
 
-	/**
-	 * Creates a new instance of BaseSubTypeJsonDeserializer with a given class.
-	 *
-	 * @param clazz Base class.
-	 */
-	public BaseSubTypeJsonDeserializer(Class<?> clazz) {
-		super(clazz);
-	}
+  /**
+   * Creates a new instance of BaseSubTypeJsonDeserializer with a given class.
+   *
+   * @param clazz Base class.
+   */
+  public BaseSubTypeJsonDeserializer(Class<?> clazz) {
+    super(clazz);
+  }
 
-	@SuppressWarnings("unchecked")
-	public T deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
-		ObjectCodec objectCodec = jsonParser.getCodec();
-		ObjectNode objectNode = objectCodec.readTree(jsonParser);
+  @SuppressWarnings("unchecked")
+  public T deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
+    ObjectCodec objectCodec = jsonParser.getCodec();
+    ObjectNode objectNode = objectCodec.readTree(jsonParser);
 
-		String typeValue = null;
-		JsonNode type = objectNode.get(TYPE_PROPERTY);
-		if (type != null) {
-			typeValue = type.asText();
+    String typeValue = null;
+    JsonNode type = objectNode.get(TYPE_PROPERTY);
+    if (type != null) {
+      typeValue = type.asText();
 
-			if (STRING_PROPERTY_VALUE.equals(typeValue)) {
-				if (objectNode.get(ENUM_PROPERTY) != null) {
-					typeValue = "enum";
-				}
-			}
-		} else {
-			if (objectNode.get(REF_PROPERTY) != null) {
-				typeValue = "ref";
-			}
-		}
+      if (STRING_PROPERTY_VALUE.equals(typeValue)) {
+        if (objectNode.get(ENUM_PROPERTY) != null) {
+          typeValue = "enum";
+        }
+      }
+    } else {
+      if (objectNode.get(REF_PROPERTY) != null) {
+        typeValue = "ref";
+      }
+    }
 
-		if (typeValue == null) {
-			throw new JsonParseException(jsonParser, "Unknown object type.");
-		}
+    if (typeValue == null) {
+      throw new JsonParseException(jsonParser, "Unknown object type.");
+    }
 
-		DeserializationConfig config = context.getConfig();
+    DeserializationConfig config = context.getConfig();
 
-		AnnotatedClass annotatedClass = AnnotatedClassResolver.resolveWithoutSuperTypes(config, handledType());
-		List<NamedType> subtypes = config.getAnnotationIntrospector().findSubtypes(annotatedClass);
+    AnnotatedClass annotatedClass =
+        AnnotatedClassResolver.resolveWithoutSuperTypes(config, handledType());
+    List<NamedType> subtypes = config.getAnnotationIntrospector().findSubtypes(annotatedClass);
 
-		for (NamedType namedType : subtypes) {
-			if (typeValue.equals(namedType.getName())) {
-				return (T) objectCodec.treeToValue(objectNode, namedType.getType());
-			}
-		}
+    for (NamedType namedType : subtypes) {
+      if (typeValue.equals(namedType.getName())) {
+        return (T) objectCodec.treeToValue(objectNode, namedType.getType());
+      }
+    }
 
-		throw new JsonParseException(jsonParser, "Unknown object type " + typeValue + ".");
-	}
+    throw new JsonParseException(jsonParser, "Unknown object type " + typeValue + ".");
+  }
 }

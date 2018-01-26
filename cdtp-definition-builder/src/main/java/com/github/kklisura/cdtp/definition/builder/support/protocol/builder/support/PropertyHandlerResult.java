@@ -12,6 +12,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PropertyHandlerResult {
-	private Builder builder;
-	private String type;
+  private Builder builder;
+  private String type;
 }

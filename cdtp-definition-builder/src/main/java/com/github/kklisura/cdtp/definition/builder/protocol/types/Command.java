@@ -14,19 +14,19 @@ import java.util.List;
 @Getter
 @Setter
 public class Command {
-	private String name;
+  private String name;
 
-	private String description;
+  private String description;
 
-	private Boolean deprecated;
+  private Boolean deprecated;
 
-	private Boolean experimental;
+  private Boolean experimental;
 
-	private String redirect;
+  private String redirect;
 
-	private List<Property> parameters;
+  private List<Property> parameters;
 
-	private List<Property> returns;
+  private List<Property> returns;
 
-	private List<String> handlers;
+  private List<String> handlers;
 }

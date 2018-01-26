@@ -8,8 +8,9 @@ import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.pr
  *
  * @author Kenan Klisura
  */
-public class PropertyArrayItemSubTypeJsonDeserializer extends BaseSubTypeJsonDeserializer<ArrayItem> {
-	public PropertyArrayItemSubTypeJsonDeserializer() {
-		super(ArrayItem.class);
-	}
+public class PropertyArrayItemSubTypeJsonDeserializer
+    extends BaseSubTypeJsonDeserializer<ArrayItem> {
+  public PropertyArrayItemSubTypeJsonDeserializer() {
+    super(ArrayItem.class);
+  }
 }

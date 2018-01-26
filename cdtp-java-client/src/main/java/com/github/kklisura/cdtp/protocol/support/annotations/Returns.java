@@ -12,7 +12,7 @@ import static java.lang.annotation.ElementType.METHOD;
  * @author Kenan Klisura
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value={ METHOD })
+@Target(value = {METHOD})
 public @interface Returns {
-	String value();
+  String value();
 }

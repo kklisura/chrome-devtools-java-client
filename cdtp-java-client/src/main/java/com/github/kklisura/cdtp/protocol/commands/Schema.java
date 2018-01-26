@@ -4,14 +4,10 @@ import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
 import com.github.kklisura.cdtp.protocol.types.schema.Domain;
 import java.util.List;
 
-/**
- * Provides information about the protocol schema.
- */
+/** Provides information about the protocol schema. */
 public interface Schema {
 
-	/**
-	 * Returns supported domains.
-	 */
-	@Returns("domains")
-	List<Domain> getDomains();
+  /** Returns supported domains. */
+  @Returns("domains")
+  List<Domain> getDomains();
 }

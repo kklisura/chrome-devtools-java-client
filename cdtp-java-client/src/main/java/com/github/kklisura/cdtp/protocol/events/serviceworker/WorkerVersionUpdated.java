@@ -5,13 +5,13 @@ import java.util.List;
 
 public class WorkerVersionUpdated {
 
-	private List<ServiceWorkerVersion> versions;
+  private List<ServiceWorkerVersion> versions;
 
-	public List<ServiceWorkerVersion> getVersions() {
-		return versions;
-	}
+  public List<ServiceWorkerVersion> getVersions() {
+    return versions;
+  }
 
-	public void setVersions(List<ServiceWorkerVersion> versions) {
-		this.versions = versions;
-	}
+  public void setVersions(List<ServiceWorkerVersion> versions) {
+    this.versions = versions;
+  }
 }

@@ -18,64 +18,65 @@ import static com.github.kklisura.cdtp.definition.builder.support.java.builder.u
  * @author Kenan Klisura
  */
 public class JavaEnumBuilderImpl extends BaseBuilder implements JavaEnumBuilder {
-	private static final String JSON_PROPERTY = "JsonProperty";
-	private static final String JSON_PROPERTY_PACKAGE = "com.fasterxml.jackson.annotation";
+  private static final String JSON_PROPERTY = "JsonProperty";
+  private static final String JSON_PROPERTY_PACKAGE = "com.fasterxml.jackson.annotation";
 
-	private EnumDeclaration declaration;
+  private EnumDeclaration declaration;
 
-	/**
-	 * Instantiates new java enum builder.
-	 *
-	 * @param packageName Package name.
-	 * @param name        Enum name.
-	 */
-	public JavaEnumBuilderImpl(String packageName, String name) {
-		super(packageName);
-		declaration = getCompilationUnit().addEnum(name);
-		declaration.setName(name);
+  /**
+   * Instantiates new java enum builder.
+   *
+   * @param packageName Package name.
+   * @param name Enum name.
+   */
+  public JavaEnumBuilderImpl(String packageName, String name) {
+    super(packageName);
+    declaration = getCompilationUnit().addEnum(name);
+    declaration.setName(name);
 
-		Name jsonPropertyName = new Name();
-		jsonPropertyName.setQualifier(new Name(JSON_PROPERTY_PACKAGE));
-		jsonPropertyName.setIdentifier(JSON_PROPERTY);
-		getCompilationUnit().addImport(new ImportDeclaration(jsonPropertyName, false, false));
-	}
+    Name jsonPropertyName = new Name();
+    jsonPropertyName.setQualifier(new Name(JSON_PROPERTY_PACKAGE));
+    jsonPropertyName.setIdentifier(JSON_PROPERTY);
+    getCompilationUnit().addImport(new ImportDeclaration(jsonPropertyName, false, false));
+  }
 
-	/**
-	 * Adds new enum constant.
-	 *
-	 * @param name Constant name.
-	 * @param value Real constant value.
-	 */
-	public void addEnumConstant(String name, String value) {
-		EnumConstantDeclaration enumConstantDeclaration = new EnumConstantDeclaration(name);
+  /**
+   * Adds new enum constant.
+   *
+   * @param name Constant name.
+   * @param value Real constant value.
+   */
+  public void addEnumConstant(String name, String value) {
+    EnumConstantDeclaration enumConstantDeclaration = new EnumConstantDeclaration(name);
 
-		SingleMemberAnnotationExpr jsonPropertyAnnotation = new SingleMemberAnnotationExpr();
-		jsonPropertyAnnotation.setName(JSON_PROPERTY);
-		jsonPropertyAnnotation.setMemberValue(new StringLiteralExpr(value));
-		enumConstantDeclaration.addAnnotation(jsonPropertyAnnotation);
+    SingleMemberAnnotationExpr jsonPropertyAnnotation = new SingleMemberAnnotationExpr();
+    jsonPropertyAnnotation.setName(JSON_PROPERTY);
+    jsonPropertyAnnotation.setMemberValue(new StringLiteralExpr(value));
+    enumConstantDeclaration.addAnnotation(jsonPropertyAnnotation);
 
-		declaration.addEntry(enumConstantDeclaration);
-	}
+    declaration.addEntry(enumConstantDeclaration);
+  }
 
-	/**
-	 * Sets the java doc comment for this enum.
-	 *
-	 * @param comment Comment.
-	 */
-	@Override
-	public void setJavaDoc(String comment) {
-		if (StringUtils.isNotEmpty(comment)) {
-			declaration.setJavadocComment(JavadocUtils.createJavadocComment(comment, INDENTATION_NO_INDENTATION));
-		}
-	}
+  /**
+   * Sets the java doc comment for this enum.
+   *
+   * @param comment Comment.
+   */
+  @Override
+  public void setJavaDoc(String comment) {
+    if (StringUtils.isNotEmpty(comment)) {
+      declaration.setJavadocComment(
+          JavadocUtils.createJavadocComment(comment, INDENTATION_NO_INDENTATION));
+    }
+  }
 
-	/**
-	 * Return enum name.
-	 *
-	 * @return Enum name.
-	 */
-	@Override
-	public String getName() {
-		return declaration.getNameAsString();
-	}
+  /**
+   * Return enum name.
+   *
+   * @return Enum name.
+   */
+  @Override
+  public String getName() {
+    return declaration.getNameAsString();
+  }
 }

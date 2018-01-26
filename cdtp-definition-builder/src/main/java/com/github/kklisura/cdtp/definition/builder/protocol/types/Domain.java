@@ -13,19 +13,19 @@ import java.util.List;
 @Getter
 @Setter
 public class Domain {
-	private String domain;
+  private String domain;
 
-	private Boolean experimental;
+  private Boolean experimental;
 
-	private String description;
+  private String description;
 
-	private Boolean deprecated;
+  private Boolean deprecated;
 
-	private List<String> dependencies;
+  private List<String> dependencies;
 
-	private List<Type> types;
+  private List<Type> types;
 
-	private List<Command> commands;
+  private List<Command> commands;
 
-	private List<Event> events;
+  private List<Event> events;
 }

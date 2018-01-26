@@ -6,54 +6,53 @@ import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
 @Experimental
 public class CustomPreview {
 
-	private String header;
+  private String header;
 
-	private Boolean hasBody;
+  private Boolean hasBody;
 
-	private String formatterObjectId;
+  private String formatterObjectId;
 
-	private String bindRemoteObjectFunctionId;
+  private String bindRemoteObjectFunctionId;
 
-	@Optional
-	private String configObjectId;
+  @Optional private String configObjectId;
 
-	public String getHeader() {
-		return header;
-	}
+  public String getHeader() {
+    return header;
+  }
 
-	public void setHeader(String header) {
-		this.header = header;
-	}
+  public void setHeader(String header) {
+    this.header = header;
+  }
 
-	public Boolean getHasBody() {
-		return hasBody;
-	}
+  public Boolean getHasBody() {
+    return hasBody;
+  }
 
-	public void setHasBody(Boolean hasBody) {
-		this.hasBody = hasBody;
-	}
+  public void setHasBody(Boolean hasBody) {
+    this.hasBody = hasBody;
+  }
 
-	public String getFormatterObjectId() {
-		return formatterObjectId;
-	}
+  public String getFormatterObjectId() {
+    return formatterObjectId;
+  }
 
-	public void setFormatterObjectId(String formatterObjectId) {
-		this.formatterObjectId = formatterObjectId;
-	}
+  public void setFormatterObjectId(String formatterObjectId) {
+    this.formatterObjectId = formatterObjectId;
+  }
 
-	public String getBindRemoteObjectFunctionId() {
-		return bindRemoteObjectFunctionId;
-	}
+  public String getBindRemoteObjectFunctionId() {
+    return bindRemoteObjectFunctionId;
+  }
 
-	public void setBindRemoteObjectFunctionId(String bindRemoteObjectFunctionId) {
-		this.bindRemoteObjectFunctionId = bindRemoteObjectFunctionId;
-	}
+  public void setBindRemoteObjectFunctionId(String bindRemoteObjectFunctionId) {
+    this.bindRemoteObjectFunctionId = bindRemoteObjectFunctionId;
+  }
 
-	public String getConfigObjectId() {
-		return configObjectId;
-	}
+  public String getConfigObjectId() {
+    return configObjectId;
+  }
 
-	public void setConfigObjectId(String configObjectId) {
-		this.configObjectId = configObjectId;
-	}
+  public void setConfigObjectId(String configObjectId) {
+    this.configObjectId = configObjectId;
+  }
 }

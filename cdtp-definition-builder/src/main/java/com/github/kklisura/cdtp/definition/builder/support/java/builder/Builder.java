@@ -10,11 +10,11 @@ import java.io.IOException;
  * @author Kenan Klisura
  */
 public interface Builder {
-	/**
-	 * Builds an item. Generates a code.
-	 *
-	 * @param sourceRoot Source root.
-	 * @throws IOException If saving fails.
-	 */
-	void build(SourceRoot sourceRoot) throws IOException;
+  /**
+   * Builds an item. Generates a code.
+   *
+   * @param sourceRoot Source root.
+   * @throws IOException If saving fails.
+   */
+  void build(SourceRoot sourceRoot) throws IOException;
 }

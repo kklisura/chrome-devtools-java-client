@@ -11,9 +11,12 @@ import static com.github.kklisura.cdtp.services.utils.ProxyUtils.createProxyFrom
  * @author Kenan Klisura
  */
 public class ProxyUtilsTest {
-	@Test(expected = RuntimeException.class)
-	public void testCreateProxyFromAbstractThrowsException() {
-		createProxyFromAbstract(ChromeDevToolsServiceImpl.class, new Class[] {}, new Object[] {},
-				(unused, method, args) -> null);
-	}
+  @Test(expected = RuntimeException.class)
+  public void testCreateProxyFromAbstractThrowsException() {
+    createProxyFromAbstract(
+        ChromeDevToolsServiceImpl.class,
+        new Class[] {},
+        new Object[] {},
+        (unused, method, args) -> null);
+  }
 }

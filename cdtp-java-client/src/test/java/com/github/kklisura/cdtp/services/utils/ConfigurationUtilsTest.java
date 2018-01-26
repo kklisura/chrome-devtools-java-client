@@ -10,13 +10,13 @@ import static org.junit.Assert.assertEquals;
  * @author Kenan Klisura
  */
 public class ConfigurationUtilsTest {
-	@Test
-	public void testSystemProperty() {
-		final String propertyName = "testSystemProperty";
-		assertEquals(10, ConfigurationUtils.systemProperty(propertyName, 10));
-		System.setProperty(propertyName, "invalid-value");
-		assertEquals(10, ConfigurationUtils.systemProperty(propertyName, 10));
-		System.setProperty(propertyName, "123");
-		assertEquals(123, ConfigurationUtils.systemProperty(propertyName, 10));
-	}
+  @Test
+  public void testSystemProperty() {
+    final String propertyName = "testSystemProperty";
+    assertEquals(10, ConfigurationUtils.systemProperty(propertyName, 10));
+    System.setProperty(propertyName, "invalid-value");
+    assertEquals(10, ConfigurationUtils.systemProperty(propertyName, 10));
+    System.setProperty(propertyName, "123");
+    assertEquals(123, ConfigurationUtils.systemProperty(propertyName, 10));
+  }
 }

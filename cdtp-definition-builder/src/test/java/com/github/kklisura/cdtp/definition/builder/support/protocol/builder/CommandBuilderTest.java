@@ -44,411 +44,448 @@ import static org.junit.Assert.assertTrue;
 @RunWith(EasyMockRunner.class)
 public class CommandBuilderTest extends EasyMockSupport {
 
-	private static final String BASE_PACKAGE_NAME = "com.github.kklisura.test";
-	private static final String TYPE_PACKAGE_NAME = "com.github.kklisura.types";
-	private static final String EVENTS_PACKAGE_NAME = "com.github.kklisura.events";
-	private static final String SUPPORT_TYPES_PACKAGE_NAME = "com.github.kklisura.support.types";
+  private static final String BASE_PACKAGE_NAME = "com.github.kklisura.test";
+  private static final String TYPE_PACKAGE_NAME = "com.github.kklisura.types";
+  private static final String EVENTS_PACKAGE_NAME = "com.github.kklisura.events";
+  private static final String SUPPORT_TYPES_PACKAGE_NAME = "com.github.kklisura.support.types";
 
-	@Mock
-	private JavaBuilderFactory javaBuilderFactory;
+  @Mock private JavaBuilderFactory javaBuilderFactory;
 
-	@Mock
-	private DomainTypeResolver resolver;
+  @Mock private DomainTypeResolver resolver;
 
-	@Mock
-	private JavaInterfaceBuilder interfaceBuilder;
+  @Mock private JavaInterfaceBuilder interfaceBuilder;
 
-	@Mock
-	private JavaClassBuilder javaClassBuilder;
+  @Mock private JavaClassBuilder javaClassBuilder;
 
-	@Mock
-	private JavaEnumBuilder javaEnumBuilder;
+  @Mock private JavaEnumBuilder javaEnumBuilder;
 
-	private CommandBuilder commandBuilder;
+  private CommandBuilder commandBuilder;
 
-	@Before
-	public void setUp() throws Exception {
-		commandBuilder = new CommandBuilder(BASE_PACKAGE_NAME, javaBuilderFactory, TYPE_PACKAGE_NAME, EVENTS_PACKAGE_NAME, SUPPORT_TYPES_PACKAGE_NAME);
-	}
+  @Before
+  public void setUp() throws Exception {
+    commandBuilder =
+        new CommandBuilder(
+            BASE_PACKAGE_NAME,
+            javaBuilderFactory,
+            TYPE_PACKAGE_NAME,
+            EVENTS_PACKAGE_NAME,
+            SUPPORT_TYPES_PACKAGE_NAME);
+  }
 
-	@Test
-	public void testBuildEmptyCommand() {
-		final Domain domain = new Domain();
-		domain.setDomain("domainName");
+  @Test
+  public void testBuildEmptyCommand() {
+    final Domain domain = new Domain();
+    domain.setDomain("domainName");
 
-		expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
-				.andReturn(interfaceBuilder);
+    expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
+        .andReturn(interfaceBuilder);
 
-		replayAll();
+    replayAll();
 
-		assertEquals(interfaceBuilder, commandBuilder.build(domain, resolver));
+    assertEquals(interfaceBuilder, commandBuilder.build(domain, resolver));
 
-		verifyAll();
-	}
+    verifyAll();
+  }
 
-	@Test
-	public void testBuildEmptyCommandWithAnnotations() {
-		final Domain domain = new Domain();
-		domain.setDomain("domainName");
-		domain.setDescription("Description");
-		domain.setDeprecated(Boolean.TRUE);
-		domain.setExperimental(Boolean.TRUE);
+  @Test
+  public void testBuildEmptyCommandWithAnnotations() {
+    final Domain domain = new Domain();
+    domain.setDomain("domainName");
+    domain.setDescription("Description");
+    domain.setDeprecated(Boolean.TRUE);
+    domain.setExperimental(Boolean.TRUE);
 
-		expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
-				.andReturn(interfaceBuilder);
+    expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
+        .andReturn(interfaceBuilder);
 
-		interfaceBuilder.setJavaDoc("Description");
+    interfaceBuilder.setJavaDoc("Description");
 
-		interfaceBuilder.addAnnotation("Deprecated");
-		interfaceBuilder.addAnnotation("Experimental");
+    interfaceBuilder.addAnnotation("Deprecated");
+    interfaceBuilder.addAnnotation("Experimental");
 
-		replayAll();
+    replayAll();
 
-		assertEquals(interfaceBuilder, commandBuilder.build(domain, resolver));
+    assertEquals(interfaceBuilder, commandBuilder.build(domain, resolver));
 
-		verifyAll();
-	}
+    verifyAll();
+  }
 
-	@Test
-	public void testBuildCommandWithSimpleMethod() {
-		final Domain domain = new Domain();
-		domain.setDomain("domainName");
-		domain.setDescription("Description");
+  @Test
+  public void testBuildCommandWithSimpleMethod() {
+    final Domain domain = new Domain();
+    domain.setDomain("domainName");
+    domain.setDescription("Description");
 
-		final Command command1 = new Command();
-		command1.setName("command1");
-		command1.setDescription("command1 description");
-		command1.setDeprecated(Boolean.TRUE);
-		command1.setExperimental(Boolean.TRUE);
+    final Command command1 = new Command();
+    command1.setName("command1");
+    command1.setDescription("command1 description");
+    command1.setDeprecated(Boolean.TRUE);
+    command1.setExperimental(Boolean.TRUE);
 
-		final Command command2 = new Command();
-		command2.setName("command2");
-		command2.setDescription("command2 description");
+    final Command command2 = new Command();
+    command2.setName("command2");
+    command2.setDescription("command2 description");
 
-		final Command command3 = new Command();
-		command3.setName("command3");
-		command3.setDescription("command3 description");
-		command3.setRedirect("Redirect");
+    final Command command3 = new Command();
+    command3.setName("command3");
+    command3.setDescription("command3 description");
+    command3.setRedirect("Redirect");
 
-		domain.setCommands(Arrays.asList(command1, command2, command3));
+    domain.setCommands(Arrays.asList(command1, command2, command3));
 
-		expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
-				.andReturn(interfaceBuilder);
-		interfaceBuilder.setJavaDoc("Description");
+    expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
+        .andReturn(interfaceBuilder);
+    interfaceBuilder.setJavaDoc("Description");
 
-		Capture<List<MethodParam>> methodParamCapture1 = Capture.newInstance();
-		interfaceBuilder.addMethod(eq("command1"), eq("command1 description"), capture(methodParamCapture1), eq(null));
+    Capture<List<MethodParam>> methodParamCapture1 = Capture.newInstance();
+    interfaceBuilder.addMethod(
+        eq("command1"), eq("command1 description"), capture(methodParamCapture1), eq(null));
 
-		interfaceBuilder.addMethodAnnotation("command1", "Deprecated");
-		interfaceBuilder.addMethodAnnotation("command1", "Experimental");
+    interfaceBuilder.addMethodAnnotation("command1", "Deprecated");
+    interfaceBuilder.addMethodAnnotation("command1", "Experimental");
 
-		Capture<List<MethodParam>> methodParamCapture2 = Capture.newInstance();
-		interfaceBuilder.addMethod(eq("command2"), eq("command2 description"), capture(methodParamCapture2), eq(null));
+    Capture<List<MethodParam>> methodParamCapture2 = Capture.newInstance();
+    interfaceBuilder.addMethod(
+        eq("command2"), eq("command2 description"), capture(methodParamCapture2), eq(null));
+
+    replayAll();
+
+    assertEquals(interfaceBuilder, commandBuilder.build(domain, resolver));
+
+    verifyAll();
+
+    assertTrue(methodParamCapture1.getValue().isEmpty());
+    assertTrue(methodParamCapture2.getValue().isEmpty());
+  }
+
+  @Test
+  public void testBuildCommandWithMethodWithSimpleParams() {
+    final Domain domain = new Domain();
+    domain.setDomain("domainName");
+    domain.setDescription("Description");
+
+    final Command command = new Command();
+    command.setName("command");
+    command.setDescription("command description");
 
-		replayAll();
+    final StringProperty stringParam = new StringProperty();
+    stringParam.setName("stringParam1");
+    stringParam.setDeprecated(Boolean.TRUE);
+    stringParam.setDescription("String param 1 description");
 
-		assertEquals(interfaceBuilder, commandBuilder.build(domain, resolver));
+    final NumberProperty numberParam = new NumberProperty();
+    numberParam.setName("numberParam1");
+    numberParam.setExperimental(Boolean.TRUE);
+    numberParam.setDescription("Number param 1 description");
+
+    final BooleanProperty booleanReturnParam = new BooleanProperty();
+    booleanReturnParam.setName("booleanReturn");
+
+    command.setParameters(Arrays.asList(stringParam, numberParam));
+    command.setReturns(Collections.singletonList(booleanReturnParam));
+
+    domain.setCommands(Arrays.asList(command));
+
+    expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
+        .andReturn(interfaceBuilder);
+    interfaceBuilder.setJavaDoc("Description");
+
+    Capture<List<MethodParam>> methodParamCapture = Capture.newInstance();
+    Capture<String> methodDescriptionCapture = Capture.newInstance();
+    interfaceBuilder.addMethod(
+        eq("command"),
+        capture(methodDescriptionCapture),
+        capture(methodParamCapture),
+        eq("Boolean"));
+
+    interfaceBuilder.addParametrizedMethodAnnotation("command", "Returns", "booleanReturn");
+
+    replayAll();
+
+    assertEquals(interfaceBuilder, commandBuilder.build(domain, resolver));
+
+    verifyAll();
+
+    assertEquals(
+        "command description\r\n\r\n@param stringParam1 String param 1 description\r\n@param numberParam1 Number param 1 description",
+        methodDescriptionCapture.getValue());
+
+    List<MethodParam> params = methodParamCapture.getValue();
+    assertEquals(2, params.size());
+    Assert.assertEquals(stringParam.getName(), params.get(0).getName());
+    assertEquals("String", params.get(0).getType());
+    assertEquals("Deprecated", params.get(0).getAnnotations().get(0).getName());
+    assertEquals("ParamName", params.get(0).getAnnotations().get(1).getName());
+    assertEquals(stringParam.getName(), params.get(0).getAnnotations().get(1).getValue());
 
-		verifyAll();
+    assertEquals(numberParam.getName(), params.get(1).getName());
+    assertEquals("Double", params.get(1).getType());
+    assertEquals("Experimental", params.get(1).getAnnotations().get(0).getName());
+    assertEquals("ParamName", params.get(1).getAnnotations().get(1).getName());
+    assertEquals(numberParam.getName(), params.get(1).getAnnotations().get(1).getValue());
+  }
 
-		assertTrue(methodParamCapture1.getValue().isEmpty());
-		assertTrue(methodParamCapture2.getValue().isEmpty());
-	}
+  @Test
+  public void testBuildCommandWithMethodWithComplexParams()
+      throws InstantiationException, IllegalAccessException {
+    final Domain domain = new Domain();
+    domain.setDomain("domainName");
+    domain.setDescription("Description");
+
+    final Command command = new Command();
+    command.setName("command");
+    command.setDescription("command description");
+
+    final RefProperty refParam = new RefProperty();
+    refParam.setName("stringParam1");
+    refParam.setDeprecated(Boolean.TRUE);
+    refParam.setRef("TestRef");
+
+    final ArrayProperty arrayProperty = new ArrayProperty();
+    arrayProperty.setName("enumParam1");
+    arrayProperty.setExperimental(Boolean.TRUE);
+    arrayProperty.setOptional(Boolean.TRUE);
+    arrayProperty.setDescription("enum param 1 description");
+
+    EnumArrayItem enumArrayItem = new EnumArrayItem();
+    enumArrayItem.setEnumValues(Arrays.asList("enum1", "enum2"));
+    arrayProperty.setItems(enumArrayItem);
+
+    final BooleanProperty booleanReturnParam = new BooleanProperty();
+    booleanReturnParam.setName("booleanReturnValue");
+
+    command.setParameters(Arrays.asList(refParam, arrayProperty));
+    command.setReturns(Collections.singletonList(booleanReturnParam));
+
+    domain.setCommands(Collections.singletonList(command));
+
+    expect(
+            javaBuilderFactory.createEnumBuilder(
+                "com.github.kklisura.types.domainname", "EnumParam1"))
+        .andReturn(javaEnumBuilder);
+
+    javaEnumBuilder.addEnumConstant("ENUM_1", "enum1");
+    javaEnumBuilder.addEnumConstant("ENUM_2", "enum2");
+
+    expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
+        .andReturn(interfaceBuilder);
+    interfaceBuilder.setJavaDoc("Description");
+
+    Capture<String> mandatoryMethodDescriptionCapture = Capture.newInstance();
+    Capture<List<MethodParam>> mandatoryMethodParamCapture = Capture.newInstance();
+    interfaceBuilder.addMethod(
+        eq("command"),
+        capture(mandatoryMethodDescriptionCapture),
+        capture(mandatoryMethodParamCapture),
+        eq("Boolean"));
+
+    Capture<String> allMethodDescriptionCapture = Capture.newInstance();
+    Capture<List<MethodParam>> allMethodParamCapture = Capture.newInstance();
+    interfaceBuilder.addMethod(
+        eq("command"),
+        capture(allMethodDescriptionCapture),
+        capture(allMethodParamCapture),
+        eq("Boolean"));
+
+    final ObjectType resolvedRefType = new ObjectType();
+    resolvedRefType.setId("TestRef");
+    resolvedRefType.setProperties(
+        Collections.singletonList(createProperty(StringProperty.class, "stringPropertyTestRef")));
+
+    expect(resolver.resolve("domainName", "TestRef")).andReturn(resolvedRefType).times(2);
+
+    interfaceBuilder.addImport("com.github.kklisura.types.domainname", "TestRef");
+    expectLastCall().times(2);
+    interfaceBuilder.addImport("java.util", "List");
+    interfaceBuilder.addImport("com.github.kklisura.types.domainname", "EnumParam1");
+
+    interfaceBuilder.addParametrizedMethodAnnotation("command", "Returns", "booleanReturnValue");
+    interfaceBuilder.addParametrizedMethodAnnotation("command", "Returns", "booleanReturnValue");
+
+    replayAll();
 
-	@Test
-	public void testBuildCommandWithMethodWithSimpleParams() {
-		final Domain domain = new Domain();
-		domain.setDomain("domainName");
-		domain.setDescription("Description");
+    Builder build = commandBuilder.build(domain, resolver);
+
+    verifyAll();
 
-		final Command command = new Command();
-		command.setName("command");
-		command.setDescription("command description");
+    assertTrue(build instanceof CombinedBuilders);
 
-		final StringProperty stringParam = new StringProperty();
-		stringParam.setName("stringParam1");
-		stringParam.setDeprecated(Boolean.TRUE);
-		stringParam.setDescription("String param 1 description");
+    List<Builder> builderList = ((CombinedBuilders) build).getBuilderList();
+    assertEquals(2, builderList.size());
 
-		final NumberProperty numberParam = new NumberProperty();
-		numberParam.setName("numberParam1");
-		numberParam.setExperimental(Boolean.TRUE);
-		numberParam.setDescription("Number param 1 description");
+    assertEquals(javaEnumBuilder, builderList.get(0));
+    assertEquals(interfaceBuilder, builderList.get(1));
 
-		final BooleanProperty booleanReturnParam = new BooleanProperty();
-		booleanReturnParam.setName("booleanReturn");
+    assertEquals(
+        "command description\r\n\r\n@param stringParam1",
+        mandatoryMethodDescriptionCapture.getValue());
 
-		command.setParameters(Arrays.asList(stringParam, numberParam));
-		command.setReturns(Collections.singletonList(booleanReturnParam));
+    assertEquals(
+        "command description\r\n\r\n@param stringParam1\r\n@param enumParam1 enum param 1 description",
+        allMethodDescriptionCapture.getValue());
 
-		domain.setCommands(Arrays.asList(command));
+    List<MethodParam> mandatoryParams = mandatoryMethodParamCapture.getValue();
+    assertEquals(1, mandatoryParams.size());
+    assertEquals(refParam.getName(), mandatoryParams.get(0).getName());
+    assertEquals("TestRef", mandatoryParams.get(0).getType());
+    assertEquals("Deprecated", mandatoryParams.get(0).getAnnotations().get(0).getName());
+    assertEquals("ParamName", mandatoryParams.get(0).getAnnotations().get(1).getName());
+    assertEquals(refParam.getName(), mandatoryParams.get(0).getAnnotations().get(1).getValue());
 
-		expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
-				.andReturn(interfaceBuilder);
-		interfaceBuilder.setJavaDoc("Description");
+    List<MethodParam> allParams = allMethodParamCapture.getValue();
+    assertEquals(2, allParams.size());
+    assertEquals(refParam.getName(), allParams.get(0).getName());
+    assertEquals("TestRef", allParams.get(0).getType());
+    assertEquals("Deprecated", allParams.get(0).getAnnotations().get(0).getName());
+    assertEquals("ParamName", allParams.get(0).getAnnotations().get(1).getName());
+    assertEquals(refParam.getName(), allParams.get(0).getAnnotations().get(1).getValue());
 
-		Capture<List<MethodParam>> methodParamCapture = Capture.newInstance();
-		Capture<String> methodDescriptionCapture = Capture.newInstance();
-		interfaceBuilder.addMethod(eq("command"), capture(methodDescriptionCapture), capture(methodParamCapture), eq("Boolean"));
+    Assert.assertEquals(arrayProperty.getName(), allParams.get(1).getName());
+    assertEquals("List<EnumParam1>", allParams.get(1).getType());
+    assertEquals("Experimental", allParams.get(1).getAnnotations().get(0).getName());
+    assertEquals("Optional", allParams.get(1).getAnnotations().get(1).getName());
+    assertEquals("ParamName", allParams.get(1).getAnnotations().get(2).getName());
+    assertEquals(arrayProperty.getName(), allParams.get(1).getAnnotations().get(2).getValue());
+  }
+
+  @Test
+  public void testBuildCommandWithMethodWithComplexReturnParams() {
+    final Domain domain = new Domain();
+    domain.setDomain("domainName");
+    domain.setDescription("Description");
+
+    final Command command = new Command();
+    command.setName("getCommandSomeResult");
+    command.setDescription("command description");
+
+    final StringProperty stringParam = new StringProperty();
+    stringParam.setName("stringParam1");
+    stringParam.setDeprecated(Boolean.TRUE);
+
+    final NumberProperty numberParam = new NumberProperty();
+    numberParam.setName("numberParam1");
+    numberParam.setExperimental(Boolean.TRUE);
+
+    command.setReturns(Arrays.asList(stringParam, numberParam));
+    domain.setCommands(Collections.singletonList(command));
 
-		interfaceBuilder.addParametrizedMethodAnnotation("command", "Returns", "booleanReturn");
+    expect(
+            javaBuilderFactory.createClassBuilder(
+                TYPE_PACKAGE_NAME + ".domainname", "CommandSomeResult"))
+        .andReturn(javaClassBuilder);
 
-		replayAll();
+    javaClassBuilder.addPrivateField("stringParam1", "String", null);
+    javaClassBuilder.addPrivateField("numberParam1", "Double", null);
 
-		assertEquals(interfaceBuilder, commandBuilder.build(domain, resolver));
+    javaClassBuilder.addFieldAnnotation("stringParam1", "Deprecated");
+    javaClassBuilder.addFieldAnnotation("numberParam1", "Experimental");
 
-		verifyAll();
+    javaClassBuilder.generateGettersAndSetters();
 
-		assertEquals("command description\r\n\r\n@param stringParam1 String param 1 description\r\n@param numberParam1 Number param 1 description", methodDescriptionCapture.getValue());
-
-		List<MethodParam> params = methodParamCapture.getValue();
-		assertEquals(2, params.size());
-		Assert.assertEquals(stringParam.getName(), params.get(0).getName());
-		assertEquals("String", params.get(0).getType());
-		assertEquals("Deprecated", params.get(0).getAnnotations().get(0).getName());
-		assertEquals("ParamName", params.get(0).getAnnotations().get(1).getName());
-		assertEquals(stringParam.getName(), params.get(0).getAnnotations().get(1).getValue());
-
-		assertEquals(numberParam.getName(), params.get(1).getName());
-		assertEquals("Double", params.get(1).getType());
-		assertEquals("Experimental", params.get(1).getAnnotations().get(0).getName());
-		assertEquals("ParamName", params.get(1).getAnnotations().get(1).getName());
-		assertEquals(numberParam.getName(), params.get(1).getAnnotations().get(1).getValue());
-	}
-
-	@Test
-	public void testBuildCommandWithMethodWithComplexParams() throws InstantiationException, IllegalAccessException {
-		final Domain domain = new Domain();
-		domain.setDomain("domainName");
-		domain.setDescription("Description");
-
-		final Command command = new Command();
-		command.setName("command");
-		command.setDescription("command description");
-
-		final RefProperty refParam = new RefProperty();
-		refParam.setName("stringParam1");
-		refParam.setDeprecated(Boolean.TRUE);
-		refParam.setRef("TestRef");
-
-		final ArrayProperty arrayProperty = new ArrayProperty();
-		arrayProperty.setName("enumParam1");
-		arrayProperty.setExperimental(Boolean.TRUE);
-		arrayProperty.setOptional(Boolean.TRUE);
-		arrayProperty.setDescription("enum param 1 description");
-
-		EnumArrayItem enumArrayItem = new EnumArrayItem();
-		enumArrayItem.setEnumValues(Arrays.asList("enum1", "enum2"));
-		arrayProperty.setItems(enumArrayItem);
-
-		final BooleanProperty booleanReturnParam = new BooleanProperty();
-		booleanReturnParam.setName("booleanReturnValue");
-
-		command.setParameters(Arrays.asList(refParam, arrayProperty));
-		command.setReturns(Collections.singletonList(booleanReturnParam));
-
-		domain.setCommands(Collections.singletonList(command));
-
-		expect(javaBuilderFactory.createEnumBuilder("com.github.kklisura.types.domainname", "EnumParam1"))
-				.andReturn(javaEnumBuilder);
-
-		javaEnumBuilder.addEnumConstant("ENUM_1", "enum1");
-		javaEnumBuilder.addEnumConstant("ENUM_2", "enum2");
-
-		expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
-				.andReturn(interfaceBuilder);
-		interfaceBuilder.setJavaDoc("Description");
-
-		Capture<String> mandatoryMethodDescriptionCapture = Capture.newInstance();
-		Capture<List<MethodParam>> mandatoryMethodParamCapture = Capture.newInstance();
-		interfaceBuilder.addMethod(eq("command"), capture(mandatoryMethodDescriptionCapture), capture(mandatoryMethodParamCapture), eq("Boolean"));
-
-		Capture<String> allMethodDescriptionCapture = Capture.newInstance();
-		Capture<List<MethodParam>> allMethodParamCapture = Capture.newInstance();
-		interfaceBuilder.addMethod(eq("command"), capture(allMethodDescriptionCapture), capture(allMethodParamCapture), eq("Boolean"));
-
-		final ObjectType resolvedRefType = new ObjectType();
-		resolvedRefType.setId("TestRef");
-		resolvedRefType.setProperties(Collections.singletonList(createProperty(StringProperty.class, "stringPropertyTestRef")));
-
-		expect(resolver.resolve("domainName", "TestRef"))
-				.andReturn(resolvedRefType)
-				.times(2);
-
-		interfaceBuilder.addImport("com.github.kklisura.types.domainname", "TestRef");
-		expectLastCall().times(2);
-		interfaceBuilder.addImport("java.util", "List");
-		interfaceBuilder.addImport("com.github.kklisura.types.domainname", "EnumParam1");
-
-		interfaceBuilder.addParametrizedMethodAnnotation("command", "Returns", "booleanReturnValue");
-		interfaceBuilder.addParametrizedMethodAnnotation("command", "Returns", "booleanReturnValue");
-
-		replayAll();
-
-		Builder build = commandBuilder.build(domain, resolver);
-
-		verifyAll();
-
-		assertTrue(build instanceof CombinedBuilders);
-
-		List<Builder> builderList = ((CombinedBuilders) build).getBuilderList();
-		assertEquals(2, builderList.size());
-
-		assertEquals(javaEnumBuilder, builderList.get(0));
-		assertEquals(interfaceBuilder, builderList.get(1));
-
-		assertEquals("command description\r\n\r\n@param stringParam1", mandatoryMethodDescriptionCapture.getValue());
-
-		assertEquals("command description\r\n\r\n@param stringParam1\r\n@param enumParam1 enum param 1 description", allMethodDescriptionCapture.getValue());
-
-		List<MethodParam> mandatoryParams = mandatoryMethodParamCapture.getValue();
-		assertEquals(1, mandatoryParams.size());
-		assertEquals(refParam.getName(), mandatoryParams.get(0).getName());
-		assertEquals("TestRef", mandatoryParams.get(0).getType());
-		assertEquals("Deprecated", mandatoryParams.get(0).getAnnotations().get(0).getName());
-		assertEquals("ParamName", mandatoryParams.get(0).getAnnotations().get(1).getName());
-		assertEquals(refParam.getName(), mandatoryParams.get(0).getAnnotations().get(1).getValue());
-
-		List<MethodParam> allParams = allMethodParamCapture.getValue();
-		assertEquals(2, allParams.size());
-		assertEquals(refParam.getName(), allParams.get(0).getName());
-		assertEquals("TestRef", allParams.get(0).getType());
-		assertEquals("Deprecated", allParams.get(0).getAnnotations().get(0).getName());
-		assertEquals("ParamName", allParams.get(0).getAnnotations().get(1).getName());
-		assertEquals(refParam.getName(), allParams.get(0).getAnnotations().get(1).getValue());
-
-		Assert.assertEquals(arrayProperty.getName(), allParams.get(1).getName());
-		assertEquals("List<EnumParam1>", allParams.get(1).getType());
-		assertEquals("Experimental", allParams.get(1).getAnnotations().get(0).getName());
-		assertEquals("Optional", allParams.get(1).getAnnotations().get(1).getName());
-		assertEquals("ParamName", allParams.get(1).getAnnotations().get(2).getName());
-		assertEquals(arrayProperty.getName(), allParams.get(1).getAnnotations().get(2).getValue());
-	}
-
-	@Test
-	public void testBuildCommandWithMethodWithComplexReturnParams() {
-		final Domain domain = new Domain();
-		domain.setDomain("domainName");
-		domain.setDescription("Description");
-
-		final Command command = new Command();
-		command.setName("getCommandSomeResult");
-		command.setDescription("command description");
-
-		final StringProperty stringParam = new StringProperty();
-		stringParam.setName("stringParam1");
-		stringParam.setDeprecated(Boolean.TRUE);
-
-		final NumberProperty numberParam = new NumberProperty();
-		numberParam.setName("numberParam1");
-		numberParam.setExperimental(Boolean.TRUE);
-
-		command.setReturns(Arrays.asList(stringParam, numberParam));
-		domain.setCommands(Collections.singletonList(command));
-
-		expect(javaBuilderFactory.createClassBuilder(TYPE_PACKAGE_NAME + ".domainname", "CommandSomeResult"))
-				.andReturn(javaClassBuilder);
-
-		javaClassBuilder.addPrivateField("stringParam1", "String", null);
-		javaClassBuilder.addPrivateField("numberParam1", "Double", null);
-
-		javaClassBuilder.addFieldAnnotation("stringParam1", "Deprecated");
-		javaClassBuilder.addFieldAnnotation("numberParam1", "Experimental");
-
-		javaClassBuilder.generateGettersAndSetters();
-
-		expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
-				.andReturn(interfaceBuilder);
-		interfaceBuilder.setJavaDoc("Description");
-
-		Capture<List<MethodParam>> methodParamCapture = Capture.newInstance();
-		interfaceBuilder.addMethod(eq("getCommandSomeResult"), eq("command description"), capture(methodParamCapture), eq("CommandSomeResult"));
-
-		interfaceBuilder.addImport("com.github.kklisura.types.domainname", "CommandSomeResult");
-
-		replayAll();
-
-		Builder build = commandBuilder.build(domain, resolver);
-
-		verifyAll();
-
-		assertTrue(build instanceof CombinedBuilders);
-
-		List<Builder> builderList = ((CombinedBuilders) build).getBuilderList();
-		assertEquals(2, builderList.size());
-
-		assertEquals(javaClassBuilder, builderList.get(0));
-		assertEquals(interfaceBuilder, builderList.get(1));
-
-		assertTrue(methodParamCapture.getValue().isEmpty());
-	}
-
-	@Test
-	public void testBuildCommandWithEvents() {
-		final Domain domain = new Domain();
-		domain.setDomain("domainName");
-		domain.setDescription("Description");
-
-		final Event event = new Event();
-		event.setName("someEvent");
-		event.setDescription("event description");
-
-		final Event event1 = new Event();
-		event1.setName("someEvent1");
-		event1.setDescription("event description");
-		event1.setDeprecated(Boolean.TRUE);
-		event1.setExperimental(Boolean.TRUE);
-
-		domain.setEvents(Arrays.asList(event, event1));
-
-		expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
-				.andReturn(interfaceBuilder);
-		interfaceBuilder.setJavaDoc("Description");
-
-		interfaceBuilder.addImport("com.github.kklisura.support.types", "EventListener");
-		interfaceBuilder.addImport("com.github.kklisura.support.types", "EventHandler");
-		interfaceBuilder.addImport("com.github.kklisura.events.domainname", "SomeEvent");
-
-		interfaceBuilder.addImport("com.github.kklisura.support.types", "EventListener");
-		interfaceBuilder.addImport("com.github.kklisura.support.types", "EventHandler");
-		interfaceBuilder.addImport("com.github.kklisura.events.domainname", "SomeEvent1");
-
-		Capture<List<MethodParam>> methodParamCapture = Capture.newInstance();
-		interfaceBuilder.addMethod(eq("onSomeEvent"), eq("event description"), capture(methodParamCapture), eq("EventListener"));
-
-		Capture<List<MethodParam>> methodParamCapture1 = Capture.newInstance();
-		interfaceBuilder.addMethod(eq("onSomeEvent1"), eq("event description"), capture(methodParamCapture1), eq("EventListener"));
-
-		interfaceBuilder.addParametrizedMethodAnnotation("onSomeEvent", "EventName", "someEvent");
-		interfaceBuilder.addParametrizedMethodAnnotation("onSomeEvent1", "EventName", "someEvent1");
-
-		interfaceBuilder.addMethodAnnotation("onSomeEvent1", "Deprecated");
-		interfaceBuilder.addMethodAnnotation("onSomeEvent1", "Experimental");
-
-		replayAll();
-
-		Builder build = commandBuilder.build(domain, resolver);
-
-		verifyAll();
-
-		assertEquals(interfaceBuilder, build);
-
-		List<MethodParam> value = methodParamCapture.getValue();
-		assertEquals(1, value.size());
-		assertEquals("eventListener", value.get(0).getName());
-		assertEquals("EventHandler<SomeEvent>", value.get(0).getType());
-
-		List<MethodParam> value1 = methodParamCapture1.getValue();
-		assertEquals(1, value1.size());
-		assertEquals("eventListener", value1.get(0).getName());
-		assertEquals("EventHandler<SomeEvent1>", value1.get(0).getType());
-	}
-
-	private <T extends Property> T createProperty(Class<T> clazz, String name)
-			throws IllegalAccessException, InstantiationException {
-		T property = clazz.newInstance();
-		property.setName(name);
-		property.setDescription(name + "Description");
-		return property;
-	}
+    expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
+        .andReturn(interfaceBuilder);
+    interfaceBuilder.setJavaDoc("Description");
+
+    Capture<List<MethodParam>> methodParamCapture = Capture.newInstance();
+    interfaceBuilder.addMethod(
+        eq("getCommandSomeResult"),
+        eq("command description"),
+        capture(methodParamCapture),
+        eq("CommandSomeResult"));
+
+    interfaceBuilder.addImport("com.github.kklisura.types.domainname", "CommandSomeResult");
+
+    replayAll();
+
+    Builder build = commandBuilder.build(domain, resolver);
+
+    verifyAll();
+
+    assertTrue(build instanceof CombinedBuilders);
+
+    List<Builder> builderList = ((CombinedBuilders) build).getBuilderList();
+    assertEquals(2, builderList.size());
+
+    assertEquals(javaClassBuilder, builderList.get(0));
+    assertEquals(interfaceBuilder, builderList.get(1));
+
+    assertTrue(methodParamCapture.getValue().isEmpty());
+  }
+
+  @Test
+  public void testBuildCommandWithEvents() {
+    final Domain domain = new Domain();
+    domain.setDomain("domainName");
+    domain.setDescription("Description");
+
+    final Event event = new Event();
+    event.setName("someEvent");
+    event.setDescription("event description");
+
+    final Event event1 = new Event();
+    event1.setName("someEvent1");
+    event1.setDescription("event description");
+    event1.setDeprecated(Boolean.TRUE);
+    event1.setExperimental(Boolean.TRUE);
+
+    domain.setEvents(Arrays.asList(event, event1));
+
+    expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
+        .andReturn(interfaceBuilder);
+    interfaceBuilder.setJavaDoc("Description");
+
+    interfaceBuilder.addImport("com.github.kklisura.support.types", "EventListener");
+    interfaceBuilder.addImport("com.github.kklisura.support.types", "EventHandler");
+    interfaceBuilder.addImport("com.github.kklisura.events.domainname", "SomeEvent");
+
+    interfaceBuilder.addImport("com.github.kklisura.support.types", "EventListener");
+    interfaceBuilder.addImport("com.github.kklisura.support.types", "EventHandler");
+    interfaceBuilder.addImport("com.github.kklisura.events.domainname", "SomeEvent1");
+
+    Capture<List<MethodParam>> methodParamCapture = Capture.newInstance();
+    interfaceBuilder.addMethod(
+        eq("onSomeEvent"),
+        eq("event description"),
+        capture(methodParamCapture),
+        eq("EventListener"));
+
+    Capture<List<MethodParam>> methodParamCapture1 = Capture.newInstance();
+    interfaceBuilder.addMethod(
+        eq("onSomeEvent1"),
+        eq("event description"),
+        capture(methodParamCapture1),
+        eq("EventListener"));
+
+    interfaceBuilder.addParametrizedMethodAnnotation("onSomeEvent", "EventName", "someEvent");
+    interfaceBuilder.addParametrizedMethodAnnotation("onSomeEvent1", "EventName", "someEvent1");
+
+    interfaceBuilder.addMethodAnnotation("onSomeEvent1", "Deprecated");
+    interfaceBuilder.addMethodAnnotation("onSomeEvent1", "Experimental");
+
+    replayAll();
+
+    Builder build = commandBuilder.build(domain, resolver);
+
+    verifyAll();
+
+    assertEquals(interfaceBuilder, build);
+
+    List<MethodParam> value = methodParamCapture.getValue();
+    assertEquals(1, value.size());
+    assertEquals("eventListener", value.get(0).getName());
+    assertEquals("EventHandler<SomeEvent>", value.get(0).getType());
+
+    List<MethodParam> value1 = methodParamCapture1.getValue();
+    assertEquals(1, value1.size());
+    assertEquals("eventListener", value1.get(0).getName());
+    assertEquals("EventHandler<SomeEvent1>", value1.get(0).getType());
+  }
+
+  private <T extends Property> T createProperty(Class<T> clazz, String name)
+      throws IllegalAccessException, InstantiationException {
+    T property = clazz.newInstance();
+    property.setName(name);
+    property.setDescription(name + "Description");
+    return property;
+  }
 }

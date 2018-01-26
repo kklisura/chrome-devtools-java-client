@@ -9,7 +9,7 @@ import com.github.kklisura.cdtp.definition.builder.protocol.types.type.array.Arr
  * @author Kenan Klisura
  */
 public class TypeArrayItemSubTypeJsonDeserializer extends BaseSubTypeJsonDeserializer<ArrayItem> {
-	public TypeArrayItemSubTypeJsonDeserializer() {
-		super(ArrayItem.class);
-	}
+  public TypeArrayItemSubTypeJsonDeserializer() {
+    super(ArrayItem.class);
+  }
 }

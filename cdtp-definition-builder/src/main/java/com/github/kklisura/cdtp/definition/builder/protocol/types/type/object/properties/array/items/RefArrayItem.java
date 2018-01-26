@@ -16,6 +16,6 @@ import lombok.Setter;
 @Setter
 @JsonDeserialize(using = JsonDeserializer.None.class)
 public class RefArrayItem extends ArrayItem {
-	@JsonProperty("$ref")
-	private String ref;
+  @JsonProperty("$ref")
+  private String ref;
 }

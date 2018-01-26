@@ -4,109 +4,94 @@ import com.github.kklisura.cdtp.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdtp.protocol.support.annotations.Optional;
 import java.util.List;
 
-/**
- * CSS media rule descriptor.
- */
+/** CSS media rule descriptor. */
 public class CSSMedia {
 
-	private String text;
+  private String text;
 
-	private Source source;
+  private Source source;
 
-	@Optional
-	private String sourceURL;
+  @Optional private String sourceURL;
 
-	@Optional
-	private SourceRange range;
+  @Optional private SourceRange range;
 
-	@Optional
-	private String styleSheetId;
+  @Optional private String styleSheetId;
 
-	@Experimental
-	@Optional
-	private List<MediaQuery> mediaList;
+  @Experimental @Optional private List<MediaQuery> mediaList;
 
-	/**
-	 * Media query text.
-	 */
-	public String getText() {
-		return text;
-	}
+  /** Media query text. */
+  public String getText() {
+    return text;
+  }
 
-	/**
-	 * Media query text.
-	 */
-	public void setText(String text) {
-		this.text = text;
-	}
+  /** Media query text. */
+  public void setText(String text) {
+    this.text = text;
+  }
 
-	/**
-	 * Source of the media query: "mediaRule" if specified by a @media rule, "importRule" if specified by an @import rule, "linkedSheet" if specified by a "media" attribute in a linked stylesheet's LINK tag, "inlineSheet" if specified by a "media" attribute in an inline stylesheet's STYLE tag.
-	 */
-	public Source getSource() {
-		return source;
-	}
+  /**
+   * Source of the media query: "mediaRule" if specified by a @media rule, "importRule" if specified
+   * by an @import rule, "linkedSheet" if specified by a "media" attribute in a linked stylesheet's
+   * LINK tag, "inlineSheet" if specified by a "media" attribute in an inline stylesheet's STYLE
+   * tag.
+   */
+  public Source getSource() {
+    return source;
+  }
 
-	/**
-	 * Source of the media query: "mediaRule" if specified by a @media rule, "importRule" if specified by an @import rule, "linkedSheet" if specified by a "media" attribute in a linked stylesheet's LINK tag, "inlineSheet" if specified by a "media" attribute in an inline stylesheet's STYLE tag.
-	 */
-	public void setSource(Source source) {
-		this.source = source;
-	}
+  /**
+   * Source of the media query: "mediaRule" if specified by a @media rule, "importRule" if specified
+   * by an @import rule, "linkedSheet" if specified by a "media" attribute in a linked stylesheet's
+   * LINK tag, "inlineSheet" if specified by a "media" attribute in an inline stylesheet's STYLE
+   * tag.
+   */
+  public void setSource(Source source) {
+    this.source = source;
+  }
 
-	/**
-	 * URL of the document containing the media query description.
-	 */
-	public String getSourceURL() {
-		return sourceURL;
-	}
+  /** URL of the document containing the media query description. */
+  public String getSourceURL() {
+    return sourceURL;
+  }
 
-	/**
-	 * URL of the document containing the media query description.
-	 */
-	public void setSourceURL(String sourceURL) {
-		this.sourceURL = sourceURL;
-	}
+  /** URL of the document containing the media query description. */
+  public void setSourceURL(String sourceURL) {
+    this.sourceURL = sourceURL;
+  }
 
-	/**
-	 * The associated rule (@media or @import) header range in the enclosing stylesheet (if available).
-	 */
-	public SourceRange getRange() {
-		return range;
-	}
+  /**
+   * The associated rule (@media or @import) header range in the enclosing stylesheet (if
+   * available).
+   */
+  public SourceRange getRange() {
+    return range;
+  }
 
-	/**
-	 * The associated rule (@media or @import) header range in the enclosing stylesheet (if available).
-	 */
-	public void setRange(SourceRange range) {
-		this.range = range;
-	}
+  /**
+   * The associated rule (@media or @import) header range in the enclosing stylesheet (if
+   * available).
+   */
+  public void setRange(SourceRange range) {
+    this.range = range;
+  }
 
-	/**
-	 * Identifier of the stylesheet containing this object (if exists).
-	 */
-	public String getStyleSheetId() {
-		return styleSheetId;
-	}
+  /** Identifier of the stylesheet containing this object (if exists). */
+  public String getStyleSheetId() {
+    return styleSheetId;
+  }
 
-	/**
-	 * Identifier of the stylesheet containing this object (if exists).
-	 */
-	public void setStyleSheetId(String styleSheetId) {
-		this.styleSheetId = styleSheetId;
-	}
+  /** Identifier of the stylesheet containing this object (if exists). */
+  public void setStyleSheetId(String styleSheetId) {
+    this.styleSheetId = styleSheetId;
+  }
 
-	/**
-	 * Array of media queries.
-	 */
-	public List<MediaQuery> getMediaList() {
-		return mediaList;
-	}
+  /** Array of media queries. */
+  public List<MediaQuery> getMediaList() {
+    return mediaList;
+  }
 
-	/**
-	 * Array of media queries.
-	 */
-	public void setMediaList(List<MediaQuery> mediaList) {
-		this.mediaList = mediaList;
-	}
+  /** Array of media queries. */
+  public void setMediaList(List<MediaQuery> mediaList) {
+    this.mediaList = mediaList;
+  }
 }

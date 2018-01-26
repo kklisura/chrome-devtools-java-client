@@ -6,13 +6,9 @@ package com.github.kklisura.cdtp.protocol.support.types;
  * @author Kenan Klisura
  */
 public interface EventListener {
-	/**
-	 * Alias to unsubscribe.
-	 */
-	void off();
+  /** Alias to unsubscribe. */
+  void off();
 
-	/**
-	 * Unsubscribe this event listener.
-	 */
-	void unsubscribe();
+  /** Unsubscribe this event listener. */
+  void unsubscribe();
 }

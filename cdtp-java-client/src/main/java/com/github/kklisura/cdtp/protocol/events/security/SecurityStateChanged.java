@@ -6,89 +6,72 @@ import com.github.kklisura.cdtp.protocol.types.security.SecurityState;
 import com.github.kklisura.cdtp.protocol.types.security.SecurityStateExplanation;
 import java.util.List;
 
-/**
- * The security state of the page changed.
- */
+/** The security state of the page changed. */
 public class SecurityStateChanged {
 
-	private SecurityState securityState;
+  private SecurityState securityState;
 
-	private Boolean schemeIsCryptographic;
+  private Boolean schemeIsCryptographic;
 
-	private List<SecurityStateExplanation> explanations;
+  private List<SecurityStateExplanation> explanations;
 
-	private InsecureContentStatus insecureContentStatus;
+  private InsecureContentStatus insecureContentStatus;
 
-	@Optional
-	private String summary;
+  @Optional private String summary;
 
-	/**
-	 * Security state.
-	 */
-	public SecurityState getSecurityState() {
-		return securityState;
-	}
+  /** Security state. */
+  public SecurityState getSecurityState() {
+    return securityState;
+  }
 
-	/**
-	 * Security state.
-	 */
-	public void setSecurityState(SecurityState securityState) {
-		this.securityState = securityState;
-	}
+  /** Security state. */
+  public void setSecurityState(SecurityState securityState) {
+    this.securityState = securityState;
+  }
 
-	/**
-	 * True if the page was loaded over cryptographic transport such as HTTPS.
-	 */
-	public Boolean getSchemeIsCryptographic() {
-		return schemeIsCryptographic;
-	}
+  /** True if the page was loaded over cryptographic transport such as HTTPS. */
+  public Boolean getSchemeIsCryptographic() {
+    return schemeIsCryptographic;
+  }
 
-	/**
-	 * True if the page was loaded over cryptographic transport such as HTTPS.
-	 */
-	public void setSchemeIsCryptographic(Boolean schemeIsCryptographic) {
-		this.schemeIsCryptographic = schemeIsCryptographic;
-	}
+  /** True if the page was loaded over cryptographic transport such as HTTPS. */
+  public void setSchemeIsCryptographic(Boolean schemeIsCryptographic) {
+    this.schemeIsCryptographic = schemeIsCryptographic;
+  }
 
-	/**
-	 * List of explanations for the security state. If the overall security state is `insecure` or `warning`, at least one corresponding explanation should be included.
-	 */
-	public List<SecurityStateExplanation> getExplanations() {
-		return explanations;
-	}
+  /**
+   * List of explanations for the security state. If the overall security state is `insecure` or
+   * `warning`, at least one corresponding explanation should be included.
+   */
+  public List<SecurityStateExplanation> getExplanations() {
+    return explanations;
+  }
 
-	/**
-	 * List of explanations for the security state. If the overall security state is `insecure` or `warning`, at least one corresponding explanation should be included.
-	 */
-	public void setExplanations(List<SecurityStateExplanation> explanations) {
-		this.explanations = explanations;
-	}
+  /**
+   * List of explanations for the security state. If the overall security state is `insecure` or
+   * `warning`, at least one corresponding explanation should be included.
+   */
+  public void setExplanations(List<SecurityStateExplanation> explanations) {
+    this.explanations = explanations;
+  }
 
-	/**
-	 * Information about insecure content on the page.
-	 */
-	public InsecureContentStatus getInsecureContentStatus() {
-		return insecureContentStatus;
-	}
+  /** Information about insecure content on the page. */
+  public InsecureContentStatus getInsecureContentStatus() {
+    return insecureContentStatus;
+  }
 
-	/**
-	 * Information about insecure content on the page.
-	 */
-	public void setInsecureContentStatus(InsecureContentStatus insecureContentStatus) {
-		this.insecureContentStatus = insecureContentStatus;
-	}
+  /** Information about insecure content on the page. */
+  public void setInsecureContentStatus(InsecureContentStatus insecureContentStatus) {
+    this.insecureContentStatus = insecureContentStatus;
+  }
 
-	/**
-	 * Overrides user-visible description of the state.
-	 */
-	public String getSummary() {
-		return summary;
-	}
+  /** Overrides user-visible description of the state. */
+  public String getSummary() {
+    return summary;
+  }
 
-	/**
-	 * Overrides user-visible description of the state.
-	 */
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
+  /** Overrides user-visible description of the state. */
+  public void setSummary(String summary) {
+    this.summary = summary;
+  }
 }

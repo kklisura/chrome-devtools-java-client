@@ -11,6 +11,4 @@ import lombok.Getter;
  */
 @Getter
 @JsonDeserialize(using = JsonDeserializer.None.class)
-public class IntegerArrayItem extends TypedArrayItem {
-}
-
+public class IntegerArrayItem extends TypedArrayItem {}

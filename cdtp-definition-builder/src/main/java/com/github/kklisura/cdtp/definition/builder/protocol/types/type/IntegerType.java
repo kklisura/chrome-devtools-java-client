@@ -10,7 +10,4 @@ import com.github.kklisura.cdtp.definition.builder.protocol.types.Type;
  * @author Kenan Klisura
  */
 @JsonDeserialize(using = JsonDeserializer.None.class)
-public class IntegerType extends Type {
-}
-
-
+public class IntegerType extends Type {}
