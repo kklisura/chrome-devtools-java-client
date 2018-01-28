@@ -1,5 +1,8 @@
 package com.github.kklisura.cdtp.services.invocation;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 import com.github.kklisura.cdtp.protocol.support.annotations.EventName;
 import com.github.kklisura.cdtp.protocol.support.annotations.ParamName;
 import com.github.kklisura.cdtp.protocol.support.annotations.Returns;
@@ -7,6 +10,7 @@ import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
 import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.services.ChromeDevToolsService;
 import com.github.kklisura.cdtp.services.types.MethodInvocation;
+import java.lang.reflect.Method;
 import org.easymock.Capture;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
@@ -14,11 +18,6 @@ import org.easymock.Mock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.lang.reflect.Method;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 
 /**
  * Command invocation handler test.

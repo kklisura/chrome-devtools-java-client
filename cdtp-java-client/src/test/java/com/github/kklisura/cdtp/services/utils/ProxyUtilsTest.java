@@ -1,9 +1,9 @@
 package com.github.kklisura.cdtp.services.utils;
 
+import static com.github.kklisura.cdtp.services.utils.ProxyUtils.createProxyFromAbstract;
+
 import com.github.kklisura.cdtp.services.impl.ChromeDevToolsServiceImpl;
 import org.junit.Test;
-
-import static com.github.kklisura.cdtp.services.utils.ProxyUtils.createProxyFromAbstract;
 
 /**
  * Created by Kenan Klisura on 23/01/2018.

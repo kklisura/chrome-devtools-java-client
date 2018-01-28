@@ -1,5 +1,7 @@
 package com.github.kklisura.cdtp.services.impl;
 
+import static com.github.kklisura.cdtp.services.utils.ConfigurationUtils.systemProperty;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,9 +14,6 @@ import com.github.kklisura.cdtp.services.exceptions.WebSocketServiceException;
 import com.github.kklisura.cdtp.services.types.ChromeTab;
 import com.github.kklisura.cdtp.services.types.EventListenerImpl;
 import com.github.kklisura.cdtp.services.types.MethodInvocation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.util.Collections;
@@ -26,8 +25,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-
-import static com.github.kklisura.cdtp.services.utils.ConfigurationUtils.systemProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Dev tools service implementation.

@@ -3,7 +3,6 @@ package com.github.kklisura.cdtp.services;
 import com.github.kklisura.cdtp.services.exceptions.ChromeServiceException;
 import com.github.kklisura.cdtp.services.types.ChromeTab;
 import com.github.kklisura.cdtp.services.types.ChromeVersion;
-
 import java.util.List;
 
 /**

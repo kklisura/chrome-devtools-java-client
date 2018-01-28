@@ -1,19 +1,10 @@
 package com.github.kklisura.cdtp.services.impl;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 import com.github.kklisura.cdtp.services.WebSocketService;
 import com.github.kklisura.cdtp.services.exceptions.WebSocketServiceException;
-import org.easymock.Capture;
-import org.easymock.EasyMockRunner;
-import org.easymock.EasyMockSupport;
-import org.glassfish.tyrus.server.Server;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import javax.websocket.DeploymentException;
-import javax.websocket.MessageHandler;
-import javax.websocket.OnMessage;
-import javax.websocket.Session;
-import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
@@ -22,9 +13,17 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import javax.websocket.DeploymentException;
+import javax.websocket.MessageHandler;
+import javax.websocket.OnMessage;
+import javax.websocket.Session;
+import javax.websocket.server.ServerEndpoint;
+import org.easymock.Capture;
+import org.easymock.EasyMockRunner;
+import org.easymock.EasyMockSupport;
+import org.glassfish.tyrus.server.Server;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * Web socket service implementation test. It's more integration test than a unit test.

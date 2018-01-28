@@ -1,5 +1,10 @@
 package com.github.kklisura.cdtp.services.impl;
 
+import static com.github.kklisura.cdtp.services.impl.utils.TestUtils.getFixture;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.*;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kklisura.cdtp.protocol.ChromeDevTools;
 import com.github.kklisura.cdtp.protocol.commands.Network;
@@ -12,21 +17,15 @@ import com.github.kklisura.cdtp.services.types.ChromeVersion;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.util.List;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
 import org.easymock.Mock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.util.List;
-
-import static com.github.kklisura.cdtp.services.impl.utils.TestUtils.getFixture;
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.*;
 
 /**
  * Chrome service impl test.

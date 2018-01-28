@@ -1,12 +1,11 @@
 package com.github.kklisura.cdtp.services.utils;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import javassist.Modifier;
 import javassist.util.proxy.ProxyFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
 
 /**
  * Proxy utils.

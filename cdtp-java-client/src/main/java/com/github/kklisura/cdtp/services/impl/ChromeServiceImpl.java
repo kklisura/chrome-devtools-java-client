@@ -1,5 +1,8 @@
 package com.github.kklisura.cdtp.services.impl;
 
+import static com.github.kklisura.cdtp.services.utils.ProxyUtils.createProxy;
+import static com.github.kklisura.cdtp.services.utils.ProxyUtils.createProxyFromAbstract;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kklisura.cdtp.services.ChromeDevToolsService;
 import com.github.kklisura.cdtp.services.ChromeService;
@@ -10,7 +13,6 @@ import com.github.kklisura.cdtp.services.factory.WebSocketServiceFactory;
 import com.github.kklisura.cdtp.services.invocation.CommandInvocationHandler;
 import com.github.kklisura.cdtp.services.types.ChromeTab;
 import com.github.kklisura.cdtp.services.types.ChromeVersion;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,9 +25,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static com.github.kklisura.cdtp.services.utils.ProxyUtils.createProxy;
-import static com.github.kklisura.cdtp.services.utils.ProxyUtils.createProxyFromAbstract;
 
 /**
  * Chrome service implementation.

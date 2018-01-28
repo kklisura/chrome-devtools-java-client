@@ -7,7 +7,6 @@ import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
 import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.services.ChromeDevToolsService;
 import com.github.kklisura.cdtp.services.types.MethodInvocation;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;

@@ -1,5 +1,8 @@
 package com.github.kklisura.cdtp.services.impl;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
 import com.github.kklisura.cdtp.protocol.support.types.EventListener;
@@ -10,6 +13,8 @@ import com.github.kklisura.cdtp.services.types.ChromeTab;
 import com.github.kklisura.cdtp.services.types.EventListenerImpl;
 import com.github.kklisura.cdtp.services.types.MethodInvocation;
 import com.github.kklisura.cdtp.services.utils.ProxyUtils;
+import java.io.IOException;
+import java.util.HashMap;
 import org.easymock.Capture;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
@@ -17,12 +22,6 @@ import org.easymock.Mock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.io.IOException;
-import java.util.HashMap;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 
 /**
  * Created by Kenan Klisura on 21/01/2018.
