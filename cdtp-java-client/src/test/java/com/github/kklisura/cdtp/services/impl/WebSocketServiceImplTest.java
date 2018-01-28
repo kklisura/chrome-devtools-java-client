@@ -1,19 +1,30 @@
 package com.github.kklisura.cdtp.services.impl;
 
+/*-
+ * #%L
+ * cdpt-java-client
+ * %%
+ * Copyright (C) 2018 Kenan Klisura
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 import com.github.kklisura.cdtp.services.WebSocketService;
 import com.github.kklisura.cdtp.services.exceptions.WebSocketServiceException;
-import org.easymock.Capture;
-import org.easymock.EasyMockRunner;
-import org.easymock.EasyMockSupport;
-import org.glassfish.tyrus.server.Server;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import javax.websocket.DeploymentException;
-import javax.websocket.MessageHandler;
-import javax.websocket.OnMessage;
-import javax.websocket.Session;
-import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
@@ -22,9 +33,17 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import javax.websocket.DeploymentException;
+import javax.websocket.MessageHandler;
+import javax.websocket.OnMessage;
+import javax.websocket.Session;
+import javax.websocket.server.ServerEndpoint;
+import org.easymock.Capture;
+import org.easymock.EasyMockRunner;
+import org.easymock.EasyMockSupport;
+import org.glassfish.tyrus.server.Server;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * Web socket service implementation test. It's more integration test than a unit test.
