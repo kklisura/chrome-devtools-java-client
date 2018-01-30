@@ -8,14 +8,13 @@ import com.github.kklisura.cdtp.definition.builder.support.java.builder.JavaBuil
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.JavaImportAwareBuilder;
 import com.github.kklisura.cdtp.definition.builder.support.protocol.builder.support.DomainTypeResolver;
 import com.github.kklisura.cdtp.definition.builder.support.protocol.builder.support.TypeBuildRequest;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.apache.commons.collections4.CollectionUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.apache.commons.collections4.CollectionUtils;
 
 /**
  * Event builder builds the classes for the protocol events.

@@ -2,7 +2,6 @@ package com.github.kklisura.cdtp.definition.builder.support.java.builder.support
 
 import com.github.javaparser.utils.SourceRoot;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.Builder;
-
 import java.io.IOException;
 import java.util.List;
 

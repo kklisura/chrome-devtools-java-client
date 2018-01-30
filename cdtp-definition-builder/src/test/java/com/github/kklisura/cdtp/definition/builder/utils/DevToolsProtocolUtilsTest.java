@@ -1,13 +1,12 @@
 package com.github.kklisura.cdtp.definition.builder.utils;
 
 import com.github.kklisura.cdtp.definition.builder.protocol.DevToolsProtocol;
-import org.json.JSONException;
-import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import org.json.JSONException;
+import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 /**
  * DevToolsProtocolUtils test.

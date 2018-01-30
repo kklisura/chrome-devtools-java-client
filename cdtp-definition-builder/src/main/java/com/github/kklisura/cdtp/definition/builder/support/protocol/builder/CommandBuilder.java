@@ -1,5 +1,8 @@
 package com.github.kklisura.cdtp.definition.builder.support.protocol.builder;
 
+import static com.github.kklisura.cdtp.definition.builder.support.protocol.builder.TypesBuilder.*;
+import static com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.*;
+
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Command;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Domain;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Event;
@@ -13,18 +16,14 @@ import com.github.kklisura.cdtp.definition.builder.support.java.builder.support.
 import com.github.kklisura.cdtp.definition.builder.support.protocol.builder.support.DomainTypeResolver;
 import com.github.kklisura.cdtp.definition.builder.support.protocol.builder.support.PropertyHandlerResult;
 import com.github.kklisura.cdtp.definition.builder.support.protocol.builder.support.TypeBuildRequest;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import static com.github.kklisura.cdtp.definition.builder.support.protocol.builder.TypesBuilder.*;
-import static com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.*;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Builds a domain commands.

@@ -1,8 +1,8 @@
 package com.github.kklisura.cdtp.definition.builder.support.utils;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 /**
  * String utils test.

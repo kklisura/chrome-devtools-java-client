@@ -1,10 +1,9 @@
 package com.github.kklisura.cdtp.definition.builder.protocol.types;
 
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.object.Property;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 /**
  * Command.

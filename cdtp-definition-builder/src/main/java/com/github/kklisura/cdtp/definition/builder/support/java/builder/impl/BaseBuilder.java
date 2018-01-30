@@ -4,10 +4,9 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.utils.CodeGenerationUtils;
 import com.github.javaparser.utils.SourceRoot;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.Builder;
-import lombok.Getter;
-
 import java.io.IOException;
 import java.nio.file.Path;
+import lombok.Getter;
 
 /**
  * Base builder.

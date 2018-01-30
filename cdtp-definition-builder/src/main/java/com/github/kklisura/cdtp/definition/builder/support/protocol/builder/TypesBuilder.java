@@ -1,5 +1,8 @@
 package com.github.kklisura.cdtp.definition.builder.support.protocol.builder;
 
+import static com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.buildPackageName;
+import static com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.toEnumClass;
+
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Domain;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Type;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.ArrayType;
@@ -35,13 +38,6 @@ import com.github.kklisura.cdtp.definition.builder.support.java.builder.support.
 import com.github.kklisura.cdtp.definition.builder.support.protocol.builder.support.DomainTypeResolver;
 import com.github.kklisura.cdtp.definition.builder.support.protocol.builder.support.PropertyHandlerResult;
 import com.github.kklisura.cdtp.definition.builder.support.protocol.builder.support.TypeBuildRequest;
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,9 +45,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import static com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.buildPackageName;
-import static com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.toEnumClass;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * TypesBuilder builds a types for a domain.

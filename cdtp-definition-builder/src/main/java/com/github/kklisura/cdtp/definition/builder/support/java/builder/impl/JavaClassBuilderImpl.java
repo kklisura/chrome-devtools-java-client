@@ -1,5 +1,8 @@
 package com.github.kklisura.cdtp.definition.builder.support.java.builder.impl;
 
+import static com.github.kklisura.cdtp.definition.builder.support.java.builder.utils.JavadocUtils.INDENTATION_NO_INDENTATION;
+import static com.github.kklisura.cdtp.definition.builder.support.java.builder.utils.JavadocUtils.INDENTATION_TAB;
+
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
@@ -10,17 +13,13 @@ import com.github.javaparser.ast.expr.Name;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.JavaClassBuilder;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.impl.utils.CompilationUnitUtils;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.utils.JavadocUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import static com.github.kklisura.cdtp.definition.builder.support.java.builder.utils.JavadocUtils.INDENTATION_NO_INDENTATION;
-import static com.github.kklisura.cdtp.definition.builder.support.java.builder.utils.JavadocUtils.INDENTATION_TAB;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Java class generator.

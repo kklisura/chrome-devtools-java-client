@@ -1,15 +1,14 @@
 package com.github.kklisura.cdtp.definition.builder.support.utils;
 
+import static org.junit.Assert.assertEquals;
+
 import com.github.kklisura.cdtp.definition.builder.protocol.DevToolsProtocol;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Domain;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Type;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.type.StringType;
-import org.junit.Test;
-
 import java.util.Arrays;
 import java.util.Collections;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 /**
  * Domain type utils test.

@@ -1,11 +1,10 @@
 package com.github.kklisura.cdtp.definition.builder.support.utils;
 
-import lombok.experimental.UtilityClass;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.experimental.UtilityClass;
 
 /**
  * Created by Kenan Klisura on 12/01/2018.

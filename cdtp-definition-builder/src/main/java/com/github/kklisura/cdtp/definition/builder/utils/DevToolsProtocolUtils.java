@@ -3,10 +3,9 @@ package com.github.kklisura.cdtp.definition.builder.utils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kklisura.cdtp.definition.builder.protocol.DevToolsProtocol;
-import lombok.experimental.UtilityClass;
-
 import java.io.IOException;
 import java.io.InputStream;
+import lombok.experimental.UtilityClass;
 
 /**
  * Dev tools protocol utils methods.

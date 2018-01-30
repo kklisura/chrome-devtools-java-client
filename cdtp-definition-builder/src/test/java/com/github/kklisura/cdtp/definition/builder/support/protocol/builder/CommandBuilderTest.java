@@ -1,5 +1,9 @@
 package com.github.kklisura.cdtp.definition.builder.support.protocol.builder;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Command;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Domain;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Event;
@@ -19,6 +23,9 @@ import com.github.kklisura.cdtp.definition.builder.support.java.builder.JavaInte
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.support.CombinedBuilders;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.support.MethodParam;
 import com.github.kklisura.cdtp.definition.builder.support.protocol.builder.support.DomainTypeResolver;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.easymock.Capture;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
@@ -27,14 +34,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Command builder test.

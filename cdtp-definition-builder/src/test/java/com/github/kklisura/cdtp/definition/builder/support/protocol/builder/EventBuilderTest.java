@@ -1,5 +1,9 @@
 package com.github.kklisura.cdtp.definition.builder.support.protocol.builder;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.github.kklisura.cdtp.definition.builder.protocol.DevToolsProtocol;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Domain;
 import com.github.kklisura.cdtp.definition.builder.protocol.types.Event;
@@ -12,19 +16,14 @@ import com.github.kklisura.cdtp.definition.builder.support.java.builder.JavaBuil
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.JavaClassBuilder;
 import com.github.kklisura.cdtp.definition.builder.support.utils.DomainUtils;
 import edu.emory.mathcs.backport.java.util.Collections;
+import java.util.Arrays;
+import java.util.List;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
 import org.easymock.Mock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Event builder test.

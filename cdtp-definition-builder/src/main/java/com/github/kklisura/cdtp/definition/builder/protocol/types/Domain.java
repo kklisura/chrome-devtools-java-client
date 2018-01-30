@@ -1,9 +1,8 @@
 package com.github.kklisura.cdtp.definition.builder.protocol.types;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 /**
  * Domain object.

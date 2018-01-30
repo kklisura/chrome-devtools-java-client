@@ -1,5 +1,8 @@
 package com.github.kklisura.cdtp.definition.builder;
 
+import static com.github.kklisura.cdtp.definition.builder.support.utils.DomainUtils.devToolsProtocolResolver;
+import static com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.buildPackageName;
+
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.printer.PrettyPrinter;
 import com.github.javaparser.printer.PrettyPrinterConfiguration;
@@ -21,10 +24,6 @@ import com.github.kklisura.cdtp.definition.builder.utils.DevToolsProtocolUtils;
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
 import com.google.googlejavaformat.java.JavaFormatterOptions;
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
-import org.kohsuke.args4j.ParserProperties;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,9 +31,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-
-import static com.github.kklisura.cdtp.definition.builder.support.utils.DomainUtils.devToolsProtocolResolver;
-import static com.github.kklisura.cdtp.definition.builder.support.utils.StringUtils.buildPackageName;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.ParserProperties;
 
 /**
  * Application

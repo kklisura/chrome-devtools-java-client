@@ -1,10 +1,9 @@
 package com.github.kklisura.cdtp.definition.builder;
 
+import java.io.File;
 import lombok.Getter;
 import lombok.Setter;
 import org.kohsuke.args4j.Option;
-
-import java.io.File;
 
 /**
  * Application configuration.

@@ -1,5 +1,7 @@
 package com.github.kklisura.cdtp.definition.builder.support.java.builder.impl;
 
+import static com.github.kklisura.cdtp.definition.builder.support.java.builder.utils.JavadocUtils.INDENTATION_NO_INDENTATION;
+
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.body.EnumConstantDeclaration;
 import com.github.javaparser.ast.body.EnumDeclaration;
@@ -9,8 +11,6 @@ import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.JavaEnumBuilder;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.utils.JavadocUtils;
 import org.apache.commons.lang3.StringUtils;
-
-import static com.github.kklisura.cdtp.definition.builder.support.java.builder.utils.JavadocUtils.INDENTATION_NO_INDENTATION;
 
 /**
  * Java enum builder implementation.

@@ -1,5 +1,9 @@
 package com.github.kklisura.cdtp.definition.builder.support.java.builder.impl;
 
+import static com.github.kklisura.cdtp.definition.builder.support.java.builder.impl.utils.CompilationUnitUtils.isImported;
+import static com.github.kklisura.cdtp.definition.builder.support.java.builder.utils.JavadocUtils.INDENTATION_NO_INDENTATION;
+import static com.github.kklisura.cdtp.definition.builder.support.java.builder.utils.JavadocUtils.INDENTATION_TAB;
+
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
@@ -11,15 +15,10 @@ import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.JavaInterfaceBuilder;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.support.MethodParam;
 import com.github.kklisura.cdtp.definition.builder.support.java.builder.utils.JavadocUtils;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.List;
 import java.util.Optional;
-
-import static com.github.kklisura.cdtp.definition.builder.support.java.builder.impl.utils.CompilationUnitUtils.isImported;
-import static com.github.kklisura.cdtp.definition.builder.support.java.builder.utils.JavadocUtils.INDENTATION_NO_INDENTATION;
-import static com.github.kklisura.cdtp.definition.builder.support.java.builder.utils.JavadocUtils.INDENTATION_TAB;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Java interface builder.
