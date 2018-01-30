@@ -9,9 +9,9 @@ package com.github.kklisura.cdtp;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,17 +20,19 @@ package com.github.kklisura.cdtp;
  * #L%
  */
 
+import com.github.kklisura.cdtp.launch.ChromeLauncher;
 import com.github.kklisura.cdtp.protocol.events.network.RequestWillBeSent;
 import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
 import com.github.kklisura.cdtp.services.ChromeDevToolsService;
 import com.github.kklisura.cdtp.services.ChromeService;
-import com.github.kklisura.cdtp.services.impl.ChromeServiceImpl;
 import com.github.kklisura.cdtp.services.types.ChromeTab;
 
 /** Hello world! */
 public class App {
   public static void main(String[] args) throws Exception {
-    final ChromeService chromeService = new ChromeServiceImpl(9222);
+    ChromeLauncher chromeLauncher = new ChromeLauncher();
+
+    final ChromeService chromeService = chromeLauncher.launch(false);
     final ChromeTab tab = chromeService.createTab();
 
     try (ChromeDevToolsService cdtpService = chromeService.createDevToolsService(tab)) {
@@ -47,14 +49,13 @@ public class App {
 
       cdtpService.getNetwork().enable();
 
-      // Network requestWillBeSent event
-      // Page loadEventFired
-
-      cdtpService.getPage().navigate("http://google.com");
+      cdtpService.getPage().navigate("http://github.com");
 
       Thread.sleep(10000);
     }
 
     chromeService.closeTab(tab);
+
+    chromeLauncher.close();
   }
 }
