@@ -1,4 +1,4 @@
-package com.github.kklisura.cdtp.launch.support;
+package com.github.kklisura.cdtp.launch.support.annotations;
 
 /*-
  * #%L

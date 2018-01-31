@@ -20,8 +20,13 @@ package com.github.kklisura.cdtp.services.impl;
  * #L%
  */
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import com.github.kklisura.cdtp.services.WebSocketService;
 import com.github.kklisura.cdtp.services.exceptions.WebSocketServiceException;
@@ -66,10 +71,10 @@ public class WebSocketServiceImplTest extends EasyMockSupport {
       throws WebSocketServiceException, InterruptedException {
     final AtomicBoolean isSuccess = new AtomicBoolean(Boolean.FALSE);
     final CountDownLatch countDownLatch = new CountDownLatch(1);
-    final int port = randomPort();
-    final Server server = startServer(port);
+    final Server server = startServer();
 
-    final WebSocketService webSocketService = WebSocketServiceImpl.create(createURI(port));
+    final WebSocketService webSocketService =
+        WebSocketServiceImpl.create(createURI(server.getPort()));
 
     webSocketService.addMessageHandler(
         message -> {
@@ -91,12 +96,15 @@ public class WebSocketServiceImplTest extends EasyMockSupport {
   }
 
   @Test(expected = WebSocketServiceException.class)
-  public void testConnectionAndMessageSendFails() throws WebSocketServiceException {
-    final int port = randomPort();
-    final Server server = startServer(port);
+  public void testConnectionAndMessageSendFails()
+      throws WebSocketServiceException, InterruptedException {
+    final Server server = startServer();
 
-    final WebSocketService webSocketService = WebSocketServiceImpl.create(createURI(port));
+    final WebSocketService webSocketService =
+        WebSocketServiceImpl.create(createURI(server.getPort()));
     server.stop();
+
+    Thread.sleep(500);
 
     try {
       webSocketService.send(PING);
@@ -167,10 +175,10 @@ public class WebSocketServiceImplTest extends EasyMockSupport {
     assertEquals(message, messageCapture.getValue());
   }
 
-  private static Server startServer(int port) {
+  private static Server startServer() {
     Server server;
     while (true) {
-      server = new Server("localhost", port, "/ws", new HashMap<>(), SimpleEndpoint.class);
+      server = new Server("localhost", randomPort(), "/ws", new HashMap<>(), SimpleEndpoint.class);
       try {
         server.start();
         break;

@@ -20,7 +20,7 @@ package com.github.kklisura.cdtp.launch;
  * #L%
  */
 
-import com.github.kklisura.cdtp.launch.support.ChromeArgument;
+import com.github.kklisura.cdtp.launch.support.annotations.ChromeArgument;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
@@ -325,6 +325,7 @@ public class ChromeArguments {
             .disableDefaultApps()
             .disableExtensions()
             .disableHangMonitor()
+            .disablePopupBlocking()
             .disablePromptOnRepost()
             .disableSync()
             .disableTranslate()

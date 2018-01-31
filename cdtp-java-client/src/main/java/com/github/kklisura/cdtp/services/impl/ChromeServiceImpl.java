@@ -202,6 +202,24 @@ public class ChromeServiceImpl implements ChromeService {
   }
 
   /**
+   * Returns current port number.
+   *
+   * @return Port number.
+   */
+  public int getPort() {
+    return port;
+  }
+
+  /**
+   * Returns host.
+   *
+   * @return Host.
+   */
+  public String getHost() {
+    return host;
+  }
+
+  /**
    * Clears the chrome dev tool service cache given a tab.
    *
    * @param tab Chrome tab.

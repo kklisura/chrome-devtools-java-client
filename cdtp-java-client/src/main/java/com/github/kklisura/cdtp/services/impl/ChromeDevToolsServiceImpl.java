@@ -60,8 +60,8 @@ public abstract class ChromeDevToolsServiceImpl
   private static final String TIMEOUT_ENV_PROPERTY =
       "com.github.kklisura.cdtp.websocket.readTimeout";
 
-  // Default of 10 seconds read timeout.
-  private static final long DEFAULT_READ_TIMEOUT = 10_000;
+  // Default of 60 seconds read timeout.
+  private static final long DEFAULT_READ_TIMEOUT = 60_000;
   private static final long READ_TIMEOUT =
       systemProperty(TIMEOUT_ENV_PROPERTY, DEFAULT_READ_TIMEOUT);
 

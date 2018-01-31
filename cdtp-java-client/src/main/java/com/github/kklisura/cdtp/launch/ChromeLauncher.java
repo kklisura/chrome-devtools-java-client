@@ -20,22 +20,23 @@ package com.github.kklisura.cdtp.launch;
  * #L%
  */
 
-import com.github.kklisura.cdtp.launch.support.ChromeArgument;
+import com.github.kklisura.cdtp.launch.config.ChromeLauncherConfiguration;
+import com.github.kklisura.cdtp.launch.support.ProcessLauncher;
+import com.github.kklisura.cdtp.launch.support.annotations.ChromeArgument;
+import com.github.kklisura.cdtp.launch.support.impl.ProcessLauncherImpl;
 import com.github.kklisura.cdtp.services.ChromeService;
 import com.github.kklisura.cdtp.services.impl.ChromeServiceImpl;
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.ProcessBuilder.Redirect;
 import java.lang.reflect.Field;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -51,21 +52,12 @@ import org.slf4j.LoggerFactory;
  */
 public class ChromeLauncher implements AutoCloseable {
   /** CHROME_PATH environment var */
-  public static final String CHROME_PATH = "CHROME_PATH";
+  public static final String ENV_CHROME_PATH = "CHROME_PATH";
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ChromeLauncher.class);
 
   private static final Pattern DEVTOOLS_LISTENING_LINE_MATCH =
       Pattern.compile("^DevTools listening on ws:\\/\\/.+?:(\\d+)\\/");
-
-  /** Default shutdown wait time in seconds. */
-  private static final int DEFAULT_SHUTDOWN_WAIT_TIME = 10;
-
-  /** Default startup wait time in seconds. */
-  private static final int DEFAULT_STARTUP_WAIT_TIME = 10;
-
-  /** 5 seconds wait time for threads to stop. */
-  private static final int THREAD_JOIN_WAIT_TIME = 1000 * 5;
 
   private static final String[] CHROME_BINARIES =
       new String[] {
@@ -83,9 +75,47 @@ public class ChromeLauncher implements AutoCloseable {
 
   private Thread shutdownHookThread = new Thread(this::close);
 
+  private ProcessLauncher processLauncher;
+
+  private Environment environment;
+  private ShutdownHookRegistry shutdownHookRegistry;
+
+  private ChromeLauncherConfiguration configuration;
+
   /** Instantiates a new Chrome launcher. */
   public ChromeLauncher() {
-    // Empty ctor.
+    this(new ChromeLauncherConfiguration());
+  }
+
+  /**
+   * Instantiates a new Chrome launcher.
+   *
+   * @param configuration Launch configuration.
+   */
+  public ChromeLauncher(ChromeLauncherConfiguration configuration) {
+    this(
+        new ProcessLauncherImpl(),
+        System::getenv,
+        new RuntimeShutdownHookRegistry(),
+        configuration);
+  }
+
+  /**
+   * Instantiates a new Chrome launcher with a process launcher.
+   *
+   * @param processLauncher Process launcher.
+   * @param environment Environment interface.
+   * @param shutdownHookRegistry Shutdown hooks registry.
+   */
+  public ChromeLauncher(
+      ProcessLauncher processLauncher,
+      Environment environment,
+      ShutdownHookRegistry shutdownHookRegistry,
+      ChromeLauncherConfiguration configuration) {
+    this.processLauncher = processLauncher;
+    this.environment = environment;
+    this.shutdownHookRegistry = shutdownHookRegistry;
+    this.configuration = configuration;
   }
 
   /**
@@ -140,20 +170,20 @@ public class ChromeLauncher implements AutoCloseable {
    * @return Chrome binary path.
    */
   public Path getChromeBinaryPath() {
-    String envChrome = System.getenv(CHROME_PATH);
-    if (envChrome != null && !envChrome.trim().isEmpty()) {
-      Path path = Paths.get(envChrome);
+    String envChrome = environment.getEnv(ENV_CHROME_PATH);
+    if (envChrome != null) {
+      boolean isExecutable = processLauncher.isExecutable(envChrome);
 
-      if (isExecutable(path)) {
-        return path.toAbsolutePath();
+      if (isExecutable) {
+        return Paths.get(envChrome).toAbsolutePath();
       }
     }
 
     for (String binary : CHROME_BINARIES) {
-      Path path = Paths.get(binary);
+      boolean isExecutable = processLauncher.isExecutable(binary);
 
-      if (isExecutable(path)) {
-        return path.toAbsolutePath();
+      if (isExecutable) {
+        return Paths.get(binary).toAbsolutePath();
       }
     }
 
@@ -168,29 +198,26 @@ public class ChromeLauncher implements AutoCloseable {
       chromeProcess.destroy();
 
       try {
-        chromeProcess.waitFor(DEFAULT_SHUTDOWN_WAIT_TIME, TimeUnit.SECONDS);
-
-        if (chromeProcess.isAlive()) {
+        if (!chromeProcess.waitFor(configuration.getShutdownWaitTime(), TimeUnit.SECONDS)) {
           chromeProcess.destroyForcibly();
-          chromeProcess.waitFor(DEFAULT_SHUTDOWN_WAIT_TIME, TimeUnit.SECONDS);
+          chromeProcess.waitFor(configuration.getShutdownWaitTime(), TimeUnit.SECONDS);
         }
         chromeProcess = null;
 
         LOGGER.info("Chrome process closed.");
       } catch (InterruptedException e) {
         LOGGER.error("Interrupted while waiting for chrome process to shutdown.", e);
+
+        chromeProcess.destroyForcibly();
+        chromeProcess = null;
       }
 
       try {
-        Runtime.getRuntime().removeShutdownHook(shutdownHookThread);
+        shutdownHookRegistry.remove(shutdownHookThread);
       } catch (IllegalStateException e) {
         // Ignore this exceptions; We're removing hook even we're still in shutdown.
       }
     }
-  }
-
-  private static boolean isExecutable(Path path) {
-    return Files.isRegularFile(path) && Files.isReadable(path) && Files.isExecutable(path);
   }
 
   private int launchChromeProcess(Path chromeBinary, ChromeArguments chromeArguments)
@@ -199,38 +226,30 @@ public class ChromeLauncher implements AutoCloseable {
       throw new IllegalStateException("Chrome process has already been started started.");
     }
 
+    shutdownHookRegistry.register(shutdownHookThread);
+
     Map<String, Object> argumentsMap = getArguments(chromeArguments);
 
-    List<String> arguments = new ArrayList<>();
-    arguments.add(chromeBinary.toString());
-
-    appendArgumentsMap(arguments, argumentsMap);
+    List<String> arguments = argsMapToArgsList(argumentsMap);
 
     LOGGER.info(
         "Launching chrome process {} with arguments {}", chromeBinary.toString(), argumentsMap);
 
-    // Install a shutdown hook.
-    Runtime.getRuntime().addShutdownHook(shutdownHookThread);
-
-    ProcessBuilder processBuilder =
-        new ProcessBuilder(arguments).redirectErrorStream(true).redirectOutput(Redirect.PIPE);
-
-    chromeProcess = processBuilder.start();
+    chromeProcess = processLauncher.launch(chromeBinary.toString(), arguments);
     return waitForDevToolsServer(chromeProcess);
   }
 
   private int waitForDevToolsServer(final Process process) {
     final AtomicInteger port = new AtomicInteger();
     final AtomicBoolean success = new AtomicBoolean(false);
-    final CountDownLatch countDownLatch = new CountDownLatch(1);
 
     Thread readLineThread =
         new Thread(
             () -> {
-              BufferedReader reader =
-                  new BufferedReader(new InputStreamReader(process.getInputStream()));
-
+              BufferedReader reader = null;
               try {
+                reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
                 // Wait for DevTools listening line and extract port number.
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -241,23 +260,19 @@ public class ChromeLauncher implements AutoCloseable {
                     break;
                   }
                 }
-              } catch (IOException e) {
+              } catch (Exception e) {
                 LOGGER.error("Failed while waiting for dev tools server.", e);
               } finally {
-                try {
-                  reader.close();
-                } catch (IOException e) {
-                  // Ignore this exception.
-                }
-
-                countDownLatch.countDown();
+                closeQuietly(reader);
               }
             });
 
     readLineThread.start();
 
     try {
-      if (!countDownLatch.await(DEFAULT_STARTUP_WAIT_TIME, TimeUnit.SECONDS)) {
+      readLineThread.join(TimeUnit.SECONDS.toMillis(configuration.getStartupWaitTime()));
+
+      if (!success.get()) {
         close(readLineThread);
         throw new RuntimeException("Failed while waiting for chrome to start. Timeout expired!");
       }
@@ -268,35 +283,31 @@ public class ChromeLauncher implements AutoCloseable {
       throw new RuntimeException("Interrupted while waiting for dev tools server.", e);
     }
 
-    if (!success.get()) {
-      close(readLineThread);
-      throw new RuntimeException("Failed while waiting for chrome to start. Timeout expired!");
-    }
-
     return port.get();
   }
 
   private void close(Thread thread) {
     close();
     try {
-      thread.join(THREAD_JOIN_WAIT_TIME);
-    } catch (InterruptedException e1) {
+      thread.join(TimeUnit.SECONDS.toMillis(configuration.getThreadWaitTime()));
+    } catch (InterruptedException e) {
       // Ignore this exception.
     }
   }
 
-  private List<String> appendArgumentsMap(List<String> arguments, Map<String, Object> args) {
+  private List<String> argsMapToArgsList(Map<String, Object> args) {
+    List<String> result = new ArrayList<>();
     for (Map.Entry<String, Object> entry : args.entrySet()) {
       if (entry.getValue() != null && !Boolean.FALSE.equals(entry.getValue())) {
         if (Boolean.TRUE.equals(entry.getValue())) {
-          arguments.add("--" + entry.getKey());
+          result.add("--" + entry.getKey());
         } else {
-          arguments.add("--" + entry.getKey() + "=" + entry.getValue());
+          result.add("--" + entry.getKey() + "=" + entry.getValue());
         }
       }
     }
 
-    return arguments;
+    return result;
   }
 
   private Map<String, Object> getArguments(ChromeArguments arguments) {
@@ -320,4 +331,50 @@ public class ChromeLauncher implements AutoCloseable {
 
     return args;
   }
+
+  private static void closeQuietly(Closeable closeable) {
+    if (closeable != null) {
+      try {
+        closeable.close();
+      } catch (IOException e) {
+        // Ignore this exception.
+      }
+    }
+  }
+
+  /** Environment interface. */
+  @FunctionalInterface
+  public interface Environment {
+    /**
+     * Returns environment value var.
+     *
+     * @param name Environment var name.
+     * @return Value.
+     */
+    String getEnv(String name);
+  }
+
+  /** Shutdown hooks registry. */
+  public interface ShutdownHookRegistry {
+    /**
+     * Registers a new shutdown hook thread.
+     *
+     * @param thread Thread.
+     */
+    default void register(Thread thread) {
+      Runtime.getRuntime().addShutdownHook(thread);
+    }
+
+    /**
+     * Removes a shutdown thread.
+     *
+     * @param thread Thread.
+     */
+    default void remove(Thread thread) {
+      Runtime.getRuntime().removeShutdownHook(thread);
+    }
+  }
+
+  /** Runtime based shutdown hook. */
+  public static class RuntimeShutdownHookRegistry implements ShutdownHookRegistry {}
 }

@@ -21,41 +21,47 @@ package com.github.kklisura.cdtp;
  */
 
 import com.github.kklisura.cdtp.launch.ChromeLauncher;
-import com.github.kklisura.cdtp.protocol.events.network.RequestWillBeSent;
-import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
+import com.github.kklisura.cdtp.protocol.commands.Network;
+import com.github.kklisura.cdtp.protocol.commands.Page;
 import com.github.kklisura.cdtp.services.ChromeDevToolsService;
 import com.github.kklisura.cdtp.services.ChromeService;
 import com.github.kklisura.cdtp.services.types.ChromeTab;
+import java.util.concurrent.CountDownLatch;
 
 /** Hello world! */
 public class App {
   public static void main(String[] args) throws Exception {
-    ChromeLauncher chromeLauncher = new ChromeLauncher();
+    // Create chrome launcher
+    try (final ChromeLauncher chromeLauncher = new ChromeLauncher()) {
 
-    final ChromeService chromeService = chromeLauncher.launch(false);
-    final ChromeTab tab = chromeService.createTab();
+      // Launch chrome either as headless (true) or no.
+      final ChromeService chromeService = chromeLauncher.launch(true);
 
-    try (ChromeDevToolsService cdtpService = chromeService.createDevToolsService(tab)) {
+      // Create empty tab (about:blank)
+      final ChromeTab tab = chromeService.createTab();
 
-      cdtpService
-          .getNetwork()
-          .onRequestWillBeSent(
-              new EventHandler<RequestWillBeSent>() {
-                @Override
-                public void onEvent(RequestWillBeSent event) {
-                  System.out.println(event.getRequest().getUrl());
-                }
-              });
+      // Get dev tools service to this tab
+      try (ChromeDevToolsService devToolsService = chromeService.createDevToolsService(tab)) {
+        final Network network = devToolsService.getNetwork();
+        final Page page = devToolsService.getPage();
 
-      cdtpService.getNetwork().enable();
+        network.onRequestWillBeSent(event -> System.out.println(event.getRequest().getUrl()));
+        network.enable();
 
-      cdtpService.getPage().navigate("http://github.com");
+        page.navigate("http://klix.ba");
 
-      Thread.sleep(10000);
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        network.onLoadingFinished(
+            event -> {
+              System.out.println("Finished");
+              countDownLatch.countDown();
+            });
+
+        countDownLatch.await();
+      }
+
+      chromeService.closeTab(tab);
     }
-
-    chromeService.closeTab(tab);
-
-    chromeLauncher.close();
   }
 }
