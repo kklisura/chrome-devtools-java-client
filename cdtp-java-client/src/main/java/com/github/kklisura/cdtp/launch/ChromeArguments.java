@@ -313,6 +313,7 @@ public class ChromeArguments {
    *
    * @param headless Headless.
    * @return Builder. builder
+   * @throws RuntimeException If it fails to create temp directory for user-data-dir.
    */
   public static Builder defaults(boolean headless) {
     Builder builder =

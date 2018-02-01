@@ -33,6 +33,7 @@ import static org.junit.Assert.fail;
 import com.github.kklisura.cdtp.launch.ChromeLauncher.Environment;
 import com.github.kklisura.cdtp.launch.ChromeLauncher.ShutdownHookRegistry;
 import com.github.kklisura.cdtp.launch.config.ChromeLauncherConfiguration;
+import com.github.kklisura.cdtp.launch.exceptions.ChromeProcessTimeoutException;
 import com.github.kklisura.cdtp.launch.support.ProcessLauncher;
 import com.github.kklisura.cdtp.services.ChromeService;
 import com.github.kklisura.cdtp.services.impl.ChromeServiceImpl;
@@ -141,7 +142,8 @@ public class ChromeLauncherTest extends EasyMockSupport {
   }
 
   @Test
-  public void testLaunchWithBinaryAndArguments() throws IOException, InterruptedException {
+  public void testLaunchWithBinaryAndArguments()
+      throws IOException, InterruptedException, ChromeProcessTimeoutException {
     final Path binaryPath = Paths.get("test-binary-path");
 
     final ChromeArguments chromeArguments =
@@ -209,7 +211,7 @@ public class ChromeLauncherTest extends EasyMockSupport {
 
   @Test
   public void testLaunchWithBinaryAndArgumentsAndCloseWithInterruptedException()
-      throws IOException, InterruptedException {
+      throws IOException, InterruptedException, ChromeProcessTimeoutException {
     final Path binaryPath = Paths.get("test-binary-path");
 
     final ChromeArguments chromeArguments =
@@ -268,7 +270,8 @@ public class ChromeLauncherTest extends EasyMockSupport {
   }
 
   @Test
-  public void testLaunchHeadlessWithBinary() throws IOException, InterruptedException {
+  public void testLaunchHeadlessWithBinary()
+      throws IOException, InterruptedException, ChromeProcessTimeoutException {
     expect(environment.getEnv("CHROME_PATH")).andReturn("/test-binary-path");
     expect(processLauncher.isExecutable("/test-binary-path")).andReturn(true);
 
@@ -319,7 +322,7 @@ public class ChromeLauncherTest extends EasyMockSupport {
 
   @Test(expected = RuntimeException.class)
   public void testLaunchWithBinaryAndArgumentsFailsOnReading()
-      throws IOException, InterruptedException {
+      throws IOException, InterruptedException, ChromeProcessTimeoutException {
     final ChromeArguments chromeArguments =
         ChromeArguments.builder()
             .incognito()
@@ -367,7 +370,7 @@ public class ChromeLauncherTest extends EasyMockSupport {
     Capture<Thread> addCaptureShutdownThread = Capture.newInstance();
     shutdownHookRegistry.register(capture(addCaptureShutdownThread));
 
-    final String trigger = "\r\n\r\n";
+    final String trigger = "test\r\ntest";
     expect(process.getInputStream()).andReturn(new ByteArrayInputStream(trigger.getBytes()));
 
     Capture<List<String>> captureArguments = Capture.newInstance();
@@ -390,8 +393,10 @@ public class ChromeLauncherTest extends EasyMockSupport {
     try {
       launcher.launch(binaryPath, chromeArguments);
       fail("Exception not thrown on timeout.");
-    } catch (RuntimeException e) {
-      assertEquals("Failed while waiting for chrome to start. Timeout expired!", e.getMessage());
+    } catch (ChromeProcessTimeoutException e) {
+      assertEquals(
+          "Failed while waiting for chrome to start: Timeout expired! Chrome output: test\ntest",
+          e.getMessage());
     }
 
     assertEquals(removeCaptureShutdownThread.getValue(), addCaptureShutdownThread.getValue());
@@ -413,7 +418,7 @@ public class ChromeLauncherTest extends EasyMockSupport {
     Capture<Thread> addCaptureShutdownThread = Capture.newInstance();
     shutdownHookRegistry.register(capture(addCaptureShutdownThread));
 
-    final String trigger = "\r\n\r\n";
+    final String trigger = "test\r\n\r\n";
     expect(process.getInputStream()).andReturn(new ByteArrayInputStream(trigger.getBytes()));
 
     Capture<List<String>> captureArguments = Capture.newInstance();
@@ -438,8 +443,10 @@ public class ChromeLauncherTest extends EasyMockSupport {
     try {
       launcher.launch(binaryPath, chromeArguments);
       fail("Exception not thrown on timeout.");
-    } catch (RuntimeException e) {
-      assertEquals("Failed while waiting for chrome to start. Timeout expired!", e.getMessage());
+    } catch (ChromeProcessTimeoutException e) {
+      assertEquals(
+          "Failed while waiting for chrome to start: Timeout expired! Chrome output: test\n",
+          e.getMessage());
     }
 
     assertEquals(removeCaptureShutdownThread.getValue(), addCaptureShutdownThread.getValue());

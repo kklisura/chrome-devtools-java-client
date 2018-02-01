@@ -20,47 +20,51 @@ package com.github.kklisura.cdtp;
  * #L%
  */
 
+import static com.github.kklisura.cdtp.utils.ChromeDevToolsUtils.waitForEvent;
+
 import com.github.kklisura.cdtp.launch.ChromeLauncher;
 import com.github.kklisura.cdtp.protocol.commands.Network;
 import com.github.kklisura.cdtp.protocol.commands.Page;
 import com.github.kklisura.cdtp.services.ChromeDevToolsService;
 import com.github.kklisura.cdtp.services.ChromeService;
 import com.github.kklisura.cdtp.services.types.ChromeTab;
-import java.util.concurrent.CountDownLatch;
+import java.util.Arrays;
 
 /** Hello world! */
 public class App {
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) throws InterruptedException {
     // Create chrome launcher
-    try (final ChromeLauncher chromeLauncher = new ChromeLauncher()) {
+    try (final ChromeLauncher launcher = new ChromeLauncher()) {
+      // Launch chrome either as headless (true) or regular (false).
+      final ChromeService chromeService = launcher.launch(false);
 
-      // Launch chrome either as headless (true) or no.
-      final ChromeService chromeService = chromeLauncher.launch(true);
-
-      // Create empty tab (about:blank)
+      // Create empty tab ie about:blank.
       final ChromeTab tab = chromeService.createTab();
 
-      // Get dev tools service to this tab
-      try (ChromeDevToolsService devToolsService = chromeService.createDevToolsService(tab)) {
+      // Get DevTools service to this tab
+      try (final ChromeDevToolsService devToolsService = chromeService.createDevToolsService(tab)) {
+        // Get individual commands
         final Network network = devToolsService.getNetwork();
         final Page page = devToolsService.getPage();
 
+        // Log requests that will be sent.
         network.onRequestWillBeSent(event -> System.out.println(event.getRequest().getUrl()));
+
+        network.setBlockedURLs(Arrays.asList("**/*.png", "**/*.css"));
+
+        // Enable network events.
         network.enable();
 
-        page.navigate("http://klix.ba");
+        // Navigate to github.com
+        page.navigate("http://github.com");
 
-        CountDownLatch countDownLatch = new CountDownLatch(1);
+        // Wait until loading is finished.
+        waitForEvent(network::onLoadingFinished);
 
-        network.onLoadingFinished(
-            event -> {
-              System.out.println("Finished");
-              countDownLatch.countDown();
-            });
-
-        countDownLatch.await();
+        Thread.sleep(10000);
       }
 
+      // Close the tab.
       chromeService.closeTab(tab);
     }
   }

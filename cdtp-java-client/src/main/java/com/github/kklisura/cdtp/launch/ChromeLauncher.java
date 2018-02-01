@@ -20,14 +20,17 @@ package com.github.kklisura.cdtp.launch;
  * #L%
  */
 
+import static com.github.kklisura.cdtp.utils.ChromeDevToolsUtils.closeQuietly;
+
 import com.github.kklisura.cdtp.launch.config.ChromeLauncherConfiguration;
+import com.github.kklisura.cdtp.launch.exceptions.ChromeProcessException;
+import com.github.kklisura.cdtp.launch.exceptions.ChromeProcessTimeoutException;
 import com.github.kklisura.cdtp.launch.support.ProcessLauncher;
 import com.github.kklisura.cdtp.launch.support.annotations.ChromeArgument;
 import com.github.kklisura.cdtp.launch.support.impl.ProcessLauncherImpl;
 import com.github.kklisura.cdtp.services.ChromeService;
 import com.github.kklisura.cdtp.services.impl.ChromeServiceImpl;
 import java.io.BufferedReader;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
@@ -40,6 +43,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
@@ -56,7 +60,7 @@ public class ChromeLauncher implements AutoCloseable {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ChromeLauncher.class);
 
-  private static final Pattern DEVTOOLS_LISTENING_LINE_MATCH =
+  private static final Pattern DEVTOOLS_LISTENING_LINE_PATTERN =
       Pattern.compile("^DevTools listening on ws:\\/\\/.+?:(\\d+)\\/");
 
   private static final String[] CHROME_BINARIES =
@@ -124,10 +128,12 @@ public class ChromeLauncher implements AutoCloseable {
    * @param chromeBinaryPath the chrome binary path
    * @param chromeArguments the chrome arguments
    * @return Chrome service.
-   * @throws IOException the io exception
+   * @throws IllegalStateException If chrome process has already been started.
+   * @throws ChromeProcessException If an I/O error occurs during chrome process start.
+   * @throws ChromeProcessTimeoutException If timeout expired while waiting for chrome to start.
    */
   public ChromeService launch(Path chromeBinaryPath, ChromeArguments chromeArguments)
-      throws IOException {
+      throws ChromeProcessException {
     int port = launchChromeProcess(chromeBinaryPath, chromeArguments);
     return new ChromeServiceImpl(port);
   }
@@ -137,9 +143,11 @@ public class ChromeLauncher implements AutoCloseable {
    *
    * @param chromeArguments the chrome arguments
    * @return Chrome service.
-   * @throws IOException the io exception
+   * @throws IllegalStateException If chrome process has already been started.
+   * @throws ChromeProcessException If an I/O error occurs during chrome process start.
+   * @throws ChromeProcessTimeoutException If timeout expired while waiting for chrome to start.
    */
-  public ChromeService launch(ChromeArguments chromeArguments) throws IOException {
+  public ChromeService launch(ChromeArguments chromeArguments) throws ChromeProcessException {
     return launch(getChromeBinaryPath(), chromeArguments);
   }
 
@@ -148,9 +156,11 @@ public class ChromeLauncher implements AutoCloseable {
    *
    * @param headless Headless flag.
    * @return Chrome service.
-   * @throws IOException the io exception
+   * @throws IllegalStateException If chrome process has already been started.
+   * @throws ChromeProcessException If an I/O error occurs during chrome process start.
+   * @throws ChromeProcessTimeoutException If timeout expired while waiting for chrome to start.
    */
-  public ChromeService launch(boolean headless) throws IOException {
+  public ChromeService launch(boolean headless) throws ChromeProcessException {
     return launch(getChromeBinaryPath(), ChromeArguments.defaults(headless).build());
   }
 
@@ -158,9 +168,11 @@ public class ChromeLauncher implements AutoCloseable {
    * Launches a headless chrome with default arguments.
    *
    * @return Chrome service.
-   * @throws IOException the io exception
+   * @throws IllegalStateException If chrome process has already been started.
+   * @throws ChromeProcessException If an I/O error occurs during chrome process start.
+   * @throws ChromeProcessTimeoutException If timeout expired while waiting for chrome to start.
    */
-  public ChromeService launch() throws IOException {
+  public ChromeService launch() throws ChromeProcessException {
     return launch(true);
   }
 
@@ -177,6 +189,8 @@ public class ChromeLauncher implements AutoCloseable {
       if (isExecutable) {
         return Paths.get(envChrome).toAbsolutePath();
       }
+
+      throw new RuntimeException("CHROME_PATH environment value is not an executable file.");
     }
 
     for (String binary : CHROME_BINARIES) {
@@ -220,8 +234,18 @@ public class ChromeLauncher implements AutoCloseable {
     }
   }
 
+  /**
+   * Launches a chrome process given a chrome binary and its arguments.
+   *
+   * @param chromeBinary Chrome binary path.
+   * @param chromeArguments Chrome arguments.
+   * @return Port on which devtools is listening.
+   * @throws IllegalStateException If chrome process has already been started.
+   * @throws ChromeProcessException If an I/O error occurs during chrome process start.
+   * @throws ChromeProcessTimeoutException If timeout expired while waiting for chrome to start.
+   */
   private int launchChromeProcess(Path chromeBinary, ChromeArguments chromeArguments)
-      throws IOException {
+      throws ChromeProcessException {
     if (chromeProcess != null) {
       throw new IllegalStateException("Chrome process has already been started started.");
     }
@@ -235,17 +259,36 @@ public class ChromeLauncher implements AutoCloseable {
     LOGGER.info(
         "Launching chrome process {} with arguments {}", chromeBinary.toString(), argumentsMap);
 
-    chromeProcess = processLauncher.launch(chromeBinary.toString(), arguments);
-    return waitForDevToolsServer(chromeProcess);
+    try {
+      chromeProcess = processLauncher.launch(chromeBinary.toString(), arguments);
+      return waitForDevToolsServer(chromeProcess);
+    } catch (IOException e) {
+      // Unsubscribe from registry on exceptions.
+      shutdownHookRegistry.remove(shutdownHookThread);
+
+      throw new ChromeProcessException("Failed starting chrome process.", e);
+    } catch (Exception e) {
+      close();
+      throw e;
+    }
   }
 
-  private int waitForDevToolsServer(final Process process) {
+  /**
+   * Waits for DevTools server is up on chrome process.
+   *
+   * @param process Chrome process.
+   * @return DevTools listening port.
+   * @throws ChromeProcessTimeoutException If timeout expired while waiting for chrome process.
+   */
+  private int waitForDevToolsServer(final Process process) throws ChromeProcessTimeoutException {
     final AtomicInteger port = new AtomicInteger();
     final AtomicBoolean success = new AtomicBoolean(false);
+    final AtomicReference<String> chromeOutput = new AtomicReference<>("");
 
     Thread readLineThread =
         new Thread(
             () -> {
+              StringBuilder chromeOutputBuilder = new StringBuilder();
               BufferedReader reader = null;
               try {
                 reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -253,16 +296,22 @@ public class ChromeLauncher implements AutoCloseable {
                 // Wait for DevTools listening line and extract port number.
                 String line;
                 while ((line = reader.readLine()) != null) {
-                  Matcher matcher = DEVTOOLS_LISTENING_LINE_MATCH.matcher(line);
+                  Matcher matcher = DEVTOOLS_LISTENING_LINE_PATTERN.matcher(line);
                   if (matcher.find()) {
                     port.set(Integer.parseInt(matcher.group(1)));
                     success.set(true);
                     break;
                   }
+
+                  if (chromeOutputBuilder.length() != 0) {
+                    chromeOutputBuilder.append(System.lineSeparator());
+                  }
+                  chromeOutputBuilder.append(line);
                 }
               } catch (Exception e) {
                 LOGGER.error("Failed while waiting for dev tools server.", e);
               } finally {
+                chromeOutput.set(chromeOutputBuilder.toString());
                 closeQuietly(reader);
               }
             });
@@ -274,7 +323,11 @@ public class ChromeLauncher implements AutoCloseable {
 
       if (!success.get()) {
         close(readLineThread);
-        throw new RuntimeException("Failed while waiting for chrome to start. Timeout expired!");
+
+        throw new ChromeProcessTimeoutException(
+            "Failed while waiting for chrome to start: "
+                + "Timeout expired! Chrome output: "
+                + chromeOutput.get());
       }
     } catch (InterruptedException e) {
       close(readLineThread);
@@ -287,7 +340,6 @@ public class ChromeLauncher implements AutoCloseable {
   }
 
   private void close(Thread thread) {
-    close();
     try {
       thread.join(TimeUnit.SECONDS.toMillis(configuration.getThreadWaitTime()));
     } catch (InterruptedException e) {
@@ -330,16 +382,6 @@ public class ChromeLauncher implements AutoCloseable {
     }
 
     return args;
-  }
-
-  private static void closeQuietly(Closeable closeable) {
-    if (closeable != null) {
-      try {
-        closeable.close();
-      } catch (IOException e) {
-        // Ignore this exception.
-      }
-    }
   }
 
   /** Environment interface. */

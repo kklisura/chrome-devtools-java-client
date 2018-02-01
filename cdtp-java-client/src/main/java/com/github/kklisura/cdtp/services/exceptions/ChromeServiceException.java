@@ -25,7 +25,7 @@ package com.github.kklisura.cdtp.services.exceptions;
  *
  * @author Kenan Klisura
  */
-public class ChromeServiceException extends Exception {
+public class ChromeServiceException extends RuntimeException {
   public ChromeServiceException(String message) {
     super(message);
   }

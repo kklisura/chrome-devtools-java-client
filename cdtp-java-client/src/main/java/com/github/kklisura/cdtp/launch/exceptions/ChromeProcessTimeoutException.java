@@ -1,4 +1,4 @@
-package com.github.kklisura.cdtp.launch.support;
+package com.github.kklisura.cdtp.launch.exceptions;
 
 /*-
  * #%L
@@ -20,30 +20,28 @@ package com.github.kklisura.cdtp.launch.support;
  * #L%
  */
 
-import java.io.IOException;
-import java.util.List;
-
 /**
- * Process launcher interface.
+ * Exception thrown when timeout expired when waiting for chrome process.
  *
  * @author Kenan Klisura
  */
-public interface ProcessLauncher {
+public class ChromeProcessTimeoutException extends ChromeProcessException {
   /**
-   * Launches a given program with a given list of arguments.
+   * Instantiates a new Chrome process timeout exception.
    *
-   * @param program Program path to launch.
-   * @param args Program arguments.
-   * @return Process.
-   * @throws IOException If an I/O error occurs during process start.
+   * @param message Message.
    */
-  Process launch(String program, List<String> args) throws IOException;
+  public ChromeProcessTimeoutException(String message) {
+    super(message);
+  }
 
   /**
-   * Returns true if given path is executable or not.
+   * Instantiates a new Chrome process timeout exception.
    *
-   * @param binaryPath Binary path.
-   * @return True if binary path is executable.
+   * @param message Message.
+   * @param cause Exception cause
    */
-  boolean isExecutable(String binaryPath);
+  public ChromeProcessTimeoutException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }
