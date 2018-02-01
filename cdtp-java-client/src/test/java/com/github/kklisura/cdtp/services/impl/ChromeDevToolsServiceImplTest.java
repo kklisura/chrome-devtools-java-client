@@ -20,15 +20,25 @@ package com.github.kklisura.cdtp.services.impl;
  * #L%
  */
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
 import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.services.WebSocketService;
+import com.github.kklisura.cdtp.services.config.ChromeDevToolsServiceConfiguration;
 import com.github.kklisura.cdtp.services.exceptions.ChromeDevToolsInvocationException;
 import com.github.kklisura.cdtp.services.exceptions.WebSocketServiceException;
+import com.github.kklisura.cdtp.services.executors.EventExecutorService;
 import com.github.kklisura.cdtp.services.types.ChromeTab;
 import com.github.kklisura.cdtp.services.types.EventListenerImpl;
 import com.github.kklisura.cdtp.services.types.MethodInvocation;
@@ -54,6 +64,11 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
 
   @Mock private WebSocketService webSocketService;
 
+  @Mock private EventExecutorService eventExecutorService;
+
+  private ImmediateEventExecutorService immediateEventExecutorService =
+      new ImmediateEventExecutorService();
+
   private ChromeDevToolsServiceImpl service;
 
   @Before
@@ -61,11 +76,14 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
     webSocketService.addMessageHandler(anyObject());
     replayAll();
 
+    ChromeDevToolsServiceConfiguration configuration = new ChromeDevToolsServiceConfiguration();
+    configuration.setEventExecutorService(eventExecutorService);
+
     service =
         ProxyUtils.createProxyFromAbstract(
             ChromeDevToolsServiceImpl.class,
-            new Class[] {WebSocketService.class},
-            new Object[] {webSocketService},
+            new Class[] {WebSocketService.class, ChromeDevToolsServiceConfiguration.class},
+            new Object[] {webSocketService, configuration},
             (proxy, method, args) -> {
               throw new RuntimeException("This should not be called during testing");
             });
@@ -268,11 +286,14 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
     webSocketService.addMessageHandler(anyObject());
     replayAll();
 
+    ChromeDevToolsServiceConfiguration configuration = new ChromeDevToolsServiceConfiguration();
+    configuration.setReadTimeout(1);
+
     service =
         ProxyUtils.createProxyFromAbstract(
             ChromeDevToolsServiceImpl.class,
-            new Class[] {WebSocketService.class, Long.TYPE},
-            new Object[] {webSocketService, 100},
+            new Class[] {WebSocketService.class, ChromeDevToolsServiceConfiguration.class},
+            new Object[] {webSocketService, configuration},
             (proxy, method, args) -> {
               throw new RuntimeException("This should not be called during testing");
             });
@@ -376,8 +397,26 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
 
   @Test
   public void testClose() {
+    webSocketService.close();
+    eventExecutorService.shutdown();
+
+    replayAll();
+
     service.close();
 
+    verifyAll();
+    resetAll();
+
+    // Test close does nothing when already closed
+    replayAll();
+
+    service.close();
+
+    verifyAll();
+  }
+
+  @Test
+  public void testCloseRemovesDevToolsServiceCache() {
     ChromeTab chromeTab = new ChromeTab();
 
     ChromeServiceImpl chromeService = mock(ChromeServiceImpl.class);
@@ -386,11 +425,14 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
 
     chromeService.clearChromeDevToolsServiceCache(chromeTab);
 
-    replay(chromeService);
+    webSocketService.close();
+    eventExecutorService.shutdown();
+
+    replay(chromeService, webSocketService, eventExecutorService);
 
     service.close();
 
-    verify(chromeService);
+    verify(chromeService, webSocketService, eventExecutorService);
   }
 
   @Test
@@ -419,7 +461,15 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
 
     EventListener eventListener =
         service.addEventListener("Domain", "name", eventHandler, TestMessage.class);
+
+    expectEventExecutorCall(1);
+
+    replayAll();
+
     service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+    verifyAll();
+    resetAll();
 
     assertNotNull(testMessageCapture.getValue());
     assertEquals("testValue", testMessageCapture.getValue().getTestProperty());
@@ -428,7 +478,11 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
 
     eventListener.off();
 
+    replayAll();
+
     service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+    verifyAll();
 
     assertFalse(testMessageCapture.hasCaptured());
   }
@@ -444,7 +498,14 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
 
     EventListener eventListener =
         service.addEventListener("Domain", "name", eventHandler, TestMessage.class);
+
+    expectEventExecutorCall(1);
+    replayAll();
+
     service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+    verifyAll();
+    resetAll();
 
     assertNotNull(testMessageCapture.getValue());
     assertEquals("testValue", testMessageCapture.getValue().getTestProperty());
@@ -453,7 +514,11 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
 
     eventListener.unsubscribe();
 
+    replayAll();
+
     service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+    verifyAll();
 
     assertFalse(testMessageCapture.hasCaptured());
   }
@@ -469,7 +534,15 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
 
     EventListener eventListener =
         service.addEventListener("Domain", "name", eventHandler, TestMessage.class);
+
+    expectEventExecutorCall(1);
+
+    replayAll();
+
     service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+    verifyAll();
+    resetAll();
 
     assertNotNull(testMessageCapture.getValue());
     assertEquals("testValue", testMessageCapture.getValue().getTestProperty());
@@ -478,7 +551,11 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
 
     testMessageCapture.reset();
 
+    replayAll();
+
     service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+    verifyAll();
 
     assertFalse(testMessageCapture.hasCaptured());
   }
@@ -494,14 +571,22 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
         event -> {
           throw new RuntimeException("test");
         };
-    EventHandler<TestMessage> eventHandler = testMessageCapture::setValue;
-
     EventListener eventListenerWithException =
         service.addEventListener("Domain", "name", eventHandlerThrowsException, TestMessage.class);
+
+    EventHandler<TestMessage> eventHandler = testMessageCapture::setValue;
+
     EventListener eventListener =
         service.addEventListener("Domain", "name", eventHandler, TestMessage.class);
 
+    expectEventExecutorCall(1);
+
+    replayAll();
+
     service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+    verifyAll();
+    resetAll();
 
     assertNotNull(testMessageCapture.getValue());
     assertEquals("testValue", testMessageCapture.getValue().getTestProperty());
@@ -510,7 +595,13 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
 
     testMessageCapture.reset();
 
+    expectEventExecutorCall(1);
+
+    replayAll();
+
     service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
+
+    verifyAll();
 
     assertNotNull(testMessageCapture.getValue());
     assertEquals("testValue", testMessageCapture.getValue().getTestProperty());
@@ -527,6 +618,11 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
               }
             })
         .start();
+  }
+
+  private void expectEventExecutorCall(int times) {
+    eventExecutorService.execute(anyObject());
+    expectLastCall().andDelegateTo(immediateEventExecutorService).times(times);
   }
 
   public static class TestMessage {
@@ -547,6 +643,18 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
 
     public void setTestProperty2(String testProperty2) {
       this.testProperty2 = testProperty2;
+    }
+  }
+
+  public static class ImmediateEventExecutorService implements EventExecutorService {
+    @Override
+    public void execute(Runnable runnable) {
+      runnable.run();
+    }
+
+    @Override
+    public void shutdown() {
+      throw new RuntimeException("test");
     }
   }
 }

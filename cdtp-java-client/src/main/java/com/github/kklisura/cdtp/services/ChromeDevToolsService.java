@@ -48,6 +48,16 @@ public interface ChromeDevToolsService extends ChromeDevTools, AutoCloseable {
   void close();
 
   /**
+   * Returns true if devtools is closed.
+   *
+   * @return True if its closed.
+   */
+  boolean isClosed();
+
+  /** Waits until devtools is closed. */
+  void waitUntilClosed();
+
+  /**
    * Adds an event listener on a given event name belonging to some domain.
    *
    * @param domainName Domain.

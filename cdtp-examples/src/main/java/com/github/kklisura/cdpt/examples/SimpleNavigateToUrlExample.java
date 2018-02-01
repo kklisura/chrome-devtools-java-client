@@ -9,7 +9,7 @@ import com.github.kklisura.cdtp.services.types.ChromeTab;
 /**
  * Simple navigate-to-url example with DevTools Protocol java client.
  *
- * The following example with open chrome, create a tab with about:blank url and then navigate to
+ * <p>The following example will open chrome, create a tab with about:blank url and then navigate to
  * github.com. It will then wait 2seconds and it will navigate to twitter.com. It will again wait
  * for 2seconds and on the end it will close the tab and close the browser.
  *

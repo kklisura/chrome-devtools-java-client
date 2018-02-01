@@ -20,6 +20,7 @@ package com.github.kklisura.cdtp.services;
  * #L%
  */
 
+import com.github.kklisura.cdtp.services.config.ChromeDevToolsServiceConfiguration;
 import com.github.kklisura.cdtp.services.exceptions.ChromeServiceException;
 import com.github.kklisura.cdtp.services.types.ChromeTab;
 import com.github.kklisura.cdtp.services.types.ChromeVersion;
@@ -82,6 +83,17 @@ public interface ChromeService {
 
   /**
    * Creates a dev tools service to specified tab.
+   *
+   * @param tab Tab.
+   * @param chromeDevToolsServiceConfiguration Service configuration.
+   * @return Dev tools.
+   */
+  ChromeDevToolsService createDevToolsService(
+      ChromeTab tab, ChromeDevToolsServiceConfiguration chromeDevToolsServiceConfiguration)
+      throws ChromeServiceException;
+
+  /**
+   * Creates a dev tools service to specified tab with default service configuration.
    *
    * @param tab Tab.
    * @return Dev tools.

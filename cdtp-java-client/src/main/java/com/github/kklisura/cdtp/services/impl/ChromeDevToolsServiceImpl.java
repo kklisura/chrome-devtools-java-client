@@ -20,8 +20,6 @@ package com.github.kklisura.cdtp.services.impl;
  * #L%
  */
 
-import static com.github.kklisura.cdtp.services.utils.ConfigurationUtils.systemProperty;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,8 +27,10 @@ import com.github.kklisura.cdtp.protocol.support.types.EventHandler;
 import com.github.kklisura.cdtp.protocol.support.types.EventListener;
 import com.github.kklisura.cdtp.services.ChromeDevToolsService;
 import com.github.kklisura.cdtp.services.WebSocketService;
+import com.github.kklisura.cdtp.services.config.ChromeDevToolsServiceConfiguration;
 import com.github.kklisura.cdtp.services.exceptions.ChromeDevToolsInvocationException;
 import com.github.kklisura.cdtp.services.exceptions.WebSocketServiceException;
+import com.github.kklisura.cdtp.services.executors.EventExecutorService;
 import com.github.kklisura.cdtp.services.types.ChromeTab;
 import com.github.kklisura.cdtp.services.types.EventListenerImpl;
 import com.github.kklisura.cdtp.services.types.MethodInvocation;
@@ -57,14 +57,6 @@ public abstract class ChromeDevToolsServiceImpl
     implements ChromeDevToolsService, Consumer<String>, AutoCloseable {
   private static final Logger LOGGER = LoggerFactory.getLogger(ChromeDevToolsServiceImpl.class);
 
-  private static final String TIMEOUT_ENV_PROPERTY =
-      "com.github.kklisura.cdtp.websocket.readTimeout";
-
-  // Default of 60 seconds read timeout.
-  private static final long DEFAULT_READ_TIMEOUT = 60_000;
-  private static final long READ_TIMEOUT =
-      systemProperty(TIMEOUT_ENV_PROPERTY, DEFAULT_READ_TIMEOUT);
-
   private static final String ID_PROPERTY = "id";
   private static final String ERROR_PROPERTY = "error";
   private static final String RESULT_PROPERTY = "result";
@@ -78,26 +70,16 @@ public abstract class ChromeDevToolsServiceImpl
 
   private Map<Long, InvocationResult> invocationResultMap = new ConcurrentHashMap<>();
 
-  private long readTimeout;
-
   private ChromeTab chromeTab;
   private ChromeServiceImpl chromeService;
 
+  private ChromeDevToolsServiceConfiguration configuration;
+
+  private EventExecutorService eventExecutorService;
+
   private Map<String, Set<EventListenerImpl>> eventNameToHandlersMap = new HashMap<>();
 
-  /**
-   * Instantiates a new Dev tools service.
-   *
-   * @param webSocketService Web socket service.
-   * @param readTimeout Read timeout in milliseconds.
-   * @throws WebSocketServiceException Web socket service exception.
-   */
-  public ChromeDevToolsServiceImpl(WebSocketService webSocketService, long readTimeout)
-      throws WebSocketServiceException {
-    this.webSocketService = webSocketService;
-    this.webSocketService.addMessageHandler(this);
-    this.readTimeout = readTimeout;
-  }
+  private CountDownLatch closeLatch;
 
   /**
    * Instantiates a new Chrome dev tools service. This is used during proxy building phase.
@@ -107,11 +89,20 @@ public abstract class ChromeDevToolsServiceImpl
    * Object[], InvocationHandler)}
    *
    * @param webSocketService Web socket service.
+   * @param configuration Service configuration.
    * @throws WebSocketServiceException Web socket service exception
    */
-  public ChromeDevToolsServiceImpl(WebSocketService webSocketService)
+  public ChromeDevToolsServiceImpl(
+      WebSocketService webSocketService, ChromeDevToolsServiceConfiguration configuration)
       throws WebSocketServiceException {
-    this(webSocketService, READ_TIMEOUT);
+    this.webSocketService = webSocketService;
+    this.configuration = configuration;
+
+    this.eventExecutorService = configuration.getEventExecutorService();
+
+    this.closeLatch = new CountDownLatch(1);
+
+    this.webSocketService.addMessageHandler(this);
   }
 
   /**
@@ -141,7 +132,7 @@ public abstract class ChromeDevToolsServiceImpl
       webSocketService.send(OBJECT_MAPPER.writeValueAsString(methodInvocation));
 
       boolean hasReceivedResponse =
-          invocationResult.waitForResult(readTimeout, TimeUnit.MILLISECONDS);
+          invocationResult.waitForResult(configuration.getReadTimeout(), TimeUnit.SECONDS);
       invocationResultMap.remove(methodInvocation.getId());
 
       if (!hasReceivedResponse) {
@@ -177,10 +168,30 @@ public abstract class ChromeDevToolsServiceImpl
 
   @Override
   public void close() {
-    webSocketService.close();
+    if (!isClosed()) {
+      webSocketService.close();
 
-    if (chromeService != null) {
-      chromeService.clearChromeDevToolsServiceCache(chromeTab);
+      if (chromeService != null) {
+        chromeService.clearChromeDevToolsServiceCache(chromeTab);
+      }
+
+      eventExecutorService.shutdown();
+
+      closeLatch.countDown();
+    }
+  }
+
+  @Override
+  public boolean isClosed() {
+    return closeLatch.getCount() == 0L;
+  }
+
+  @Override
+  public void waitUntilClosed() {
+    try {
+      closeLatch.await();
+    } catch (InterruptedException e) {
+      // Ignore this exception.
     }
   }
 
@@ -262,22 +273,28 @@ public abstract class ChromeDevToolsServiceImpl
     Set<EventListenerImpl> listeners = eventNameToHandlersMap.get(name);
 
     if (listeners != null) {
+      final Set<EventListener> eventListeners;
       synchronized (listeners) {
-        if (!listeners.isEmpty()) {
-          Object event = null;
+        eventListeners = new HashSet<>(listeners);
+      }
 
-          for (EventListenerImpl listener : listeners) {
-            try {
-              if (event == null) {
-                event = readJsonObject(listener.getParamType(), params);
+      if (!eventListeners.isEmpty()) {
+        eventExecutorService.execute(
+            () -> {
+              Object event = null;
+
+              for (EventListenerImpl listener : listeners) {
+                try {
+                  if (event == null) {
+                    event = readJsonObject(listener.getParamType(), params);
+                  }
+
+                  listener.getHandler().onEvent(event);
+                } catch (Exception e) {
+                  LOGGER.error("Error while processing event {}", name, e);
+                }
               }
-
-              listener.getHandler().onEvent(event);
-            } catch (Exception e) {
-              LOGGER.error("Error while processing event {}", name, e);
-            }
-          }
-        }
+            });
       }
     }
   }
@@ -372,6 +389,11 @@ public abstract class ChromeDevToolsServiceImpl
      * @throws InterruptedException If wait is interrupted.
      */
     public boolean waitForResult(long timeout, TimeUnit timeUnit) throws InterruptedException {
+      if (timeout == 0) {
+        countDownLatch.await();
+        return true;
+      }
+
       return countDownLatch.await(timeout, timeUnit);
     }
   }

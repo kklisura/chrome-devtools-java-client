@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kklisura.cdtp.services.ChromeDevToolsService;
 import com.github.kklisura.cdtp.services.ChromeService;
 import com.github.kklisura.cdtp.services.WebSocketService;
+import com.github.kklisura.cdtp.services.config.ChromeDevToolsServiceConfiguration;
 import com.github.kklisura.cdtp.services.exceptions.ChromeServiceException;
 import com.github.kklisura.cdtp.services.exceptions.WebSocketServiceException;
 import com.github.kklisura.cdtp.services.factory.WebSocketServiceFactory;
@@ -159,6 +160,13 @@ public class ChromeServiceImpl implements ChromeService {
   @Override
   public synchronized ChromeDevToolsService createDevToolsService(ChromeTab tab)
       throws ChromeServiceException {
+    return createDevToolsService(tab, new ChromeDevToolsServiceConfiguration());
+  }
+
+  @Override
+  public synchronized ChromeDevToolsService createDevToolsService(
+      ChromeTab tab, ChromeDevToolsServiceConfiguration chromeDevToolsServiceConfiguration)
+      throws ChromeServiceException {
     try {
       if (isChromeDevToolsServiceCached(tab)) {
         return getCachedChromeDevToolsService(tab);
@@ -168,6 +176,10 @@ public class ChromeServiceImpl implements ChromeService {
       String webSocketDebuggerUrl = tab.getWebSocketDebuggerUrl();
       WebSocketService webSocketService =
           webSocketServiceFactory.createWebSocketService(webSocketDebuggerUrl);
+
+      // DevTools service configuration
+      ChromeDevToolsServiceConfiguration serviceConfiguration =
+          new ChromeDevToolsServiceConfiguration();
 
       // Create invocation handler
       CommandInvocationHandler commandInvocationHandler = new CommandInvocationHandler();
@@ -179,8 +191,8 @@ public class ChromeServiceImpl implements ChromeService {
       ChromeDevToolsServiceImpl chromeDevToolsService =
           createProxyFromAbstract(
               ChromeDevToolsServiceImpl.class,
-              new Class[] {WebSocketService.class},
-              new Object[] {webSocketService},
+              new Class[] {WebSocketService.class, ChromeDevToolsServiceConfiguration.class},
+              new Object[] {webSocketService, serviceConfiguration},
               (unused, method, args) ->
                   commandsCache.computeIfAbsent(
                       method,
