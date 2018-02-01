@@ -2,18 +2,20 @@ package com.github.kklisura.cdpt.examples;
 
 import com.github.kklisura.cdtp.launch.ChromeLauncher;
 import com.github.kklisura.cdtp.protocol.commands.Page;
-import com.github.kklisura.cdtp.protocol.commands.Runtime;
-import com.github.kklisura.cdtp.protocol.types.runtime.Evaluate;
 import com.github.kklisura.cdtp.services.ChromeDevToolsService;
 import com.github.kklisura.cdtp.services.ChromeService;
 import com.github.kklisura.cdtp.services.types.ChromeTab;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Base64;
 
 /**
- * The following example dumps the index html from github.com.
+ * Takes a page screenshot.
  *
  * @author Kenan Klisura
  */
-public class DumpHtmlFromPageExample {
+public class TakeScreenshotExample {
   public static void main(String[] args) throws InterruptedException {
     // Create chrome launcher.
     final ChromeLauncher launcher = new ChromeLauncher();
@@ -29,16 +31,13 @@ public class DumpHtmlFromPageExample {
 
     // Get individual commands
     final Page page = devToolsService.getPage();
-    final Runtime runtime = devToolsService.getRuntime();
 
-    // Wait for on load event
     page.onLoadEventFired(
         event -> {
-          // Evaluate javascript
-          Evaluate evaluation = runtime.evaluate("document.documentElement.outerHTML");
-          System.out.println(evaluation.getResult().getValue());
+          System.out.println("Taking screenshot...");
+          dump("screenshot.png", page.captureScreenshot());
+          System.out.println("Done!");
 
-          // Close devtools.
           devToolsService.close();
         });
 
@@ -48,10 +47,26 @@ public class DumpHtmlFromPageExample {
     // Navigate to github.com.
     page.navigate("http://github.com");
 
-    // Wait until devtools is closed.
     devToolsService.waitUntilClosed();
+  }
 
-    // Close tab.
-    chromeService.closeTab(tab);
+  private static void dump(String fileName, String data) {
+    FileOutputStream fileOutputStream = null;
+    try {
+      File file = new File(fileName);
+      fileOutputStream = new FileOutputStream(file);
+      fileOutputStream.write(Base64.getDecoder().decode(data));
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally{
+      if (fileOutputStream != null) {
+        try {
+          fileOutputStream.flush();
+          fileOutputStream.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
   }
 }
