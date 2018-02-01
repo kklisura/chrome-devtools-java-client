@@ -21,8 +21,6 @@ package com.github.kklisura.cdtp.launch;
  */
 
 import com.github.kklisura.cdtp.launch.support.annotations.ChromeArgument;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +30,8 @@ import java.util.Map;
  * @author Kenan Klisura
  */
 public class ChromeArguments {
+  public static final String USER_DATA_DIR_ARGUMENT = "user-data-dir";
+
   @ChromeArgument("headless")
   private Boolean headless;
 
@@ -44,7 +44,7 @@ public class ChromeArguments {
   @ChromeArgument("no-first-run")
   private Boolean noFirstRun;
 
-  @ChromeArgument("user-data-dir")
+  @ChromeArgument(USER_DATA_DIR_ARGUMENT)
   private String userDataDir;
 
   @ChromeArgument("incognito")
@@ -331,28 +331,13 @@ public class ChromeArguments {
             .disableSync()
             .disableTranslate()
             .metricsRecordingOnly()
-            .safebrowsingDisableAutoUpdate()
-            .userDataDir(randomUserDataDir());
+            .safebrowsingDisableAutoUpdate();
 
     if (headless) {
       builder.headless().disableGpu().hideScrollbars().muteAudio();
     }
 
     return builder;
-  }
-
-  /**
-   * Returns a random user data dir.
-   *
-   * @return Random user data dir absolute path.
-   * @throws RuntimeException If it fails to create temp directory.
-   */
-  public static String randomUserDataDir() {
-    try {
-      return Files.createTempDirectory("cdtp-user-data-dir").toAbsolutePath().toString();
-    } catch (IOException e) {
-      throw new RuntimeException("Failed creating temp directory for user data dir.", e);
-    }
   }
 
   /** The type Builder. */

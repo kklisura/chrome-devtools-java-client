@@ -117,7 +117,7 @@ public class ChromeArgumentsTest extends EasyMockSupport {
     assertTrue(args.getSafebrowsingDisableAutoUpdate());
     assertTrue(args.getDisablePopupBlocking());
 
-    assertNotNull(args.getUserDataDir());
+    assertNull(args.getUserDataDir());
 
     assertEquals(0, args.getRemoteDebuggingPort().intValue());
   }

@@ -20,7 +20,10 @@ package com.github.kklisura.cdtp.launch;
  * #L%
  */
 
+import static com.github.kklisura.cdtp.launch.ChromeArguments.USER_DATA_DIR_ARGUMENT;
 import static com.github.kklisura.cdtp.utils.ChromeDevToolsUtils.closeQuietly;
+import static com.github.kklisura.cdtp.utils.FilesUtils.deleteQuietly;
+import static com.github.kklisura.cdtp.utils.FilesUtils.randomTempDir;
 
 import com.github.kklisura.cdtp.launch.config.ChromeLauncherConfiguration;
 import com.github.kklisura.cdtp.launch.exceptions.ChromeProcessException;
@@ -60,6 +63,8 @@ public class ChromeLauncher implements AutoCloseable {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ChromeLauncher.class);
 
+  private static final String TEMP_PREFIX = "cdtp-user-data-dir";
+
   private static final Pattern DEVTOOLS_LISTENING_LINE_PATTERN =
       Pattern.compile("^DevTools listening on ws:\\/\\/.+?:(\\d+)\\/");
 
@@ -85,6 +90,8 @@ public class ChromeLauncher implements AutoCloseable {
   private ShutdownHookRegistry shutdownHookRegistry;
 
   private ChromeLauncherConfiguration configuration;
+
+  private Path userDataDirPath;
 
   /** Instantiates a new Chrome launcher. */
   public ChromeLauncher() {
@@ -224,6 +231,8 @@ public class ChromeLauncher implements AutoCloseable {
 
         chromeProcess.destroyForcibly();
         chromeProcess = null;
+      } finally {
+        deleteQuietly(userDataDirPath);
       }
 
       try {
@@ -254,6 +263,13 @@ public class ChromeLauncher implements AutoCloseable {
 
     Map<String, Object> argumentsMap = getArguments(chromeArguments);
 
+    // Special case for user data directory.
+    if (chromeArguments.getUserDataDir() == null) {
+      String userDatDir = randomTempDir(TEMP_PREFIX);
+      userDataDirPath = Paths.get(userDatDir);
+      argumentsMap.put(USER_DATA_DIR_ARGUMENT, userDatDir);
+    }
+
     List<String> arguments = argsMapToArgsList(argumentsMap);
 
     LOGGER.info(
@@ -261,6 +277,7 @@ public class ChromeLauncher implements AutoCloseable {
 
     try {
       chromeProcess = processLauncher.launch(chromeBinary.toString(), arguments);
+
       return waitForDevToolsServer(chromeProcess);
     } catch (IOException e) {
       // Unsubscribe from registry on exceptions.

@@ -29,6 +29,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.powermock.api.easymock.PowerMock.mockStatic;
+import static org.powermock.api.easymock.PowerMock.replay;
 
 import com.github.kklisura.cdtp.launch.ChromeLauncher.Environment;
 import com.github.kklisura.cdtp.launch.ChromeLauncher.ShutdownHookRegistry;
@@ -37,6 +39,7 @@ import com.github.kklisura.cdtp.launch.exceptions.ChromeProcessTimeoutException;
 import com.github.kklisura.cdtp.launch.support.ProcessLauncher;
 import com.github.kklisura.cdtp.services.ChromeService;
 import com.github.kklisura.cdtp.services.impl.ChromeServiceImpl;
+import com.github.kklisura.cdtp.utils.FilesUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -44,19 +47,22 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.easymock.Capture;
-import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
 import org.easymock.Mock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.api.easymock.PowerMock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
  * Chrome launcher test.
  *
  * @author Kenan Klisura
  */
-@RunWith(EasyMockRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ChromeLauncher.class, FilesUtils.class})
 public class ChromeLauncherTest extends EasyMockSupport {
 
   @Mock private ProcessLauncher processLauncher;
@@ -71,16 +77,27 @@ public class ChromeLauncherTest extends EasyMockSupport {
 
   @Before
   public void setUp() throws Exception {
+    mockStatic(FilesUtils.class);
+
     launcher =
         new ChromeLauncher(
             processLauncher, environment, shutdownHookRegistry, new ChromeLauncherConfiguration());
   }
 
   @Test(expected = RuntimeException.class)
-  public void testGetChromeBinaryPathThrowsExceptionWhenNoBinaryFound() {
+  public void testGetChromeBinaryPathThrowsExceptionWhenNoBinaryFoundOnChromePath() {
     expect(environment.getEnv("CHROME_PATH")).andReturn("test");
 
     expect(processLauncher.isExecutable("test")).andReturn(false);
+
+    replayAll();
+
+    launcher.getChromeBinaryPath();
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testGetChromeBinaryPathThrowsExceptionWhenNoBinaryFound() {
+    expect(environment.getEnv("CHROME_PATH")).andReturn(null);
 
     expect(processLauncher.isExecutable("/usr/bin/chromium")).andReturn(false);
     expect(processLauncher.isExecutable("/usr/bin/chromium-browser")).andReturn(false);
@@ -142,7 +159,86 @@ public class ChromeLauncherTest extends EasyMockSupport {
   }
 
   @Test
-  public void testLaunchWithBinaryAndArguments()
+  public void testLaunchWithBinaryAndArgumentsAndDefaultUserDataDir()
+      throws IOException, InterruptedException, ChromeProcessTimeoutException {
+    final Path binaryPath = Paths.get("test-binary-path");
+
+    final ChromeArguments chromeArguments =
+        ChromeArguments.builder()
+            .noFirstRun(Boolean.FALSE)
+            .incognito()
+            .remoteDebuggingPort(null)
+            .disableBackgroundNetworking()
+            .disableDefaultApps()
+            .build();
+
+    shutdownHookRegistry.register(anyObject());
+
+    final String trigger = "\r\n\r\nDevTools listening on ws://127.0.0.1:9123/";
+    expect(process.getInputStream()).andReturn(new ByteArrayInputStream(trigger.getBytes()));
+
+    Capture<List<String>> captureArguments = Capture.newInstance();
+    expect(processLauncher.launch(eq("test-binary-path"), capture(captureArguments)))
+        .andReturn(process);
+
+    expect(FilesUtils.randomTempDir("cdtp-user-data-dir")).andReturn("temp-user-data-dir");
+
+    replayAll();
+    PowerMock.replay(FilesUtils.class);
+
+    ChromeService launch = launcher.launch(binaryPath, chromeArguments);
+
+    verifyAll();
+    PowerMock.verify(FilesUtils.class);
+
+    assertNotNull(launch);
+    assertTrue(launch instanceof ChromeServiceImpl);
+
+    assertEquals(9123, ((ChromeServiceImpl) launch).getPort());
+
+    List<String> arguments = captureArguments.getValue();
+
+    assertEquals(5, arguments.size());
+    assertTrue(arguments.contains("--incognito"));
+    assertTrue(arguments.contains("--disable-background-networking"));
+    assertTrue(arguments.contains("--disable-default-apps"));
+    assertTrue(arguments.contains("--remote-debugging-port=0"));
+    assertTrue(arguments.contains("--user-data-dir=temp-user-data-dir"));
+
+    try {
+      launcher.launch(binaryPath, chromeArguments);
+      fail(
+          "IllegalStateException should be thrown from launch when launching already active process.");
+    } catch (IllegalStateException e) {
+      // Ignore this exception.
+    }
+
+    // Test closing
+    resetAll();
+    PowerMock.resetAll(FilesUtils.class);
+
+    process.destroy();
+    expect(process.waitFor(60, TimeUnit.SECONDS)).andReturn(true);
+
+    shutdownHookRegistry.remove(anyObject());
+
+    Capture<Path> deletePathCapture = Capture.newInstance();
+    FilesUtils.deleteQuietly(capture(deletePathCapture));
+
+    replayAll();
+    replay(FilesUtils.class);
+
+    launcher.close();
+    launcher.close();
+
+    verify();
+    PowerMock.verify(FilesUtils.class);
+
+    assertEquals("temp-user-data-dir", deletePathCapture.getValue().toString());
+  }
+
+  @Test
+  public void testLaunchWithBinaryAndArgumentsAndCustomUserDataDir()
       throws IOException, InterruptedException, ChromeProcessTimeoutException {
     final Path binaryPath = Paths.get("test-binary-path");
 
@@ -201,12 +297,16 @@ public class ChromeLauncherTest extends EasyMockSupport {
 
     shutdownHookRegistry.remove(anyObject());
 
+    FilesUtils.deleteQuietly(null);
+
     replayAll();
+    replay(FilesUtils.class);
 
     launcher.close();
     launcher.close();
 
     verify();
+    PowerMock.verify(FilesUtils.class);
   }
 
   @Test
@@ -262,11 +362,15 @@ public class ChromeLauncherTest extends EasyMockSupport {
 
     shutdownHookRegistry.remove(anyObject());
 
+    FilesUtils.deleteQuietly(null);
+
     replayAll();
+    PowerMock.replay(FilesUtils.class);
 
     launcher.close();
 
     verify();
+    PowerMock.verify(FilesUtils.class);
   }
 
   @Test
@@ -284,11 +388,15 @@ public class ChromeLauncherTest extends EasyMockSupport {
     expect(processLauncher.launch(eq("/test-binary-path"), capture(captureArguments)))
         .andReturn(process);
 
+    expect(FilesUtils.randomTempDir("cdtp-user-data-dir")).andReturn("temp-user-data-dir");
+
     replayAll();
+    PowerMock.replay(FilesUtils.class);
 
     ChromeService launch = launcher.launch();
 
     verifyAll();
+    PowerMock.verify(FilesUtils.class);
 
     assertNotNull(launch);
     assertTrue(launch instanceof ChromeServiceImpl);
@@ -316,8 +424,7 @@ public class ChromeLauncherTest extends EasyMockSupport {
     assertTrue(arguments.contains("--disable-hang-monitor"));
     assertTrue(arguments.contains("--disable-sync"));
     assertTrue(arguments.contains("--disable-gpu"));
-
-    assertUserDataDir(arguments);
+    assertTrue(arguments.contains("--user-data-dir=temp-user-data-dir"));
   }
 
   @Test(expected = RuntimeException.class)
