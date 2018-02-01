@@ -54,5 +54,7 @@ public class LogRequestsExample {
 
     // Navigate to github.com.
     page.navigate("http://github.com");
+
+    devToolsService.waitUntilClosed();
   }
 }

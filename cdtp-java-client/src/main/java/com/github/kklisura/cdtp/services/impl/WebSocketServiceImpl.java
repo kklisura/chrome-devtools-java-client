@@ -79,7 +79,7 @@ public class WebSocketServiceImpl implements WebSocketService {
 
   @Override
   public void connect(URI uri) throws WebSocketServiceException {
-    LOGGER.info("Connecting to ws server {}", uri);
+    LOGGER.debug("Connecting to ws server {}", uri);
 
     try {
       session =
@@ -87,7 +87,7 @@ public class WebSocketServiceImpl implements WebSocketService {
               new Endpoint() {
                 @Override
                 public void onOpen(Session session, EndpointConfig config) {
-                  LOGGER.debug("Connected to ws server {}", uri);
+                  LOGGER.info("Connected to ws server {}", uri);
                 }
 
                 // TODO(kklisura): Add close handler.
@@ -102,7 +102,7 @@ public class WebSocketServiceImpl implements WebSocketService {
   @Override
   public void send(String message) throws WebSocketServiceException {
     try {
-      LOGGER.info("Sending message {} on {}", message, session.getRequestURI());
+      LOGGER.debug("Sending message {} on {}", message, session.getRequestURI());
       session.getBasicRemote().sendText(message);
     } catch (Exception e) {
       LOGGER.error("Failed sending data to ws server {}...", session.getRequestURI(), e);
