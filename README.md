@@ -16,13 +16,13 @@ make update-protocol-definition
 
 By running, this will:
 
- - Build `cdtp-definition-builder` project.
+ - Build `cdt-definition-builder` project.
  
- - Clean previous protocol definition (remove packages `commands`, `events`, `types` from `cdtp-java-client` project).
+ - Clean previous protocol definition (remove packages `commands`, `events`, `types` from `cdt-java-client` project).
  
- - Run `cdtp-definition-builder` and parse `protocol.json` file. Output classess will be written to `cdtp-java-client` project in `src/main/java/com/github/kklisura/cdtp/protocol` directory.
+ - Run `cdt-definition-builder` and parse `protocol.json` file. Output classess will be written to `cdt-java-client` project in `src/main/java/com/github/kklisura/cdt/protocol` directory.
 
- - Compile `cdtp-java-client` in order to check if project compiles successfully.
+ - Compile `cdt-java-client` in order to check if project compiles successfully.
 
 ## License
 
