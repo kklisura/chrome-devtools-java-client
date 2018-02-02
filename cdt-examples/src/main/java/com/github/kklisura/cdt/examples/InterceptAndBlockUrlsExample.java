@@ -1,19 +1,20 @@
-package com.github.kklisura.cdp.examples;
+package com.github.kklisura.cdt.examples;
 
 import com.github.kklisura.cdt.launch.ChromeLauncher;
 import com.github.kklisura.cdt.protocol.commands.Network;
 import com.github.kklisura.cdt.protocol.commands.Page;
+import com.github.kklisura.cdt.protocol.types.network.ErrorReason;
 import com.github.kklisura.cdt.services.ChromeDevToolsService;
 import com.github.kklisura.cdt.services.ChromeService;
 import com.github.kklisura.cdt.services.types.ChromeTab;
-import java.util.Arrays;
 
 /**
- * Blocks an URLs given a patterns.
+ * Intercept and block per URL. Since requestIntercepted event is still Experimental it might not
+ * work on your browser.
  *
  * @author Kenan Klisura
  */
-public class BlockUrlGIvenPatternExample {
+public class InterceptAndBlockUrlsExample {
   public static void main(String[] args) throws InterruptedException {
     // Create chrome launcher.
     final ChromeLauncher launcher = new ChromeLauncher();
@@ -31,18 +32,27 @@ public class BlockUrlGIvenPatternExample {
     final Page page = devToolsService.getPage();
     final Network network = devToolsService.getNetwork();
 
-    // Block some urls.
-    network.setBlockedURLs(Arrays.asList("**/*.css", "**/*.png", "**/*.svg"));
-
-    // Enable network events
-    network.enable();
-
-    // Wait for on load event
-    page.onLoadEventFired(
+    network.onRequestIntercepted(
         event -> {
-          // Close devtools.
-          devToolsService.close();
+          String interceptionId = event.getInterceptionId();
+          boolean blocked = isBlocked(event.getRequest().getUrl());
+
+          System.out.printf(
+              "%s - %s%s",
+              (blocked ? "BLOCKED" : "ALLOWED"),
+              event.getRequest().getUrl(),
+              System.lineSeparator());
+
+          ErrorReason errorReason = blocked ? ErrorReason.ABORTED : null;
+
+          network.continueInterceptedRequest(
+              interceptionId, errorReason, null, null, null, null, null, null);
         });
+
+    page.onLoadEventFired(event -> devToolsService.close());
+
+    network.setRequestInterceptionEnabled(Boolean.TRUE);
+    network.enable();
 
     // Enable page events.
     page.enable();
@@ -50,10 +60,10 @@ public class BlockUrlGIvenPatternExample {
     // Navigate to github.com.
     page.navigate("http://github.com");
 
-    // Wait until devtools is closed.
     devToolsService.waitUntilClosed();
+  }
 
-    // Close tab.
-    chromeService.closeTab(tab);
+  public static boolean isBlocked(String url) {
+    return url.endsWith(".png") || url.endsWith(".css");
   }
 }

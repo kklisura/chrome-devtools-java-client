@@ -19,7 +19,7 @@ TBD
 You can use following code, taken from, `LogRequestsExample`:
 
 ```java
-package com.github.kklisura.cdp.examples;
+package com.github.kklisura.cdt.examples;
 
 import com.github.kklisura.cdt.launch.ChromeLauncher;
 import com.github.kklisura.cdt.protocol.commands.Network;

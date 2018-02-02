@@ -1,4 +1,4 @@
-package com.github.kklisura.cdp.examples;
+package com.github.kklisura.cdt.examples;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kklisura.cdt.launch.ChromeLauncher;
