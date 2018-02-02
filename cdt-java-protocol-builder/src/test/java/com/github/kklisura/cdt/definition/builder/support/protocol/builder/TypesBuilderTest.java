@@ -488,6 +488,60 @@ public class TypesBuilderTest extends EasyMockSupport {
     javaClassBuilder1.setJavaDoc("Description1");
 
     javaClassBuilder1.addPrivateField(
+        "refPropertyName1", "SomeObjectType1", "Some property description");
+
+    javaClassBuilder1.generateGettersAndSetters();
+    javaClassBuilder2.generateGettersAndSetters();
+
+    expect(resolver.resolve("TestPackage", "SomeObjectType1")).andReturn(resolvedType1);
+
+    replayAll();
+
+    List<Builder> builderList = builder.build(domain, resolver);
+
+    verifyAll();
+
+    assertEquals(1, builderList.size());
+    assertEquals(javaClassBuilder1, builderList.get(0));
+  }
+
+  @Test
+  public void
+      testTypesGeneratorGeneratesCorrectTypesOnClassTypeWithRefPropertyToObjectTypeWithSameNameImportingAsFullyQualifiedType()
+          throws InstantiationException, IllegalAccessException {
+
+    builder = new TypesBuilder(BASE_PACKAGE_NAME, javaBuilderFactory, false, true);
+
+    RefProperty refProperty1 = createProperty(RefProperty.class, "refPropertyName1");
+
+    refProperty1.setDescription("Some property description");
+    refProperty1.setRef("TestPackage.SomeObjectType1");
+
+    ObjectType objectType = createObjectType("someObjectType1", "Description1");
+    objectType.setProperties(Collections.singletonList(refProperty1));
+
+    ObjectType resolvedType1 = new ObjectType();
+    resolvedType1.setId("SomeObjectType1");
+    resolvedType1.setProperties(
+        Collections.singletonList(
+            createProperty(StringProperty.class, "stringPropertySomeObjectType1")));
+
+    ObjectType resolvedType2 = new ObjectType();
+    resolvedType2.setId("SomeObjectType1-resolved");
+
+    Domain domain = new Domain();
+    domain.setDomain("domain-name");
+    domain.setTypes(Arrays.asList(objectType, resolvedType2));
+
+    expect(javaBuilderFactory.createClassBuilder("my.test.package.domain-name", "SomeObjectType1"))
+        .andReturn(javaClassBuilder1);
+    expect(
+            javaBuilderFactory.createClassBuilder(
+                "my.test.package.domain-name", "SomeObjectType1-resolved"))
+        .andReturn(javaClassBuilder2);
+    javaClassBuilder1.setJavaDoc("Description1");
+
+    javaClassBuilder1.addPrivateField(
         "refPropertyName1",
         "my.test.package.testpackage.SomeObjectType1",
         "Some property description");

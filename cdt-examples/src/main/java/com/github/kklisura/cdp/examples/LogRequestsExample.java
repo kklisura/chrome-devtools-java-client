@@ -8,7 +8,7 @@ import com.github.kklisura.cdt.services.ChromeService;
 import com.github.kklisura.cdt.services.types.ChromeTab;
 
 /**
- * Log requests example with DevTools Protocol java client.
+ * Log requests example with DevTools java client.
  *
  * <p>The following example will open chrome, create a tab with about:blank url, subscribe to
  * requestWillBeSent event and then navigate to github.com.

@@ -4,8 +4,8 @@ JAVA=java
 CP=cp
 RUN_JAR=$(JAVA) -jar
 
-DEFINITION_BUILDER_DIR=cdt-definition-builder
-DEFINITION_BUILDER_JAR="$(DEFINITION_BUILDER_DIR)/target/cdt-definition-builder.jar"
+JAVA_PROTOCOL_BUILDER_DIR=cdt-java-protocol-builder
+JAVA_PROTOCOL_BUILDER_JAR="$(JAVA_PROTOCOL_BUILDER_DIR)/target/cdt-java-protocol-builder.jar"
 
 JAVA_CLIENT_DIR=cdt-java-client
 JAVA_CLIENT_PACKAGE=com/github/kklisura/cdt/protocol
@@ -13,38 +13,43 @@ JAVA_CLIENT_PACKAGE=com/github/kklisura/cdt/protocol
 PACKAGE_NAME=com.github.kklisura.cdt.protocol
 PROTOCOL_JSON_FILE=./protocol.json
 
-build-cdt-definition-builder:
-	# Building cdt-definition-builder project...
-	$(CP) $(PROTOCOL_JSON_FILE) "./$(DEFINITION_BUILDER_DIR)/src/test/resources/protocol.json"
-	$(MVN) --file "$(DEFINITION_BUILDER_DIR)/" clean package
+build-cdt-java-protocol-builder:
+	# Building cdt-java-protocol-builder project...
+	$(CP) $(PROTOCOL_JSON_FILE) "./$(JAVA_PROTOCOL_BUILDER_DIR)/src/test/resources/protocol.json"
+	$(MVN) --file "$(JAVA_PROTOCOL_BUILDER_DIR)/" clean package
 
 compile-cdt-java-client:
 	# Compiling cdt-java-client project...
 	$(MVN) --file "$(JAVA_CLIENT_DIR)/" clean compile
 
-clean-cdt-definition-builder:
-	# Cleaning cdt-definition-builder project...
-	$(MVN) --file "$(DEFINITION_BUILDER_DIR)/" clean
+clean-cdt-java-protocol-builder:
+	# Cleaning cdt-java-protocol-builder project...
+	$(MVN) --file "$(JAVA_PROTOCOL_BUILDER_DIR)/" clean
 
 clean-cdt-java-client:
 	# Cleaning cdt-java-client project...
 	$(MVN) --file "$(JAVA_CLIENT_DIR)/" clean
 
-clean-previous-protocol-definition:
-	# Cleaning previous protocol definition...
+clean-previous-protocol:
+	# Cleaning previous protocol...
 	$(RM) -rf $(JAVA_CLIENT_DIR)/src/main/java/$(JAVA_CLIENT_PACKAGE)/types
 	$(RM) -rf $(JAVA_CLIENT_DIR)/src/main/java/$(JAVA_CLIENT_PACKAGE)/events
 	$(RM) -rf $(JAVA_CLIENT_DIR)/src/main/java/$(JAVA_CLIENT_PACKAGE)/commands
 
-upgrade-protocol-definition: build-cdt-definition-builder clean-previous-protocol-definition
-	$(RUN_JAR) $(DEFINITION_BUILDER_JAR) --base-package="$(PACKAGE_NAME)" \
+upgrade-protocol: build-cdt-java-protocol-builder clean-previous-protocol
+	$(RUN_JAR) $(JAVA_PROTOCOL_BUILDER_JAR) --base-package="$(PACKAGE_NAME)" \
 		--output=./$(JAVA_CLIENT_DIR)/ \
 		--protocol=$(PROTOCOL_JSON_FILE)
 
-update-protocol-definition: upgrade-protocol-definition compile-cdt-java-client
-	# Updated protocol definition on cdt-java-client
+update-protocol: upgrade-protocol compile-cdt-java-client
+	# Updated protocol on cdt-java-client
 
 sonar-analysis:
 	# Running sonar analysis
-	cd $(DEFINITION_BUILDER_DIR)/ && make sonar-analysis
+	cd $(JAVA_PROTOCOL_BUILDER_DIR)/ && make sonar-analysis
 	cd $(JAVA_CLIENT_DIR)/ && make sonar-analysis
+
+verify:
+	# Running unit tests
+	cd $(JAVA_PROTOCOL_BUILDER_DIR)/ && make verify
+	cd $(JAVA_CLIENT_DIR)/ && make verify

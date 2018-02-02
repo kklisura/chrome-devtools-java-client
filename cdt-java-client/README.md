@@ -86,7 +86,7 @@ For more examples, see `cdt-examples`.
 ## Running unit tests
 
 `make verify`
-
+ 
 ## Sonar analysis
 
 `make sonar-analysis`

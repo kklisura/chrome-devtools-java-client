@@ -20,6 +20,10 @@ package com.github.kklisura.cdt.definition.builder.support.protocol.builder;
  * #L%
  */
 
+import static com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.buildPackageName;
+import static com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.getReturnTypeFromGetter;
+import static com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.toEnumClass;
+
 import com.github.kklisura.cdt.definition.builder.protocol.types.Command;
 import com.github.kklisura.cdt.definition.builder.protocol.types.Domain;
 import com.github.kklisura.cdt.definition.builder.protocol.types.Event;
@@ -98,10 +102,7 @@ public class CommandBuilder {
    */
   public Builder build(Domain domain, DomainTypeResolver domainTypeResolver) {
     JavaInterfaceBuilder interfaceBuilder =
-        javaBuilderFactory.createInterfaceBuilder(
-            basePackageName,
-            com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.toEnumClass(
-                domain.getDomain()));
+        javaBuilderFactory.createInterfaceBuilder(basePackageName, toEnumClass(domain.getDomain()));
 
     if (StringUtils.isNotEmpty(domain.getDescription())) {
       interfaceBuilder.setJavaDoc(domain.getDescription());
@@ -137,22 +138,14 @@ public class CommandBuilder {
         interfaceBuilder.addImport(supportTypesPackageName, EVENT_LISTENER_ARGUMENT_TYPE);
 
         final String eventsPackageName =
-            com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.buildPackageName(
-                eventPackageName, domain.getDomain().toLowerCase());
+            buildPackageName(eventPackageName, domain.getDomain().toLowerCase());
 
-        interfaceBuilder.addImport(
-            eventsPackageName,
-            com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.toEnumClass(
-                event.getName()));
+        interfaceBuilder.addImport(eventsPackageName, toEnumClass(event.getName()));
 
         MethodParam methodParam = new MethodParam();
         methodParam.setName(EVENT_LISTENER_ARGUMENT_NAME);
         methodParam.setType(
-            EVENT_LISTENER_ARGUMENT_TYPE
-                + "<"
-                + com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.toEnumClass(
-                    event.getName())
-                + ">");
+            EVENT_LISTENER_ARGUMENT_TYPE + "<" + toEnumClass(event.getName()) + ">");
 
         interfaceBuilder.addMethod(
             method,
@@ -282,16 +275,14 @@ public class CommandBuilder {
       List<Builder> builders) {
     List<Property> returns = command.getReturns();
 
-    TypesBuilder typesBuilder = new TypesBuilder(typesPackageName, javaBuilderFactory);
+    TypesBuilder typesBuilder = new TypesBuilder(typesPackageName, javaBuilderFactory, false, true);
 
     if (CollectionUtils.isNotEmpty(returns)) {
       if (returns.size() == 1) {
         final Property property = returns.get(0);
 
         ObjectType objectType = new ObjectType();
-        objectType.setId(
-            com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.toEnumClass(
-                domain.getDomain()));
+        objectType.setId(toEnumClass(domain.getDomain()));
         TypeBuildRequest<ObjectType> request =
             new TypeBuildRequest<>(domain, objectType, domainTypeResolver);
 
@@ -302,9 +293,7 @@ public class CommandBuilder {
 
         return result.getType();
       } else {
-        String name =
-            com.github.kklisura.cdt.definition.builder.support.utils.StringUtils
-                .getReturnTypeFromGetter(command.getName());
+        String name = getReturnTypeFromGetter(command.getName());
 
         ObjectType objectType = new ObjectType();
         objectType.setId(name);
@@ -318,9 +307,7 @@ public class CommandBuilder {
         builders.add(result.getBuilder());
 
         // Since these properties are not ref type, we need to manually import them.
-        String packageName =
-            com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.buildPackageName(
-                typesPackageName, domain.getDomain().toLowerCase());
+        String packageName = buildPackageName(typesPackageName, domain.getDomain().toLowerCase());
         interfaceBuilder.addImport(packageName, name);
 
         return name;
@@ -344,9 +331,7 @@ public class CommandBuilder {
     if (CollectionUtils.isNotEmpty(parameters)) {
       for (Property property : parameters) {
         ObjectType objectType = new ObjectType();
-        objectType.setId(
-            com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.toEnumClass(
-                domain.getDomain()));
+        objectType.setId(toEnumClass(domain.getDomain()));
         TypeBuildRequest<ObjectType> request =
             new TypeBuildRequest<>(domain, objectType, domainTypeResolver);
 
@@ -401,12 +386,8 @@ public class CommandBuilder {
       builders.add(result.getBuilder());
 
       // Since these properties are not ref type, we need to manually import them.
-      String packageName =
-          com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.buildPackageName(
-              typesPackageName, domain.getDomain().toLowerCase());
-      String name =
-          com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.toEnumClass(
-              property.getName());
+      String packageName = buildPackageName(typesPackageName, domain.getDomain().toLowerCase());
+      String name = toEnumClass(property.getName());
 
       interfaceBuilder.addImport(packageName, name);
     }
