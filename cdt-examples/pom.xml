@@ -8,7 +8,8 @@
   <packaging>jar</packaging>
 
   <name>cdt-examples</name>
-  <url>http://maven.apache.org</url>
+  <description>Chrome DevTools java client examples</description>
+  <url>https://github.com/kklisura/chrome-devtools-java-client</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

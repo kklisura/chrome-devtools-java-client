@@ -13,6 +13,8 @@ JAVA_CLIENT_PACKAGE=com/github/kklisura/cdt/protocol
 PACKAGE_NAME=com.github.kklisura.cdt.protocol
 PROTOCOL_JSON_FILE=./protocol.json
 
+EXAMPLES_DIR=cdt-examples
+
 build-cdt-java-protocol-builder:
 	# Building cdt-java-protocol-builder project...
 	$(CP) $(PROTOCOL_JSON_FILE) "./$(JAVA_PROTOCOL_BUILDER_DIR)/src/test/resources/protocol.json"
@@ -53,3 +55,5 @@ verify:
 	# Running unit tests
 	cd $(JAVA_PROTOCOL_BUILDER_DIR)/ && make verify
 	cd $(JAVA_CLIENT_DIR)/ && make verify
+	$(MVN) --file "$(JAVA_CLIENT_DIR)/" clean install && \
+	  $(MVN) --file "$(EXAMPLES_DIR)/" clean compile
