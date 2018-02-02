@@ -8,10 +8,11 @@
   <packaging>pom</packaging>
 
   <name>ctd-java-client-root</name>
+  <description>Chrome DevTools definition builder</description>
   <url>https://github.com/kklisura/chrome-devtools-java-client</url>
 
   <modules>
-    <module>cdt-definition-builder</module>
+    <module>cdt-java-protocol-builder</module>
     <module>cdt-java-client</module>
     <module>cdt-examples</module>
   </modules>
