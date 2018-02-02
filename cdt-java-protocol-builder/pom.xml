@@ -133,6 +133,15 @@
 
     <build>
         <finalName>${project.artifactId}</finalName>
+        <resources>
+            <resource>
+                <includes>
+                    <include>LICENSE.txt</include>
+                    <include>THIRD-PARTY.txt</include>
+                </includes>
+                <directory>.</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
