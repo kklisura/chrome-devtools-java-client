@@ -21,11 +21,11 @@ package com.github.kklisura.cdt.definition.builder.support.java.builder.impl;
  */
 
 import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.eq;
 import static org.junit.Assert.assertEquals;
 
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.utils.SourceRoot;
+import com.github.kklisura.cdt.definition.builder.support.java.builder.SourceProject;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.support.MethodParam;
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
 
   private JavaInterfaceBuilderImpl interfaceBuilder;
 
-  @Mock private SourceRoot sourceRoot;
+  @Mock private SourceProject sourceProject;
 
   private Path rootPath;
 
@@ -68,14 +68,14 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
   public void testBasicInterface() throws IOException {
     Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-    expect(sourceRoot.getRoot()).andReturn(rootPath);
-    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
+    sourceProject.addCompilationUnit(
+        eq(BASE_PACKAGE_NAME), eq(NAME), capture(compilationUnitCapture));
 
     interfaceBuilder.setJavaDoc("");
 
     replayAll();
 
-    interfaceBuilder.build(sourceRoot);
+    interfaceBuilder.build(sourceProject);
 
     assertEquals(
         "package com.github.kklisura;\n" + "\n" + "public interface InterfaceTest {\n" + "}\n" + "",
@@ -88,8 +88,8 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
   public void testBasicInterfaceWithAnnotation() throws IOException {
     Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-    expect(sourceRoot.getRoot()).andReturn(rootPath);
-    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
+    sourceProject.addCompilationUnit(
+        eq(BASE_PACKAGE_NAME), eq(NAME), capture(compilationUnitCapture));
 
     interfaceBuilder.addAnnotation("Annotation");
     interfaceBuilder.addAnnotation("Annotation");
@@ -98,7 +98,7 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
 
     replayAll();
 
-    interfaceBuilder.build(sourceRoot);
+    interfaceBuilder.build(sourceProject);
 
     assertEquals(
         "package com.github.kklisura;\n"
@@ -119,14 +119,14 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
   public void testSetJavadoc() throws IOException {
     Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-    expect(sourceRoot.getRoot()).andReturn(rootPath);
-    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
+    sourceProject.addCompilationUnit(
+        eq(BASE_PACKAGE_NAME), eq(NAME), capture(compilationUnitCapture));
 
     interfaceBuilder.setJavaDoc("Java doc.");
 
     replayAll();
 
-    interfaceBuilder.build(sourceRoot);
+    interfaceBuilder.build(sourceProject);
 
     assertEquals(
         "package com.github.kklisura;\n"
@@ -145,8 +145,8 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
   public void testAddingImportsOnSamePackage() throws IOException {
     Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-    expect(sourceRoot.getRoot()).andReturn(rootPath);
-    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
+    sourceProject.addCompilationUnit(
+        eq(BASE_PACKAGE_NAME), eq(NAME), capture(compilationUnitCapture));
 
     replayAll();
 
@@ -155,7 +155,7 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
     interfaceBuilder.addImport("java.util", "List");
     interfaceBuilder.addImport("java.util", "List");
 
-    interfaceBuilder.build(sourceRoot);
+    interfaceBuilder.build(sourceProject);
 
     assertEquals(
         "package com.github.kklisura;\n\n"
@@ -173,8 +173,8 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
   public void testBasicInterfaceWithSimpleMethod() throws IOException {
     Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-    expect(sourceRoot.getRoot()).andReturn(rootPath);
-    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
+    sourceProject.addCompilationUnit(
+        eq(BASE_PACKAGE_NAME), eq(NAME), capture(compilationUnitCapture));
 
     String description =
         "Method description\r\n\r\n@param test Test param\r\n@return Returns nothing";
@@ -182,7 +182,7 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
 
     replayAll();
 
-    interfaceBuilder.build(sourceRoot);
+    interfaceBuilder.build(sourceProject);
 
     assertEquals(
         "package com.github.kklisura;\n"
@@ -208,8 +208,8 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
   public void testBasicInterfaceWithSimpleMethod2() throws IOException {
     Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-    expect(sourceRoot.getRoot()).andReturn(rootPath);
-    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
+    sourceProject.addCompilationUnit(
+        eq(BASE_PACKAGE_NAME), eq(NAME), capture(compilationUnitCapture));
 
     final MethodParam param1 = new MethodParam();
     param1.setType("Integer");
@@ -234,7 +234,7 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
 
     replayAll();
 
-    interfaceBuilder.build(sourceRoot);
+    interfaceBuilder.build(sourceProject);
 
     assertEquals(
         "package com.github.kklisura;\n"

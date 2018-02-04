@@ -21,11 +21,11 @@ package com.github.kklisura.cdt.definition.builder.support.java.builder.impl;
  */
 
 import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.eq;
 import static org.junit.Assert.assertEquals;
 
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.utils.SourceRoot;
+import com.github.kklisura.cdt.definition.builder.support.java.builder.SourceProject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -48,7 +48,7 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
   private static final String CLASS_NAME = "ClassName";
   private static final String ANNOTATIONS_PACKAGE_NAME = "com.github.kklisura.annotations";
 
-  @Mock private SourceRoot sourceRoot;
+  @Mock private SourceProject sourceProject;
 
   private Path rootPath;
 
@@ -64,14 +64,14 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
   public void testBasicClass() throws IOException {
     Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-    expect(sourceRoot.getRoot()).andReturn(rootPath);
-    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
+    sourceProject.addCompilationUnit(
+        eq(PACKAGE_NAME), eq(CLASS_NAME), capture(compilationUnitCapture));
 
     javaClassBuilder.setJavaDoc("");
 
     replayAll();
 
-    javaClassBuilder.build(sourceRoot);
+    javaClassBuilder.build(sourceProject);
 
     assertEquals(
         "package com.github.kklisura;\n" + "\n" + "public class ClassName {\n" + "}\n" + "",
@@ -84,15 +84,15 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
   public void testBasicClassWithAnnotation() throws IOException {
     Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-    expect(sourceRoot.getRoot()).andReturn(rootPath);
-    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
+    sourceProject.addCompilationUnit(
+        eq(PACKAGE_NAME), eq(CLASS_NAME), capture(compilationUnitCapture));
 
     javaClassBuilder.addAnnotation("Annotation");
     javaClassBuilder.addAnnotation("Deprecated");
 
     replayAll();
 
-    javaClassBuilder.build(sourceRoot);
+    javaClassBuilder.build(sourceProject);
 
     assertEquals(
         "package com.github.kklisura;\n"
@@ -113,14 +113,14 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
   public void testSetJavadoc() throws IOException {
     Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-    expect(sourceRoot.getRoot()).andReturn(rootPath);
-    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
+    sourceProject.addCompilationUnit(
+        eq(PACKAGE_NAME), eq(CLASS_NAME), capture(compilationUnitCapture));
 
     javaClassBuilder.setJavaDoc("Java doc.");
 
     replayAll();
 
-    javaClassBuilder.build(sourceRoot);
+    javaClassBuilder.build(sourceProject);
 
     assertEquals(
         "package com.github.kklisura;\n"
@@ -139,8 +139,8 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
   public void testAddingImports() throws IOException {
     Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-    expect(sourceRoot.getRoot()).andReturn(rootPath);
-    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
+    sourceProject.addCompilationUnit(
+        eq(PACKAGE_NAME), eq(CLASS_NAME), capture(compilationUnitCapture));
 
     replayAll();
 
@@ -148,7 +148,7 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
     javaClassBuilder.addImport("java.util", "List");
     javaClassBuilder.addImport("java.util", "List");
 
-    javaClassBuilder.build(sourceRoot);
+    javaClassBuilder.build(sourceProject);
 
     assertEquals(
         "package com.github.kklisura;\n\n"
@@ -166,15 +166,15 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
   public void testAddingImportsOnSamePackage() throws IOException {
     Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-    expect(sourceRoot.getRoot()).andReturn(rootPath);
-    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
+    sourceProject.addCompilationUnit(
+        eq(PACKAGE_NAME), eq(CLASS_NAME), capture(compilationUnitCapture));
 
     replayAll();
 
     javaClassBuilder.addImport(PACKAGE_NAME, "Test");
     javaClassBuilder.addImport("java.util", "List");
 
-    javaClassBuilder.build(sourceRoot);
+    javaClassBuilder.build(sourceProject);
 
     assertEquals(
         "package com.github.kklisura;\n\n"
@@ -192,8 +192,8 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
   public void testGenerateGettersAndSetters() throws IOException {
     Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-    expect(sourceRoot.getRoot()).andReturn(rootPath);
-    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
+    sourceProject.addCompilationUnit(
+        eq(PACKAGE_NAME), eq(CLASS_NAME), capture(compilationUnitCapture));
 
     replayAll();
 
@@ -201,7 +201,7 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
 
     javaClassBuilder.generateGettersAndSetters();
 
-    javaClassBuilder.build(sourceRoot);
+    javaClassBuilder.build(sourceProject);
 
     assertEquals(
         "package com.github.kklisura;\n"
@@ -233,8 +233,8 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
   public void testGenerateFieldAnnotation() throws IOException {
     Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-    expect(sourceRoot.getRoot()).andReturn(rootPath);
-    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
+    sourceProject.addCompilationUnit(
+        eq(PACKAGE_NAME), eq(CLASS_NAME), capture(compilationUnitCapture));
 
     replayAll();
 
@@ -245,7 +245,7 @@ public class JavaClassBuilderImplTest extends EasyMockSupport {
     javaClassBuilder.addFieldAnnotation("privateField", "Annotation1");
     javaClassBuilder.addFieldAnnotation("privateField", "Deprecated");
 
-    javaClassBuilder.build(sourceRoot);
+    javaClassBuilder.build(sourceProject);
 
     assertEquals(
         "package com.github.kklisura;\n"

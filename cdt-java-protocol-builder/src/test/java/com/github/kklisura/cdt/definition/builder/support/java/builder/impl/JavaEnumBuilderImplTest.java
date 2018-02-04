@@ -21,11 +21,11 @@ package com.github.kklisura.cdt.definition.builder.support.java.builder.impl;
  */
 
 import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.eq;
 import static org.junit.Assert.assertEquals;
 
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.utils.SourceRoot;
+import com.github.kklisura.cdt.definition.builder.support.java.builder.SourceProject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -49,7 +49,7 @@ public class JavaEnumBuilderImplTest extends EasyMockSupport {
 
   private JavaEnumBuilderImpl javaEnumBuilder;
 
-  @Mock private SourceRoot sourceRoot;
+  @Mock private SourceProject sourceProject;
 
   private Path rootPath;
 
@@ -63,14 +63,13 @@ public class JavaEnumBuilderImplTest extends EasyMockSupport {
   public void testBasicEnum() throws IOException {
     Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-    expect(sourceRoot.getRoot()).andReturn(rootPath);
-    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
+    sourceProject.addCompilationUnit(eq(PACKAGE), eq(NAME), capture(compilationUnitCapture));
 
     javaEnumBuilder.setJavaDoc("");
 
     replayAll();
 
-    javaEnumBuilder.build(sourceRoot);
+    javaEnumBuilder.build(sourceProject);
 
     assertEquals(
         "package com.github.kklisura;\n"
@@ -88,15 +87,14 @@ public class JavaEnumBuilderImplTest extends EasyMockSupport {
   public void testBasicEnumWithJavadocAndConstant() throws IOException {
     Capture<CompilationUnit> compilationUnitCapture = Capture.newInstance();
 
-    expect(sourceRoot.getRoot()).andReturn(rootPath);
-    expect(sourceRoot.add(capture(compilationUnitCapture))).andReturn(sourceRoot);
+    sourceProject.addCompilationUnit(eq(PACKAGE), eq(NAME), capture(compilationUnitCapture));
 
     javaEnumBuilder.addEnumConstant("ENUM_CONSTANT", "enumConstant");
     javaEnumBuilder.setJavaDoc("Java doc.");
 
     replayAll();
 
-    javaEnumBuilder.build(sourceRoot);
+    javaEnumBuilder.build(sourceProject);
 
     assertEquals(
         "package com.github.kklisura;\n"

@@ -20,10 +20,6 @@ package com.github.kklisura.cdt.definition.builder;
  * #L%
  */
 
-import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.printer.PrettyPrinter;
-import com.github.javaparser.printer.PrettyPrinterConfiguration;
-import com.github.javaparser.utils.SourceRoot;
 import com.github.kklisura.cdt.definition.builder.protocol.DevToolsProtocol;
 import com.github.kklisura.cdt.definition.builder.protocol.types.Domain;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.Builder;
@@ -31,25 +27,23 @@ import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaBuild
 import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaClassBuilder;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaEnumBuilder;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaInterfaceBuilder;
+import com.github.kklisura.cdt.definition.builder.support.java.builder.SourceProject;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.impl.JavaClassBuilderImpl;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.impl.JavaEnumBuilderImpl;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.impl.JavaInterfaceBuilderImpl;
+import com.github.kklisura.cdt.definition.builder.support.java.builder.impl.SourceProjectImpl;
 import com.github.kklisura.cdt.definition.builder.support.protocol.builder.CommandBuilder;
 import com.github.kklisura.cdt.definition.builder.support.protocol.builder.EventBuilder;
 import com.github.kklisura.cdt.definition.builder.support.protocol.builder.TypesBuilder;
 import com.github.kklisura.cdt.definition.builder.support.utils.DomainUtils;
 import com.github.kklisura.cdt.definition.builder.support.utils.StringUtils;
 import com.github.kklisura.cdt.definition.builder.utils.DevToolsProtocolUtils;
-import com.google.googlejavaformat.java.Formatter;
-import com.google.googlejavaformat.java.FormatterException;
-import com.google.googlejavaformat.java.JavaFormatterOptions;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.ParserProperties;
@@ -105,7 +99,7 @@ public class Application {
     final DevToolsProtocol protocol = DevToolsProtocolUtils.readJson(inputStream);
 
     Path outputLocation = configuration.getOutputProjectLocation().toPath().resolve(SRC_MAIN);
-    SourceRoot sourceRoot = new SourceRoot(outputLocation);
+    SourceProject sourceProject = new SourceProjectImpl(outputLocation);
 
     JavaBuilderFactory javaBuilderFactory =
         new JavaBuilderFactory() {
@@ -154,35 +148,10 @@ public class Application {
 
     // Build all items
     for (Builder builder : builderList) {
-      builder.build(sourceRoot);
+      builder.build(sourceProject);
     }
 
-    PrettyPrinterConfiguration prettyPrinterConfiguration = new PrettyPrinterConfiguration();
-    prettyPrinterConfiguration.setIndent("\t");
-    prettyPrinterConfiguration.setPrintComments(true);
-    prettyPrinterConfiguration.setPrintJavadoc(true);
-    prettyPrinterConfiguration.setOrderImports(true);
-
-    PrettyPrinter prettyPrinter = new PrettyPrinter(prettyPrinterConfiguration);
-
-    JavaFormatterOptions javaFormatterOptions =
-        JavaFormatterOptions.builder().style(JavaFormatterOptions.Style.GOOGLE).build();
-
-    sourceRoot.setPrinter(googleCodeFormatter(javaFormatterOptions, prettyPrinter::print));
-    sourceRoot.saveAll(outputLocation);
-  }
-
-  private static Function<CompilationUnit, String> googleCodeFormatter(
-      JavaFormatterOptions options, Function<CompilationUnit, String> printer) {
-    Formatter formatter = new Formatter(options);
-    return compilationUnit -> {
-      String source = printer.apply(compilationUnit);
-      try {
-        return formatter.formatSourceAndFixImports(source);
-      } catch (FormatterException e) {
-        throw new RuntimeException("Failed formatting source.", e);
-      }
-    };
+    sourceProject.saveAll();
   }
 
   private static Builder buildCommandFactory(List<Domain> domains, String basePackage) {

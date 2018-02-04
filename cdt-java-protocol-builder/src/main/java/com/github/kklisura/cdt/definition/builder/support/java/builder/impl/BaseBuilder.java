@@ -21,11 +21,9 @@ package com.github.kklisura.cdt.definition.builder.support.java.builder.impl;
  */
 
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.utils.CodeGenerationUtils;
-import com.github.javaparser.utils.SourceRoot;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.Builder;
+import com.github.kklisura.cdt.definition.builder.support.java.builder.SourceProject;
 import java.io.IOException;
-import java.nio.file.Path;
 import lombok.Getter;
 
 /**
@@ -67,16 +65,11 @@ public abstract class BaseBuilder implements Builder {
   /**
    * Builds an item. Generates a code.
    *
-   * @param sourceRoot Root path to save generated code.
+   * @param sourceProject Root path to save generated code.
    * @throws IOException If saving fails.
    */
   @Override
-  public void build(SourceRoot sourceRoot) throws IOException {
-    String packageName = compilationUnit.getPackageDeclaration().get().getName().getIdentifier();
-
-    Path path = sourceRoot.getRoot().resolve(CodeGenerationUtils.packageToPath(packageName));
-
-    compilationUnit.setStorage(path.resolve(getName() + ".java"));
-    sourceRoot.add(compilationUnit);
+  public void build(SourceProject sourceProject) throws IOException {
+    sourceProject.addCompilationUnit(getPackageName(), getName(), compilationUnit);
   }
 }

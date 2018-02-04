@@ -20,19 +20,23 @@ package com.github.kklisura.cdt.definition.builder.support.java.builder;
  * #L%
  */
 
-import java.io.IOException;
+import com.github.javaparser.ast.CompilationUnit;
 
 /**
- * Builder contract.
+ * Source project.
  *
  * @author Kenan Klisura
  */
-public interface Builder {
+public interface SourceProject {
   /**
-   * Builds an item. Generates a code.
+   * Adds a compilation unit to source-project.
    *
-   * @param sourceProject Source project.
-   * @throws IOException If saving fails.
+   * @param packageName Compilation unit package name.
+   * @param name Name.
+   * @param compilationUnit Compilation unit.
    */
-  void build(SourceProject sourceProject) throws IOException;
+  void addCompilationUnit(String packageName, String name, CompilationUnit compilationUnit);
+
+  /** Saves all compilation units. */
+  void saveAll();
 }

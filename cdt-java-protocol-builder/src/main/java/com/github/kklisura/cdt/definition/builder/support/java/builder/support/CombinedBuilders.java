@@ -20,8 +20,8 @@ package com.github.kklisura.cdt.definition.builder.support.java.builder.support;
  * #L%
  */
 
-import com.github.javaparser.utils.SourceRoot;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.Builder;
+import com.github.kklisura.cdt.definition.builder.support.java.builder.SourceProject;
 import java.io.IOException;
 import java.util.List;
 
@@ -52,9 +52,9 @@ public class CombinedBuilders implements Builder {
   }
 
   @Override
-  public void build(SourceRoot sourceRoot) throws IOException {
+  public void build(SourceProject sourceProject) throws IOException {
     for (Builder builder : builderList) {
-      builder.build(sourceRoot);
+      builder.build(sourceProject);
     }
   }
 }
