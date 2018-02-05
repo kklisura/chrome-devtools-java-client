@@ -24,32 +24,6 @@ import static com.github.kklisura.cdt.definition.builder.support.utils.StringUti
 import static com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.toEnumClass;
 import static com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.toEnumConstant;
 
-import com.github.kklisura.cdt.definition.builder.protocol.types.Domain;
-import com.github.kklisura.cdt.definition.builder.protocol.types.Type;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.ArrayType;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.EnumType;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.IntegerType;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.NumberType;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.StringType;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.ObjectType;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.Property;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.AnyProperty;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.ArrayProperty;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.BooleanProperty;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.EnumProperty;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.IntegerProperty;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.NumberProperty;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.ObjectProperty;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.RefProperty;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.StringProperty;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.array.ArrayItem;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.array.items.AnyArrayItem;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.array.items.EnumArrayItem;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.array.items.IntegerArrayItem;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.array.items.NumberArrayItem;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.array.items.ObjectArrayItem;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.array.items.RefArrayItem;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.array.items.StringArrayItem;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.Builder;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaBuilderFactory;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaClassBuilder;
@@ -59,6 +33,32 @@ import com.github.kklisura.cdt.definition.builder.support.java.builder.support.C
 import com.github.kklisura.cdt.definition.builder.support.protocol.builder.support.DomainTypeResolver;
 import com.github.kklisura.cdt.definition.builder.support.protocol.builder.support.PropertyHandlerResult;
 import com.github.kklisura.cdt.definition.builder.support.protocol.builder.support.TypeBuildRequest;
+import com.github.kklisura.cdt.protocol.definition.types.Domain;
+import com.github.kklisura.cdt.protocol.definition.types.Type;
+import com.github.kklisura.cdt.protocol.definition.types.type.ArrayType;
+import com.github.kklisura.cdt.protocol.definition.types.type.EnumType;
+import com.github.kklisura.cdt.protocol.definition.types.type.IntegerType;
+import com.github.kklisura.cdt.protocol.definition.types.type.NumberType;
+import com.github.kklisura.cdt.protocol.definition.types.type.StringType;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.ObjectType;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.Property;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.AnyProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.ArrayProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.BooleanProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.EnumProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.IntegerProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.NumberProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.ObjectProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.RefProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.StringProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.ArrayItem;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.AnyArrayItem;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.EnumArrayItem;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.IntegerArrayItem;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.NumberArrayItem;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.ObjectArrayItem;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.RefArrayItem;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.StringArrayItem;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -146,16 +146,13 @@ public class TypesBuilder {
   // Registers array item types to java types.
   static {
     registerTypeArrayItem(
-        com.github.kklisura.cdt.definition.builder.protocol.types.type.array.items.StringArrayItem
-            .class,
+        com.github.kklisura.cdt.protocol.definition.types.type.array.items.StringArrayItem.class,
         "String");
     registerTypeArrayItem(
-        com.github.kklisura.cdt.definition.builder.protocol.types.type.array.items.NumberArrayItem
-            .class,
+        com.github.kklisura.cdt.protocol.definition.types.type.array.items.NumberArrayItem.class,
         "Double");
     registerTypeArrayItem(
-        com.github.kklisura.cdt.definition.builder.protocol.types.type.array.items.IntegerArrayItem
-            .class,
+        com.github.kklisura.cdt.protocol.definition.types.type.array.items.IntegerArrayItem.class,
         "Integer");
   }
 
@@ -560,7 +557,7 @@ public class TypesBuilder {
   }
 
   protected static String getArrayItemJavaType(
-      com.github.kklisura.cdt.definition.builder.protocol.types.type.array.ArrayItem arrayItem) {
+      com.github.kklisura.cdt.protocol.definition.types.type.array.ArrayItem arrayItem) {
     return ARRAY_TYPE_ITEM_TYPE_TO_JAVA_TYPE_MAP.get(arrayItem.getClass());
   }
 
@@ -590,8 +587,7 @@ public class TypesBuilder {
    * @param javaType Java type.
    * @param <T> Array item class type.
    */
-  private static <
-          T extends com.github.kklisura.cdt.definition.builder.protocol.types.type.array.ArrayItem>
+  private static <T extends com.github.kklisura.cdt.protocol.definition.types.type.array.ArrayItem>
       void registerTypeArrayItem(Class<T> clazz, String javaType) {
     ARRAY_TYPE_ITEM_TYPE_TO_JAVA_TYPE_MAP.put(clazz, javaType);
   }

@@ -12,6 +12,7 @@
   <url>https://github.com/kklisura/chrome-devtools-java-client</url>
 
   <modules>
+    <module>cdt-protocol-parser</module>
     <module>cdt-java-protocol-builder</module>
     <module>cdt-java-client</module>
     <module>cdt-examples</module>

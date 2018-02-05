@@ -20,10 +20,10 @@ package com.github.kklisura.cdt.definition.builder.support.utils;
  * #L%
  */
 
-import com.github.kklisura.cdt.definition.builder.protocol.DevToolsProtocol;
-import com.github.kklisura.cdt.definition.builder.protocol.types.Domain;
-import com.github.kklisura.cdt.definition.builder.protocol.types.Type;
 import com.github.kklisura.cdt.definition.builder.support.protocol.builder.support.DomainTypeResolver;
+import com.github.kklisura.cdt.protocol.definition.DevToolsProtocol;
+import com.github.kklisura.cdt.protocol.definition.types.Domain;
+import com.github.kklisura.cdt.protocol.definition.types.Type;
 import lombok.experimental.UtilityClass;
 
 /**
