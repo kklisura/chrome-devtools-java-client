@@ -20,14 +20,14 @@ package com.github.kklisura.cdt.definition.builder.support.protocol.builder;
  * #L%
  */
 
-import com.github.kklisura.cdt.definition.builder.protocol.types.Domain;
-import com.github.kklisura.cdt.definition.builder.protocol.types.Event;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.ObjectType;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.Builder;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaBuilderFactory;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaImportAwareBuilder;
 import com.github.kklisura.cdt.definition.builder.support.protocol.builder.support.DomainTypeResolver;
 import com.github.kklisura.cdt.definition.builder.support.protocol.builder.support.TypeBuildRequest;
+import com.github.kklisura.cdt.protocol.definition.types.Domain;
+import com.github.kklisura.cdt.protocol.definition.types.Event;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.ObjectType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

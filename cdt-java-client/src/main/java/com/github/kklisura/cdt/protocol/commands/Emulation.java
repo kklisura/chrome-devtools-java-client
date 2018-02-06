@@ -30,8 +30,8 @@ import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.dom.RGBA;
-import com.github.kklisura.cdt.protocol.types.emulation.Configuration;
 import com.github.kklisura.cdt.protocol.types.emulation.ScreenOrientation;
+import com.github.kklisura.cdt.protocol.types.emulation.SetEmitTouchEventsForMouseConfiguration;
 import com.github.kklisura.cdt.protocol.types.emulation.VirtualTimePolicy;
 
 /** This domain emulates different environments for the page. */
@@ -177,7 +177,7 @@ public interface Emulation {
   @Experimental
   void setEmitTouchEventsForMouse(
       @ParamName("enabled") Boolean enabled,
-      @Optional @ParamName("configuration") Configuration configuration);
+      @Optional @ParamName("configuration") SetEmitTouchEventsForMouseConfiguration configuration);
 
   /**
    * Emulates the given media for CSS media queries.

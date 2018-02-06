@@ -29,7 +29,7 @@ import java.util.List;
 /** Issued when console API was called. */
 public class ConsoleAPICalled {
 
-  private Type type;
+  private ConsoleAPICalledType type;
 
   private List<RemoteObject> args;
 
@@ -42,12 +42,12 @@ public class ConsoleAPICalled {
   @Experimental @Optional private String context;
 
   /** Type of the call. */
-  public Type getType() {
+  public ConsoleAPICalledType getType() {
     return type;
   }
 
   /** Type of the call. */
-  public void setType(Type type) {
+  public void setType(ConsoleAPICalledType type) {
     this.type = type;
   }
 

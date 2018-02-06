@@ -29,7 +29,7 @@ public class CSSMedia {
 
   private String text;
 
-  private Source source;
+  private CSSMediaSource source;
 
   @Optional private String sourceURL;
 
@@ -55,7 +55,7 @@ public class CSSMedia {
    * LINK tag, "inlineSheet" if specified by a "media" attribute in an inline stylesheet's STYLE
    * tag.
    */
-  public Source getSource() {
+  public CSSMediaSource getSource() {
     return source;
   }
 
@@ -65,7 +65,7 @@ public class CSSMedia {
    * LINK tag, "inlineSheet" if specified by a "media" attribute in an inline stylesheet's STYLE
    * tag.
    */
-  public void setSource(Source source) {
+  public void setSource(CSSMediaSource source) {
     this.source = source;
   }
 

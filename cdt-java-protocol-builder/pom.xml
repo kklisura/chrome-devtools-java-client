@@ -47,6 +47,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.github.kklisura.cdt</groupId>
+            <artifactId>cdt-protocol-parser</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.google.googlejavaformat</groupId>
             <artifactId>google-java-format</artifactId>
             <version>${google.java.format.version}</version>
@@ -179,7 +185,7 @@
                         <root>src/test</root>
                     </roots>
                     <licenseMerges>
-                        <licenseMerge>The Apache Software License, Version 2.0|Apache License, Version 2.0|Apache Public License 2.0|Apache 2|Apache 2.0|Apache License 2.0|Apache License|apache_v2</licenseMerge>
+                        <licenseMerge>The Apache Software License, Version 2.0|Apache License, Version 2.0|Apache Public License 2.0|Apache 2|Apache 2.0|Apache License 2.0|Apache License|apache_v2|The Apache License, Version 2.0</licenseMerge>
                         <licenseMerge>Eclipse Public License v1.0|Eclipse Public License 1.0|Eclipse Public License - v 1.0</licenseMerge>
                         <licenseMerge>BSD 3-Clause License|BSD|New BSD License</licenseMerge>
                         <licenseMerge>Dual license consisting of the CDDL v1.1 and GPL v2|CDDL+GPL</licenseMerge>

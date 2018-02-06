@@ -24,7 +24,7 @@ import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
 import com.github.kklisura.cdt.protocol.types.audits.EncodedResponse;
-import com.github.kklisura.cdt.protocol.types.audits.Encoding;
+import com.github.kklisura.cdt.protocol.types.audits.GetEncodedResponseEncoding;
 
 /** Audits domain allows investigation of page violations and possible improvements. */
 @Experimental
@@ -38,7 +38,8 @@ public interface Audits {
    * @param encoding The encoding to use.
    */
   EncodedResponse getEncodedResponse(
-      @ParamName("requestId") String requestId, @ParamName("encoding") Encoding encoding);
+      @ParamName("requestId") String requestId,
+      @ParamName("encoding") GetEncodedResponseEncoding encoding);
 
   /**
    * Returns the response body and size if it were re-encoded with the specified settings. Only
@@ -51,7 +52,7 @@ public interface Audits {
    */
   EncodedResponse getEncodedResponse(
       @ParamName("requestId") String requestId,
-      @ParamName("encoding") Encoding encoding,
+      @ParamName("encoding") GetEncodedResponseEncoding encoding,
       @Optional @ParamName("quality") Double quality,
       @Optional @ParamName("sizeOnly") Boolean sizeOnly);
 }

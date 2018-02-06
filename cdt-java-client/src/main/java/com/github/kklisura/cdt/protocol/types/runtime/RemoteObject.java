@@ -26,9 +26,9 @@ import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 /** Mirror object referencing original JavaScript object. */
 public class RemoteObject {
 
-  private Type type;
+  private RemoteObjectType type;
 
-  @Optional private Subtype subtype;
+  @Optional private RemoteObjectSubtype subtype;
 
   @Optional private String className;
 
@@ -45,22 +45,22 @@ public class RemoteObject {
   @Experimental @Optional private CustomPreview customPreview;
 
   /** Object type. */
-  public Type getType() {
+  public RemoteObjectType getType() {
     return type;
   }
 
   /** Object type. */
-  public void setType(Type type) {
+  public void setType(RemoteObjectType type) {
     this.type = type;
   }
 
   /** Object subtype hint. Specified for <code>object</code> type values only. */
-  public Subtype getSubtype() {
+  public RemoteObjectSubtype getSubtype() {
     return subtype;
   }
 
   /** Object subtype hint. Specified for <code>object</code> type values only. */
-  public void setSubtype(Subtype subtype) {
+  public void setSubtype(RemoteObjectSubtype subtype) {
     this.subtype = subtype;
   }
 

@@ -39,7 +39,7 @@ public class Request {
 
   private ResourcePriority initialPriority;
 
-  private ReferrerPolicy referrerPolicy;
+  private RequestReferrerPolicy referrerPolicy;
 
   @Optional private Boolean isLinkPreload;
 
@@ -104,12 +104,12 @@ public class Request {
   }
 
   /** The referrer policy of the request, as defined in https://www.w3.org/TR/referrer-policy/ */
-  public ReferrerPolicy getReferrerPolicy() {
+  public RequestReferrerPolicy getReferrerPolicy() {
     return referrerPolicy;
   }
 
   /** The referrer policy of the request, as defined in https://www.w3.org/TR/referrer-policy/ */
-  public void setReferrerPolicy(ReferrerPolicy referrerPolicy) {
+  public void setReferrerPolicy(RequestReferrerPolicy referrerPolicy) {
     this.referrerPolicy = referrerPolicy;
   }
 

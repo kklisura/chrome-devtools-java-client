@@ -26,7 +26,7 @@ import com.github.kklisura.cdt.protocol.types.runtime.StackTrace;
 /** Information about the request initiator. */
 public class Initiator {
 
-  private Type type;
+  private InitiatorType type;
 
   @Optional private StackTrace stack;
 
@@ -35,12 +35,12 @@ public class Initiator {
   @Optional private Double lineNumber;
 
   /** Type of this initiator. */
-  public Type getType() {
+  public InitiatorType getType() {
     return type;
   }
 
   /** Type of this initiator. */
-  public void setType(Type type) {
+  public void setType(InitiatorType type) {
     this.type = type;
   }
 

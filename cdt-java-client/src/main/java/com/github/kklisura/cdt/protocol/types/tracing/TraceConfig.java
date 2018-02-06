@@ -26,7 +26,7 @@ import java.util.Map;
 
 public class TraceConfig {
 
-  @Optional private RecordMode recordMode;
+  @Optional private TraceConfigRecordMode recordMode;
 
   @Optional private Boolean enableSampling;
 
@@ -43,12 +43,12 @@ public class TraceConfig {
   @Optional private Map<String, Object> memoryDumpConfig;
 
   /** Controls how the trace buffer stores data. */
-  public RecordMode getRecordMode() {
+  public TraceConfigRecordMode getRecordMode() {
     return recordMode;
   }
 
   /** Controls how the trace buffer stores data. */
-  public void setRecordMode(RecordMode recordMode) {
+  public void setRecordMode(TraceConfigRecordMode recordMode) {
     this.recordMode = recordMode;
   }
 

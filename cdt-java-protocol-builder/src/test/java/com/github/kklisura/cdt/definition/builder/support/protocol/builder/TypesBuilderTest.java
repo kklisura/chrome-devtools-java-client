@@ -24,36 +24,37 @@ import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.github.kklisura.cdt.definition.builder.protocol.types.Domain;
-import com.github.kklisura.cdt.definition.builder.protocol.types.Type;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.ArrayType;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.EnumType;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.NumberType;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.StringType;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.array.items.StringArrayItem;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.ObjectType;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.Property;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.AnyProperty;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.ArrayProperty;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.BooleanProperty;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.EnumProperty;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.IntegerProperty;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.NumberProperty;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.ObjectProperty;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.RefProperty;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.StringProperty;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.array.ArrayItem;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.array.items.AnyArrayItem;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.array.items.EnumArrayItem;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.array.items.IntegerArrayItem;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.array.items.ObjectArrayItem;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.array.items.RefArrayItem;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.Builder;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaBuilderFactory;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaClassBuilder;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaEnumBuilder;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.support.CombinedBuilders;
 import com.github.kklisura.cdt.definition.builder.support.protocol.builder.support.DomainTypeResolver;
+import com.github.kklisura.cdt.protocol.definition.types.Domain;
+import com.github.kklisura.cdt.protocol.definition.types.Type;
+import com.github.kklisura.cdt.protocol.definition.types.type.ArrayType;
+import com.github.kklisura.cdt.protocol.definition.types.type.EnumType;
+import com.github.kklisura.cdt.protocol.definition.types.type.NumberType;
+import com.github.kklisura.cdt.protocol.definition.types.type.StringType;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.ObjectType;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.Property;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.AnyProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.ArrayProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.BooleanProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.EnumProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.IntegerProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.NumberProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.ObjectProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.RefProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.StringProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.ArrayItem;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.AnyArrayItem;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.EnumArrayItem;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.IntegerArrayItem;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.NumberArrayItem;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.ObjectArrayItem;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.RefArrayItem;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.StringArrayItem;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -304,10 +305,13 @@ public class TypesBuilderTest extends EasyMockSupport {
         .andReturn(javaClassBuilder1);
     javaClassBuilder1.setJavaDoc("Description1");
 
-    javaClassBuilder1.addPrivateField("enumProperty", "EnumProperty", "Some property description");
+    javaClassBuilder1.addPrivateField(
+        "enumProperty", "SomeObjectType1EnumProperty", "Some property description");
     javaClassBuilder1.generateGettersAndSetters();
 
-    expect(javaBuilderFactory.createEnumBuilder("my.test.package.domain-name", "EnumProperty"))
+    expect(
+            javaBuilderFactory.createEnumBuilder(
+                "my.test.package.domain-name", "SomeObjectType1EnumProperty"))
         .andReturn(javaEnumBuilder1);
     javaEnumBuilder1.setJavaDoc("Some property description");
 
@@ -651,7 +655,8 @@ public class TypesBuilderTest extends EasyMockSupport {
     javaClassBuilder1.addImport("java.util", "List");
 
     ArrayType resolvedType = new ArrayType();
-    resolvedType.setItems(new StringArrayItem());
+    resolvedType.setItems(
+        new com.github.kklisura.cdt.protocol.definition.types.type.array.items.StringArrayItem());
 
     expect(resolver.resolve("TestPackage", "RefArray")).andReturn(resolvedType);
 
@@ -719,15 +724,9 @@ public class TypesBuilderTest extends EasyMockSupport {
 
     arrayItems.put(ObjectArrayItem.class, "Object");
     arrayItems.put(AnyArrayItem.class, "Object");
-    arrayItems.put(
-        com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.array.items
-            .StringArrayItem.class,
-        "String");
+    arrayItems.put(StringArrayItem.class, "String");
     arrayItems.put(IntegerArrayItem.class, "Integer");
-    arrayItems.put(
-        com.github.kklisura.cdt.definition.builder.protocol.types.type.object.properties.array.items
-            .NumberArrayItem.class,
-        "Double");
+    arrayItems.put(NumberArrayItem.class, "Double");
 
     for (Map.Entry<Class<? extends ArrayItem>, String> arrayItem : arrayItems.entrySet()) {
       ArrayProperty arrayProperty = createProperty(ArrayProperty.class, "arrayPropertyName");
@@ -948,8 +947,7 @@ public class TypesBuilderTest extends EasyMockSupport {
 
     ArrayType resolvedType = new ArrayType();
     resolvedType.setItems(
-        new com.github.kklisura.cdt.definition.builder.protocol.types.type.array.items
-            .NumberArrayItem());
+        new com.github.kklisura.cdt.protocol.definition.types.type.array.items.NumberArrayItem());
 
     expect(resolver.resolve("domain-name", "RefArray1")).andReturn(resolvedType);
 

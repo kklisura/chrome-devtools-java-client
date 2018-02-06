@@ -6,6 +6,7 @@ RUN_JAR=$(JAVA) -jar
 
 JAVA_PROTOCOL_BUILDER_DIR=cdt-java-protocol-builder
 JAVA_PROTOCOL_BUILDER_JAR="$(JAVA_PROTOCOL_BUILDER_DIR)/target/cdt-java-protocol-builder.jar"
+PROTOCOL_PARSER=cdt-protocol-parser
 
 JAVA_CLIENT_DIR=cdt-java-client
 JAVA_CLIENT_PACKAGE=com/github/kklisura/cdt/protocol
@@ -17,7 +18,7 @@ EXAMPLES_DIR=cdt-examples
 
 build-cdt-java-protocol-builder:
 	# Building cdt-java-protocol-builder project...
-	$(CP) $(PROTOCOL_JSON_FILE) "./$(JAVA_PROTOCOL_BUILDER_DIR)/src/test/resources/protocol.json"
+	$(CP) $(PROTOCOL_JSON_FILE) "./$(PROTOCOL_PARSER)/src/test/resources/protocol.json"
 	$(MVN) --file "$(JAVA_PROTOCOL_BUILDER_DIR)/" clean package
 
 compile-cdt-java-client:

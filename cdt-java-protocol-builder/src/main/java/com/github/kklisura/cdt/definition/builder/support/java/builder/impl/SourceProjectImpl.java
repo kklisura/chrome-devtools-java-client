@@ -42,13 +42,15 @@ import java.util.function.Function;
  */
 public class SourceProjectImpl implements SourceProject {
   private SourceRoot sourceRoot;
-  private Path outputLocation;
 
   private Map<String, CompilationUnit> compilationUnitCache;
 
   public SourceProjectImpl(Path outputLocation) {
-    this.sourceRoot = new SourceRoot(outputLocation);
-    this.outputLocation = outputLocation;
+    this(new SourceRoot(outputLocation));
+  }
+
+  public SourceProjectImpl(SourceRoot sourceRoot) {
+    this.sourceRoot = sourceRoot;
     this.compilationUnitCache = new HashMap<>();
   }
 
@@ -86,7 +88,7 @@ public class SourceProjectImpl implements SourceProject {
         JavaFormatterOptions.builder().style(JavaFormatterOptions.Style.GOOGLE).build();
 
     sourceRoot.setPrinter(googleCodeFormatter(javaFormatterOptions, prettyPrinter::print));
-    sourceRoot.saveAll(outputLocation);
+    sourceRoot.saveAll(sourceRoot.getRoot());
   }
 
   private static Function<CompilationUnit, String> googleCodeFormatter(

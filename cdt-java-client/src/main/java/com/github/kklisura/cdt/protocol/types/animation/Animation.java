@@ -43,7 +43,7 @@ public class Animation {
 
   private AnimationEffect source;
 
-  private Type type;
+  private AnimationType type;
 
   @Optional private String cssId;
 
@@ -128,12 +128,12 @@ public class Animation {
   }
 
   /** Animation type of <code>Animation</code>. */
-  public Type getType() {
+  public AnimationType getType() {
     return type;
   }
 
   /** Animation type of <code>Animation</code>. */
-  public void setType(Type type) {
+  public void setType(AnimationType type) {
     this.type = type;
   }
 

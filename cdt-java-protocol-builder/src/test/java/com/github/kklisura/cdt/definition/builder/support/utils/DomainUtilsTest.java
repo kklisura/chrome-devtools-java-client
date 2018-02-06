@@ -22,10 +22,10 @@ package com.github.kklisura.cdt.definition.builder.support.utils;
 
 import static org.junit.Assert.assertEquals;
 
-import com.github.kklisura.cdt.definition.builder.protocol.DevToolsProtocol;
-import com.github.kklisura.cdt.definition.builder.protocol.types.Domain;
-import com.github.kklisura.cdt.definition.builder.protocol.types.Type;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.StringType;
+import com.github.kklisura.cdt.protocol.definition.DevToolsProtocol;
+import com.github.kklisura.cdt.protocol.definition.types.Domain;
+import com.github.kklisura.cdt.protocol.definition.types.Type;
+import com.github.kklisura.cdt.protocol.definition.types.type.StringType;
 import java.util.Arrays;
 import java.util.Collections;
 import org.junit.Test;

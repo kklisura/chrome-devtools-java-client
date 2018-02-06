@@ -23,17 +23,17 @@ package com.github.kklisura.cdt.protocol.types.emulation;
 /** Screen orientation. */
 public class ScreenOrientation {
 
-  private Type type;
+  private ScreenOrientationType type;
 
   private Integer angle;
 
   /** Orientation type. */
-  public Type getType() {
+  public ScreenOrientationType getType() {
     return type;
   }
 
   /** Orientation type. */
-  public void setType(Type type) {
+  public void setType(ScreenOrientationType type) {
     this.type = type;
   }
 

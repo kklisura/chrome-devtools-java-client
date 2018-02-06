@@ -20,15 +20,11 @@ package com.github.kklisura.cdt.definition.builder.support.protocol.builder;
  * #L%
  */
 
+import static com.github.kklisura.cdt.definition.builder.support.protocol.builder.TypesBuilder.LIST_CLASS_NAME;
 import static com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.buildPackageName;
 import static com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.getReturnTypeFromGetter;
 import static com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.toEnumClass;
 
-import com.github.kklisura.cdt.definition.builder.protocol.types.Command;
-import com.github.kklisura.cdt.definition.builder.protocol.types.Domain;
-import com.github.kklisura.cdt.definition.builder.protocol.types.Event;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.ObjectType;
-import com.github.kklisura.cdt.definition.builder.protocol.types.type.object.Property;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.Builder;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaBuilderFactory;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaInterfaceBuilder;
@@ -37,6 +33,11 @@ import com.github.kklisura.cdt.definition.builder.support.java.builder.support.M
 import com.github.kklisura.cdt.definition.builder.support.protocol.builder.support.DomainTypeResolver;
 import com.github.kklisura.cdt.definition.builder.support.protocol.builder.support.PropertyHandlerResult;
 import com.github.kklisura.cdt.definition.builder.support.protocol.builder.support.TypeBuildRequest;
+import com.github.kklisura.cdt.protocol.definition.types.Command;
+import com.github.kklisura.cdt.protocol.definition.types.Domain;
+import com.github.kklisura.cdt.protocol.definition.types.Event;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.ObjectType;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.Property;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -331,7 +332,7 @@ public class CommandBuilder {
     if (CollectionUtils.isNotEmpty(parameters)) {
       for (Property property : parameters) {
         ObjectType objectType = new ObjectType();
-        objectType.setId(toEnumClass(domain.getDomain()));
+        objectType.setId(toEnumClass(command.getName()));
         TypeBuildRequest<ObjectType> request =
             new TypeBuildRequest<>(domain, objectType, domainTypeResolver);
 
@@ -387,9 +388,8 @@ public class CommandBuilder {
 
       // Since these properties are not ref type, we need to manually import them.
       String packageName = buildPackageName(typesPackageName, domain.getDomain().toLowerCase());
-      String name = toEnumClass(property.getName());
 
-      interfaceBuilder.addImport(packageName, name);
+      interfaceBuilder.addImport(packageName, getTypeName(result));
     }
   }
 
@@ -400,5 +400,14 @@ public class CommandBuilder {
     }
 
     return parameters;
+  }
+
+  private String getTypeName(PropertyHandlerResult propertyHandlerResult) {
+    String type = propertyHandlerResult.getType();
+    if (type.startsWith(LIST_CLASS_NAME)) {
+      return type.substring(LIST_CLASS_NAME.length() + 1, type.length() - 1);
+    }
+
+    return type;
   }
 }

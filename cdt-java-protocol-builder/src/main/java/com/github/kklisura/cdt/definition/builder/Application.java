@@ -20,8 +20,6 @@ package com.github.kklisura.cdt.definition.builder;
  * #L%
  */
 
-import com.github.kklisura.cdt.definition.builder.protocol.DevToolsProtocol;
-import com.github.kklisura.cdt.definition.builder.protocol.types.Domain;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.Builder;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaBuilderFactory;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaClassBuilder;
@@ -37,7 +35,9 @@ import com.github.kklisura.cdt.definition.builder.support.protocol.builder.Event
 import com.github.kklisura.cdt.definition.builder.support.protocol.builder.TypesBuilder;
 import com.github.kklisura.cdt.definition.builder.support.utils.DomainUtils;
 import com.github.kklisura.cdt.definition.builder.support.utils.StringUtils;
-import com.github.kklisura.cdt.definition.builder.utils.DevToolsProtocolUtils;
+import com.github.kklisura.cdt.protocol.definition.DevToolsProtocol;
+import com.github.kklisura.cdt.protocol.definition.types.Domain;
+import com.github.kklisura.cdt.protocol.definition.utils.DevToolsProtocolUtils;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;

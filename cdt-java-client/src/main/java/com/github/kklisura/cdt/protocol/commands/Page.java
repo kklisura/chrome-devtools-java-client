@@ -46,12 +46,13 @@ import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.debugger.SearchMatch;
 import com.github.kklisura.cdt.protocol.types.page.AppManifest;
-import com.github.kklisura.cdt.protocol.types.page.Behavior;
-import com.github.kklisura.cdt.protocol.types.page.Format;
+import com.github.kklisura.cdt.protocol.types.page.CaptureScreenshotFormat;
 import com.github.kklisura.cdt.protocol.types.page.FrameResourceTree;
 import com.github.kklisura.cdt.protocol.types.page.LayoutMetrics;
 import com.github.kklisura.cdt.protocol.types.page.NavigationHistory;
 import com.github.kklisura.cdt.protocol.types.page.ResourceContent;
+import com.github.kklisura.cdt.protocol.types.page.SetDownloadBehaviorBehavior;
+import com.github.kklisura.cdt.protocol.types.page.StartScreencastFormat;
 import com.github.kklisura.cdt.protocol.types.page.TransitionType;
 import com.github.kklisura.cdt.protocol.types.page.Viewport;
 import java.util.List;
@@ -242,7 +243,7 @@ public interface Page {
   @Experimental
   @Returns("data")
   String captureScreenshot(
-      @Optional @ParamName("format") Format format,
+      @Optional @ParamName("format") CaptureScreenshotFormat format,
       @Optional @ParamName("quality") Integer quality,
       @Experimental @Optional @ParamName("clip") Viewport clip,
       @Experimental @Optional @ParamName("fromSurface") Boolean fromSurface);
@@ -301,7 +302,7 @@ public interface Page {
    */
   @Experimental
   void startScreencast(
-      @Optional @ParamName("format") Format format,
+      @Optional @ParamName("format") StartScreencastFormat format,
       @Optional @ParamName("quality") Integer quality,
       @Optional @ParamName("maxWidth") Integer maxWidth,
       @Optional @ParamName("maxHeight") Integer maxHeight,
@@ -380,7 +381,7 @@ public interface Page {
    *     behavior if available (otherwise deny).
    */
   @Experimental
-  void setDownloadBehavior(@ParamName("behavior") Behavior behavior);
+  void setDownloadBehavior(@ParamName("behavior") SetDownloadBehaviorBehavior behavior);
 
   /**
    * Set the behavior when downloading a file.
@@ -392,7 +393,7 @@ public interface Page {
    */
   @Experimental
   void setDownloadBehavior(
-      @ParamName("behavior") Behavior behavior,
+      @ParamName("behavior") SetDownloadBehaviorBehavior behavior,
       @Optional @ParamName("downloadPath") String downloadPath);
 
   @EventName("domContentEventFired")

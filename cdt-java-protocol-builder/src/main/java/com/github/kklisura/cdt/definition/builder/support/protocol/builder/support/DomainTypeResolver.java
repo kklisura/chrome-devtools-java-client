@@ -20,7 +20,7 @@ package com.github.kklisura.cdt.definition.builder.support.protocol.builder.supp
  * #L%
  */
 
-import com.github.kklisura.cdt.definition.builder.protocol.types.Type;
+import com.github.kklisura.cdt.protocol.definition.types.Type;
 
 /** Domain type resolves type given a domain and its object. */
 @FunctionalInterface

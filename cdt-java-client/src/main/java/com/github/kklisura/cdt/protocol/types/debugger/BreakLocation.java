@@ -32,7 +32,7 @@ public class BreakLocation {
 
   @Optional private Integer columnNumber;
 
-  @Optional private Type type;
+  @Optional private BreakLocationType type;
 
   /** Script identifier as reported in the <code>Debugger.scriptParsed</code>. */
   public String getScriptId() {
@@ -64,11 +64,11 @@ public class BreakLocation {
     this.columnNumber = columnNumber;
   }
 
-  public Type getType() {
+  public BreakLocationType getType() {
     return type;
   }
 
-  public void setType(Type type) {
+  public void setType(BreakLocationType type) {
     this.type = type;
   }
 }
