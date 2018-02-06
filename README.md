@@ -12,7 +12,7 @@ For more information on DevTools, see https://chromedevtools.github.io/devtools-
 
 Add the following dependency to your `pom.xml`:
 
-```
+```xml
 <dependency>
   <groupId>com.github.kklisura.cdt</groupId>
   <artifactId>cdt-java-client</artifactId>
