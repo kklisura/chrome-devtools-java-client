@@ -13,7 +13,7 @@ import java.util.Arrays;
  *
  * @author Kenan Klisura
  */
-public class BlockUrlGIvenPatternExample {
+public class BlockUrlGivenPatternExample {
   public static void main(String[] args) throws InterruptedException {
     // Create chrome launcher.
     final ChromeLauncher launcher = new ChromeLauncher();

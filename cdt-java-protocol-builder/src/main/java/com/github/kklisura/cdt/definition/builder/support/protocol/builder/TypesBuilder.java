@@ -371,7 +371,7 @@ public class TypesBuilder {
     final EnumProperty property = request.getProperty();
 
     String packageName = buildPackageName(basePackageName, domain.getDomain().toLowerCase());
-    String name = toEnumClass(property.getName());
+    String name = toEnumClass(request.getObjectType().getId()) + toEnumClass(property.getName());
 
     PropertyHandlerResult result = new PropertyHandlerResult();
     result.setBuilder(

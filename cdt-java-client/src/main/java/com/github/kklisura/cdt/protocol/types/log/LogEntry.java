@@ -26,9 +26,9 @@ import com.github.kklisura.cdt.protocol.types.runtime.StackTrace;
 /** Log entry. */
 public class LogEntry {
 
-  private Source source;
+  private LogEntrySource source;
 
-  private Level level;
+  private LogEntryLevel level;
 
   private String text;
 
@@ -45,22 +45,22 @@ public class LogEntry {
   @Optional private String workerId;
 
   /** Log entry source. */
-  public Source getSource() {
+  public LogEntrySource getSource() {
     return source;
   }
 
   /** Log entry source. */
-  public void setSource(Source source) {
+  public void setSource(LogEntrySource source) {
     this.source = source;
   }
 
   /** Log entry severity. */
-  public Level getLevel() {
+  public LogEntryLevel getLevel() {
     return level;
   }
 
   /** Log entry severity. */
-  public void setLevel(Level level) {
+  public void setLevel(LogEntryLevel level) {
     this.level = level;
   }
 

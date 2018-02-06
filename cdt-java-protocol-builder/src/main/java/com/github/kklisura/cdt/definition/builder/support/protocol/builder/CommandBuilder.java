@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.definition.builder.support.protocol.builder;
  * #L%
  */
 
+import static com.github.kklisura.cdt.definition.builder.support.protocol.builder.TypesBuilder.LIST_CLASS_NAME;
 import static com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.buildPackageName;
 import static com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.getReturnTypeFromGetter;
 import static com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.toEnumClass;
@@ -331,7 +332,7 @@ public class CommandBuilder {
     if (CollectionUtils.isNotEmpty(parameters)) {
       for (Property property : parameters) {
         ObjectType objectType = new ObjectType();
-        objectType.setId(toEnumClass(domain.getDomain()));
+        objectType.setId(toEnumClass(command.getName()));
         TypeBuildRequest<ObjectType> request =
             new TypeBuildRequest<>(domain, objectType, domainTypeResolver);
 
@@ -387,9 +388,8 @@ public class CommandBuilder {
 
       // Since these properties are not ref type, we need to manually import them.
       String packageName = buildPackageName(typesPackageName, domain.getDomain().toLowerCase());
-      String name = toEnumClass(property.getName());
 
-      interfaceBuilder.addImport(packageName, name);
+      interfaceBuilder.addImport(packageName, getTypeName(result));
     }
   }
 
@@ -400,5 +400,14 @@ public class CommandBuilder {
     }
 
     return parameters;
+  }
+
+  private String getTypeName(PropertyHandlerResult propertyHandlerResult) {
+    String type = propertyHandlerResult.getType();
+    if (type.startsWith(LIST_CLASS_NAME)) {
+      return type.substring(LIST_CLASS_NAME.length() + 1, type.length() - 1);
+    }
+
+    return type;
   }
 }

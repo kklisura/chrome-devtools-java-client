@@ -305,10 +305,13 @@ public class TypesBuilderTest extends EasyMockSupport {
         .andReturn(javaClassBuilder1);
     javaClassBuilder1.setJavaDoc("Description1");
 
-    javaClassBuilder1.addPrivateField("enumProperty", "EnumProperty", "Some property description");
+    javaClassBuilder1.addPrivateField(
+        "enumProperty", "SomeObjectType1EnumProperty", "Some property description");
     javaClassBuilder1.generateGettersAndSetters();
 
-    expect(javaBuilderFactory.createEnumBuilder("my.test.package.domain-name", "EnumProperty"))
+    expect(
+            javaBuilderFactory.createEnumBuilder(
+                "my.test.package.domain-name", "SomeObjectType1EnumProperty"))
         .andReturn(javaEnumBuilder1);
     javaEnumBuilder1.setJavaDoc("Some property description");
 

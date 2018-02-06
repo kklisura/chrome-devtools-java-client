@@ -25,9 +25,9 @@ import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 /** Console message. */
 public class ConsoleMessage {
 
-  private Source source;
+  private ConsoleMessageSource source;
 
-  private Level level;
+  private ConsoleMessageLevel level;
 
   private String text;
 
@@ -38,22 +38,22 @@ public class ConsoleMessage {
   @Optional private Integer column;
 
   /** Message source. */
-  public Source getSource() {
+  public ConsoleMessageSource getSource() {
     return source;
   }
 
   /** Message source. */
-  public void setSource(Source source) {
+  public void setSource(ConsoleMessageSource source) {
     this.source = source;
   }
 
   /** Message severity. */
-  public Level getLevel() {
+  public ConsoleMessageLevel getLevel() {
     return level;
   }
 
   /** Message severity. */
-  public void setLevel(Level level) {
+  public void setLevel(ConsoleMessageLevel level) {
     this.level = level;
   }
 

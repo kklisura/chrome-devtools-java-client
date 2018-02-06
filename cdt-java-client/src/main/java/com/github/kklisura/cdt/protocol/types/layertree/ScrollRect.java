@@ -27,7 +27,7 @@ public class ScrollRect {
 
   private Rect rect;
 
-  private Type type;
+  private ScrollRectType type;
 
   /** Rectangle itself. */
   public Rect getRect() {
@@ -40,12 +40,12 @@ public class ScrollRect {
   }
 
   /** Reason for rectangle to force scrolling on the main thread */
-  public Type getType() {
+  public ScrollRectType getType() {
     return type;
   }
 
   /** Reason for rectangle to force scrolling on the main thread */
-  public void setType(Type type) {
+  public void setType(ScrollRectType type) {
     this.type = type;
   }
 }

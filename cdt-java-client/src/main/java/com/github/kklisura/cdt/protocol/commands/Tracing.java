@@ -31,8 +31,8 @@ import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.tracing.RequestMemoryDump;
+import com.github.kklisura.cdt.protocol.types.tracing.StartTransferMode;
 import com.github.kklisura.cdt.protocol.types.tracing.TraceConfig;
-import com.github.kklisura.cdt.protocol.types.tracing.TransferMode;
 import java.util.List;
 
 @Experimental
@@ -56,7 +56,7 @@ public interface Tracing {
       @Deprecated @Optional @ParamName("categories") String categories,
       @Deprecated @Optional @ParamName("options") String options,
       @Optional @ParamName("bufferUsageReportingInterval") Double bufferUsageReportingInterval,
-      @Optional @ParamName("transferMode") TransferMode transferMode,
+      @Optional @ParamName("transferMode") StartTransferMode transferMode,
       @Optional @ParamName("traceConfig") TraceConfig traceConfig);
 
   /** Stop trace events collection. */

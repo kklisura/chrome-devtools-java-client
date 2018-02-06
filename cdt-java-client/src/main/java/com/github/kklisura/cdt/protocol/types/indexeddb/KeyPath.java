@@ -26,19 +26,19 @@ import java.util.List;
 /** Key path. */
 public class KeyPath {
 
-  private Type type;
+  private KeyPathType type;
 
   @Optional private String string;
 
   @Optional private List<String> array;
 
   /** Key path type. */
-  public Type getType() {
+  public KeyPathType getType() {
     return type;
   }
 
   /** Key path type. */
-  public void setType(Type type) {
+  public void setType(KeyPathType type) {
     this.type = type;
   }
 

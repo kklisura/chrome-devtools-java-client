@@ -28,9 +28,9 @@ import java.util.List;
 @Experimental
 public class ObjectPreview {
 
-  private Type type;
+  private ObjectPreviewType type;
 
-  @Optional private Subtype subtype;
+  @Optional private ObjectPreviewSubtype subtype;
 
   @Optional private String description;
 
@@ -41,22 +41,22 @@ public class ObjectPreview {
   @Optional private List<EntryPreview> entries;
 
   /** Object type. */
-  public Type getType() {
+  public ObjectPreviewType getType() {
     return type;
   }
 
   /** Object type. */
-  public void setType(Type type) {
+  public void setType(ObjectPreviewType type) {
     this.type = type;
   }
 
   /** Object subtype hint. Specified for <code>object</code> type values only. */
-  public Subtype getSubtype() {
+  public ObjectPreviewSubtype getSubtype() {
     return subtype;
   }
 
   /** Object subtype hint. Specified for <code>object</code> type values only. */
-  public void setSubtype(Subtype subtype) {
+  public void setSubtype(ObjectPreviewSubtype subtype) {
     this.subtype = subtype;
   }
 

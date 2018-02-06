@@ -30,7 +30,7 @@ public class FrameScheduledNavigation {
 
   private Double delay;
 
-  @Experimental private Reason reason;
+  @Experimental private FrameScheduledNavigationReason reason;
 
   @Experimental private String url;
 
@@ -61,12 +61,12 @@ public class FrameScheduledNavigation {
   }
 
   /** The reason for the navigation. */
-  public Reason getReason() {
+  public FrameScheduledNavigationReason getReason() {
     return reason;
   }
 
   /** The reason for the navigation. */
-  public void setReason(Reason reason) {
+  public void setReason(FrameScheduledNavigationReason reason) {
     this.reason = reason;
   }
 

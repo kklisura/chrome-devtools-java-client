@@ -23,17 +23,17 @@ package com.github.kklisura.cdt.protocol.types.log;
 /** Violation configuration setting. */
 public class ViolationSetting {
 
-  private Name name;
+  private ViolationSettingName name;
 
   private Double threshold;
 
   /** Violation type. */
-  public Name getName() {
+  public ViolationSettingName getName() {
     return name;
   }
 
   /** Violation type. */
-  public void setName(Name name) {
+  public void setName(ViolationSettingName name) {
     this.name = name;
   }
 

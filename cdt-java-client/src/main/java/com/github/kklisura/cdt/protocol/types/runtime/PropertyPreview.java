@@ -28,13 +28,13 @@ public class PropertyPreview {
 
   private String name;
 
-  private Type type;
+  private PropertyPreviewType type;
 
   @Optional private String value;
 
   @Optional private ObjectPreview valuePreview;
 
-  @Optional private Subtype subtype;
+  @Optional private PropertyPreviewSubtype subtype;
 
   /** Property name. */
   public String getName() {
@@ -47,12 +47,12 @@ public class PropertyPreview {
   }
 
   /** Object type. Accessor means that the property itself is an accessor property. */
-  public Type getType() {
+  public PropertyPreviewType getType() {
     return type;
   }
 
   /** Object type. Accessor means that the property itself is an accessor property. */
-  public void setType(Type type) {
+  public void setType(PropertyPreviewType type) {
     this.type = type;
   }
 
@@ -77,12 +77,12 @@ public class PropertyPreview {
   }
 
   /** Object subtype hint. Specified for <code>object</code> type values only. */
-  public Subtype getSubtype() {
+  public PropertyPreviewSubtype getSubtype() {
     return subtype;
   }
 
   /** Object subtype hint. Specified for <code>object</code> type values only. */
-  public void setSubtype(Subtype subtype) {
+  public void setSubtype(PropertyPreviewSubtype subtype) {
     this.subtype = subtype;
   }
 }

@@ -23,10 +23,14 @@ package com.github.kklisura.cdt.protocol.commands;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
-import com.github.kklisura.cdt.protocol.types.input.Button;
+import com.github.kklisura.cdt.protocol.types.input.DispatchKeyEventType;
+import com.github.kklisura.cdt.protocol.types.input.DispatchMouseEventButton;
+import com.github.kklisura.cdt.protocol.types.input.DispatchMouseEventType;
+import com.github.kklisura.cdt.protocol.types.input.DispatchTouchEventType;
+import com.github.kklisura.cdt.protocol.types.input.EmulateTouchFromMouseEventButton;
+import com.github.kklisura.cdt.protocol.types.input.EmulateTouchFromMouseEventType;
 import com.github.kklisura.cdt.protocol.types.input.GestureSourceType;
 import com.github.kklisura.cdt.protocol.types.input.TouchPoint;
-import com.github.kklisura.cdt.protocol.types.input.Type;
 import java.util.List;
 
 public interface Input {
@@ -43,7 +47,7 @@ public interface Input {
    *
    * @param type Type of the key event.
    */
-  void dispatchKeyEvent(@ParamName("type") Type type);
+  void dispatchKeyEvent(@ParamName("type") DispatchKeyEventType type);
 
   /**
    * Dispatches a key event to the page.
@@ -67,7 +71,7 @@ public interface Input {
    * @param isSystemKey Whether the event was a system key event (default: false).
    */
   void dispatchKeyEvent(
-      @ParamName("type") Type type,
+      @ParamName("type") DispatchKeyEventType type,
       @Optional @ParamName("modifiers") Integer modifiers,
       @Optional @ParamName("timestamp") Double timestamp,
       @Optional @ParamName("text") String text,
@@ -91,7 +95,9 @@ public interface Input {
    *     viewport.
    */
   void dispatchMouseEvent(
-      @ParamName("type") Type type, @ParamName("x") Double x, @ParamName("y") Double y);
+      @ParamName("type") DispatchMouseEventType type,
+      @ParamName("x") Double x,
+      @ParamName("y") Double y);
 
   /**
    * Dispatches a mouse event to the page.
@@ -110,12 +116,12 @@ public interface Input {
    * @param deltaY Y delta in CSS pixels for mouse wheel event (default: 0).
    */
   void dispatchMouseEvent(
-      @ParamName("type") Type type,
+      @ParamName("type") DispatchMouseEventType type,
       @ParamName("x") Double x,
       @ParamName("y") Double y,
       @Optional @ParamName("modifiers") Integer modifiers,
       @Optional @ParamName("timestamp") Double timestamp,
-      @Optional @ParamName("button") Button button,
+      @Optional @ParamName("button") DispatchMouseEventButton button,
       @Optional @ParamName("clickCount") Integer clickCount,
       @Optional @ParamName("deltaX") Double deltaX,
       @Optional @ParamName("deltaY") Double deltaY);
@@ -131,7 +137,8 @@ public interface Input {
    */
   @Experimental
   void dispatchTouchEvent(
-      @ParamName("type") Type type, @ParamName("touchPoints") List<TouchPoint> touchPoints);
+      @ParamName("type") DispatchTouchEventType type,
+      @ParamName("touchPoints") List<TouchPoint> touchPoints);
 
   /**
    * Dispatches a touch event to the page.
@@ -147,7 +154,7 @@ public interface Input {
    */
   @Experimental
   void dispatchTouchEvent(
-      @ParamName("type") Type type,
+      @ParamName("type") DispatchTouchEventType type,
       @ParamName("touchPoints") List<TouchPoint> touchPoints,
       @Optional @ParamName("modifiers") Integer modifiers,
       @Optional @ParamName("timestamp") Double timestamp);
@@ -163,11 +170,11 @@ public interface Input {
    */
   @Experimental
   void emulateTouchFromMouseEvent(
-      @ParamName("type") Type type,
+      @ParamName("type") EmulateTouchFromMouseEventType type,
       @ParamName("x") Integer x,
       @ParamName("y") Integer y,
       @ParamName("timestamp") Double timestamp,
-      @ParamName("button") Button button);
+      @ParamName("button") EmulateTouchFromMouseEventButton button);
 
   /**
    * Emulates touch event from the mouse event parameters.
@@ -185,11 +192,11 @@ public interface Input {
    */
   @Experimental
   void emulateTouchFromMouseEvent(
-      @ParamName("type") Type type,
+      @ParamName("type") EmulateTouchFromMouseEventType type,
       @ParamName("x") Integer x,
       @ParamName("y") Integer y,
       @ParamName("timestamp") Double timestamp,
-      @ParamName("button") Button button,
+      @ParamName("button") EmulateTouchFromMouseEventButton button,
       @Optional @ParamName("deltaX") Double deltaX,
       @Optional @ParamName("deltaY") Double deltaY,
       @Optional @ParamName("modifiers") Integer modifiers,

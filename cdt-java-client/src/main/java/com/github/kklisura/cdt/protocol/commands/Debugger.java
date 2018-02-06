@@ -33,6 +33,7 @@ import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.debugger.BreakLocation;
+import com.github.kklisura.cdt.protocol.types.debugger.ContinueToLocationTargetCallFrames;
 import com.github.kklisura.cdt.protocol.types.debugger.EvaluateOnCallFrame;
 import com.github.kklisura.cdt.protocol.types.debugger.Location;
 import com.github.kklisura.cdt.protocol.types.debugger.RestartFrame;
@@ -40,9 +41,8 @@ import com.github.kklisura.cdt.protocol.types.debugger.ScriptPosition;
 import com.github.kklisura.cdt.protocol.types.debugger.SearchMatch;
 import com.github.kklisura.cdt.protocol.types.debugger.SetBreakpoint;
 import com.github.kklisura.cdt.protocol.types.debugger.SetBreakpointByUrl;
+import com.github.kklisura.cdt.protocol.types.debugger.SetPauseOnExceptionsState;
 import com.github.kklisura.cdt.protocol.types.debugger.SetScriptSource;
-import com.github.kklisura.cdt.protocol.types.debugger.State;
-import com.github.kklisura.cdt.protocol.types.debugger.TargetCallFrames;
 import com.github.kklisura.cdt.protocol.types.runtime.CallArgument;
 import java.util.List;
 
@@ -174,7 +174,8 @@ public interface Debugger {
    */
   void continueToLocation(
       @ParamName("location") Location location,
-      @Experimental @Optional @ParamName("targetCallFrames") TargetCallFrames targetCallFrames);
+      @Experimental @Optional @ParamName("targetCallFrames")
+          ContinueToLocationTargetCallFrames targetCallFrames);
 
   /** Steps over the statement. */
   void stepOver();
@@ -269,7 +270,7 @@ public interface Debugger {
    *
    * @param state Pause on exceptions mode.
    */
-  void setPauseOnExceptions(@ParamName("state") State state);
+  void setPauseOnExceptions(@ParamName("state") SetPauseOnExceptionsState state);
 
   /**
    * Evaluates expression on a given call frame.

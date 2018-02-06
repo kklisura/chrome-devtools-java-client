@@ -26,7 +26,7 @@ import java.util.List;
 /** Key. */
 public class Key {
 
-  private Type type;
+  private KeyType type;
 
   @Optional private Double number;
 
@@ -37,12 +37,12 @@ public class Key {
   @Optional private List<Key> array;
 
   /** Key type. */
-  public Type getType() {
+  public KeyType getType() {
     return type;
   }
 
   /** Key type. */
-  public void setType(Type type) {
+  public void setType(KeyType type) {
     this.type = type;
   }
 

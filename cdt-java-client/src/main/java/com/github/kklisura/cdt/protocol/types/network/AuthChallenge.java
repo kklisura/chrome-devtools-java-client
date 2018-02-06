@@ -27,7 +27,7 @@ import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 @Experimental
 public class AuthChallenge {
 
-  @Optional private Source source;
+  @Optional private AuthChallengeSource source;
 
   private String origin;
 
@@ -36,12 +36,12 @@ public class AuthChallenge {
   private String realm;
 
   /** Source of the authentication challenge. */
-  public Source getSource() {
+  public AuthChallengeSource getSource() {
     return source;
   }
 
   /** Source of the authentication challenge. */
-  public void setSource(Source source) {
+  public void setSource(AuthChallengeSource source) {
     this.source = source;
   }
 

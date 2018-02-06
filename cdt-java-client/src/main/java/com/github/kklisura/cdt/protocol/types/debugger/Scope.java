@@ -26,7 +26,7 @@ import com.github.kklisura.cdt.protocol.types.runtime.RemoteObject;
 /** Scope description. */
 public class Scope {
 
-  private Type type;
+  private ScopeType type;
 
   private RemoteObject object;
 
@@ -37,12 +37,12 @@ public class Scope {
   @Optional private Location endLocation;
 
   /** Scope type. */
-  public Type getType() {
+  public ScopeType getType() {
     return type;
   }
 
   /** Scope type. */
-  public void setType(Type type) {
+  public void setType(ScopeType type) {
     this.type = type;
   }
 
