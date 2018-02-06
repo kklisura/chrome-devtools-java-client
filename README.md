@@ -81,8 +81,8 @@ public class LogRequestsExample {
 }
 ```
 
-For more examples, see `cdt-examples`.
- 
+For more examples, see [examples](cdt-examples/src/main/java/com/github/kklisura/cdt/examples).
+
 ## Running unit tests
 
 `make verify`
