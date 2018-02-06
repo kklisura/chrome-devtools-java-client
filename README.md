@@ -13,7 +13,11 @@ For more information on DevTools, see https://chromedevtools.github.io/devtools-
 Add the following dependency to your `pom.xml`:
 
 ```
-TBD
+<dependency>
+  <groupId>com.github.kklisura.cdt</groupId>
+  <artifactId>cdt-java-client</artifactId>
+  <version>1.2.0</version>
+</dependency>
 ```
 
 You can use following code, taken from, `LogRequestsExample`:
