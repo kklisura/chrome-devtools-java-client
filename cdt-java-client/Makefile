@@ -26,4 +26,4 @@ build:
 
 deploy:
 	# Deploying
-	GPG_TTY=$$(tty) $(MVN) clean compile deploy
+	GPG_TTY=$$(tty) $(MVN) clean compile deploy -P release
