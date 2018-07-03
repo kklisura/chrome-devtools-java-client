@@ -70,13 +70,14 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.tyrus</groupId>
-            <artifactId>tyrus-client</artifactId>
+            <artifactId>tyrus-container-grizzly-client</artifactId>
             <version>${tyrus.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.tyrus</groupId>
             <artifactId>tyrus-container-grizzly-server</artifactId>
             <version>${tyrus.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
