@@ -21,6 +21,7 @@ package com.github.kklisura.cdt.services.impl;
  */
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
@@ -65,7 +66,9 @@ public abstract class ChromeDevToolsServiceImpl
   private static final String PARAMS_PROPERTY = "params";
 
   private static final ObjectMapper OBJECT_MAPPER =
-      new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+      new ObjectMapper()
+          .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+          .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
   private WebSocketService webSocketService;
 

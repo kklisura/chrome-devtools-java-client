@@ -281,6 +281,36 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
   }
 
   @Test
+  public void testInvokeTestMessageMethodWithUnknownProperty()
+      throws WebSocketServiceException, IOException {
+    MethodInvocation methodInvocation = new MethodInvocation();
+    methodInvocation.setId(1L);
+    methodInvocation.setMethod("SomeMethod");
+    methodInvocation.setParams(new HashMap<>());
+    methodInvocation.getParams().put("param", "value");
+
+    Capture<String> messageCapture = Capture.newInstance();
+    webSocketService.send(capture(messageCapture));
+
+    replayAll();
+
+    resolveMessage(
+        "{\"id\":1,\"result\":{\"testProperty\":\"resultValue\",\"testProperty2\":\"resultValue2\",\"unknownProperty\":false}}");
+    TestMessage testMessage = service.invoke(null, TestMessage.class, methodInvocation);
+
+    verifyAll();
+
+    assertEquals("resultValue", testMessage.getTestProperty());
+    assertEquals("resultValue2", testMessage.getTestProperty2());
+
+    MethodInvocation sentInvocation =
+        OBJECT_MAPPER.readerFor(MethodInvocation.class).readValue(messageCapture.getValue());
+    assertEquals(methodInvocation.getId(), sentInvocation.getId());
+    assertEquals(methodInvocation.getMethod(), sentInvocation.getMethod());
+    assertEquals(methodInvocation.getParams(), sentInvocation.getParams());
+  }
+
+  @Test
   public void testInvokeTestMessageMethodWithBadJson()
       throws WebSocketServiceException, IOException {
     webSocketService.addMessageHandler(anyObject());
