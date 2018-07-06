@@ -34,13 +34,24 @@ import org.skyscreamer.jsonassert.JSONAssert;
  * @author Kenan Klisura
  */
 public class DevToolsProtocolUtilsTest {
-  public static final String PROTOCOL_FIXTURE = "protocol.json";
+  public static final String JS_PROTOCOL_FIXTURE = "js_protocol.json";
+  public static final String BROWSER_PROTOCOL_FIXTURE = "browser_protocol.json";
 
   @Test
-  public void testSerializationDeserialization() throws IOException, JSONException {
-    String json = readString(getFixture(PROTOCOL_FIXTURE));
+  public void testJsSerializationDeserialization() throws IOException, JSONException {
+    String json = readString(getFixture(JS_PROTOCOL_FIXTURE));
 
-    DevToolsProtocol protocol = DevToolsProtocolUtils.readJson(getFixture(PROTOCOL_FIXTURE));
+    DevToolsProtocol protocol = DevToolsProtocolUtils.readJson(getFixture(JS_PROTOCOL_FIXTURE));
+    String output = DevToolsProtocolUtils.writeJson(protocol);
+
+    JSONAssert.assertEquals(json, output, true);
+  }
+
+  @Test
+  public void testBrowserSerializationDeserialization() throws IOException, JSONException {
+    String json = readString(getFixture(BROWSER_PROTOCOL_FIXTURE));
+
+    DevToolsProtocol protocol = DevToolsProtocolUtils.readJson(getFixture(BROWSER_PROTOCOL_FIXTURE));
     String output = DevToolsProtocolUtils.writeJson(protocol);
 
     JSONAssert.assertEquals(json, output, true);

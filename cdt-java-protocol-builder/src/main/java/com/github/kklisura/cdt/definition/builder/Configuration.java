@@ -42,12 +42,20 @@ public class Configuration {
   private String basePackage;
 
   @Option(
-    name = "--protocol",
-    usage = "JSON protocol file (protocol.json)",
-    metaVar = "PROTOCOL_JSON",
+    name = "--js-protocol",
+    usage = "JS JSON protocol file (js_protocol.json)",
+    metaVar = "JS_PROTOCOL_JSON",
     required = true
   )
-  private File protocolFile;
+  private File jsProtocolFile;
+
+  @Option(
+    name = "--browser-protocol",
+    usage = "Browser JSON protocol file (browser_protocol.json)",
+    metaVar = "BROWSER_PROTOCOL_JSON",
+    required = true
+  )
+  private File browserProtocolFile;
 
   @Option(name = "--output", usage = "Output project location.", metaVar = "DIR", required = true)
   private File outputProjectLocation;

@@ -4,6 +4,7 @@ JAVA=java
 CP=cp
 RUN_JAR=$(JAVA) -jar
 
+PROTOCOL_PARSER_DIR=cdt-protocol-parser
 JAVA_PROTOCOL_BUILDER_DIR=cdt-java-protocol-builder
 JAVA_PROTOCOL_BUILDER_JAR="$(JAVA_PROTOCOL_BUILDER_DIR)/target/cdt-java-protocol-builder.jar"
 PROTOCOL_PARSER=cdt-protocol-parser
@@ -12,13 +13,19 @@ JAVA_CLIENT_DIR=cdt-java-client
 JAVA_CLIENT_PACKAGE=com/github/kklisura/cdt/protocol
 
 PACKAGE_NAME=com.github.kklisura.cdt.protocol
-PROTOCOL_JSON_FILE=./protocol.json
+JS_PROTOCOL_JSON_FILE=./js_protocol.json
+BROWSER_PROTOCOL_JSON_FILE=./browser_protocol.json
 
 EXAMPLES_DIR=cdt-examples
 
-build-cdt-java-protocol-builder:
+install-cdt-java-protocol-parser:
+	# Building and install cdt-protocol-parser project...
+	$(CP) $(JS_PROTOCOL_JSON_FILE) "./$(PROTOCOL_PARSER)/src/test/resources/js_protocol.json"
+	$(CP) $(BROWSER_PROTOCOL_JSON_FILE) "./$(PROTOCOL_PARSER)/src/test/resources/browser_protocol.json"
+	$(MVN) --file "$(PROTOCOL_PARSER_DIR)/" clean install
+
+build-cdt-java-protocol-builder: install-cdt-java-protocol-parser
 	# Building cdt-java-protocol-builder project...
-	$(CP) $(PROTOCOL_JSON_FILE) "./$(PROTOCOL_PARSER)/src/test/resources/protocol.json"
 	$(MVN) --file "$(JAVA_PROTOCOL_BUILDER_DIR)/" clean package
 
 compile-cdt-java-client:
@@ -42,7 +49,8 @@ clean-previous-protocol:
 upgrade-protocol: build-cdt-java-protocol-builder clean-previous-protocol
 	$(RUN_JAR) $(JAVA_PROTOCOL_BUILDER_JAR) --base-package="$(PACKAGE_NAME)" \
 		--output=./$(JAVA_CLIENT_DIR)/ \
-		--protocol=$(PROTOCOL_JSON_FILE)
+		--js-protocol=$(JS_PROTOCOL_JSON_FILE) \
+		--browser-protocol=$(BROWSER_PROTOCOL_JSON_FILE) \
 
 update-protocol: upgrade-protocol compile-cdt-java-client
 	# Updated protocol on cdt-java-client

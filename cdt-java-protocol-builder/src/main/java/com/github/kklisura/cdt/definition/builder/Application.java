@@ -38,6 +38,7 @@ import com.github.kklisura.cdt.definition.builder.support.utils.StringUtils;
 import com.github.kklisura.cdt.protocol.definition.DevToolsProtocol;
 import com.github.kklisura.cdt.protocol.definition.types.Domain;
 import com.github.kklisura.cdt.protocol.definition.utils.DevToolsProtocolUtils;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -95,8 +96,7 @@ public class Application {
     final String supportAnnotationsPackageName =
         StringUtils.buildPackageName(configuration.getBasePackage(), SUPPORT_ANNOTATIONS_PACKAGE);
 
-    final InputStream inputStream = new FileInputStream(configuration.getProtocolFile());
-    final DevToolsProtocol protocol = DevToolsProtocolUtils.readJson(inputStream);
+    final DevToolsProtocol protocol = readDevToolsProtocolFiles(configuration);
 
     Path outputLocation = configuration.getOutputProjectLocation().toPath().resolve(SRC_MAIN);
     SourceProject sourceProject = new SourceProjectImpl(outputLocation);
@@ -169,5 +169,36 @@ public class Application {
     }
 
     return factoryInterfaceBuilder;
+  }
+
+  private static DevToolsProtocol readDevToolsProtocolFiles(Configuration configuration)
+      throws IOException {
+    DevToolsProtocol jsProtocol = readDevToolsProtocolFile(configuration.getJsProtocolFile());
+    DevToolsProtocol browserProtocol =
+        readDevToolsProtocolFile(configuration.getBrowserProtocolFile());
+
+    return mergeProtocols(jsProtocol, browserProtocol);
+  }
+
+  private static DevToolsProtocol mergeProtocols(
+      DevToolsProtocol jsProtocol, DevToolsProtocol browserProtocol) {
+    DevToolsProtocol mergedProtocol = new DevToolsProtocol();
+    mergedProtocol.setVersion(jsProtocol.getVersion());
+    mergedProtocol.setDomains(new ArrayList<>(jsProtocol.getDomains()));
+    mergedProtocol.getDomains().addAll(browserProtocol.getDomains());
+
+    return mergedProtocol;
+  }
+
+  private static DevToolsProtocol readDevToolsProtocolFile(File file) throws IOException {
+    InputStream inputStream = null;
+    try {
+      inputStream = new FileInputStream(file);
+      return DevToolsProtocolUtils.readJson(inputStream);
+    } finally {
+      if (inputStream != null) {
+        inputStream.close();
+      }
+    }
   }
 }
