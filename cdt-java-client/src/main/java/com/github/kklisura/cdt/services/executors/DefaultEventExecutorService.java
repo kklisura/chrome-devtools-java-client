@@ -29,7 +29,7 @@ import java.util.concurrent.Executors;
  * @author Kenan Klisura
  */
 public class DefaultEventExecutorService implements EventExecutorService {
-  private ExecutorService executorService = Executors.newCachedThreadPool();
+  private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
   @Override
   public void execute(Runnable runnable) {
