@@ -6,6 +6,8 @@ Chrome DevTools Java Client is a DevTools client - in Java. (: It can be used fo
 
 For more information on DevTools, see https://chromedevtools.github.io/devtools-protocol/.
 
+Tested on Google Chrome Version 67.0.3396.87. Protocol files from [dev-tools-protocol#1aa7b31ca7](https://github.com/ChromeDevTools/devtools-protocol/tree/1aa7b31ca7bba982eceea8d4bd494b27850fb0df/json)
+
 [1] https://chromedevtools.github.io/devtools-protocol/.
 
 ## Usage
