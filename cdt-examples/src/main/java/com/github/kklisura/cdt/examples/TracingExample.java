@@ -18,7 +18,7 @@ import java.util.List;
  * @author Kenan Klisura
  */
 public class TracingExample {
-  public static void main(String[] args) throws InterruptedException {
+  public static void main(String[] args) {
     // Create chrome launcher.
     final ChromeLauncher launcher = new ChromeLauncher();
 

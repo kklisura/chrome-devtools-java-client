@@ -4,9 +4,11 @@ import com.github.kklisura.cdt.launch.ChromeLauncher;
 import com.github.kklisura.cdt.protocol.commands.Network;
 import com.github.kklisura.cdt.protocol.commands.Page;
 import com.github.kklisura.cdt.protocol.types.network.ErrorReason;
+import com.github.kklisura.cdt.protocol.types.network.RequestPattern;
 import com.github.kklisura.cdt.services.ChromeDevToolsService;
 import com.github.kklisura.cdt.services.ChromeService;
 import com.github.kklisura.cdt.services.types.ChromeTab;
+import java.util.Collections;
 
 /**
  * Intercept and block per URL. Since requestIntercepted event is still Experimental it might not
@@ -15,7 +17,7 @@ import com.github.kklisura.cdt.services.types.ChromeTab;
  * @author Kenan Klisura
  */
 public class InterceptAndBlockUrlsExample {
-  public static void main(String[] args) throws InterruptedException {
+  public static void main(String[] args) {
     // Create chrome launcher.
     final ChromeLauncher launcher = new ChromeLauncher();
 
@@ -51,7 +53,8 @@ public class InterceptAndBlockUrlsExample {
 
     page.onLoadEventFired(event -> devToolsService.close());
 
-    network.setRequestInterceptionEnabled(Boolean.TRUE);
+    RequestPattern interceptionRequestPattern = new RequestPattern();
+    network.setRequestInterception(Collections.singletonList(interceptionRequestPattern));
     network.enable();
 
     // Enable page events.

@@ -16,7 +16,7 @@ import java.util.Base64;
  * @author Kenan Klisura
  */
 public class TakeScreenshotExample {
-  public static void main(String[] args) throws InterruptedException {
+  public static void main(String[] args) {
     // Create chrome launcher.
     final ChromeLauncher launcher = new ChromeLauncher();
 

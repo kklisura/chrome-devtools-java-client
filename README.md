@@ -41,7 +41,7 @@ import com.github.kklisura.cdt.services.types.ChromeTab;
  * @author Kenan Klisura
  */
 public class LogRequestsExample {
-  public static void main(String[] args) throws InterruptedException {
+  public static void main(String[] args) {
     // Create chrome launcher.
     final ChromeLauncher launcher = new ChromeLauncher();
 
