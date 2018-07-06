@@ -22,7 +22,7 @@ package com.github.kklisura.cdt.protocol.types.animation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Animation type of <code>Animation</code>. */
+/** Animation type of `Animation`. */
 public enum AnimationType {
   @JsonProperty("CSSTransition")
   CSS_TRANSITION,

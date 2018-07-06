@@ -20,10 +20,8 @@ package com.github.kklisura.cdt.protocol.types.debugger;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
-@Experimental
 public class BreakLocation {
 
   private String scriptId;
@@ -34,12 +32,12 @@ public class BreakLocation {
 
   @Optional private BreakLocationType type;
 
-  /** Script identifier as reported in the <code>Debugger.scriptParsed</code>. */
+  /** Script identifier as reported in the `Debugger.scriptParsed`. */
   public String getScriptId() {
     return scriptId;
   }
 
-  /** Script identifier as reported in the <code>Debugger.scriptParsed</code>. */
+  /** Script identifier as reported in the `Debugger.scriptParsed`. */
   public void setScriptId(String scriptId) {
     this.scriptId = scriptId;
   }

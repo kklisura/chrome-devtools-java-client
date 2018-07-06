@@ -1,4 +1,4 @@
-package com.github.kklisura.cdt.protocol.types.accessibility;
+package com.github.kklisura.cdt.protocol.types.network;
 
 /*-
  * #%L
@@ -22,28 +22,13 @@ package com.github.kklisura.cdt.protocol.types.accessibility;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Attributes which apply to widgets. */
-public enum AXWidgetAttributes {
-  @JsonProperty("autocomplete")
-  AUTOCOMPLETE,
-  @JsonProperty("haspopup")
-  HASPOPUP,
-  @JsonProperty("level")
-  LEVEL,
-  @JsonProperty("multiselectable")
-  MULTISELECTABLE,
-  @JsonProperty("orientation")
-  ORIENTATION,
-  @JsonProperty("multiline")
-  MULTILINE,
-  @JsonProperty("readonly")
-  READONLY,
-  @JsonProperty("required")
-  REQUIRED,
-  @JsonProperty("valuemin")
-  VALUEMIN,
-  @JsonProperty("valuemax")
-  VALUEMAX,
-  @JsonProperty("valuetext")
-  VALUETEXT
+/**
+ * Stages of the interception to begin intercepting. Request will intercept before the request is
+ * sent. Response will intercept after the response is received.
+ */
+public enum InterceptionStage {
+  @JsonProperty("Request")
+  REQUEST,
+  @JsonProperty("HeadersReceived")
+  HEADERS_RECEIVED
 }

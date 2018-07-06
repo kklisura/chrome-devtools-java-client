@@ -20,9 +20,11 @@ package com.github.kklisura.cdt.protocol.events.target;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.types.target.TargetInfo;
 
-/** Issued when attached to target because of auto-attach or <code>attachToTarget</code> command. */
+/** Issued when attached to target because of auto-attach or `attachToTarget` command. */
+@Experimental
 public class AttachedToTarget {
 
   private String sessionId;

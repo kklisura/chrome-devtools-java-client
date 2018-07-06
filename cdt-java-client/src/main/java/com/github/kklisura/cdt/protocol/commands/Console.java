@@ -29,19 +29,19 @@ import com.github.kklisura.cdt.protocol.support.types.EventListener;
 @Deprecated
 public interface Console {
 
-  /**
-   * Enables console domain, sends the messages collected so far to the client by means of the
-   * <code>messageAdded</code> notification.
-   */
-  void enable();
+  /** Does nothing. */
+  void clearMessages();
 
   /**
    * Disables console domain, prevents further console messages from being reported to the client.
    */
   void disable();
 
-  /** Does nothing. */
-  void clearMessages();
+  /**
+   * Enables console domain, sends the messages collected so far to the client by means of the
+   * `messageAdded` notification.
+   */
+  void enable();
 
   /** Issued when new console message is added. */
   @EventName("messageAdded")

@@ -22,21 +22,19 @@ package com.github.kklisura.cdt.protocol.commands;
 
 import com.github.kklisura.cdt.protocol.events.performance.Metrics;
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.performance.Metric;
 import java.util.List;
 
-@Experimental
 public interface Performance {
-
-  /** Enable collecting and reporting metrics. */
-  void enable();
 
   /** Disable collecting and reporting metrics. */
   void disable();
+
+  /** Enable collecting and reporting metrics. */
+  void enable();
 
   /** Retrieve current values of run-time metrics. */
   @Returns("metrics")

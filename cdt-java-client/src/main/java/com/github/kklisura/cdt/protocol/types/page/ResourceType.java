@@ -48,6 +48,12 @@ public enum ResourceType {
   WEB_SOCKET,
   @JsonProperty("Manifest")
   MANIFEST,
+  @JsonProperty("SignedExchange")
+  SIGNED_EXCHANGE,
+  @JsonProperty("Ping")
+  PING,
+  @JsonProperty("CSPViolationReport")
+  CSP_VIOLATION_REPORT,
   @JsonProperty("Other")
   OTHER
 }

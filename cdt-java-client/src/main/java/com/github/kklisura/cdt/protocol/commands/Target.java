@@ -23,6 +23,7 @@ package com.github.kklisura.cdt.protocol.commands;
 import com.github.kklisura.cdt.protocol.events.target.AttachedToTarget;
 import com.github.kklisura.cdt.protocol.events.target.DetachedFromTarget;
 import com.github.kklisura.cdt.protocol.events.target.ReceivedMessageFromTarget;
+import com.github.kklisura.cdt.protocol.events.target.TargetCrashed;
 import com.github.kklisura.cdt.protocol.events.target.TargetCreated;
 import com.github.kklisura.cdt.protocol.events.target.TargetDestroyed;
 import com.github.kklisura.cdt.protocol.events.target.TargetInfoChanged;
@@ -38,40 +39,155 @@ import com.github.kklisura.cdt.protocol.types.target.TargetInfo;
 import java.util.List;
 
 /** Supports additional targets discovery and allows to attach to them. */
-@Experimental
 public interface Target {
 
   /**
-   * Controls whether to discover available targets and notify via <code>
-   * targetCreated/targetInfoChanged/targetDestroyed</code> events.
+   * Activates (focuses) the target.
    *
-   * @param discover Whether to discover available targets.
+   * @param targetId
    */
-  void setDiscoverTargets(@ParamName("discover") Boolean discover);
+  void activateTarget(@ParamName("targetId") String targetId);
 
   /**
-   * Controls whether to automatically attach to new targets which are considered to be related to
-   * this one. When turned on, attaches to all existing related targets as well. When turned off,
-   * automatically detaches from all currently attached targets.
+   * Attaches to the target with given id.
    *
-   * @param autoAttach Whether to auto-attach to related targets.
-   * @param waitForDebuggerOnStart Whether to pause new targets when attaching to them. Use <code>
-   *     Runtime.runIfWaitingForDebugger</code> to run paused targets.
+   * @param targetId
    */
-  void setAutoAttach(
-      @ParamName("autoAttach") Boolean autoAttach,
-      @ParamName("waitForDebuggerOnStart") Boolean waitForDebuggerOnStart);
-
-  /** @param value Whether to attach to frames. */
-  void setAttachToFrames(@ParamName("value") Boolean value);
+  @Returns("sessionId")
+  String attachToTarget(@ParamName("targetId") String targetId);
 
   /**
-   * Enables target discovery for the specified locations, when <code>setDiscoverTargets</code> was
-   * set to <code>true</code>.
+   * Attaches to the target with given id.
    *
-   * @param locations List of remote locations.
+   * @param targetId
+   * @param flatten Enables "flat" access to the session via specifying sessionId attribute in the
+   *     commands.
    */
-  void setRemoteLocations(@ParamName("locations") List<RemoteLocation> locations);
+  @Returns("sessionId")
+  String attachToTarget(
+      @ParamName("targetId") String targetId,
+      @Experimental @Optional @ParamName("flatten") Boolean flatten);
+
+  /**
+   * Closes the target. If the target is a page that gets closed too.
+   *
+   * @param targetId
+   */
+  @Returns("success")
+  Boolean closeTarget(@ParamName("targetId") String targetId);
+
+  /**
+   * Inject object to the target's main frame that provides a communication channel with browser
+   * target.
+   *
+   * <p>Injected object will be available as `window[bindingName]`.
+   *
+   * <p>The object has the follwing API: - `binding.send(json)` - a method to send messages over the
+   * remote debugging protocol - `binding.onmessage = json => handleMessage(json)` - a callback that
+   * will be called for the protocol notifications and command responses.
+   *
+   * @param targetId
+   */
+  @Experimental
+  void exposeDevToolsProtocol(@ParamName("targetId") String targetId);
+
+  /**
+   * Inject object to the target's main frame that provides a communication channel with browser
+   * target.
+   *
+   * <p>Injected object will be available as `window[bindingName]`.
+   *
+   * <p>The object has the follwing API: - `binding.send(json)` - a method to send messages over the
+   * remote debugging protocol - `binding.onmessage = json => handleMessage(json)` - a callback that
+   * will be called for the protocol notifications and command responses.
+   *
+   * @param targetId
+   * @param bindingName Binding name, 'cdp' if not specified.
+   */
+  @Experimental
+  void exposeDevToolsProtocol(
+      @ParamName("targetId") String targetId,
+      @Optional @ParamName("bindingName") String bindingName);
+
+  /**
+   * Creates a new empty BrowserContext. Similar to an incognito profile but you can have more than
+   * one.
+   */
+  @Experimental
+  @Returns("browserContextId")
+  String createBrowserContext();
+
+  /** Returns all browser contexts created with `Target.createBrowserContext` method. */
+  @Experimental
+  @Returns("browserContextIds")
+  List<String> getBrowserContexts();
+
+  /**
+   * Creates a new page.
+   *
+   * @param url The initial URL the page will be navigated to.
+   */
+  @Returns("targetId")
+  String createTarget(@ParamName("url") String url);
+
+  /**
+   * Creates a new page.
+   *
+   * @param url The initial URL the page will be navigated to.
+   * @param width Frame width in DIP (headless chrome only).
+   * @param height Frame height in DIP (headless chrome only).
+   * @param browserContextId The browser context to create the page in.
+   * @param enableBeginFrameControl Whether BeginFrames for this target will be controlled via
+   *     DevTools (headless chrome only, not supported on MacOS yet, false by default).
+   */
+  @Returns("targetId")
+  String createTarget(
+      @ParamName("url") String url,
+      @Optional @ParamName("width") Integer width,
+      @Optional @ParamName("height") Integer height,
+      @Optional @ParamName("browserContextId") String browserContextId,
+      @Experimental @Optional @ParamName("enableBeginFrameControl")
+          Boolean enableBeginFrameControl);
+
+  /** Detaches session with given id. */
+  void detachFromTarget();
+
+  /**
+   * Detaches session with given id.
+   *
+   * @param sessionId Session to detach.
+   * @param targetId Deprecated.
+   */
+  void detachFromTarget(
+      @Optional @ParamName("sessionId") String sessionId,
+      @Deprecated @Optional @ParamName("targetId") String targetId);
+
+  /**
+   * Deletes a BrowserContext. All the belonging pages will be closed without calling their
+   * beforeunload hooks.
+   *
+   * @param browserContextId
+   */
+  @Experimental
+  void disposeBrowserContext(@ParamName("browserContextId") String browserContextId);
+
+  /** Returns information about a target. */
+  @Experimental
+  @Returns("targetInfo")
+  TargetInfo getTargetInfo();
+
+  /**
+   * Returns information about a target.
+   *
+   * @param targetId
+   */
+  @Experimental
+  @Returns("targetInfo")
+  TargetInfo getTargetInfo(@Optional @ParamName("targetId") String targetId);
+
+  /** Retrieves a list of available targets. */
+  @Returns("targetInfos")
+  List<TargetInfo> getTargets();
 
   /**
    * Sends protocol message over session with given id.
@@ -93,124 +209,72 @@ public interface Target {
       @Deprecated @Optional @ParamName("targetId") String targetId);
 
   /**
-   * Returns information about a target.
+   * Controls whether to automatically attach to new targets which are considered to be related to
+   * this one. When turned on, attaches to all existing related targets as well. When turned off,
+   * automatically detaches from all currently attached targets.
    *
-   * @param targetId
+   * @param autoAttach Whether to auto-attach to related targets.
+   * @param waitForDebuggerOnStart Whether to pause new targets when attaching to them. Use
+   *     `Runtime.runIfWaitingForDebugger` to run paused targets.
    */
-  @Returns("targetInfo")
-  TargetInfo getTargetInfo(@ParamName("targetId") String targetId);
+  @Experimental
+  void setAutoAttach(
+      @ParamName("autoAttach") Boolean autoAttach,
+      @ParamName("waitForDebuggerOnStart") Boolean waitForDebuggerOnStart);
 
   /**
-   * Activates (focuses) the target.
+   * Controls whether to discover available targets and notify via
+   * `targetCreated/targetInfoChanged/targetDestroyed` events.
    *
-   * @param targetId
+   * @param discover Whether to discover available targets.
    */
-  void activateTarget(@ParamName("targetId") String targetId);
+  void setDiscoverTargets(@ParamName("discover") Boolean discover);
 
   /**
-   * Closes the target. If the target is a page that gets closed too.
+   * Enables target discovery for the specified locations, when `setDiscoverTargets` was set to
+   * `true`.
    *
-   * @param targetId
+   * @param locations List of remote locations.
    */
-  @Returns("success")
-  Boolean closeTarget(@ParamName("targetId") String targetId);
+  @Experimental
+  void setRemoteLocations(@ParamName("locations") List<RemoteLocation> locations);
+
+  /** Issued when attached to target because of auto-attach or `attachToTarget` command. */
+  @EventName("attachedToTarget")
+  @Experimental
+  EventListener onAttachedToTarget(EventHandler<AttachedToTarget> eventListener);
 
   /**
-   * Attaches to the target with given id.
-   *
-   * @param targetId
+   * Issued when detached from target for any reason (including `detachFromTarget` command). Can be
+   * issued multiple times per target if multiple sessions have been attached to it.
    */
-  @Returns("sessionId")
-  String attachToTarget(@ParamName("targetId") String targetId);
-
-  /** Detaches session with given id. */
-  void detachFromTarget();
+  @EventName("detachedFromTarget")
+  @Experimental
+  EventListener onDetachedFromTarget(EventHandler<DetachedFromTarget> eventListener);
 
   /**
-   * Detaches session with given id.
-   *
-   * @param sessionId Session to detach.
-   * @param targetId Deprecated.
+   * Notifies about a new protocol message received from the session (as reported in
+   * `attachedToTarget` event).
    */
-  void detachFromTarget(
-      @Optional @ParamName("sessionId") String sessionId,
-      @Deprecated @Optional @ParamName("targetId") String targetId);
-
-  /**
-   * Creates a new empty BrowserContext. Similar to an incognito profile but you can have more than
-   * one.
-   */
-  @Returns("browserContextId")
-  String createBrowserContext();
-
-  /**
-   * Deletes a BrowserContext, will fail of any open page uses it.
-   *
-   * @param browserContextId
-   */
-  @Returns("success")
-  Boolean disposeBrowserContext(@ParamName("browserContextId") String browserContextId);
-
-  /**
-   * Creates a new page.
-   *
-   * @param url The initial URL the page will be navigated to.
-   */
-  @Returns("targetId")
-  String createTarget(@ParamName("url") String url);
-
-  /**
-   * Creates a new page.
-   *
-   * @param url The initial URL the page will be navigated to.
-   * @param width Frame width in DIP (headless chrome only).
-   * @param height Frame height in DIP (headless chrome only).
-   * @param browserContextId The browser context to create the page in (headless chrome only).
-   */
-  @Returns("targetId")
-  String createTarget(
-      @ParamName("url") String url,
-      @Optional @ParamName("width") Integer width,
-      @Optional @ParamName("height") Integer height,
-      @Optional @ParamName("browserContextId") String browserContextId);
-
-  /** Retrieves a list of available targets. */
-  @Returns("targetInfos")
-  List<TargetInfo> getTargets();
+  @EventName("receivedMessageFromTarget")
+  EventListener onReceivedMessageFromTarget(EventHandler<ReceivedMessageFromTarget> eventListener);
 
   /** Issued when a possible inspection target is created. */
   @EventName("targetCreated")
   EventListener onTargetCreated(EventHandler<TargetCreated> eventListener);
 
-  /**
-   * Issued when some information about a target has changed. This only happens between <code>
-   * targetCreated</code> and <code>targetDestroyed</code>.
-   */
-  @EventName("targetInfoChanged")
-  EventListener onTargetInfoChanged(EventHandler<TargetInfoChanged> eventListener);
-
   /** Issued when a target is destroyed. */
   @EventName("targetDestroyed")
   EventListener onTargetDestroyed(EventHandler<TargetDestroyed> eventListener);
 
-  /**
-   * Issued when attached to target because of auto-attach or <code>attachToTarget</code> command.
-   */
-  @EventName("attachedToTarget")
-  EventListener onAttachedToTarget(EventHandler<AttachedToTarget> eventListener);
+  /** Issued when a target has crashed. */
+  @EventName("targetCrashed")
+  EventListener onTargetCrashed(EventHandler<TargetCrashed> eventListener);
 
   /**
-   * Issued when detached from target for any reason (including <code>detachFromTarget</code>
-   * command). Can be issued multiple times per target if multiple sessions have been attached to
-   * it.
+   * Issued when some information about a target has changed. This only happens between
+   * `targetCreated` and `targetDestroyed`.
    */
-  @EventName("detachedFromTarget")
-  EventListener onDetachedFromTarget(EventHandler<DetachedFromTarget> eventListener);
-
-  /**
-   * Notifies about a new protocol message received from the session (as reported in <code>
-   * attachedToTarget</code> event).
-   */
-  @EventName("receivedMessageFromTarget")
-  EventListener onReceivedMessageFromTarget(EventHandler<ReceivedMessageFromTarget> eventListener);
+  @EventName("targetInfoChanged")
+  EventListener onTargetInfoChanged(EventHandler<TargetInfoChanged> eventListener);
 }

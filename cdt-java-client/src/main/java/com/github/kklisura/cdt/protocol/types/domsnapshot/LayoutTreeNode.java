@@ -21,7 +21,6 @@ package com.github.kklisura.cdt.protocol.types.domsnapshot;
  */
 
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
-import com.github.kklisura.cdt.protocol.types.css.InlineTextBox;
 import com.github.kklisura.cdt.protocol.types.dom.Rect;
 import java.util.List;
 
@@ -38,18 +37,14 @@ public class LayoutTreeNode {
 
   @Optional private Integer styleIndex;
 
-  /**
-   * The index of the related DOM node in the <code>domNodes</code> array returned by <code>
-   * getSnapshot</code>.
-   */
+  @Optional private Integer paintOrder;
+
+  /** The index of the related DOM node in the `domNodes` array returned by `getSnapshot`. */
   public Integer getDomNodeIndex() {
     return domNodeIndex;
   }
 
-  /**
-   * The index of the related DOM node in the <code>domNodes</code> array returned by <code>
-   * getSnapshot</code>.
-   */
+  /** The index of the related DOM node in the `domNodes` array returned by `getSnapshot`. */
   public void setDomNodeIndex(Integer domNodeIndex) {
     this.domNodeIndex = domNodeIndex;
   }
@@ -84,13 +79,31 @@ public class LayoutTreeNode {
     this.inlineTextNodes = inlineTextNodes;
   }
 
-  /** Index into the <code>computedStyles</code> array returned by <code>getSnapshot</code>. */
+  /** Index into the `computedStyles` array returned by `getSnapshot`. */
   public Integer getStyleIndex() {
     return styleIndex;
   }
 
-  /** Index into the <code>computedStyles</code> array returned by <code>getSnapshot</code>. */
+  /** Index into the `computedStyles` array returned by `getSnapshot`. */
   public void setStyleIndex(Integer styleIndex) {
     this.styleIndex = styleIndex;
+  }
+
+  /**
+   * Global paint order index, which is determined by the stacking order of the nodes. Nodes that
+   * are painted together will have the same index. Only provided if includePaintOrder in
+   * getSnapshot was true.
+   */
+  public Integer getPaintOrder() {
+    return paintOrder;
+  }
+
+  /**
+   * Global paint order index, which is determined by the stacking order of the nodes. Nodes that
+   * are painted together will have the same index. Only provided if includePaintOrder in
+   * getSnapshot was true.
+   */
+  public void setPaintOrder(Integer paintOrder) {
+    this.paintOrder = paintOrder;
   }
 }

@@ -22,6 +22,8 @@ package com.github.kklisura.cdt.protocol.types.domsnapshot;
 
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.dom.PseudoType;
+import com.github.kklisura.cdt.protocol.types.dom.ShadowRootType;
+import com.github.kklisura.cdt.protocol.types.domdebugger.EventListener;
 import java.util.List;
 
 /** A Node in the DOM tree. */
@@ -73,34 +75,42 @@ public class DOMNode {
 
   @Optional private PseudoType pseudoType;
 
+  @Optional private ShadowRootType shadowRootType;
+
   @Optional private Boolean isClickable;
 
-  /** <code>Node</code>'s nodeType. */
+  @Optional private List<EventListener> eventListeners;
+
+  @Optional private String currentSourceURL;
+
+  @Optional private String originURL;
+
+  /** `Node`'s nodeType. */
   public Integer getNodeType() {
     return nodeType;
   }
 
-  /** <code>Node</code>'s nodeType. */
+  /** `Node`'s nodeType. */
   public void setNodeType(Integer nodeType) {
     this.nodeType = nodeType;
   }
 
-  /** <code>Node</code>'s nodeName. */
+  /** `Node`'s nodeName. */
   public String getNodeName() {
     return nodeName;
   }
 
-  /** <code>Node</code>'s nodeName. */
+  /** `Node`'s nodeName. */
   public void setNodeName(String nodeName) {
     this.nodeName = nodeName;
   }
 
-  /** <code>Node</code>'s nodeValue. */
+  /** `Node`'s nodeValue. */
   public String getNodeValue() {
     return nodeValue;
   }
 
-  /** <code>Node</code>'s nodeValue. */
+  /** `Node`'s nodeValue. */
   public void setNodeValue(String nodeValue) {
     this.nodeValue = nodeValue;
   }
@@ -145,94 +155,90 @@ public class DOMNode {
     this.optionSelected = optionSelected;
   }
 
-  /** <code>Node</code>'s id, corresponds to DOM.Node.backendNodeId. */
+  /** `Node`'s id, corresponds to DOM.Node.backendNodeId. */
   public Integer getBackendNodeId() {
     return backendNodeId;
   }
 
-  /** <code>Node</code>'s id, corresponds to DOM.Node.backendNodeId. */
+  /** `Node`'s id, corresponds to DOM.Node.backendNodeId. */
   public void setBackendNodeId(Integer backendNodeId) {
     this.backendNodeId = backendNodeId;
   }
 
   /**
-   * The indexes of the node's child nodes in the <code>domNodes</code> array returned by <code>
-   * getSnapshot</code>, if any.
+   * The indexes of the node's child nodes in the `domNodes` array returned by `getSnapshot`, if
+   * any.
    */
   public List<Integer> getChildNodeIndexes() {
     return childNodeIndexes;
   }
 
   /**
-   * The indexes of the node's child nodes in the <code>domNodes</code> array returned by <code>
-   * getSnapshot</code>, if any.
+   * The indexes of the node's child nodes in the `domNodes` array returned by `getSnapshot`, if
+   * any.
    */
   public void setChildNodeIndexes(List<Integer> childNodeIndexes) {
     this.childNodeIndexes = childNodeIndexes;
   }
 
-  /** Attributes of an <code>Element</code> node. */
+  /** Attributes of an `Element` node. */
   public List<NameValue> getAttributes() {
     return attributes;
   }
 
-  /** Attributes of an <code>Element</code> node. */
+  /** Attributes of an `Element` node. */
   public void setAttributes(List<NameValue> attributes) {
     this.attributes = attributes;
   }
 
   /**
-   * Indexes of pseudo elements associated with this node in the <code>domNodes</code> array
-   * returned by <code>getSnapshot</code>, if any.
+   * Indexes of pseudo elements associated with this node in the `domNodes` array returned by
+   * `getSnapshot`, if any.
    */
   public List<Integer> getPseudoElementIndexes() {
     return pseudoElementIndexes;
   }
 
   /**
-   * Indexes of pseudo elements associated with this node in the <code>domNodes</code> array
-   * returned by <code>getSnapshot</code>, if any.
+   * Indexes of pseudo elements associated with this node in the `domNodes` array returned by
+   * `getSnapshot`, if any.
    */
   public void setPseudoElementIndexes(List<Integer> pseudoElementIndexes) {
     this.pseudoElementIndexes = pseudoElementIndexes;
   }
 
   /**
-   * The index of the node's related layout tree node in the <code>layoutTreeNodes</code> array
-   * returned by <code>getSnapshot</code>, if any.
+   * The index of the node's related layout tree node in the `layoutTreeNodes` array returned by
+   * `getSnapshot`, if any.
    */
   public Integer getLayoutNodeIndex() {
     return layoutNodeIndex;
   }
 
   /**
-   * The index of the node's related layout tree node in the <code>layoutTreeNodes</code> array
-   * returned by <code>getSnapshot</code>, if any.
+   * The index of the node's related layout tree node in the `layoutTreeNodes` array returned by
+   * `getSnapshot`, if any.
    */
   public void setLayoutNodeIndex(Integer layoutNodeIndex) {
     this.layoutNodeIndex = layoutNodeIndex;
   }
 
-  /** Document URL that <code>Document</code> or <code>FrameOwner</code> node points to. */
+  /** Document URL that `Document` or `FrameOwner` node points to. */
   public String getDocumentURL() {
     return documentURL;
   }
 
-  /** Document URL that <code>Document</code> or <code>FrameOwner</code> node points to. */
+  /** Document URL that `Document` or `FrameOwner` node points to. */
   public void setDocumentURL(String documentURL) {
     this.documentURL = documentURL;
   }
 
-  /**
-   * Base URL that <code>Document</code> or <code>FrameOwner</code> node uses for URL completion.
-   */
+  /** Base URL that `Document` or `FrameOwner` node uses for URL completion. */
   public String getBaseURL() {
     return baseURL;
   }
 
-  /**
-   * Base URL that <code>Document</code> or <code>FrameOwner</code> node uses for URL completion.
-   */
+  /** Base URL that `Document` or `FrameOwner` node uses for URL completion. */
   public void setBaseURL(String baseURL) {
     this.baseURL = baseURL;
   }
@@ -257,22 +263,22 @@ public class DOMNode {
     this.documentEncoding = documentEncoding;
   }
 
-  /** <code>DocumentType</code> node's publicId. */
+  /** `DocumentType` node's publicId. */
   public String getPublicId() {
     return publicId;
   }
 
-  /** <code>DocumentType</code> node's publicId. */
+  /** `DocumentType` node's publicId. */
   public void setPublicId(String publicId) {
     this.publicId = publicId;
   }
 
-  /** <code>DocumentType</code> node's systemId. */
+  /** `DocumentType` node's systemId. */
   public String getSystemId() {
     return systemId;
   }
 
-  /** <code>DocumentType</code> node's systemId. */
+  /** `DocumentType` node's systemId. */
   public void setSystemId(String systemId) {
     this.systemId = systemId;
   }
@@ -288,48 +294,48 @@ public class DOMNode {
   }
 
   /**
-   * The index of a frame owner element's content document in the <code>domNodes</code> array
-   * returned by <code>getSnapshot</code>, if any.
+   * The index of a frame owner element's content document in the `domNodes` array returned by
+   * `getSnapshot`, if any.
    */
   public Integer getContentDocumentIndex() {
     return contentDocumentIndex;
   }
 
   /**
-   * The index of a frame owner element's content document in the <code>domNodes</code> array
-   * returned by <code>getSnapshot</code>, if any.
+   * The index of a frame owner element's content document in the `domNodes` array returned by
+   * `getSnapshot`, if any.
    */
   public void setContentDocumentIndex(Integer contentDocumentIndex) {
     this.contentDocumentIndex = contentDocumentIndex;
   }
 
   /**
-   * Index of the imported document's node of a link element in the <code>domNodes</code> array
-   * returned by <code>getSnapshot</code>, if any.
+   * Index of the imported document's node of a link element in the `domNodes` array returned by
+   * `getSnapshot`, if any.
    */
   public Integer getImportedDocumentIndex() {
     return importedDocumentIndex;
   }
 
   /**
-   * Index of the imported document's node of a link element in the <code>domNodes</code> array
-   * returned by <code>getSnapshot</code>, if any.
+   * Index of the imported document's node of a link element in the `domNodes` array returned by
+   * `getSnapshot`, if any.
    */
   public void setImportedDocumentIndex(Integer importedDocumentIndex) {
     this.importedDocumentIndex = importedDocumentIndex;
   }
 
   /**
-   * Index of the content node of a template element in the <code>domNodes</code> array returned by
-   * <code>getSnapshot</code>.
+   * Index of the content node of a template element in the `domNodes` array returned by
+   * `getSnapshot`.
    */
   public Integer getTemplateContentIndex() {
     return templateContentIndex;
   }
 
   /**
-   * Index of the content node of a template element in the <code>domNodes</code> array returned by
-   * <code>getSnapshot</code>.
+   * Index of the content node of a template element in the `domNodes` array returned by
+   * `getSnapshot`.
    */
   public void setTemplateContentIndex(Integer templateContentIndex) {
     this.templateContentIndex = templateContentIndex;
@@ -343,6 +349,16 @@ public class DOMNode {
   /** Type of a pseudo element node. */
   public void setPseudoType(PseudoType pseudoType) {
     this.pseudoType = pseudoType;
+  }
+
+  /** Shadow root type. */
+  public ShadowRootType getShadowRootType() {
+    return shadowRootType;
+  }
+
+  /** Shadow root type. */
+  public void setShadowRootType(ShadowRootType shadowRootType) {
+    this.shadowRootType = shadowRootType;
   }
 
   /**
@@ -359,5 +375,35 @@ public class DOMNode {
    */
   public void setIsClickable(Boolean isClickable) {
     this.isClickable = isClickable;
+  }
+
+  /** Details of the node's event listeners, if any. */
+  public List<EventListener> getEventListeners() {
+    return eventListeners;
+  }
+
+  /** Details of the node's event listeners, if any. */
+  public void setEventListeners(List<EventListener> eventListeners) {
+    this.eventListeners = eventListeners;
+  }
+
+  /** The selected url for nodes with a srcset attribute. */
+  public String getCurrentSourceURL() {
+    return currentSourceURL;
+  }
+
+  /** The selected url for nodes with a srcset attribute. */
+  public void setCurrentSourceURL(String currentSourceURL) {
+    this.currentSourceURL = currentSourceURL;
+  }
+
+  /** The url of the script (if any) that generates this node. */
+  public String getOriginURL() {
+    return originURL;
+  }
+
+  /** The url of the script (if any) that generates this node. */
+  public void setOriginURL(String originURL) {
+    this.originURL = originURL;
   }
 }

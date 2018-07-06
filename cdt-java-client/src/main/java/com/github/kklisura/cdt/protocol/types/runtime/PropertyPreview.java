@@ -76,12 +76,12 @@ public class PropertyPreview {
     this.valuePreview = valuePreview;
   }
 
-  /** Object subtype hint. Specified for <code>object</code> type values only. */
+  /** Object subtype hint. Specified for `object` type values only. */
   public PropertyPreviewSubtype getSubtype() {
     return subtype;
   }
 
-  /** Object subtype hint. Specified for <code>object</code> type values only. */
+  /** Object subtype hint. Specified for `object` type values only. */
   public void setSubtype(PropertyPreviewSubtype subtype) {
     this.subtype = subtype;
   }

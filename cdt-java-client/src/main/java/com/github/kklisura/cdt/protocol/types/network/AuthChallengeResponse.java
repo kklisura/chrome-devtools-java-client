@@ -27,7 +27,7 @@ import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 @Experimental
 public class AuthChallengeResponse {
 
-  private AuthChallengeResponseType response;
+  private AuthChallengeResponseResponse response;
 
   @Optional private String username;
 
@@ -38,7 +38,7 @@ public class AuthChallengeResponse {
    * to the default behavior of the net stack, which will likely either the Cancel authentication or
    * display a popup dialog box.
    */
-  public AuthChallengeResponseType getResponse() {
+  public AuthChallengeResponseResponse getResponse() {
     return response;
   }
 
@@ -47,7 +47,7 @@ public class AuthChallengeResponse {
    * to the default behavior of the net stack, which will likely either the Cancel authentication or
    * display a popup dialog box.
    */
-  public void setResponse(AuthChallengeResponseType response) {
+  public void setResponse(AuthChallengeResponseResponse response) {
     this.response = response;
   }
 

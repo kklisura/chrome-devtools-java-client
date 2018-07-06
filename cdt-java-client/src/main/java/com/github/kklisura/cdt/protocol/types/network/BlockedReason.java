@@ -24,6 +24,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The reason why request was blocked. */
 public enum BlockedReason {
+  @JsonProperty("other")
+  OTHER,
   @JsonProperty("csp")
   CSP,
   @JsonProperty("mixed-content")
@@ -34,6 +36,8 @@ public enum BlockedReason {
   INSPECTOR,
   @JsonProperty("subresource-filter")
   SUBRESOURCE_FILTER,
-  @JsonProperty("other")
-  OTHER
+  @JsonProperty("content-type")
+  CONTENT_TYPE,
+  @JsonProperty("collapsed-by-client")
+  COLLAPSED_BY_CLIENT
 }

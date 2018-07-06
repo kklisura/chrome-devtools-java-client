@@ -20,10 +20,7 @@ package com.github.kklisura.cdt.protocol.events.overlay;
  * #L%
  */
 
-/**
- * Fired when the node should be highlighted. This happens after call to <code>setInspectMode</code>
- * .
- */
+/** Fired when the node should be highlighted. This happens after call to `setInspectMode`. */
 public class NodeHighlightRequested {
 
   private Integer nodeId;

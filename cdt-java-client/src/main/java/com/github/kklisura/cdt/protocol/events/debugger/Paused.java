@@ -20,9 +20,11 @@ package com.github.kklisura.cdt.protocol.events.debugger;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.debugger.CallFrame;
 import com.github.kklisura.cdt.protocol.types.runtime.StackTrace;
+import com.github.kklisura.cdt.protocol.types.runtime.StackTraceId;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +40,10 @@ public class Paused {
   @Optional private List<String> hitBreakpoints;
 
   @Optional private StackTrace asyncStackTrace;
+
+  @Experimental @Optional private StackTraceId asyncStackTraceId;
+
+  @Experimental @Optional private StackTraceId asyncCallStackTraceId;
 
   /** Call stack the virtual machine stopped on. */
   public List<CallFrame> getCallFrames() {
@@ -87,5 +93,31 @@ public class Paused {
   /** Async stack trace, if any. */
   public void setAsyncStackTrace(StackTrace asyncStackTrace) {
     this.asyncStackTrace = asyncStackTrace;
+  }
+
+  /** Async stack trace, if any. */
+  public StackTraceId getAsyncStackTraceId() {
+    return asyncStackTraceId;
+  }
+
+  /** Async stack trace, if any. */
+  public void setAsyncStackTraceId(StackTraceId asyncStackTraceId) {
+    this.asyncStackTraceId = asyncStackTraceId;
+  }
+
+  /**
+   * Just scheduled async call will have this stack trace as parent stack during async execution.
+   * This field is available only after `Debugger.stepInto` call with `breakOnAsynCall` flag.
+   */
+  public StackTraceId getAsyncCallStackTraceId() {
+    return asyncCallStackTraceId;
+  }
+
+  /**
+   * Just scheduled async call will have this stack trace as parent stack during async execution.
+   * This field is available only after `Debugger.stepInto` call with `breakOnAsynCall` flag.
+   */
+  public void setAsyncCallStackTraceId(StackTraceId asyncCallStackTraceId) {
+    this.asyncCallStackTraceId = asyncCallStackTraceId;
   }
 }

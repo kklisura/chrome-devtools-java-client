@@ -22,7 +22,6 @@ package com.github.kklisura.cdt.protocol.commands;
 
 import com.github.kklisura.cdt.protocol.events.log.EntryAdded;
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
@@ -30,20 +29,19 @@ import com.github.kklisura.cdt.protocol.types.log.ViolationSetting;
 import java.util.List;
 
 /** Provides access to log entries. */
-@Experimental
 public interface Log {
 
-  /**
-   * Enables log domain, sends the entries collected so far to the client by means of the <code>
-   * entryAdded</code> notification.
-   */
-  void enable();
+  /** Clears the log. */
+  void clear();
 
   /** Disables log domain, prevents further log entries from being reported to the client. */
   void disable();
 
-  /** Clears the log. */
-  void clear();
+  /**
+   * Enables log domain, sends the entries collected so far to the client by means of the
+   * `entryAdded` notification.
+   */
+  void enable();
 
   /**
    * start violation reporting.

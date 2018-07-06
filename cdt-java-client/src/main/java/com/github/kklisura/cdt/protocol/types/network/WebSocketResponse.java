@@ -20,15 +20,13 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import java.util.Map;
 
 /** WebSocket response data. */
-@Experimental
 public class WebSocketResponse {
 
-  private Double status;
+  private Integer status;
 
   private String statusText;
 
@@ -41,12 +39,12 @@ public class WebSocketResponse {
   @Optional private String requestHeadersText;
 
   /** HTTP response status code. */
-  public Double getStatus() {
+  public Integer getStatus() {
     return status;
   }
 
   /** HTTP response status code. */
-  public void setStatus(Double status) {
+  public void setStatus(Integer status) {
     this.status = status;
   }
 

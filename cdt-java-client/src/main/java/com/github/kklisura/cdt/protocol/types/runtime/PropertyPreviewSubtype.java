@@ -22,7 +22,7 @@ package com.github.kklisura.cdt.protocol.types.runtime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Object subtype hint. Specified for <code>object</code> type values only. */
+/** Object subtype hint. Specified for `object` type values only. */
 public enum PropertyPreviewSubtype {
   @JsonProperty("array")
   ARRAY,

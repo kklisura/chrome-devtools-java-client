@@ -31,12 +31,12 @@ public class Location {
 
   @Optional private Integer columnNumber;
 
-  /** Script identifier as reported in the <code>Debugger.scriptParsed</code>. */
+  /** Script identifier as reported in the `Debugger.scriptParsed`. */
   public String getScriptId() {
     return scriptId;
   }
 
-  /** Script identifier as reported in the <code>Debugger.scriptParsed</code>. */
+  /** Script identifier as reported in the `Debugger.scriptParsed`. */
   public void setScriptId(String scriptId) {
     this.scriptId = scriptId;
   }

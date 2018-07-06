@@ -20,7 +20,7 @@ package com.github.kklisura.cdt.protocol.events.dom;
  * #L%
  */
 
-/** Fired when <code>Container</code>'s child node count has changed. */
+/** Fired when `Container`'s child node count has changed. */
 public class ChildNodeCountUpdated {
 
   private Integer nodeId;

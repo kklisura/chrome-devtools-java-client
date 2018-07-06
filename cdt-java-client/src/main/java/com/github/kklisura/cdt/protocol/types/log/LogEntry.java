@@ -21,7 +21,9 @@ package com.github.kklisura.cdt.protocol.types.log;
  */
 
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
+import com.github.kklisura.cdt.protocol.types.runtime.RemoteObject;
 import com.github.kklisura.cdt.protocol.types.runtime.StackTrace;
+import java.util.List;
 
 /** Log entry. */
 public class LogEntry {
@@ -43,6 +45,8 @@ public class LogEntry {
   @Optional private String networkRequestId;
 
   @Optional private String workerId;
+
+  @Optional private List<RemoteObject> args;
 
   /** Log entry source. */
   public LogEntrySource getSource() {
@@ -132,5 +136,15 @@ public class LogEntry {
   /** Identifier of the worker associated with this entry. */
   public void setWorkerId(String workerId) {
     this.workerId = workerId;
+  }
+
+  /** Call arguments. */
+  public List<RemoteObject> getArgs() {
+    return args;
+  }
+
+  /** Call arguments. */
+  public void setArgs(List<RemoteObject> args) {
+    this.args = args;
   }
 }

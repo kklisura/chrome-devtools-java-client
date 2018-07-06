@@ -37,12 +37,12 @@ public class KeyframeStyle {
     this.offset = offset;
   }
 
-  /** <code>AnimationEffect</code>'s timing function. */
+  /** `AnimationEffect`'s timing function. */
   public String getEasing() {
     return easing;
   }
 
-  /** <code>AnimationEffect</code>'s timing function. */
+  /** `AnimationEffect`'s timing function. */
   public void setEasing(String easing) {
     this.easing = easing;
   }

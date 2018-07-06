@@ -36,9 +36,16 @@ import java.util.List;
 
 public interface Profiler {
 
+  void disable();
+
   void enable();
 
-  void disable();
+  /**
+   * Collect coverage data for the current isolate. The coverage data may be incomplete due to
+   * garbage collection.
+   */
+  @Returns("result")
+  List<ScriptCoverage> getBestEffortCoverage();
 
   /**
    * Changes CPU profiler sampling interval. Must be called before CPU profiles recording started.
@@ -49,15 +56,11 @@ public interface Profiler {
 
   void start();
 
-  @Returns("profile")
-  Profile stop();
-
   /**
    * Enable precise code coverage. Coverage data for JavaScript executed before enabling precise
    * code coverage may be incomplete. Enabling prevents running optimized code and resets execution
    * counters.
    */
-  @Experimental
   void startPreciseCoverage();
 
   /**
@@ -68,51 +71,43 @@ public interface Profiler {
    * @param callCount Collect accurate call counts beyond simple 'covered' or 'not covered'.
    * @param detailed Collect block-based coverage.
    */
-  @Experimental
   void startPreciseCoverage(
       @Optional @ParamName("callCount") Boolean callCount,
       @Optional @ParamName("detailed") Boolean detailed);
-
-  /**
-   * Disable precise code coverage. Disabling releases unnecessary execution count records and
-   * allows executing optimized code.
-   */
-  @Experimental
-  void stopPreciseCoverage();
-
-  /**
-   * Collect coverage data for the current isolate, and resets execution counters. Precise code
-   * coverage needs to have started.
-   */
-  @Experimental
-  @Returns("result")
-  List<ScriptCoverage> takePreciseCoverage();
-
-  /**
-   * Collect coverage data for the current isolate. The coverage data may be incomplete due to
-   * garbage collection.
-   */
-  @Experimental
-  @Returns("result")
-  List<ScriptCoverage> getBestEffortCoverage();
 
   /** Enable type profile. */
   @Experimental
   void startTypeProfile();
 
+  @Returns("profile")
+  Profile stop();
+
+  /**
+   * Disable precise code coverage. Disabling releases unnecessary execution count records and
+   * allows executing optimized code.
+   */
+  void stopPreciseCoverage();
+
   /** Disable type profile. Disabling releases type profile data collected so far. */
   @Experimental
   void stopTypeProfile();
+
+  /**
+   * Collect coverage data for the current isolate, and resets execution counters. Precise code
+   * coverage needs to have started.
+   */
+  @Returns("result")
+  List<ScriptCoverage> takePreciseCoverage();
 
   /** Collect type profile. */
   @Experimental
   @Returns("result")
   List<ScriptTypeProfile> takeTypeProfile();
 
+  @EventName("consoleProfileFinished")
+  EventListener onConsoleProfileFinished(EventHandler<ConsoleProfileFinished> eventListener);
+
   /** Sent when new profile recording is started using console.profile() call. */
   @EventName("consoleProfileStarted")
   EventListener onConsoleProfileStarted(EventHandler<ConsoleProfileStarted> eventListener);
-
-  @EventName("consoleProfileFinished")
-  EventListener onConsoleProfileFinished(EventHandler<ConsoleProfileFinished> eventListener);
 }

@@ -1,4 +1,4 @@
-package com.github.kklisura.cdt.protocol.types.css;
+package com.github.kklisura.cdt.protocol.types.memory;
 
 /*-
  * #%L
@@ -20,15 +20,18 @@ package com.github.kklisura.cdt.protocol.types.css;
  * #L%
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
-public enum ForcedPseudoClasses {
-  @JsonProperty("active")
-  ACTIVE,
-  @JsonProperty("focus")
-  FOCUS,
-  @JsonProperty("hover")
-  HOVER,
-  @JsonProperty("visited")
-  VISITED
+/** Array of heap profile samples. */
+public class SamplingProfile {
+
+  private List<SamplingProfileNode> samples;
+
+  public List<SamplingProfileNode> getSamples() {
+    return samples;
+  }
+
+  public void setSamples(List<SamplingProfileNode> samples) {
+    this.samples = samples;
+  }
 }

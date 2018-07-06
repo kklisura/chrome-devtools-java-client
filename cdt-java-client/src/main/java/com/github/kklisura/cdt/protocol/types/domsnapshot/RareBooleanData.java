@@ -1,4 +1,4 @@
-package com.github.kklisura.cdt.protocol.types.network;
+package com.github.kklisura.cdt.protocol.types.domsnapshot;
 
 /*-
  * #%L
@@ -20,13 +20,17 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #L%
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
-public enum AuthChallengeResponseType {
-  @JsonProperty("Default")
-  DEFAULT,
-  @JsonProperty("CancelAuth")
-  CANCEL_AUTH,
-  @JsonProperty("ProvideCredentials")
-  PROVIDE_CREDENTIALS
+public class RareBooleanData {
+
+  private List<Integer> index;
+
+  public List<Integer> getIndex() {
+    return index;
+  }
+
+  public void setIndex(List<Integer> index) {
+    this.index = index;
+  }
 }

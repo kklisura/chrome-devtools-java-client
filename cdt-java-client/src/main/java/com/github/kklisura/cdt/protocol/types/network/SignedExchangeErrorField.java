@@ -1,4 +1,4 @@
-package com.github.kklisura.cdt.protocol.types.accessibility;
+package com.github.kklisura.cdt.protocol.types.network;
 
 /*-
  * #%L
@@ -22,16 +22,18 @@ package com.github.kklisura.cdt.protocol.types.accessibility;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** States which apply to widgets. */
-public enum AXWidgetStates {
-  @JsonProperty("checked")
-  CHECKED,
-  @JsonProperty("expanded")
-  EXPANDED,
-  @JsonProperty("modal")
-  MODAL,
-  @JsonProperty("pressed")
-  PRESSED,
-  @JsonProperty("selected")
-  SELECTED
+/** Field type for a signed exchange related error. */
+public enum SignedExchangeErrorField {
+  @JsonProperty("signatureSig")
+  SIGNATURE_SIG,
+  @JsonProperty("signatureIntegrity")
+  SIGNATURE_INTEGRITY,
+  @JsonProperty("signatureCertUrl")
+  SIGNATURE_CERT_URL,
+  @JsonProperty("signatureCertSha256")
+  SIGNATURE_CERT_SHA_256,
+  @JsonProperty("signatureValidityUrl")
+  SIGNATURE_VALIDITY_URL,
+  @JsonProperty("signatureTimestamps")
+  SIGNATURE_TIMESTAMPS
 }

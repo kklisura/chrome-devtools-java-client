@@ -20,10 +20,7 @@ package com.github.kklisura.cdt.protocol.types.page;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
-
 /** Viewport for capturing screenshot. */
-@Experimental
 public class Viewport {
 
   private Double x;

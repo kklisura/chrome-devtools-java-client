@@ -20,10 +20,8 @@ package com.github.kklisura.cdt.protocol.types.input;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
-@Experimental
 public class TouchPoint {
 
   private Double x;

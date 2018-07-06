@@ -29,11 +29,15 @@ public class Request {
 
   private String url;
 
+  @Optional private String urlFragment;
+
   private String method;
 
   private Map<String, Object> headers;
 
   @Optional private String postData;
+
+  @Optional private Boolean hasPostData;
 
   @Optional private MixedContentType mixedContentType;
 
@@ -43,14 +47,24 @@ public class Request {
 
   @Optional private Boolean isLinkPreload;
 
-  /** Request URL. */
+  /** Request URL (without fragment). */
   public String getUrl() {
     return url;
   }
 
-  /** Request URL. */
+  /** Request URL (without fragment). */
   public void setUrl(String url) {
     this.url = url;
+  }
+
+  /** Fragment of the requested URL starting with hash, if present. */
+  public String getUrlFragment() {
+    return urlFragment;
+  }
+
+  /** Fragment of the requested URL starting with hash, if present. */
+  public void setUrlFragment(String urlFragment) {
+    this.urlFragment = urlFragment;
   }
 
   /** HTTP request method. */
@@ -81,6 +95,22 @@ public class Request {
   /** HTTP POST request data. */
   public void setPostData(String postData) {
     this.postData = postData;
+  }
+
+  /**
+   * True when the request has POST data. Note that postData might still be omitted when this flag
+   * is true when the data is too long.
+   */
+  public Boolean getHasPostData() {
+    return hasPostData;
+  }
+
+  /**
+   * True when the request has POST data. Note that postData might still be omitted when this flag
+   * is true when the data is too long.
+   */
+  public void setHasPostData(Boolean hasPostData) {
+    this.hasPostData = hasPostData;
   }
 
   /** The mixed content type of the request. */

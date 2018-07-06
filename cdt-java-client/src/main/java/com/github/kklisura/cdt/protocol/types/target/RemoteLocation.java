@@ -20,6 +20,9 @@ package com.github.kklisura.cdt.protocol.types.target;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
+
+@Experimental
 public class RemoteLocation {
 
   private String host;

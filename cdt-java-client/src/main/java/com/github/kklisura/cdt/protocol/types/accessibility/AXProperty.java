@@ -22,17 +22,17 @@ package com.github.kklisura.cdt.protocol.types.accessibility;
 
 public class AXProperty {
 
-  private String name;
+  private AXPropertyName name;
 
   private AXValue value;
 
   /** The name of this property. */
-  public String getName() {
+  public AXPropertyName getName() {
     return name;
   }
 
   /** The name of this property. */
-  public void setName(String name) {
+  public void setName(AXPropertyName name) {
     this.name = name;
   }
 

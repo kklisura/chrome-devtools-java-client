@@ -27,19 +27,19 @@ import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 @Experimental
 public class ScreencastFrameMetadata {
 
-  @Experimental private Double offsetTop;
+  private Double offsetTop;
 
-  @Experimental private Double pageScaleFactor;
+  private Double pageScaleFactor;
 
-  @Experimental private Double deviceWidth;
+  private Double deviceWidth;
 
-  @Experimental private Double deviceHeight;
+  private Double deviceHeight;
 
-  @Experimental private Double scrollOffsetX;
+  private Double scrollOffsetX;
 
-  @Experimental private Double scrollOffsetY;
+  private Double scrollOffsetY;
 
-  @Experimental @Optional private Double timestamp;
+  @Optional private Double timestamp;
 
   /** Top offset in DIP. */
   public Double getOffsetTop() {

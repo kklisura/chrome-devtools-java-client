@@ -1,4 +1,4 @@
-package com.github.kklisura.cdt.protocol.types.page;
+package com.github.kklisura.cdt.protocol.types.domsnapshot;
 
 /*-
  * #%L
@@ -20,17 +20,27 @@ package com.github.kklisura.cdt.protocol.types.page;
  * #L%
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
-/**
- * Proceed: allow the navigation; Cancel: cancel the navigation; CancelAndIgnore: cancels the
- * navigation and makes the requester of the navigation acts like the request was never made.
- */
-public enum NavigationResponse {
-  @JsonProperty("Proceed")
-  PROCEED,
-  @JsonProperty("Cancel")
-  CANCEL,
-  @JsonProperty("CancelAndIgnore")
-  CANCEL_AND_IGNORE
+public class RareIntegerData {
+
+  private List<Integer> index;
+
+  private List<Integer> value;
+
+  public List<Integer> getIndex() {
+    return index;
+  }
+
+  public void setIndex(List<Integer> index) {
+    this.index = index;
+  }
+
+  public List<Integer> getValue() {
+    return value;
+  }
+
+  public void setValue(List<Integer> value) {
+    this.value = value;
+  }
 }

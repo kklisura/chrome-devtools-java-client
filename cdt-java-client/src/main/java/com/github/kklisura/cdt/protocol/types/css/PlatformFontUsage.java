@@ -20,10 +20,7 @@ package com.github.kklisura.cdt.protocol.types.css;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
-
 /** Information about amount of glyphs that were rendered with given font. */
-@Experimental
 public class PlatformFontUsage {
 
   private String familyName;

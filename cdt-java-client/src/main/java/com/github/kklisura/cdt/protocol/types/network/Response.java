@@ -20,7 +20,6 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.security.SecurityState;
 import java.util.Map;
@@ -30,7 +29,7 @@ public class Response {
 
   private String url;
 
-  private Double status;
+  private Integer status;
 
   private String statusText;
 
@@ -48,9 +47,9 @@ public class Response {
 
   private Double connectionId;
 
-  @Experimental @Optional private String remoteIPAddress;
+  @Optional private String remoteIPAddress;
 
-  @Experimental @Optional private Integer remotePort;
+  @Optional private Integer remotePort;
 
   @Optional private Boolean fromDiskCache;
 
@@ -77,12 +76,12 @@ public class Response {
   }
 
   /** HTTP response status code. */
-  public Double getStatus() {
+  public Integer getStatus() {
     return status;
   }
 
   /** HTTP response status code. */
-  public void setStatus(Double status) {
+  public void setStatus(Integer status) {
     this.status = status;
   }
 

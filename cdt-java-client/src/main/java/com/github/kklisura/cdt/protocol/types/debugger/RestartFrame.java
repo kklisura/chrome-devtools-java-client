@@ -20,8 +20,10 @@ package com.github.kklisura.cdt.protocol.types.debugger;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.runtime.StackTrace;
+import com.github.kklisura.cdt.protocol.types.runtime.StackTraceId;
 import java.util.List;
 
 public class RestartFrame {
@@ -29,6 +31,8 @@ public class RestartFrame {
   private List<CallFrame> callFrames;
 
   @Optional private StackTrace asyncStackTrace;
+
+  @Experimental @Optional private StackTraceId asyncStackTraceId;
 
   /** New stack trace. */
   public List<CallFrame> getCallFrames() {
@@ -48,5 +52,15 @@ public class RestartFrame {
   /** Async stack trace, if any. */
   public void setAsyncStackTrace(StackTrace asyncStackTrace) {
     this.asyncStackTrace = asyncStackTrace;
+  }
+
+  /** Async stack trace, if any. */
+  public StackTraceId getAsyncStackTraceId() {
+    return asyncStackTraceId;
+  }
+
+  /** Async stack trace, if any. */
+  public void setAsyncStackTraceId(StackTraceId asyncStackTraceId) {
+    this.asyncStackTraceId = asyncStackTraceId;
   }
 }

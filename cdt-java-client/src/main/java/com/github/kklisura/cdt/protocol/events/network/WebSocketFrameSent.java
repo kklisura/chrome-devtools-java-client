@@ -20,11 +20,9 @@ package com.github.kklisura.cdt.protocol.events.network;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.types.network.WebSocketFrame;
 
 /** Fired when WebSocket frame is sent. */
-@Experimental
 public class WebSocketFrameSent {
 
   private String requestId;

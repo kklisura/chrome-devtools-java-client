@@ -20,7 +20,7 @@ package com.github.kklisura.cdt.protocol.events.dom;
  * #L%
  */
 
-/** Fired when <code>Element</code>'s attribute is removed. */
+/** Fired when `Element`'s attribute is removed. */
 public class AttributeRemoved {
 
   private Integer nodeId;

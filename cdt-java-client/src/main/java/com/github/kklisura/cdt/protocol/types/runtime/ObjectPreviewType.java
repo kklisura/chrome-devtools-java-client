@@ -37,5 +37,7 @@ public enum ObjectPreviewType {
   @JsonProperty("boolean")
   BOOLEAN,
   @JsonProperty("symbol")
-  SYMBOL
+  SYMBOL,
+  @JsonProperty("bigint")
+  BIGINT
 }

@@ -20,7 +20,6 @@ package com.github.kklisura.cdt.protocol.events.network;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.network.BlockedReason;
 import com.github.kklisura.cdt.protocol.types.page.ResourceType;
@@ -38,7 +37,7 @@ public class LoadingFailed {
 
   @Optional private Boolean canceled;
 
-  @Experimental @Optional private BlockedReason blockedReason;
+  @Optional private BlockedReason blockedReason;
 
   /** Request identifier. */
   public String getRequestId() {

@@ -23,6 +23,7 @@ package com.github.kklisura.cdt.protocol.events.network;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.network.AuthChallenge;
+import com.github.kklisura.cdt.protocol.types.network.ErrorReason;
 import com.github.kklisura.cdt.protocol.types.network.Request;
 import com.github.kklisura.cdt.protocol.types.page.ResourceType;
 import java.util.Map;
@@ -38,17 +39,23 @@ public class RequestIntercepted {
 
   private Request request;
 
+  private String frameId;
+
   private ResourceType resourceType;
 
   private Boolean isNavigationRequest;
 
-  @Optional private Map<String, Object> redirectHeaders;
-
-  @Optional private Integer redirectStatusCode;
+  @Optional private Boolean isDownload;
 
   @Optional private String redirectUrl;
 
   @Optional private AuthChallenge authChallenge;
+
+  @Optional private ErrorReason responseErrorReason;
+
+  @Optional private Integer responseStatusCode;
+
+  @Optional private Map<String, Object> responseHeaders;
 
   /**
    * Each request the page makes will have a unique id, however if any redirects are encountered
@@ -76,6 +83,16 @@ public class RequestIntercepted {
     this.request = request;
   }
 
+  /** The id of the frame that initiated the request. */
+  public String getFrameId() {
+    return frameId;
+  }
+
+  /** The id of the frame that initiated the request. */
+  public void setFrameId(String frameId) {
+    this.frameId = frameId;
+  }
+
   /** How the requested resource will be used. */
   public ResourceType getResourceType() {
     return resourceType;
@@ -96,24 +113,20 @@ public class RequestIntercepted {
     this.isNavigationRequest = isNavigationRequest;
   }
 
-  /** HTTP response headers, only sent if a redirect was intercepted. */
-  public Map<String, Object> getRedirectHeaders() {
-    return redirectHeaders;
+  /**
+   * Set if the request is a navigation that will result in a download. Only present after response
+   * is received from the server (i.e. HeadersReceived stage).
+   */
+  public Boolean getIsDownload() {
+    return isDownload;
   }
 
-  /** HTTP response headers, only sent if a redirect was intercepted. */
-  public void setRedirectHeaders(Map<String, Object> redirectHeaders) {
-    this.redirectHeaders = redirectHeaders;
-  }
-
-  /** HTTP response code, only sent if a redirect was intercepted. */
-  public Integer getRedirectStatusCode() {
-    return redirectStatusCode;
-  }
-
-  /** HTTP response code, only sent if a redirect was intercepted. */
-  public void setRedirectStatusCode(Integer redirectStatusCode) {
-    this.redirectStatusCode = redirectStatusCode;
+  /**
+   * Set if the request is a navigation that will result in a download. Only present after response
+   * is received from the server (i.e. HeadersReceived stage).
+   */
+  public void setIsDownload(Boolean isDownload) {
+    this.isDownload = isDownload;
   }
 
   /** Redirect location, only sent if a redirect was intercepted. */
@@ -140,5 +153,53 @@ public class RequestIntercepted {
    */
   public void setAuthChallenge(AuthChallenge authChallenge) {
     this.authChallenge = authChallenge;
+  }
+
+  /**
+   * Response error if intercepted at response stage or if redirect occurred while intercepting
+   * request.
+   */
+  public ErrorReason getResponseErrorReason() {
+    return responseErrorReason;
+  }
+
+  /**
+   * Response error if intercepted at response stage or if redirect occurred while intercepting
+   * request.
+   */
+  public void setResponseErrorReason(ErrorReason responseErrorReason) {
+    this.responseErrorReason = responseErrorReason;
+  }
+
+  /**
+   * Response code if intercepted at response stage or if redirect occurred while intercepting
+   * request or auth retry occurred.
+   */
+  public Integer getResponseStatusCode() {
+    return responseStatusCode;
+  }
+
+  /**
+   * Response code if intercepted at response stage or if redirect occurred while intercepting
+   * request or auth retry occurred.
+   */
+  public void setResponseStatusCode(Integer responseStatusCode) {
+    this.responseStatusCode = responseStatusCode;
+  }
+
+  /**
+   * Response headers if intercepted at the response stage or if redirect occurred while
+   * intercepting request or auth retry occurred.
+   */
+  public Map<String, Object> getResponseHeaders() {
+    return responseHeaders;
+  }
+
+  /**
+   * Response headers if intercepted at the response stage or if redirect occurred while
+   * intercepting request or auth retry occurred.
+   */
+  public void setResponseHeaders(Map<String, Object> responseHeaders) {
+    this.responseHeaders = responseHeaders;
   }
 }

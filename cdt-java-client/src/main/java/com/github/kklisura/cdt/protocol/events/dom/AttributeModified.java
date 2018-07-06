@@ -20,7 +20,7 @@ package com.github.kklisura.cdt.protocol.events.dom;
  * #L%
  */
 
-/** Fired when <code>Element</code>'s attribute is modified. */
+/** Fired when `Element`'s attribute is modified. */
 public class AttributeModified {
 
   private Integer nodeId;

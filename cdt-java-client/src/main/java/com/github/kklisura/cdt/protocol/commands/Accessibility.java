@@ -32,23 +32,26 @@ public interface Accessibility {
 
   /**
    * Fetches the accessibility node and partial accessibility tree for this DOM node, if it exists.
-   *
-   * @param nodeId ID of node to get the partial accessibility tree for.
    */
   @Experimental
   @Returns("nodes")
-  List<AXNode> getPartialAXTree(@ParamName("nodeId") Integer nodeId);
+  List<AXNode> getPartialAXTree();
 
   /**
    * Fetches the accessibility node and partial accessibility tree for this DOM node, if it exists.
    *
-   * @param nodeId ID of node to get the partial accessibility tree for.
+   * @param nodeId Identifier of the node to get the partial accessibility tree for.
+   * @param backendNodeId Identifier of the backend node to get the partial accessibility tree for.
+   * @param objectId JavaScript object id of the node wrapper to get the partial accessibility tree
+   *     for.
    * @param fetchRelatives Whether to fetch this nodes ancestors, siblings and children. Defaults to
    *     true.
    */
   @Experimental
   @Returns("nodes")
   List<AXNode> getPartialAXTree(
-      @ParamName("nodeId") Integer nodeId,
+      @Optional @ParamName("nodeId") Integer nodeId,
+      @Optional @ParamName("backendNodeId") Integer backendNodeId,
+      @Optional @ParamName("objectId") String objectId,
       @Optional @ParamName("fetchRelatives") Boolean fetchRelatives);
 }

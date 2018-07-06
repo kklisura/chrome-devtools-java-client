@@ -20,11 +20,9 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
 /** Cookie object */
-@Experimental
 public class Cookie {
 
   private String name;

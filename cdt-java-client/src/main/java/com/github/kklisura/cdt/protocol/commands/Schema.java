@@ -24,7 +24,8 @@ import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.types.schema.Domain;
 import java.util.List;
 
-/** Provides information about the protocol schema. */
+/** This domain is deprecated. */
+@Deprecated
 public interface Schema {
 
   /** Returns supported domains. */

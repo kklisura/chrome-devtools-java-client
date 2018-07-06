@@ -20,7 +20,6 @@ package com.github.kklisura.cdt.protocol.types.profiler;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.runtime.CallFrame;
 import java.util.List;
@@ -32,13 +31,13 @@ public class ProfileNode {
 
   private CallFrame callFrame;
 
-  @Experimental @Optional private Integer hitCount;
+  @Optional private Integer hitCount;
 
   @Optional private List<Integer> children;
 
   @Optional private String deoptReason;
 
-  @Experimental @Optional private List<PositionTickInfo> positionTicks;
+  @Optional private List<PositionTickInfo> positionTicks;
 
   /** Unique id of the node. */
   public Integer getId() {

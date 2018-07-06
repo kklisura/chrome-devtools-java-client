@@ -20,11 +20,9 @@ package com.github.kklisura.cdt.protocol.types.css;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import java.util.List;
 
 /** Media query descriptor. */
-@Experimental
 public class MediaQuery {
 
   private List<MediaQueryExpression> expressions;

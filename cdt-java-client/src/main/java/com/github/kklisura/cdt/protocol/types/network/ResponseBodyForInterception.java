@@ -1,4 +1,4 @@
-package com.github.kklisura.cdt.protocol.types.accessibility;
+package com.github.kklisura.cdt.protocol.types.network;
 
 /*-
  * #%L
@@ -20,16 +20,29 @@ package com.github.kklisura.cdt.protocol.types.accessibility;
  * #L%
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+public class ResponseBodyForInterception {
 
-/** Attributes which apply to nodes in live regions. */
-public enum AXLiveRegionAttributes {
-  @JsonProperty("live")
-  LIVE,
-  @JsonProperty("atomic")
-  ATOMIC,
-  @JsonProperty("relevant")
-  RELEVANT,
-  @JsonProperty("root")
-  ROOT
+  private String body;
+
+  private Boolean base64Encoded;
+
+  /** Response body. */
+  public String getBody() {
+    return body;
+  }
+
+  /** Response body. */
+  public void setBody(String body) {
+    this.body = body;
+  }
+
+  /** True, if content was sent as base64. */
+  public Boolean getBase64Encoded() {
+    return base64Encoded;
+  }
+
+  /** True, if content was sent as base64. */
+  public void setBase64Encoded(Boolean base64Encoded) {
+    this.base64Encoded = base64Encoded;
+  }
 }

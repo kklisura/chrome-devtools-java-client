@@ -20,10 +20,7 @@ package com.github.kklisura.cdt.protocol.types.domstorage;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
-
 /** DOM Storage identifier. */
-@Experimental
 public class StorageId {
 
   private String securityOrigin;

@@ -36,6 +36,7 @@ import com.github.kklisura.cdt.protocol.commands.Database;
 import com.github.kklisura.cdt.protocol.commands.Debugger;
 import com.github.kklisura.cdt.protocol.commands.DeviceOrientation;
 import com.github.kklisura.cdt.protocol.commands.Emulation;
+import com.github.kklisura.cdt.protocol.commands.HeadlessExperimental;
 import com.github.kklisura.cdt.protocol.commands.HeapProfiler;
 import com.github.kklisura.cdt.protocol.commands.IO;
 import com.github.kklisura.cdt.protocol.commands.IndexedDB;
@@ -61,117 +62,120 @@ import com.github.kklisura.cdt.protocol.commands.Tracing;
 
 public interface ChromeDevTools {
 
-  /** Returns the Inspector command. */
-  Inspector getInspector();
-
-  /** Returns the Memory command. */
-  Memory getMemory();
-
-  /** Returns the Performance command. */
-  Performance getPerformance();
-
-  /** Returns the Page command. */
-  Page getPage();
-
-  /** Returns the Overlay command. */
-  Overlay getOverlay();
-
-  /** Returns the Emulation command. */
-  Emulation getEmulation();
-
-  /** Returns the Security command. */
-  Security getSecurity();
-
-  /** Returns the Audits command. */
-  Audits getAudits();
-
-  /** Returns the Network command. */
-  Network getNetwork();
-
-  /** Returns the Database command. */
-  Database getDatabase();
-
-  /** Returns the IndexedDB command. */
-  IndexedDB getIndexedDB();
-
-  /** Returns the CacheStorage command. */
-  CacheStorage getCacheStorage();
-
-  /** Returns the DOMStorage command. */
-  DOMStorage getDOMStorage();
-
-  /** Returns the ApplicationCache command. */
-  ApplicationCache getApplicationCache();
-
-  /** Returns the DOM command. */
-  DOM getDOM();
-
-  /** Returns the CSS command. */
-  CSS getCSS();
-
-  /** Returns the DOMSnapshot command. */
-  DOMSnapshot getDOMSnapshot();
-
-  /** Returns the IO command. */
-  IO getIO();
-
-  /** Returns the DOMDebugger command. */
-  DOMDebugger getDOMDebugger();
-
-  /** Returns the Target command. */
-  Target getTarget();
-
-  /** Returns the ServiceWorker command. */
-  ServiceWorker getServiceWorker();
-
-  /** Returns the Input command. */
-  Input getInput();
-
-  /** Returns the LayerTree command. */
-  LayerTree getLayerTree();
-
-  /** Returns the DeviceOrientation command. */
-  DeviceOrientation getDeviceOrientation();
-
-  /** Returns the Tracing command. */
-  Tracing getTracing();
-
-  /** Returns the Animation command. */
-  Animation getAnimation();
-
-  /** Returns the Accessibility command. */
-  Accessibility getAccessibility();
-
-  /** Returns the Storage command. */
-  Storage getStorage();
-
-  /** Returns the Log command. */
-  Log getLog();
-
-  /** Returns the SystemInfo command. */
-  SystemInfo getSystemInfo();
-
-  /** Returns the Tethering command. */
-  Tethering getTethering();
-
-  /** Returns the Browser command. */
-  Browser getBrowser();
-
-  /** Returns the Schema command. */
-  Schema getSchema();
-
-  /** Returns the Runtime command. */
-  Runtime getRuntime();
+  /** Returns the Console command. */
+  Console getConsole();
 
   /** Returns the Debugger command. */
   Debugger getDebugger();
 
-  /** Returns the Console command. */
-  Console getConsole();
+  /** Returns the HeapProfiler command. */
+  HeapProfiler getHeapProfiler();
 
   /** Returns the Profiler command. */
   Profiler getProfiler();
 
-  /** Returns the HeapProfiler command. */
-  HeapProfiler getHeapProfiler();
+  /** Returns the Runtime command. */
+  Runtime getRuntime();
+
+  /** Returns the Schema command. */
+  Schema getSchema();
+
+  /** Returns the Accessibility command. */
+  Accessibility getAccessibility();
+
+  /** Returns the Animation command. */
+  Animation getAnimation();
+
+  /** Returns the ApplicationCache command. */
+  ApplicationCache getApplicationCache();
+
+  /** Returns the Audits command. */
+  Audits getAudits();
+
+  /** Returns the Browser command. */
+  Browser getBrowser();
+
+  /** Returns the CSS command. */
+  CSS getCSS();
+
+  /** Returns the CacheStorage command. */
+  CacheStorage getCacheStorage();
+
+  /** Returns the DOM command. */
+  DOM getDOM();
+
+  /** Returns the DOMDebugger command. */
+  DOMDebugger getDOMDebugger();
+
+  /** Returns the DOMSnapshot command. */
+  DOMSnapshot getDOMSnapshot();
+
+  /** Returns the DOMStorage command. */
+  DOMStorage getDOMStorage();
+
+  /** Returns the Database command. */
+  Database getDatabase();
+
+  /** Returns the DeviceOrientation command. */
+  DeviceOrientation getDeviceOrientation();
+
+  /** Returns the Emulation command. */
+  Emulation getEmulation();
+
+  /** Returns the HeadlessExperimental command. */
+  HeadlessExperimental getHeadlessExperimental();
+
+  /** Returns the IO command. */
+  IO getIO();
+
+  /** Returns the IndexedDB command. */
+  IndexedDB getIndexedDB();
+
+  /** Returns the Input command. */
+  Input getInput();
+
+  /** Returns the Inspector command. */
+  Inspector getInspector();
+
+  /** Returns the LayerTree command. */
+  LayerTree getLayerTree();
+
+  /** Returns the Log command. */
+  Log getLog();
+
+  /** Returns the Memory command. */
+  Memory getMemory();
+
+  /** Returns the Network command. */
+  Network getNetwork();
+
+  /** Returns the Overlay command. */
+  Overlay getOverlay();
+
+  /** Returns the Page command. */
+  Page getPage();
+
+  /** Returns the Performance command. */
+  Performance getPerformance();
+
+  /** Returns the Security command. */
+  Security getSecurity();
+
+  /** Returns the ServiceWorker command. */
+  ServiceWorker getServiceWorker();
+
+  /** Returns the Storage command. */
+  Storage getStorage();
+
+  /** Returns the SystemInfo command. */
+  SystemInfo getSystemInfo();
+
+  /** Returns the Target command. */
+  Target getTarget();
+
+  /** Returns the Tethering command. */
+  Tethering getTethering();
+
+  /** Returns the Tracing command. */
+  Tracing getTracing();
 }

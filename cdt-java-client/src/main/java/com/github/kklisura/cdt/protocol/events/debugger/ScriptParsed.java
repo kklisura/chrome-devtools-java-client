@@ -53,11 +53,11 @@ public class ScriptParsed {
 
   @Optional private String sourceMapURL;
 
-  @Experimental @Optional private Boolean hasSourceURL;
+  @Optional private Boolean hasSourceURL;
 
-  @Experimental @Optional private Boolean isModule;
+  @Optional private Boolean isModule;
 
-  @Experimental @Optional private Integer length;
+  @Optional private Integer length;
 
   @Experimental @Optional private StackTrace stackTrace;
 

@@ -36,12 +36,6 @@ import java.util.List;
 @Experimental
 public interface LayerTree {
 
-  /** Enables compositing tree inspection. */
-  void enable();
-
-  /** Disables compositing tree inspection. */
-  void disable();
-
   /**
    * Provides the reasons why the given layer was composited.
    *
@@ -50,13 +44,11 @@ public interface LayerTree {
   @Returns("compositingReasons")
   List<String> compositingReasons(@ParamName("layerId") String layerId);
 
-  /**
-   * Returns the layer snapshot identifier.
-   *
-   * @param layerId The id of the layer.
-   */
-  @Returns("snapshotId")
-  String makeSnapshot(@ParamName("layerId") String layerId);
+  /** Disables compositing tree inspection. */
+  void disable();
+
+  /** Enables compositing tree inspection. */
+  void enable();
 
   /**
    * Returns the snapshot identifier.
@@ -67,11 +59,12 @@ public interface LayerTree {
   String loadSnapshot(@ParamName("tiles") List<PictureTile> tiles);
 
   /**
-   * Releases layer snapshot captured by the back-end.
+   * Returns the layer snapshot identifier.
    *
-   * @param snapshotId The id of the layer snapshot.
+   * @param layerId The id of the layer.
    */
-  void releaseSnapshot(@ParamName("snapshotId") String snapshotId);
+  @Returns("snapshotId")
+  String makeSnapshot(@ParamName("layerId") String layerId);
 
   /** @param snapshotId The id of the layer snapshot. */
   @Returns("timings")
@@ -89,6 +82,13 @@ public interface LayerTree {
       @Optional @ParamName("minRepeatCount") Integer minRepeatCount,
       @Optional @ParamName("minDuration") Double minDuration,
       @Optional @ParamName("clipRect") Rect clipRect);
+
+  /**
+   * Releases layer snapshot captured by the back-end.
+   *
+   * @param snapshotId The id of the layer snapshot.
+   */
+  void releaseSnapshot(@ParamName("snapshotId") String snapshotId);
 
   /**
    * Replays the layer snapshot and returns the resulting bitmap.
@@ -121,9 +121,9 @@ public interface LayerTree {
   @Returns("commandLog")
   List<Object> snapshotCommandLog(@ParamName("snapshotId") String snapshotId);
 
-  @EventName("layerTreeDidChange")
-  EventListener onLayerTreeDidChange(EventHandler<LayerTreeDidChange> eventListener);
-
   @EventName("layerPainted")
   EventListener onLayerPainted(EventHandler<LayerPainted> eventListener);
+
+  @EventName("layerTreeDidChange")
+  EventListener onLayerTreeDidChange(EventHandler<LayerTreeDidChange> eventListener);
 }

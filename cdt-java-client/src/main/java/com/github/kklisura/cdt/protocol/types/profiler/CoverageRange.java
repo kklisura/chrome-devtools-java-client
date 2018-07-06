@@ -20,10 +20,7 @@ package com.github.kklisura.cdt.protocol.types.profiler;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
-
 /** Coverage data for a source range. */
-@Experimental
 public class CoverageRange {
 
   private Integer startOffset;

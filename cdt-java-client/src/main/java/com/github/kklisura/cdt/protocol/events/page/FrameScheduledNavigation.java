@@ -30,9 +30,9 @@ public class FrameScheduledNavigation {
 
   private Double delay;
 
-  @Experimental private FrameScheduledNavigationReason reason;
+  private FrameScheduledNavigationReason reason;
 
-  @Experimental private String url;
+  private String url;
 
   /** Id of the frame that has scheduled a navigation. */
   public String getFrameId() {

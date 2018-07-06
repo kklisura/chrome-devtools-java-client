@@ -20,7 +20,6 @@ package com.github.kklisura.cdt.protocol.types.dom;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import java.util.List;
 
@@ -32,9 +31,9 @@ public class Node {
 
   private Integer nodeId;
 
-  @Experimental @Optional private Integer parentId;
+  @Optional private Integer parentId;
 
-  @Experimental private Integer backendNodeId;
+  private Integer backendNodeId;
 
   private Integer nodeType;
 
@@ -52,7 +51,7 @@ public class Node {
 
   @Optional private String documentURL;
 
-  @Experimental @Optional private String baseURL;
+  @Optional private String baseURL;
 
   @Optional private String publicId;
 
@@ -70,35 +69,35 @@ public class Node {
 
   @Optional private ShadowRootType shadowRootType;
 
-  @Experimental @Optional private String frameId;
+  @Optional private String frameId;
 
   @Optional private Node contentDocument;
 
-  @Experimental @Optional private List<Node> shadowRoots;
+  @Optional private List<Node> shadowRoots;
 
-  @Experimental @Optional private Node templateContent;
+  @Optional private Node templateContent;
 
-  @Experimental @Optional private List<Node> pseudoElements;
+  @Optional private List<Node> pseudoElements;
 
   @Optional private Node importedDocument;
 
-  @Experimental @Optional private List<BackendNode> distributedNodes;
+  @Optional private List<BackendNode> distributedNodes;
 
-  @Experimental @Optional private Boolean isSVG;
+  @Optional private Boolean isSVG;
 
   /**
-   * Node identifier that is passed into the rest of the DOM messages as the <code>nodeId</code>.
-   * Backend will only push node with given <code>id</code> once. It is aware of all requested nodes
-   * and will only fire DOM events for nodes known to the client.
+   * Node identifier that is passed into the rest of the DOM messages as the `nodeId`. Backend will
+   * only push node with given `id` once. It is aware of all requested nodes and will only fire DOM
+   * events for nodes known to the client.
    */
   public Integer getNodeId() {
     return nodeId;
   }
 
   /**
-   * Node identifier that is passed into the rest of the DOM messages as the <code>nodeId</code>.
-   * Backend will only push node with given <code>id</code> once. It is aware of all requested nodes
-   * and will only fire DOM events for nodes known to the client.
+   * Node identifier that is passed into the rest of the DOM messages as the `nodeId`. Backend will
+   * only push node with given `id` once. It is aware of all requested nodes and will only fire DOM
+   * events for nodes known to the client.
    */
   public void setNodeId(Integer nodeId) {
     this.nodeId = nodeId;
@@ -124,52 +123,52 @@ public class Node {
     this.backendNodeId = backendNodeId;
   }
 
-  /** <code>Node</code>'s nodeType. */
+  /** `Node`'s nodeType. */
   public Integer getNodeType() {
     return nodeType;
   }
 
-  /** <code>Node</code>'s nodeType. */
+  /** `Node`'s nodeType. */
   public void setNodeType(Integer nodeType) {
     this.nodeType = nodeType;
   }
 
-  /** <code>Node</code>'s nodeName. */
+  /** `Node`'s nodeName. */
   public String getNodeName() {
     return nodeName;
   }
 
-  /** <code>Node</code>'s nodeName. */
+  /** `Node`'s nodeName. */
   public void setNodeName(String nodeName) {
     this.nodeName = nodeName;
   }
 
-  /** <code>Node</code>'s localName. */
+  /** `Node`'s localName. */
   public String getLocalName() {
     return localName;
   }
 
-  /** <code>Node</code>'s localName. */
+  /** `Node`'s localName. */
   public void setLocalName(String localName) {
     this.localName = localName;
   }
 
-  /** <code>Node</code>'s nodeValue. */
+  /** `Node`'s nodeValue. */
   public String getNodeValue() {
     return nodeValue;
   }
 
-  /** <code>Node</code>'s nodeValue. */
+  /** `Node`'s nodeValue. */
   public void setNodeValue(String nodeValue) {
     this.nodeValue = nodeValue;
   }
 
-  /** Child count for <code>Container</code> nodes. */
+  /** Child count for `Container` nodes. */
   public Integer getChildNodeCount() {
     return childNodeCount;
   }
 
-  /** Child count for <code>Container</code> nodes. */
+  /** Child count for `Container` nodes. */
   public void setChildNodeCount(Integer childNodeCount) {
     this.childNodeCount = childNodeCount;
   }
@@ -185,101 +184,95 @@ public class Node {
   }
 
   /**
-   * Attributes of the <code>Element</code> node in the form of flat array <code>
-   * [name1, value1, name2, value2]</code>.
+   * Attributes of the `Element` node in the form of flat array `[name1, value1, name2, value2]`.
    */
   public List<String> getAttributes() {
     return attributes;
   }
 
   /**
-   * Attributes of the <code>Element</code> node in the form of flat array <code>
-   * [name1, value1, name2, value2]</code>.
+   * Attributes of the `Element` node in the form of flat array `[name1, value1, name2, value2]`.
    */
   public void setAttributes(List<String> attributes) {
     this.attributes = attributes;
   }
 
-  /** Document URL that <code>Document</code> or <code>FrameOwner</code> node points to. */
+  /** Document URL that `Document` or `FrameOwner` node points to. */
   public String getDocumentURL() {
     return documentURL;
   }
 
-  /** Document URL that <code>Document</code> or <code>FrameOwner</code> node points to. */
+  /** Document URL that `Document` or `FrameOwner` node points to. */
   public void setDocumentURL(String documentURL) {
     this.documentURL = documentURL;
   }
 
-  /**
-   * Base URL that <code>Document</code> or <code>FrameOwner</code> node uses for URL completion.
-   */
+  /** Base URL that `Document` or `FrameOwner` node uses for URL completion. */
   public String getBaseURL() {
     return baseURL;
   }
 
-  /**
-   * Base URL that <code>Document</code> or <code>FrameOwner</code> node uses for URL completion.
-   */
+  /** Base URL that `Document` or `FrameOwner` node uses for URL completion. */
   public void setBaseURL(String baseURL) {
     this.baseURL = baseURL;
   }
 
-  /** <code>DocumentType</code>'s publicId. */
+  /** `DocumentType`'s publicId. */
   public String getPublicId() {
     return publicId;
   }
 
-  /** <code>DocumentType</code>'s publicId. */
+  /** `DocumentType`'s publicId. */
   public void setPublicId(String publicId) {
     this.publicId = publicId;
   }
 
-  /** <code>DocumentType</code>'s systemId. */
+  /** `DocumentType`'s systemId. */
   public String getSystemId() {
     return systemId;
   }
 
-  /** <code>DocumentType</code>'s systemId. */
+  /** `DocumentType`'s systemId. */
   public void setSystemId(String systemId) {
     this.systemId = systemId;
   }
 
-  /** <code>DocumentType</code>'s internalSubset. */
+  /** `DocumentType`'s internalSubset. */
   public String getInternalSubset() {
     return internalSubset;
   }
 
-  /** <code>DocumentType</code>'s internalSubset. */
+  /** `DocumentType`'s internalSubset. */
   public void setInternalSubset(String internalSubset) {
     this.internalSubset = internalSubset;
   }
 
-  /** <code>Document</code>'s XML version in case of XML documents. */
+  /** `Document`'s XML version in case of XML documents. */
   public String getXmlVersion() {
     return xmlVersion;
   }
 
-  /** <code>Document</code>'s XML version in case of XML documents. */
+  /** `Document`'s XML version in case of XML documents. */
   public void setXmlVersion(String xmlVersion) {
     this.xmlVersion = xmlVersion;
   }
 
-  /** <code>Attr</code>'s name. */
+  /** `Attr`'s name. */
   public String getName() {
     return name;
   }
 
-  /** <code>Attr</code>'s name. */
+  /** `Attr`'s name. */
   public void setName(String name) {
     this.name = name;
   }
 
-  /** <code>Attr</code>'s value. */
+  /** `Attr`'s value. */
   public String getValue() {
     return value;
   }
 
-  /** <code>Attr</code>'s value. */
+  /** `Attr`'s value. */
   public void setValue(String value) {
     this.value = value;
   }

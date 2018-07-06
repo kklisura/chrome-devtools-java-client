@@ -32,30 +32,47 @@ import java.util.List;
 @Experimental
 public interface IndexedDB {
 
-  /** Enables events from backend. */
-  void enable();
-
-  /** Disables events from backend. */
-  void disable();
-
   /**
-   * Requests database names for given security origin.
+   * Clears all entries from an object store.
    *
    * @param securityOrigin Security origin.
+   * @param databaseName Database name.
+   * @param objectStoreName Object store name.
    */
-  @Returns("databaseNames")
-  List<String> requestDatabaseNames(@ParamName("securityOrigin") String securityOrigin);
+  void clearObjectStore(
+      @ParamName("securityOrigin") String securityOrigin,
+      @ParamName("databaseName") String databaseName,
+      @ParamName("objectStoreName") String objectStoreName);
 
   /**
-   * Requests database with given name in given frame.
+   * Deletes a database.
    *
    * @param securityOrigin Security origin.
    * @param databaseName Database name.
    */
-  @Returns("databaseWithObjectStores")
-  DatabaseWithObjectStores requestDatabase(
+  void deleteDatabase(
       @ParamName("securityOrigin") String securityOrigin,
       @ParamName("databaseName") String databaseName);
+
+  /**
+   * Delete a range of entries from an object store
+   *
+   * @param securityOrigin
+   * @param databaseName
+   * @param objectStoreName
+   * @param keyRange Range of entry keys to delete
+   */
+  void deleteObjectStoreEntries(
+      @ParamName("securityOrigin") String securityOrigin,
+      @ParamName("databaseName") String databaseName,
+      @ParamName("objectStoreName") String objectStoreName,
+      @ParamName("keyRange") KeyRange keyRange);
+
+  /** Disables events from backend. */
+  void disable();
+
+  /** Enables events from backend. */
+  void enable();
 
   /**
    * Requests data from object store or index.
@@ -96,24 +113,21 @@ public interface IndexedDB {
       @Optional @ParamName("keyRange") KeyRange keyRange);
 
   /**
-   * Clears all entries from an object store.
-   *
-   * @param securityOrigin Security origin.
-   * @param databaseName Database name.
-   * @param objectStoreName Object store name.
-   */
-  void clearObjectStore(
-      @ParamName("securityOrigin") String securityOrigin,
-      @ParamName("databaseName") String databaseName,
-      @ParamName("objectStoreName") String objectStoreName);
-
-  /**
-   * Deletes a database.
+   * Requests database with given name in given frame.
    *
    * @param securityOrigin Security origin.
    * @param databaseName Database name.
    */
-  void deleteDatabase(
+  @Returns("databaseWithObjectStores")
+  DatabaseWithObjectStores requestDatabase(
       @ParamName("securityOrigin") String securityOrigin,
       @ParamName("databaseName") String databaseName);
+
+  /**
+   * Requests database names for given security origin.
+   *
+   * @param securityOrigin Security origin.
+   */
+  @Returns("databaseNames")
+  List<String> requestDatabaseNames(@ParamName("securityOrigin") String securityOrigin);
 }

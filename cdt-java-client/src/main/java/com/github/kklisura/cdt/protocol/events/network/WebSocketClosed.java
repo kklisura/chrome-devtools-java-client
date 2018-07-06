@@ -20,10 +20,7 @@ package com.github.kklisura.cdt.protocol.events.network;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
-
 /** Fired when WebSocket is closed. */
-@Experimental
 public class WebSocketClosed {
 
   private String requestId;

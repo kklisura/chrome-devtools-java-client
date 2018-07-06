@@ -20,10 +20,7 @@ package com.github.kklisura.cdt.protocol.types.profiler;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
-
 /** Specifies a number of samples attributed to a certain source position. */
-@Experimental
 public class PositionTickInfo {
 
   private Integer line;

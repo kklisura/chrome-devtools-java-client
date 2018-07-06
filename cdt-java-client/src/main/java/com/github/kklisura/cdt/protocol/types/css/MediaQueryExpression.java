@@ -20,11 +20,9 @@ package com.github.kklisura.cdt.protocol.types.css;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
 /** Media query expression descriptor. */
-@Experimental
 public class MediaQueryExpression {
 
   private Double value;

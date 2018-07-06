@@ -20,9 +20,11 @@ package com.github.kklisura.cdt.protocol.types.debugger;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.runtime.ExceptionDetails;
 import com.github.kklisura.cdt.protocol.types.runtime.StackTrace;
+import com.github.kklisura.cdt.protocol.types.runtime.StackTraceId;
 import java.util.List;
 
 public class SetScriptSource {
@@ -32,6 +34,8 @@ public class SetScriptSource {
   @Optional private Boolean stackChanged;
 
   @Optional private StackTrace asyncStackTrace;
+
+  @Experimental @Optional private StackTraceId asyncStackTraceId;
 
   @Optional private ExceptionDetails exceptionDetails;
 
@@ -63,6 +67,16 @@ public class SetScriptSource {
   /** Async stack trace, if any. */
   public void setAsyncStackTrace(StackTrace asyncStackTrace) {
     this.asyncStackTrace = asyncStackTrace;
+  }
+
+  /** Async stack trace, if any. */
+  public StackTraceId getAsyncStackTraceId() {
+    return asyncStackTraceId;
+  }
+
+  /** Async stack trace, if any. */
+  public void setAsyncStackTraceId(StackTraceId asyncStackTraceId) {
+    this.asyncStackTraceId = asyncStackTraceId;
   }
 
   /** Exception details if any. */

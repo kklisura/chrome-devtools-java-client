@@ -26,13 +26,13 @@ import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 @Experimental
 public class VirtualTimePaused {
 
-  private Integer virtualTimeElapsed;
+  private Double virtualTimeElapsed;
 
   /**
    * The amount of virtual time that has elapsed in milliseconds since virtual time was first
    * enabled.
    */
-  public Integer getVirtualTimeElapsed() {
+  public Double getVirtualTimeElapsed() {
     return virtualTimeElapsed;
   }
 
@@ -40,7 +40,7 @@ public class VirtualTimePaused {
    * The amount of virtual time that has elapsed in milliseconds since virtual time was first
    * enabled.
    */
-  public void setVirtualTimeElapsed(Integer virtualTimeElapsed) {
+  public void setVirtualTimeElapsed(Double virtualTimeElapsed) {
     this.virtualTimeElapsed = virtualTimeElapsed;
   }
 }

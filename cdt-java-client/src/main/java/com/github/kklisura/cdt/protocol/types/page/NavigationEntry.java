@@ -20,10 +20,7 @@ package com.github.kklisura.cdt.protocol.types.page;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
-
 /** Navigation history entry. */
-@Experimental
 public class NavigationEntry {
 
   private Integer id;

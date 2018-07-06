@@ -20,10 +20,7 @@ package com.github.kklisura.cdt.protocol.types.dom;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
-
 /** Rectangle. */
-@Experimental
 public class Rect {
 
   private Double x;

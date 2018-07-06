@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.events.emulation.VirtualTimeAdvanced;
 import com.github.kklisura.cdt.protocol.events.emulation.VirtualTimeBudgetExpired;
 import com.github.kklisura.cdt.protocol.events.emulation.VirtualTimePaused;
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
@@ -33,9 +34,47 @@ import com.github.kklisura.cdt.protocol.types.dom.RGBA;
 import com.github.kklisura.cdt.protocol.types.emulation.ScreenOrientation;
 import com.github.kklisura.cdt.protocol.types.emulation.SetEmitTouchEventsForMouseConfiguration;
 import com.github.kklisura.cdt.protocol.types.emulation.VirtualTimePolicy;
+import com.github.kklisura.cdt.protocol.types.page.Viewport;
 
 /** This domain emulates different environments for the page. */
 public interface Emulation {
+
+  /** Tells whether emulation is supported. */
+  @Returns("result")
+  Boolean canEmulate();
+
+  /** Clears the overriden device metrics. */
+  void clearDeviceMetricsOverride();
+
+  /** Clears the overriden Geolocation Position and Error. */
+  void clearGeolocationOverride();
+
+  /** Requests that page scale factor is reset to initial values. */
+  @Experimental
+  void resetPageScaleFactor();
+
+  /**
+   * Enables CPU throttling to emulate slow CPUs.
+   *
+   * @param rate Throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc).
+   */
+  @Experimental
+  void setCPUThrottlingRate(@ParamName("rate") Double rate);
+
+  /**
+   * Sets or clears an override of the default background color of the frame. This override is used
+   * if the content does not specify one.
+   */
+  void setDefaultBackgroundColorOverride();
+
+  /**
+   * Sets or clears an override of the default background color of the frame. This override is used
+   * if the content does not specify one.
+   *
+   * @param color RGBA of the default background color. If not specified, any existing override will
+   *     be cleared.
+   */
+  void setDefaultBackgroundColorOverride(@Optional @ParamName("color") RGBA color);
 
   /**
    * Overrides the values of device screen dimensions (window.screen.width, window.screen.height,
@@ -75,96 +114,31 @@ public interface Emulation {
    * @param positionY Overriding view Y position on screen in pixels (minimum 0, maximum 10000000).
    * @param dontSetVisibleSize Do not set visible view size, rely upon explicit setVisibleSize call.
    * @param screenOrientation Screen orientation override.
+   * @param viewport If set, the visible area of the page will be overridden to this viewport. This
+   *     viewport change is not observed by the page, e.g. viewport-relative elements do not change
+   *     positions.
    */
   void setDeviceMetricsOverride(
       @ParamName("width") Integer width,
       @ParamName("height") Integer height,
       @ParamName("deviceScaleFactor") Double deviceScaleFactor,
       @ParamName("mobile") Boolean mobile,
-      @Optional @ParamName("scale") Double scale,
+      @Experimental @Optional @ParamName("scale") Double scale,
       @Experimental @Optional @ParamName("screenWidth") Integer screenWidth,
       @Experimental @Optional @ParamName("screenHeight") Integer screenHeight,
       @Experimental @Optional @ParamName("positionX") Integer positionX,
       @Experimental @Optional @ParamName("positionY") Integer positionY,
       @Experimental @Optional @ParamName("dontSetVisibleSize") Boolean dontSetVisibleSize,
-      @Optional @ParamName("screenOrientation") ScreenOrientation screenOrientation);
+      @Optional @ParamName("screenOrientation") ScreenOrientation screenOrientation,
+      @Experimental @Optional @ParamName("viewport") Viewport viewport);
 
-  /** Clears the overriden device metrics. */
-  void clearDeviceMetricsOverride();
-
-  /** Requests that page scale factor is reset to initial values. */
+  /** @param hidden Whether scrollbars should be always hidden. */
   @Experimental
-  void resetPageScaleFactor();
+  void setScrollbarsHidden(@ParamName("hidden") Boolean hidden);
 
-  /**
-   * Sets a specified page scale factor.
-   *
-   * @param pageScaleFactor Page scale factor.
-   */
+  /** @param disabled Whether document.coookie API should be disabled. */
   @Experimental
-  void setPageScaleFactor(@ParamName("pageScaleFactor") Double pageScaleFactor);
-
-  /**
-   * Resizes the frame/viewport of the page. Note that this does not affect the frame's container
-   * (e.g. browser window). Can be used to produce screenshots of the specified size. Not supported
-   * on Android.
-   *
-   * @param width Frame width (DIP).
-   * @param height Frame height (DIP).
-   */
-  @Deprecated
-  @Experimental
-  void setVisibleSize(@ParamName("width") Integer width, @ParamName("height") Integer height);
-
-  /**
-   * Switches script execution in the page.
-   *
-   * @param value Whether script execution should be disabled in the page.
-   */
-  @Experimental
-  void setScriptExecutionDisabled(@ParamName("value") Boolean value);
-
-  /**
-   * Overrides the Geolocation Position or Error. Omitting any of the parameters emulates position
-   * unavailable.
-   */
-  @Experimental
-  void setGeolocationOverride();
-
-  /**
-   * Overrides the Geolocation Position or Error. Omitting any of the parameters emulates position
-   * unavailable.
-   *
-   * @param latitude Mock latitude
-   * @param longitude Mock longitude
-   * @param accuracy Mock accuracy
-   */
-  @Experimental
-  void setGeolocationOverride(
-      @Optional @ParamName("latitude") Double latitude,
-      @Optional @ParamName("longitude") Double longitude,
-      @Optional @ParamName("accuracy") Double accuracy);
-
-  /** Clears the overriden Geolocation Position and Error. */
-  @Experimental
-  void clearGeolocationOverride();
-
-  /**
-   * Enables touch on platforms which do not support them.
-   *
-   * @param enabled Whether the touch event emulation should be enabled.
-   */
-  void setTouchEmulationEnabled(@ParamName("enabled") Boolean enabled);
-
-  /**
-   * Enables touch on platforms which do not support them.
-   *
-   * @param enabled Whether the touch event emulation should be enabled.
-   * @param maxTouchPoints Maximum touch points supported. Defaults to one.
-   */
-  void setTouchEmulationEnabled(
-      @ParamName("enabled") Boolean enabled,
-      @Optional @ParamName("maxTouchPoints") Integer maxTouchPoints);
+  void setDocumentCookieDisabled(@ParamName("disabled") Boolean disabled);
 
   /** @param enabled Whether touch emulation based on mouse input should be enabled. */
   @Experimental
@@ -187,17 +161,64 @@ public interface Emulation {
   void setEmulatedMedia(@ParamName("media") String media);
 
   /**
-   * Enables CPU throttling to emulate slow CPUs.
+   * Overrides the Geolocation Position or Error. Omitting any of the parameters emulates position
+   * unavailable.
+   */
+  void setGeolocationOverride();
+
+  /**
+   * Overrides the Geolocation Position or Error. Omitting any of the parameters emulates position
+   * unavailable.
    *
-   * @param rate Throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc).
+   * @param latitude Mock latitude
+   * @param longitude Mock longitude
+   * @param accuracy Mock accuracy
+   */
+  void setGeolocationOverride(
+      @Optional @ParamName("latitude") Double latitude,
+      @Optional @ParamName("longitude") Double longitude,
+      @Optional @ParamName("accuracy") Double accuracy);
+
+  /**
+   * Overrides value returned by the javascript navigator object.
+   *
+   * @param platform The platform navigator.platform should return.
+   */
+  @Deprecated
+  @Experimental
+  void setNavigatorOverrides(@ParamName("platform") String platform);
+
+  /**
+   * Sets a specified page scale factor.
+   *
+   * @param pageScaleFactor Page scale factor.
    */
   @Experimental
-  void setCPUThrottlingRate(@ParamName("rate") Double rate);
+  void setPageScaleFactor(@ParamName("pageScaleFactor") Double pageScaleFactor);
 
-  /** Tells whether emulation is supported. */
-  @Experimental
-  @Returns("result")
-  Boolean canEmulate();
+  /**
+   * Switches script execution in the page.
+   *
+   * @param value Whether script execution should be disabled in the page.
+   */
+  void setScriptExecutionDisabled(@ParamName("value") Boolean value);
+
+  /**
+   * Enables touch on platforms which do not support them.
+   *
+   * @param enabled Whether the touch event emulation should be enabled.
+   */
+  void setTouchEmulationEnabled(@ParamName("enabled") Boolean enabled);
+
+  /**
+   * Enables touch on platforms which do not support them.
+   *
+   * @param enabled Whether the touch event emulation should be enabled.
+   * @param maxTouchPoints Maximum touch points supported. Defaults to one.
+   */
+  void setTouchEmulationEnabled(
+      @ParamName("enabled") Boolean enabled,
+      @Optional @ParamName("maxTouchPoints") Integer maxTouchPoints);
 
   /**
    * Turns on virtual time for all frames (replacing real-time with a synthetic time source) and
@@ -206,7 +227,8 @@ public interface Emulation {
    * @param policy
    */
   @Experimental
-  void setVirtualTimePolicy(@ParamName("policy") VirtualTimePolicy policy);
+  @Returns("virtualTimeTicksBase")
+  Double setVirtualTimePolicy(@ParamName("policy") VirtualTimePolicy policy);
 
   /**
    * Turns on virtual time for all frames (replacing real-time with a synthetic time source) and
@@ -215,35 +237,58 @@ public interface Emulation {
    * @param policy
    * @param budget If set, after this many virtual milliseconds have elapsed virtual time will be
    *     paused and a virtualTimeBudgetExpired event is sent.
+   * @param maxVirtualTimeTaskStarvationCount If set this specifies the maximum number of tasks that
+   *     can be run before virtual is forced forwards to prevent deadlock.
+   * @param waitForNavigation If set the virtual time policy change should be deferred until any
+   *     frame starts navigating. Note any previous deferred policy change is superseded.
+   * @param initialVirtualTime If set, base::Time::Now will be overriden to initially return this
+   *     value.
    */
   @Experimental
-  void setVirtualTimePolicy(
-      @ParamName("policy") VirtualTimePolicy policy, @Optional @ParamName("budget") Integer budget);
+  @Returns("virtualTimeTicksBase")
+  Double setVirtualTimePolicy(
+      @ParamName("policy") VirtualTimePolicy policy,
+      @Optional @ParamName("budget") Double budget,
+      @Optional @ParamName("maxVirtualTimeTaskStarvationCount")
+          Integer maxVirtualTimeTaskStarvationCount,
+      @Optional @ParamName("waitForNavigation") Boolean waitForNavigation,
+      @Optional @ParamName("initialVirtualTime") Double initialVirtualTime);
 
   /**
-   * Overrides value returned by the javascript navigator object.
+   * Resizes the frame/viewport of the page. Note that this does not affect the frame's container
+   * (e.g. browser window). Can be used to produce screenshots of the specified size. Not supported
+   * on Android.
    *
+   * @param width Frame width (DIP).
+   * @param height Frame height (DIP).
+   */
+  @Deprecated
+  @Experimental
+  void setVisibleSize(@ParamName("width") Integer width, @ParamName("height") Integer height);
+
+  /**
+   * Allows overriding user agent with the given string.
+   *
+   * @param userAgent User agent to use.
+   */
+  void setUserAgentOverride(@ParamName("userAgent") String userAgent);
+
+  /**
+   * Allows overriding user agent with the given string.
+   *
+   * @param userAgent User agent to use.
+   * @param acceptLanguage Browser langugage to emulate.
    * @param platform The platform navigator.platform should return.
    */
-  @Experimental
-  void setNavigatorOverrides(@ParamName("platform") String platform);
+  void setUserAgentOverride(
+      @ParamName("userAgent") String userAgent,
+      @Optional @ParamName("acceptLanguage") String acceptLanguage,
+      @Optional @ParamName("platform") String platform);
 
-  /**
-   * Sets or clears an override of the default background color of the frame. This override is used
-   * if the content does not specify one.
-   */
+  /** Notification sent after the virtual time has advanced. */
+  @EventName("virtualTimeAdvanced")
   @Experimental
-  void setDefaultBackgroundColorOverride();
-
-  /**
-   * Sets or clears an override of the default background color of the frame. This override is used
-   * if the content does not specify one.
-   *
-   * @param color RGBA of the default background color. If not specified, any existing override will
-   *     be cleared.
-   */
-  @Experimental
-  void setDefaultBackgroundColorOverride(@Optional @ParamName("color") RGBA color);
+  EventListener onVirtualTimeAdvanced(EventHandler<VirtualTimeAdvanced> eventListener);
 
   /**
    * Notification sent after the virtual time budget for the current VirtualTimePolicy has run out.

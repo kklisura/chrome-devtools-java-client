@@ -1,4 +1,4 @@
-package com.github.kklisura.cdt.protocol.types.runtime;
+package com.github.kklisura.cdt.protocol.events.headlessexperimental;
 
 /*-
  * #%L
@@ -20,16 +20,18 @@ package com.github.kklisura.cdt.protocol.types.runtime;
  * #L%
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+/** Issued when the target starts or stops needing BeginFrames. */
+public class NeedsBeginFramesChanged {
 
-/** Primitive value which cannot be JSON-stringified. */
-public enum UnserializableValue {
-  @JsonProperty("Infinity")
-  INFINITY,
-  @JsonProperty("NaN")
-  NAN,
-  @JsonProperty("-Infinity")
-  NEGATIVE_INFINITY,
-  @JsonProperty("-0")
-  NEGATIVE_0
+  private Boolean needsBeginFrames;
+
+  /** True if BeginFrames are needed, false otherwise. */
+  public Boolean getNeedsBeginFrames() {
+    return needsBeginFrames;
+  }
+
+  /** True if BeginFrames are needed, false otherwise. */
+  public void setNeedsBeginFrames(Boolean needsBeginFrames) {
+    this.needsBeginFrames = needsBeginFrames;
+  }
 }

@@ -20,11 +20,9 @@ package com.github.kklisura.cdt.protocol.types.dom;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import java.util.List;
 
 /** CSS Shape Outside details. */
-@Experimental
 public class ShapeOutsideInfo {
 
   private List<Double> bounds;

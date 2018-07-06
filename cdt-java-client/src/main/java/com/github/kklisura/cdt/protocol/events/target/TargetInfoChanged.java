@@ -23,8 +23,8 @@ package com.github.kklisura.cdt.protocol.events.target;
 import com.github.kklisura.cdt.protocol.types.target.TargetInfo;
 
 /**
- * Issued when some information about a target has changed. This only happens between <code>
- * targetCreated</code> and <code>targetDestroyed</code>.
+ * Issued when some information about a target has changed. This only happens between
+ * `targetCreated` and `targetDestroyed`.
  */
 public class TargetInfoChanged {
 

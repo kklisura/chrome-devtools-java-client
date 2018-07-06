@@ -20,10 +20,7 @@ package com.github.kklisura.cdt.protocol.types.css;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
-
 /** CSS coverage information. */
-@Experimental
 public class RuleUsage {
 
   private String styleSheetId;

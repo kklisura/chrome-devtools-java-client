@@ -20,7 +20,6 @@ package com.github.kklisura.cdt.protocol.events.network;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.network.Initiator;
 import com.github.kklisura.cdt.protocol.types.network.Request;
@@ -40,15 +39,17 @@ public class RequestWillBeSent {
 
   private Double timestamp;
 
-  @Experimental private Double wallTime;
+  private Double wallTime;
 
   private Initiator initiator;
 
   @Optional private Response redirectResponse;
 
-  @Experimental @Optional private ResourceType type;
+  @Optional private ResourceType type;
 
-  @Experimental @Optional private String frameId;
+  @Optional private String frameId;
+
+  @Optional private Boolean hasUserGesture;
 
   /** Request identifier. */
   public String getRequestId() {
@@ -60,12 +61,12 @@ public class RequestWillBeSent {
     this.requestId = requestId;
   }
 
-  /** Loader identifier. Empty string if the request is fetched form worker. */
+  /** Loader identifier. Empty string if the request is fetched from worker. */
   public String getLoaderId() {
     return loaderId;
   }
 
-  /** Loader identifier. Empty string if the request is fetched form worker. */
+  /** Loader identifier. Empty string if the request is fetched from worker. */
   public void setLoaderId(String loaderId) {
     this.loaderId = loaderId;
   }
@@ -148,5 +149,15 @@ public class RequestWillBeSent {
   /** Frame identifier. */
   public void setFrameId(String frameId) {
     this.frameId = frameId;
+  }
+
+  /** Whether the request is initiated by a user gesture. Defaults to false. */
+  public Boolean getHasUserGesture() {
+    return hasUserGesture;
+  }
+
+  /** Whether the request is initiated by a user gesture. Defaults to false. */
+  public void setHasUserGesture(Boolean hasUserGesture) {
+    this.hasUserGesture = hasUserGesture;
   }
 }

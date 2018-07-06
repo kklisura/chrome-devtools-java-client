@@ -20,10 +20,7 @@ package com.github.kklisura.cdt.protocol.types.database;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
-
 /** Database object. */
-@Experimental
 public class Database {
 
   private String id;

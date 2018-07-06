@@ -20,7 +20,6 @@ package com.github.kklisura.cdt.protocol.types.css;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
 /** CSS stylesheet metainformation. */
@@ -50,7 +49,7 @@ public class CSSStyleSheetHeader {
 
   private Double startColumn;
 
-  @Experimental private Double length;
+  private Double length;
 
   /** The stylesheet identifier. */
   public String getStyleSheetId() {

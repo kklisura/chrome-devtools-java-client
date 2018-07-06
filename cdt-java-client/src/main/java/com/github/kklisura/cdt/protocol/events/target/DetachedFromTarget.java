@@ -20,12 +20,14 @@ package com.github.kklisura.cdt.protocol.events.target;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
 /**
- * Issued when detached from target for any reason (including <code>detachFromTarget</code>
- * command). Can be issued multiple times per target if multiple sessions have been attached to it.
+ * Issued when detached from target for any reason (including `detachFromTarget` command). Can be
+ * issued multiple times per target if multiple sessions have been attached to it.
  */
+@Experimental
 public class DetachedFromTarget {
 
   private String sessionId;

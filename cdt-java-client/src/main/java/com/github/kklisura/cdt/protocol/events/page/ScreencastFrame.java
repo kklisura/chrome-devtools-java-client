@@ -23,7 +23,7 @@ package com.github.kklisura.cdt.protocol.events.page;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.types.page.ScreencastFrameMetadata;
 
-/** Compressed image data requested by the <code>startScreencast</code>. */
+/** Compressed image data requested by the `startScreencast`. */
 @Experimental
 public class ScreencastFrame {
 

@@ -20,6 +20,8 @@ package com.github.kklisura.cdt.protocol.events.network;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
+
 /** Fired when HTTP request has finished loading. */
 public class LoadingFinished {
 
@@ -28,6 +30,8 @@ public class LoadingFinished {
   private Double timestamp;
 
   private Double encodedDataLength;
+
+  @Optional private Boolean shouldReportCorbBlocking;
 
   /** Request identifier. */
   public String getRequestId() {
@@ -57,5 +61,21 @@ public class LoadingFinished {
   /** Total number of bytes received for this request. */
   public void setEncodedDataLength(Double encodedDataLength) {
     this.encodedDataLength = encodedDataLength;
+  }
+
+  /**
+   * Set when 1) response was blocked by Cross-Origin Read Blocking and also 2) this needs to be
+   * reported to the DevTools console.
+   */
+  public Boolean getShouldReportCorbBlocking() {
+    return shouldReportCorbBlocking;
+  }
+
+  /**
+   * Set when 1) response was blocked by Cross-Origin Read Blocking and also 2) this needs to be
+   * reported to the DevTools console.
+   */
+  public void setShouldReportCorbBlocking(Boolean shouldReportCorbBlocking) {
+    this.shouldReportCorbBlocking = shouldReportCorbBlocking;
   }
 }

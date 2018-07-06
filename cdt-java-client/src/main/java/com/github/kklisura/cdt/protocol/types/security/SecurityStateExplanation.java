@@ -27,6 +27,8 @@ public class SecurityStateExplanation {
 
   private SecurityState securityState;
 
+  private String title;
+
   private String summary;
 
   private String description;
@@ -43,6 +45,16 @@ public class SecurityStateExplanation {
   /** Security state representing the severity of the factor being explained. */
   public void setSecurityState(SecurityState securityState) {
     this.securityState = securityState;
+  }
+
+  /** Title describing the type of factor. */
+  public String getTitle() {
+    return title;
+  }
+
+  /** Title describing the type of factor. */
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   /** Short phrase describing the type of factor. */

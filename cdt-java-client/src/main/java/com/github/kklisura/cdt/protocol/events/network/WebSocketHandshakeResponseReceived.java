@@ -20,11 +20,9 @@ package com.github.kklisura.cdt.protocol.events.network;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.types.network.WebSocketResponse;
 
 /** Fired when WebSocket handshake response becomes available. */
-@Experimental
 public class WebSocketHandshakeResponseReceived {
 
   private String requestId;

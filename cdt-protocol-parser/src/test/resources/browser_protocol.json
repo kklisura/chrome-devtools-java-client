@@ -1119,6 +1119,12 @@
                             "description": "Requested substring in name. Only histograms which have query as a\nsubstring in their name are extracted. An empty or absent query returns\nall histograms.",
                             "optional": true,
                             "type": "string"
+                        },
+                        {
+                            "name": "delta",
+                            "description": "If true, retrieve delta since last call.",
+                            "optional": true,
+                            "type": "boolean"
                         }
                     ],
                     "returns": [
@@ -1141,6 +1147,12 @@
                             "name": "name",
                             "description": "Requested histogram name.",
                             "type": "string"
+                        },
+                        {
+                            "name": "delta",
+                            "description": "If true, retrieve delta since last call.",
+                            "optional": true,
+                            "type": "boolean"
                         }
                     ],
                     "returns": [
@@ -12747,6 +12759,13 @@
                         {
                             "name": "targetId",
                             "$ref": "TargetID"
+                        },
+                        {
+                            "name": "flatten",
+                            "description": "Enables \"flat\" access to the session via specifying sessionId attribute in the commands.",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "boolean"
                         }
                     ],
                     "returns": [
@@ -12897,6 +12916,7 @@
                     "parameters": [
                         {
                             "name": "targetId",
+                            "optional": true,
                             "$ref": "TargetID"
                         }
                     ],

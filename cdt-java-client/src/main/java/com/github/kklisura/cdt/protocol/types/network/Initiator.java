@@ -54,12 +54,18 @@ public class Initiator {
     this.stack = stack;
   }
 
-  /** Initiator URL, set for Parser type or for Script type (when script is importing module). */
+  /**
+   * Initiator URL, set for Parser type or for Script type (when script is importing module) or for
+   * SignedExchange type.
+   */
   public String getUrl() {
     return url;
   }
 
-  /** Initiator URL, set for Parser type or for Script type (when script is importing module). */
+  /**
+   * Initiator URL, set for Parser type or for Script type (when script is importing module) or for
+   * SignedExchange type.
+   */
   public void setUrl(String url) {
     this.url = url;
   }

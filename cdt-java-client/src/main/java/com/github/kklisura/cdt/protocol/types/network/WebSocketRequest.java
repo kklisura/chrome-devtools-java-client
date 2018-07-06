@@ -20,11 +20,9 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import java.util.Map;
 
 /** WebSocket request data. */
-@Experimental
 public class WebSocketRequest {
 
   private Map<String, Object> headers;

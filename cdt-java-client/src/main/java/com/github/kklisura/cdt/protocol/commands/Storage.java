@@ -22,6 +22,8 @@ package com.github.kklisura.cdt.protocol.commands;
 
 import com.github.kklisura.cdt.protocol.events.storage.CacheStorageContentUpdated;
 import com.github.kklisura.cdt.protocol.events.storage.CacheStorageListUpdated;
+import com.github.kklisura.cdt.protocol.events.storage.IndexedDBContentUpdated;
+import com.github.kklisura.cdt.protocol.events.storage.IndexedDBListUpdated;
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
@@ -56,18 +58,40 @@ public interface Storage {
   void trackCacheStorageForOrigin(@ParamName("origin") String origin);
 
   /**
+   * Registers origin to be notified when an update occurs to its IndexedDB.
+   *
+   * @param origin Security origin.
+   */
+  void trackIndexedDBForOrigin(@ParamName("origin") String origin);
+
+  /**
    * Unregisters origin from receiving notifications for cache storage.
    *
    * @param origin Security origin.
    */
   void untrackCacheStorageForOrigin(@ParamName("origin") String origin);
 
-  /** A cache has been added/deleted. */
-  @EventName("cacheStorageListUpdated")
-  EventListener onCacheStorageListUpdated(EventHandler<CacheStorageListUpdated> eventListener);
+  /**
+   * Unregisters origin from receiving notifications for IndexedDB.
+   *
+   * @param origin Security origin.
+   */
+  void untrackIndexedDBForOrigin(@ParamName("origin") String origin);
 
   /** A cache's contents have been modified. */
   @EventName("cacheStorageContentUpdated")
   EventListener onCacheStorageContentUpdated(
       EventHandler<CacheStorageContentUpdated> eventListener);
+
+  /** A cache has been added/deleted. */
+  @EventName("cacheStorageListUpdated")
+  EventListener onCacheStorageListUpdated(EventHandler<CacheStorageListUpdated> eventListener);
+
+  /** The origin's IndexedDB object store has been modified. */
+  @EventName("indexedDBContentUpdated")
+  EventListener onIndexedDBContentUpdated(EventHandler<IndexedDBContentUpdated> eventListener);
+
+  /** The origin's IndexedDB database list has been modified. */
+  @EventName("indexedDBListUpdated")
+  EventListener onIndexedDBListUpdated(EventHandler<IndexedDBListUpdated> eventListener);
 }

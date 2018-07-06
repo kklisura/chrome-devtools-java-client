@@ -21,8 +21,8 @@ package com.github.kklisura.cdt.protocol.events.overlay;
  */
 
 /**
- * Fired when the node should be inspected. This happens after call to <code>setInspectMode</code>
- * or when user manually inspects an element.
+ * Fired when the node should be inspected. This happens after call to `setInspectMode` or when user
+ * manually inspects an element.
  */
 public class InspectNodeRequested {
 

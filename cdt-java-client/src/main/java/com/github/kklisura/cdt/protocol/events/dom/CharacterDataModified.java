@@ -20,7 +20,7 @@ package com.github.kklisura.cdt.protocol.events.dom;
  * #L%
  */
 
-/** Mirrors <code>DOMCharacterDataModified</code> event. */
+/** Mirrors `DOMCharacterDataModified` event. */
 public class CharacterDataModified {
 
   private Integer nodeId;

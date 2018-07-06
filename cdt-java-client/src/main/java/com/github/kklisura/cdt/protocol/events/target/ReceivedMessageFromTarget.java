@@ -23,8 +23,8 @@ package com.github.kklisura.cdt.protocol.events.target;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
 /**
- * Notifies about a new protocol message received from the session (as reported in <code>
- * attachedToTarget</code> event).
+ * Notifies about a new protocol message received from the session (as reported in
+ * `attachedToTarget` event).
  */
 public class ReceivedMessageFromTarget {
 

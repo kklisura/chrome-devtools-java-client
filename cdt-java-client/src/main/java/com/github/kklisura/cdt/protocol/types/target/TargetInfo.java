@@ -20,6 +20,9 @@ package com.github.kklisura.cdt.protocol.types.target;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
+
 public class TargetInfo {
 
   private String targetId;
@@ -31,6 +34,10 @@ public class TargetInfo {
   private String url;
 
   private Boolean attached;
+
+  @Optional private String openerId;
+
+  @Experimental @Optional private String browserContextId;
 
   public String getTargetId() {
     return targetId;
@@ -72,5 +79,23 @@ public class TargetInfo {
   /** Whether the target has an attached client. */
   public void setAttached(Boolean attached) {
     this.attached = attached;
+  }
+
+  /** Opener target Id */
+  public String getOpenerId() {
+    return openerId;
+  }
+
+  /** Opener target Id */
+  public void setOpenerId(String openerId) {
+    this.openerId = openerId;
+  }
+
+  public String getBrowserContextId() {
+    return browserContextId;
+  }
+
+  public void setBrowserContextId(String browserContextId) {
+    this.browserContextId = browserContextId;
   }
 }

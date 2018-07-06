@@ -20,10 +20,7 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
-
 /** WebSocket frame data. */
-@Experimental
 public class WebSocketFrame {
 
   private Double opcode;

@@ -20,9 +20,11 @@ package com.github.kklisura.cdt.protocol.types.browser;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
 /** Browser window bounds information */
+@Experimental
 public class Bounds {
 
   @Optional private Integer left;

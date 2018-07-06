@@ -22,7 +22,7 @@ package com.github.kklisura.cdt.protocol.events.dom;
 
 import com.github.kklisura.cdt.protocol.types.dom.Node;
 
-/** Mirrors <code>DOMNodeInserted</code> event. */
+/** Mirrors `DOMNodeInserted` event. */
 public class ChildNodeInserted {
 
   private Integer parentNodeId;

@@ -20,10 +20,7 @@ package com.github.kklisura.cdt.protocol.events.network;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
-
 /** Fired when WebSocket frame error occurs. */
-@Experimental
 public class WebSocketFrameError {
 
   private String requestId;

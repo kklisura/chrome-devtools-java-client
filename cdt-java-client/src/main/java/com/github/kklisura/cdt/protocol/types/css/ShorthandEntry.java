@@ -50,12 +50,12 @@ public class ShorthandEntry {
     this.value = value;
   }
 
-  /** Whether the property has "!important" annotation (implies <code>false</code> if absent). */
+  /** Whether the property has "!important" annotation (implies `false` if absent). */
   public Boolean getImportant() {
     return important;
   }
 
-  /** Whether the property has "!important" annotation (implies <code>false</code> if absent). */
+  /** Whether the property has "!important" annotation (implies `false` if absent). */
   public void setImportant(Boolean important) {
     this.important = important;
   }

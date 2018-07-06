@@ -20,7 +20,7 @@ package com.github.kklisura.cdt.protocol.events.dom;
  * #L%
  */
 
-/** Mirrors <code>DOMNodeRemoved</code> event. */
+/** Mirrors `DOMNodeRemoved` event. */
 public class ChildNodeRemoved {
 
   private Integer parentNodeId;

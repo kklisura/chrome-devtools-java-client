@@ -20,10 +20,7 @@ package com.github.kklisura.cdt.protocol.events.network;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
-
 /** Fired when EventSource message is received. */
-@Experimental
 public class EventSourceMessageReceived {
 
   private String requestId;

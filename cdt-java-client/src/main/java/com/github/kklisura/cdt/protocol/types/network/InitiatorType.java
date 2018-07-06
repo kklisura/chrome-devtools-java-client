@@ -30,6 +30,8 @@ public enum InitiatorType {
   SCRIPT,
   @JsonProperty("preload")
   PRELOAD,
+  @JsonProperty("SignedExchange")
+  SIGNED_EXCHANGE,
   @JsonProperty("other")
   OTHER
 }

@@ -22,7 +22,7 @@ package com.github.kklisura.cdt.protocol.events.page;
 
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 
-/** Fired when the page with currently enabled screencast was shown or hidden </code>. */
+/** Fired when the page with currently enabled screencast was shown or hidden `. */
 @Experimental
 public class ScreencastVisibilityChanged {
 

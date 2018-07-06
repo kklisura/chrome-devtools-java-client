@@ -23,15 +23,14 @@ package com.github.kklisura.cdt.protocol.types.runtime;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
 /**
- * Represents function call argument. Either remote object id <code>objectId</code>, primitive
- * <code>value</code>, unserializable primitive value or neither of (for undefined) them should be
- * specified.
+ * Represents function call argument. Either remote object id `objectId`, primitive `value`,
+ * unserializable primitive value or neither of (for undefined) them should be specified.
  */
 public class CallArgument {
 
   @Optional private Object value;
 
-  @Optional private UnserializableValue unserializableValue;
+  @Optional private String unserializableValue;
 
   @Optional private String objectId;
 
@@ -46,12 +45,12 @@ public class CallArgument {
   }
 
   /** Primitive value which can not be JSON-stringified. */
-  public UnserializableValue getUnserializableValue() {
+  public String getUnserializableValue() {
     return unserializableValue;
   }
 
   /** Primitive value which can not be JSON-stringified. */
-  public void setUnserializableValue(UnserializableValue unserializableValue) {
+  public void setUnserializableValue(String unserializableValue) {
     this.unserializableValue = unserializableValue;
   }
 

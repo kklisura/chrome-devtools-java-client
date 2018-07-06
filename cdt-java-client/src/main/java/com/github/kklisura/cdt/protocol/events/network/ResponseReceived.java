@@ -20,7 +20,6 @@ package com.github.kklisura.cdt.protocol.events.network;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.network.Response;
 import com.github.kklisura.cdt.protocol.types.page.ResourceType;
@@ -38,7 +37,7 @@ public class ResponseReceived {
 
   private Response response;
 
-  @Experimental @Optional private String frameId;
+  @Optional private String frameId;
 
   /** Request identifier. */
   public String getRequestId() {
@@ -50,12 +49,12 @@ public class ResponseReceived {
     this.requestId = requestId;
   }
 
-  /** Loader identifier. Empty string if the request is fetched form worker. */
+  /** Loader identifier. Empty string if the request is fetched from worker. */
   public String getLoaderId() {
     return loaderId;
   }
 
-  /** Loader identifier. Empty string if the request is fetched form worker. */
+  /** Loader identifier. Empty string if the request is fetched from worker. */
   public void setLoaderId(String loaderId) {
     this.loaderId = loaderId;
   }

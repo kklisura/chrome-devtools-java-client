@@ -20,12 +20,10 @@ package com.github.kklisura.cdt.protocol.types.domdebugger;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.runtime.RemoteObject;
 
 /** Object event listener. */
-@Experimental
 public class EventListener {
 
   private String type;
@@ -48,42 +46,42 @@ public class EventListener {
 
   @Optional private Integer backendNodeId;
 
-  /** <code>EventListener</code>'s type. */
+  /** `EventListener`'s type. */
   public String getType() {
     return type;
   }
 
-  /** <code>EventListener</code>'s type. */
+  /** `EventListener`'s type. */
   public void setType(String type) {
     this.type = type;
   }
 
-  /** <code>EventListener</code>'s useCapture. */
+  /** `EventListener`'s useCapture. */
   public Boolean getUseCapture() {
     return useCapture;
   }
 
-  /** <code>EventListener</code>'s useCapture. */
+  /** `EventListener`'s useCapture. */
   public void setUseCapture(Boolean useCapture) {
     this.useCapture = useCapture;
   }
 
-  /** <code>EventListener</code>'s passive flag. */
+  /** `EventListener`'s passive flag. */
   public Boolean getPassive() {
     return passive;
   }
 
-  /** <code>EventListener</code>'s passive flag. */
+  /** `EventListener`'s passive flag. */
   public void setPassive(Boolean passive) {
     this.passive = passive;
   }
 
-  /** <code>EventListener</code>'s once flag. */
+  /** `EventListener`'s once flag. */
   public Boolean getOnce() {
     return once;
   }
 
-  /** <code>EventListener</code>'s once flag. */
+  /** `EventListener`'s once flag. */
   public void setOnce(Boolean once) {
     this.once = once;
   }

@@ -20,10 +20,7 @@ package com.github.kklisura.cdt.protocol.types.page;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
-
 /** Visual viewport position, dimensions, and scale. */
-@Experimental
 public class VisualViewport {
 
   private Double offsetX;

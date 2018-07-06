@@ -20,18 +20,16 @@ package com.github.kklisura.cdt.protocol.events.network;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.types.network.WebSocketRequest;
 
 /** Fired when WebSocket is about to initiate handshake. */
-@Experimental
 public class WebSocketWillSendHandshakeRequest {
 
   private String requestId;
 
   private Double timestamp;
 
-  @Experimental private Double wallTime;
+  private Double wallTime;
 
   private WebSocketRequest request;
 

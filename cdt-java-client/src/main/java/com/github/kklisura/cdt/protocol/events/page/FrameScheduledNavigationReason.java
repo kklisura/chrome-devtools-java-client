@@ -24,8 +24,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The reason for the navigation. */
 public enum FrameScheduledNavigationReason {
-  @JsonProperty("formSubmission")
-  FORM_SUBMISSION,
+  @JsonProperty("formSubmissionGet")
+  FORM_SUBMISSION_GET,
+  @JsonProperty("formSubmissionPost")
+  FORM_SUBMISSION_POST,
   @JsonProperty("httpHeaderRefresh")
   HTTP_HEADER_REFRESH,
   @JsonProperty("scriptInitiated")

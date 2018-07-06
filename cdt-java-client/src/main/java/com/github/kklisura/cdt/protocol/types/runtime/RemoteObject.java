@@ -34,7 +34,7 @@ public class RemoteObject {
 
   @Optional private Object value;
 
-  @Optional private UnserializableValue unserializableValue;
+  @Optional private String unserializableValue;
 
   @Optional private String description;
 
@@ -54,22 +54,22 @@ public class RemoteObject {
     this.type = type;
   }
 
-  /** Object subtype hint. Specified for <code>object</code> type values only. */
+  /** Object subtype hint. Specified for `object` type values only. */
   public RemoteObjectSubtype getSubtype() {
     return subtype;
   }
 
-  /** Object subtype hint. Specified for <code>object</code> type values only. */
+  /** Object subtype hint. Specified for `object` type values only. */
   public void setSubtype(RemoteObjectSubtype subtype) {
     this.subtype = subtype;
   }
 
-  /** Object class (constructor) name. Specified for <code>object</code> type values only. */
+  /** Object class (constructor) name. Specified for `object` type values only. */
   public String getClassName() {
     return className;
   }
 
-  /** Object class (constructor) name. Specified for <code>object</code> type values only. */
+  /** Object class (constructor) name. Specified for `object` type values only. */
   public void setClassName(String className) {
     this.className = className;
   }
@@ -85,18 +85,18 @@ public class RemoteObject {
   }
 
   /**
-   * Primitive value which can not be JSON-stringified does not have <code>value</code>, but gets
-   * this property.
+   * Primitive value which can not be JSON-stringified does not have `value`, but gets this
+   * property.
    */
-  public UnserializableValue getUnserializableValue() {
+  public String getUnserializableValue() {
     return unserializableValue;
   }
 
   /**
-   * Primitive value which can not be JSON-stringified does not have <code>value</code>, but gets
-   * this property.
+   * Primitive value which can not be JSON-stringified does not have `value`, but gets this
+   * property.
    */
-  public void setUnserializableValue(UnserializableValue unserializableValue) {
+  public void setUnserializableValue(String unserializableValue) {
     this.unserializableValue = unserializableValue;
   }
 
@@ -120,18 +120,12 @@ public class RemoteObject {
     this.objectId = objectId;
   }
 
-  /**
-   * Preview containing abbreviated property values. Specified for <code>object</code> type values
-   * only.
-   */
+  /** Preview containing abbreviated property values. Specified for `object` type values only. */
   public ObjectPreview getPreview() {
     return preview;
   }
 
-  /**
-   * Preview containing abbreviated property values. Specified for <code>object</code> type values
-   * only.
-   */
+  /** Preview containing abbreviated property values. Specified for `object` type values only. */
   public void setPreview(ObjectPreview preview) {
     this.preview = preview;
   }

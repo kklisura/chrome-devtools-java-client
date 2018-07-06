@@ -23,7 +23,7 @@ package com.github.kklisura.cdt.protocol.events.dom;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import java.util.List;
 
-/** Fired when <code>Element</code>'s inline style is modified via a CSS property modification. */
+/** Fired when `Element`'s inline style is modified via a CSS property modification. */
 @Experimental
 public class InlineStyleInvalidated {
 

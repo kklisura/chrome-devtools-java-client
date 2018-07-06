@@ -21,6 +21,7 @@ package com.github.kklisura.cdt.protocol.events.tracing;
  */
 
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
+import com.github.kklisura.cdt.protocol.types.tracing.StreamCompression;
 
 /**
  * Signals that tracing is stopped and there is no trace buffers pending flush, all data were
@@ -30,6 +31,8 @@ public class TracingComplete {
 
   @Optional private String stream;
 
+  @Optional private StreamCompression streamCompression;
+
   /** A handle of the stream that holds resulting trace data. */
   public String getStream() {
     return stream;
@@ -38,5 +41,15 @@ public class TracingComplete {
   /** A handle of the stream that holds resulting trace data. */
   public void setStream(String stream) {
     this.stream = stream;
+  }
+
+  /** Compression format of returned stream. */
+  public StreamCompression getStreamCompression() {
+    return streamCompression;
+  }
+
+  /** Compression format of returned stream. */
+  public void setStreamCompression(StreamCompression streamCompression) {
+    this.streamCompression = streamCompression;
   }
 }

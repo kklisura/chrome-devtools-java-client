@@ -46,6 +46,8 @@ public enum LogEntrySource {
   VIOLATION,
   @JsonProperty("intervention")
   INTERVENTION,
+  @JsonProperty("recommendation")
+  RECOMMENDATION,
   @JsonProperty("other")
   OTHER
 }

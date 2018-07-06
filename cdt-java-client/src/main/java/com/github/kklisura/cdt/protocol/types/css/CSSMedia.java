@@ -20,7 +20,6 @@ package com.github.kklisura.cdt.protocol.types.css;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class CSSMedia {
 
   @Optional private String styleSheetId;
 
-  @Experimental @Optional private List<MediaQuery> mediaList;
+  @Optional private List<MediaQuery> mediaList;
 
   /** Media query text. */
   public String getText() {

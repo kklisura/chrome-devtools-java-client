@@ -20,10 +20,7 @@ package com.github.kklisura.cdt.protocol.types.debugger;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
-
 /** Search match for resource. */
-@Experimental
 public class SearchMatch {
 
   private Double lineNumber;

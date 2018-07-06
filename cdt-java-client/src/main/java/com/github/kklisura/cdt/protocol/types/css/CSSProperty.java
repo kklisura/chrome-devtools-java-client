@@ -61,22 +61,22 @@ public class CSSProperty {
     this.value = value;
   }
 
-  /** Whether the property has "!important" annotation (implies <code>false</code> if absent). */
+  /** Whether the property has "!important" annotation (implies `false` if absent). */
   public Boolean getImportant() {
     return important;
   }
 
-  /** Whether the property has "!important" annotation (implies <code>false</code> if absent). */
+  /** Whether the property has "!important" annotation (implies `false` if absent). */
   public void setImportant(Boolean important) {
     this.important = important;
   }
 
-  /** Whether the property is implicit (implies <code>false</code> if absent). */
+  /** Whether the property is implicit (implies `false` if absent). */
   public Boolean getImplicit() {
     return implicit;
   }
 
-  /** Whether the property is implicit (implies <code>false</code> if absent). */
+  /** Whether the property is implicit (implies `false` if absent). */
   public void setImplicit(Boolean implicit) {
     this.implicit = implicit;
   }
@@ -91,12 +91,12 @@ public class CSSProperty {
     this.text = text;
   }
 
-  /** Whether the property is understood by the browser (implies <code>true</code> if absent). */
+  /** Whether the property is understood by the browser (implies `true` if absent). */
   public Boolean getParsedOk() {
     return parsedOk;
   }
 
-  /** Whether the property is understood by the browser (implies <code>true</code> if absent). */
+  /** Whether the property is understood by the browser (implies `true` if absent). */
   public void setParsedOk(Boolean parsedOk) {
     this.parsedOk = parsedOk;
   }

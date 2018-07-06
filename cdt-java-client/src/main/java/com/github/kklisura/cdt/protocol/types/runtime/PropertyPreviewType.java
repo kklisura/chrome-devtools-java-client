@@ -39,5 +39,7 @@ public enum PropertyPreviewType {
   @JsonProperty("symbol")
   SYMBOL,
   @JsonProperty("accessor")
-  ACCESSOR
+  ACCESSOR,
+  @JsonProperty("bigint")
+  BIGINT
 }

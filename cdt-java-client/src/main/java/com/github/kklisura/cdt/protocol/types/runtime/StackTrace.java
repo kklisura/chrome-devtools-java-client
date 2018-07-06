@@ -33,7 +33,7 @@ public class StackTrace {
 
   @Optional private StackTrace parent;
 
-  @Experimental @Optional private CallFrame promiseCreationFrame;
+  @Experimental @Optional private StackTraceId parentId;
 
   /**
    * String label of this stack trace. For async traces this may be a name of the function that
@@ -71,19 +71,13 @@ public class StackTrace {
     this.parent = parent;
   }
 
-  /**
-   * Creation frame of the Promise which produced the next synchronous trace when resolved, if
-   * available.
-   */
-  public CallFrame getPromiseCreationFrame() {
-    return promiseCreationFrame;
+  /** Asynchronous JavaScript stack trace that preceded this stack, if available. */
+  public StackTraceId getParentId() {
+    return parentId;
   }
 
-  /**
-   * Creation frame of the Promise which produced the next synchronous trace when resolved, if
-   * available.
-   */
-  public void setPromiseCreationFrame(CallFrame promiseCreationFrame) {
-    this.promiseCreationFrame = promiseCreationFrame;
+  /** Asynchronous JavaScript stack trace that preceded this stack, if available. */
+  public void setParentId(StackTraceId parentId) {
+    this.parentId = parentId;
   }
 }

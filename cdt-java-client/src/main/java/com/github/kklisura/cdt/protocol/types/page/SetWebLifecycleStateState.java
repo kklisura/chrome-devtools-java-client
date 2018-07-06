@@ -1,4 +1,4 @@
-package com.github.kklisura.cdt.protocol.types.accessibility;
+package com.github.kklisura.cdt.protocol.types.page;
 
 /*-
  * #%L
@@ -22,22 +22,10 @@ package com.github.kklisura.cdt.protocol.types.accessibility;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Relationships between elements other than parent/child/sibling. */
-public enum AXRelationshipAttributes {
-  @JsonProperty("activedescendant")
-  ACTIVEDESCENDANT,
-  @JsonProperty("controls")
-  CONTROLS,
-  @JsonProperty("describedby")
-  DESCRIBEDBY,
-  @JsonProperty("details")
-  DETAILS,
-  @JsonProperty("errormessage")
-  ERRORMESSAGE,
-  @JsonProperty("flowto")
-  FLOWTO,
-  @JsonProperty("labelledby")
-  LABELLEDBY,
-  @JsonProperty("owns")
-  OWNS
+/** Target lifecycle state */
+public enum SetWebLifecycleStateState {
+  @JsonProperty("frozen")
+  FROZEN,
+  @JsonProperty("active")
+  ACTIVE
 }

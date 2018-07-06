@@ -47,5 +47,9 @@ public enum ErrorReason {
   @JsonProperty("InternetDisconnected")
   INTERNET_DISCONNECTED,
   @JsonProperty("AddressUnreachable")
-  ADDRESS_UNREACHABLE
+  ADDRESS_UNREACHABLE,
+  @JsonProperty("BlockedByClient")
+  BLOCKED_BY_CLIENT,
+  @JsonProperty("BlockedByResponse")
+  BLOCKED_BY_RESPONSE
 }

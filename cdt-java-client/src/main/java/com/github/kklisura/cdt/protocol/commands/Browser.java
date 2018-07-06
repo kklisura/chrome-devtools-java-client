@@ -21,25 +21,85 @@ package com.github.kklisura.cdt.protocol.commands;
  */
 
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.types.browser.Bounds;
+import com.github.kklisura.cdt.protocol.types.browser.Histogram;
 import com.github.kklisura.cdt.protocol.types.browser.Version;
 import com.github.kklisura.cdt.protocol.types.browser.WindowForTarget;
+import java.util.List;
 
 /** The Browser domain defines methods and events for browser managing. */
-@Experimental
 public interface Browser {
+
+  /** Close browser gracefully. */
+  void close();
+
+  /** Returns version information. */
+  Version getVersion();
+
+  /**
+   * Returns the command line switches for the browser process if, and only if --enable-automation
+   * is on the commandline.
+   */
+  @Experimental
+  @Returns("arguments")
+  List<String> getBrowserCommandLine();
+
+  /** Get Chrome histograms. */
+  @Experimental
+  @Returns("histograms")
+  List<Histogram> getHistograms();
+
+  /**
+   * Get Chrome histograms.
+   *
+   * @param query Requested substring in name. Only histograms which have query as a substring in
+   *     their name are extracted. An empty or absent query returns all histograms.
+   * @param delta If true, retrieve delta since last call.
+   */
+  @Experimental
+  @Returns("histograms")
+  List<Histogram> getHistograms(
+      @Optional @ParamName("query") String query, @Optional @ParamName("delta") Boolean delta);
+
+  /**
+   * Get a Chrome histogram by name.
+   *
+   * @param name Requested histogram name.
+   */
+  @Experimental
+  @Returns("histogram")
+  Histogram getHistogram(@ParamName("name") String name);
+
+  /**
+   * Get a Chrome histogram by name.
+   *
+   * @param name Requested histogram name.
+   * @param delta If true, retrieve delta since last call.
+   */
+  @Experimental
+  @Returns("histogram")
+  Histogram getHistogram(
+      @ParamName("name") String name, @Optional @ParamName("delta") Boolean delta);
+
+  /**
+   * Get position and size of the browser window.
+   *
+   * @param windowId Browser window id.
+   */
+  @Experimental
+  @Returns("bounds")
+  Bounds getWindowBounds(@ParamName("windowId") Integer windowId);
 
   /**
    * Get the browser window that contains the devtools target.
    *
    * @param targetId Devtools agent host id.
    */
+  @Experimental
   WindowForTarget getWindowForTarget(@ParamName("targetId") String targetId);
-
-  /** Returns version information. */
-  Version getVersion();
 
   /**
    * Set position and/or size of the browser window.
@@ -48,13 +108,6 @@ public interface Browser {
    * @param bounds New window bounds. The 'minimized', 'maximized' and 'fullscreen' states cannot be
    *     combined with 'left', 'top', 'width' or 'height'. Leaves unspecified fields unchanged.
    */
+  @Experimental
   void setWindowBounds(@ParamName("windowId") Integer windowId, @ParamName("bounds") Bounds bounds);
-
-  /**
-   * Get position and size of the browser window.
-   *
-   * @param windowId Browser window id.
-   */
-  @Returns("bounds")
-  Bounds getWindowBounds(@ParamName("windowId") Integer windowId);
 }

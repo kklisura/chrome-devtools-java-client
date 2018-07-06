@@ -22,9 +22,11 @@ package com.github.kklisura.cdt.protocol.events.security;
 
 /**
  * There is a certificate error. If overriding certificate errors is enabled, then it should be
- * handled with the handleCertificateError command. Note: this event does not fire if the
- * certificate error has been allowed internally.
+ * handled with the `handleCertificateError` command. Note: this event does not fire if the
+ * certificate error has been allowed internally. Only one client per target should override
+ * certificate errors at the same time.
  */
+@Deprecated
 public class CertificateError {
 
   private Integer eventId;

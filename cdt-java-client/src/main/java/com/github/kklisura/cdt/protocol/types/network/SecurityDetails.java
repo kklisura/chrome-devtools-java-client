@@ -50,6 +50,8 @@ public class SecurityDetails {
 
   private List<SignedCertificateTimestamp> signedCertificateTimestampList;
 
+  private CertificateTransparencyCompliance certificateTransparencyCompliance;
+
   /** Protocol name (e.g. "TLS 1.2" or "QUIC"). */
   public String getProtocol() {
     return protocol;
@@ -169,5 +171,16 @@ public class SecurityDetails {
   public void setSignedCertificateTimestampList(
       List<SignedCertificateTimestamp> signedCertificateTimestampList) {
     this.signedCertificateTimestampList = signedCertificateTimestampList;
+  }
+
+  /** Whether the request complied with Certificate Transparency policy */
+  public CertificateTransparencyCompliance getCertificateTransparencyCompliance() {
+    return certificateTransparencyCompliance;
+  }
+
+  /** Whether the request complied with Certificate Transparency policy */
+  public void setCertificateTransparencyCompliance(
+      CertificateTransparencyCompliance certificateTransparencyCompliance) {
+    this.certificateTransparencyCompliance = certificateTransparencyCompliance;
   }
 }

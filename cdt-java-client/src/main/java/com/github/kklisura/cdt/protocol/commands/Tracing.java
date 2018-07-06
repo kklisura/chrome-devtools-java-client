@@ -32,11 +32,29 @@ import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.tracing.RequestMemoryDump;
 import com.github.kklisura.cdt.protocol.types.tracing.StartTransferMode;
+import com.github.kklisura.cdt.protocol.types.tracing.StreamCompression;
 import com.github.kklisura.cdt.protocol.types.tracing.TraceConfig;
 import java.util.List;
 
 @Experimental
 public interface Tracing {
+
+  /** Stop trace events collection. */
+  void end();
+
+  /** Gets supported tracing categories. */
+  @Returns("categories")
+  List<String> getCategories();
+
+  /**
+   * Record a clock sync marker in the trace.
+   *
+   * @param syncId The ID of this clock sync marker
+   */
+  void recordClockSyncMarker(@ParamName("syncId") String syncId);
+
+  /** Request a global memory dump. */
+  RequestMemoryDump requestMemoryDump();
 
   /** Start trace events collection. */
   void start();
@@ -49,7 +67,9 @@ public interface Tracing {
    * @param bufferUsageReportingInterval If set, the agent will issue bufferUsage events at this
    *     interval, specified in milliseconds
    * @param transferMode Whether to report trace events as series of dataCollected events or to save
-   *     trace to a stream (defaults to <code>ReportEvents</code>).
+   *     trace to a stream (defaults to `ReportEvents`).
+   * @param streamCompression Compression format to use. This only applies when using
+   *     `ReturnAsStream` transfer mode (defaults to `none`)
    * @param traceConfig
    */
   void start(
@@ -57,24 +77,11 @@ public interface Tracing {
       @Deprecated @Optional @ParamName("options") String options,
       @Optional @ParamName("bufferUsageReportingInterval") Double bufferUsageReportingInterval,
       @Optional @ParamName("transferMode") StartTransferMode transferMode,
+      @Optional @ParamName("streamCompression") StreamCompression streamCompression,
       @Optional @ParamName("traceConfig") TraceConfig traceConfig);
 
-  /** Stop trace events collection. */
-  void end();
-
-  /** Gets supported tracing categories. */
-  @Returns("categories")
-  List<String> getCategories();
-
-  /** Request a global memory dump. */
-  RequestMemoryDump requestMemoryDump();
-
-  /**
-   * Record a clock sync marker in the trace.
-   *
-   * @param syncId The ID of this clock sync marker
-   */
-  void recordClockSyncMarker(@ParamName("syncId") String syncId);
+  @EventName("bufferUsage")
+  EventListener onBufferUsage(EventHandler<BufferUsage> eventListener);
 
   /**
    * Contains an bucket of collected trace events. When tracing is stopped collected events will be
@@ -89,7 +96,4 @@ public interface Tracing {
    */
   @EventName("tracingComplete")
   EventListener onTracingComplete(EventHandler<TracingComplete> eventListener);
-
-  @EventName("bufferUsage")
-  EventListener onBufferUsage(EventHandler<BufferUsage> eventListener);
 }

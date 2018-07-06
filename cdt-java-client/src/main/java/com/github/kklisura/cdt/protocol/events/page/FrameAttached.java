@@ -20,7 +20,6 @@ package com.github.kklisura.cdt.protocol.events.page;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.runtime.StackTrace;
 
@@ -31,7 +30,7 @@ public class FrameAttached {
 
   private String parentFrameId;
 
-  @Experimental @Optional private StackTrace stack;
+  @Optional private StackTrace stack;
 
   /** Id of the frame that has been attached. */
   public String getFrameId() {
