@@ -402,11 +402,7 @@ public class CommandBuilderTest extends EasyMockSupport {
     interfaceBuilder.setJavaDoc("Description");
 
     Capture<List<MethodParam>> methodParamCapture = Capture.newInstance();
-    interfaceBuilder.addMethod(
-        eq("command"),
-        anyString(),
-        capture(methodParamCapture),
-        eq(null));
+    interfaceBuilder.addMethod(eq("command"), anyString(), capture(methodParamCapture), eq(null));
 
     final ArrayType resolvedRefType = new ArrayType();
     resolvedRefType.setId("arrayRefType");
@@ -464,16 +460,14 @@ public class CommandBuilderTest extends EasyMockSupport {
     interfaceBuilder.setJavaDoc("Description");
 
     Capture<List<MethodParam>> methodParamCapture = Capture.newInstance();
-    interfaceBuilder.addMethod(
-        eq("command"),
-        anyString(),
-        capture(methodParamCapture),
-        eq(null));
+    interfaceBuilder.addMethod(eq("command"), anyString(), capture(methodParamCapture), eq(null));
 
     final ArrayType resolvedRefType = new ArrayType();
     resolvedRefType.setId("arrayRefType");
 
-    final com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem refArrayItem = new com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem();
+    final com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem
+        refArrayItem =
+            new com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem();
     refArrayItem.setRef("TestRefArrayItem");
     resolvedRefType.setItems(refArrayItem);
 
@@ -531,23 +525,23 @@ public class CommandBuilderTest extends EasyMockSupport {
     interfaceBuilder.setJavaDoc("Description");
 
     Capture<List<MethodParam>> methodParamCapture = Capture.newInstance();
-    interfaceBuilder.addMethod(
-        eq("command"),
-        anyString(),
-        capture(methodParamCapture),
-        eq(null));
+    interfaceBuilder.addMethod(eq("command"), anyString(), capture(methodParamCapture), eq(null));
 
     final ArrayType resolvedRefType = new ArrayType();
     resolvedRefType.setId("arrayRefType");
 
-    final com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem refArrayItem = new com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem();
+    final com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem
+        refArrayItem =
+            new com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem();
     refArrayItem.setRef("TestRefArrayItem");
     resolvedRefType.setItems(refArrayItem);
 
     final ArrayType resolvedRefType2 = new ArrayType();
     resolvedRefType2.setId("arrayRefType2");
 
-    final com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem refArrayItem2 = new com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem();
+    final com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem
+        refArrayItem2 =
+            new com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem();
     refArrayItem2.setRef("SomeOtherDomain.TestRefArrayItem2");
     resolvedRefType2.setItems(refArrayItem2);
 
