@@ -500,7 +500,20 @@ public class TypesBuilder {
       importAwareBuilder.addImport(UTILS_PACKAGE, LIST_CLASS_NAME);
 
       ArrayType arrayType = (ArrayType) type;
-      return buildArrayJavaType(getArrayItemJavaType(arrayType.getItems()));
+      String arrayItemType = null;
+
+      if (isRefArrayItemType(arrayType.getItems())) {
+        com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem refArrayItem = (com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem) arrayType.getItems();
+
+        arrayItemType = addRefImportStatement(importAwareBuilder, refArrayItem.getRef(),
+            objectType,
+            domain,
+            domainTypeResolver);
+      } else {
+        arrayItemType = getArrayItemJavaType(arrayType.getItems());
+      }
+
+      return buildArrayJavaType(arrayItemType);
     }
     if (!isComplexType(type)) {
       return getTypeJavaType(type);
@@ -554,6 +567,11 @@ public class TypesBuilder {
 
   private static String getArrayItemJavaType(ArrayItem arrayItem) {
     return ARRAY_ITEM_TYPE_TO_JAVA_TYPE_MAP.get(arrayItem.getClass());
+  }
+
+  protected static boolean isRefArrayItemType(
+      com.github.kklisura.cdt.protocol.definition.types.type.array.ArrayItem arrayItem) {
+    return arrayItem instanceof com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem;
   }
 
   protected static String getArrayItemJavaType(

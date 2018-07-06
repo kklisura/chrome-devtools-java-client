@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.github.kklisura.cdt.protocol.definition.deserializers.impl.types.TypeArrayItemSubTypeJsonDeserializer;
 import com.github.kklisura.cdt.protocol.definition.types.type.array.items.IntegerArrayItem;
 import com.github.kklisura.cdt.protocol.definition.types.type.array.items.NumberArrayItem;
+import com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem;
 import com.github.kklisura.cdt.protocol.definition.types.type.array.items.StringArrayItem;
 import lombok.Getter;
 
@@ -37,7 +38,8 @@ import lombok.Getter;
 @JsonSubTypes({
   @JsonSubTypes.Type(value = StringArrayItem.class, name = "string"),
   @JsonSubTypes.Type(value = IntegerArrayItem.class, name = "integer"),
-  @JsonSubTypes.Type(value = NumberArrayItem.class, name = "number")
+  @JsonSubTypes.Type(value = NumberArrayItem.class, name = "number"),
+  @JsonSubTypes.Type(value = RefArrayItem.class, name = "ref"),
 })
 @JsonDeserialize(using = TypeArrayItemSubTypeJsonDeserializer.class)
 public abstract class ArrayItem {

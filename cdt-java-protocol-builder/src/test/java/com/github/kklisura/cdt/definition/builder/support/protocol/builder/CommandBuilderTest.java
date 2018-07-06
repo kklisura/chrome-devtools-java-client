@@ -20,7 +20,11 @@ package com.github.kklisura.cdt.definition.builder.support.protocol.builder;
  * #L%
  */
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.anyString;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -35,6 +39,9 @@ import com.github.kklisura.cdt.definition.builder.support.protocol.builder.suppo
 import com.github.kklisura.cdt.protocol.definition.types.Command;
 import com.github.kklisura.cdt.protocol.definition.types.Domain;
 import com.github.kklisura.cdt.protocol.definition.types.Event;
+import com.github.kklisura.cdt.protocol.definition.types.type.ArrayType;
+import com.github.kklisura.cdt.protocol.definition.types.type.StringType;
+import com.github.kklisura.cdt.protocol.definition.types.type.array.items.StringArrayItem;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.ObjectType;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.Property;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.ArrayProperty;
@@ -43,6 +50,7 @@ import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.
 import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.RefProperty;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.StringProperty;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.EnumArrayItem;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.RefArrayItem;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -365,6 +373,215 @@ public class CommandBuilderTest extends EasyMockSupport {
     assertEquals("Optional", allParams.get(1).getAnnotations().get(1).getName());
     assertEquals("ParamName", allParams.get(1).getAnnotations().get(2).getName());
     assertEquals(arrayProperty.getName(), allParams.get(1).getAnnotations().get(2).getValue());
+  }
+
+  @Test
+  public void testBuildCommandWithMethodWithArrayStringParam() {
+    final Domain domain = new Domain();
+    domain.setDomain("domainName");
+    domain.setDescription("Description");
+
+    final Command command = new Command();
+    command.setName("command");
+    command.setDescription("command description");
+
+    final ArrayProperty arrayProperty = new ArrayProperty();
+    arrayProperty.setName("enumParam1");
+    arrayProperty.setOptional(Boolean.FALSE);
+    arrayProperty.setDescription("enum param 1 description");
+
+    RefArrayItem enumArrayItem = new RefArrayItem();
+    enumArrayItem.setRef("SomeRefType");
+    arrayProperty.setItems(enumArrayItem);
+    command.setParameters(Collections.singletonList(arrayProperty));
+
+    domain.setCommands(Collections.singletonList(command));
+
+    expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
+        .andReturn(interfaceBuilder);
+    interfaceBuilder.setJavaDoc("Description");
+
+    Capture<List<MethodParam>> methodParamCapture = Capture.newInstance();
+    interfaceBuilder.addMethod(
+        eq("command"),
+        anyString(),
+        capture(methodParamCapture),
+        eq(null));
+
+    final ArrayType resolvedRefType = new ArrayType();
+    resolvedRefType.setId("arrayRefType");
+
+    final StringArrayItem stringArrayItem = new StringArrayItem();
+    resolvedRefType.setItems(stringArrayItem);
+
+    expect(resolver.resolve("domainName", "SomeRefType")).andReturn(resolvedRefType);
+
+    interfaceBuilder.addImport("java.util", "List");
+    expectLastCall().times(2);
+
+    replayAll();
+
+    Builder build = commandBuilder.build(domain, resolver);
+
+    verifyAll();
+
+    assertTrue(build instanceof JavaInterfaceBuilder);
+    assertEquals(interfaceBuilder, build);
+
+    List<MethodParam> params = methodParamCapture.getValue();
+    assertEquals(1, params.size());
+
+    Assert.assertEquals(arrayProperty.getName(), params.get(0).getName());
+    assertEquals("List<List<String>>", params.get(0).getType());
+    assertEquals("ParamName", params.get(0).getAnnotations().get(0).getName());
+    assertEquals(arrayProperty.getName(), params.get(0).getAnnotations().get(0).getValue());
+  }
+
+  @Test
+  public void testBuildCommandWithMethodWithArrayRefParam() {
+    final Domain domain = new Domain();
+    domain.setDomain("domainName");
+    domain.setDescription("Description");
+
+    final Command command = new Command();
+    command.setName("command");
+    command.setDescription("command description");
+
+    final ArrayProperty arrayProperty = new ArrayProperty();
+    arrayProperty.setName("enumParam1");
+    arrayProperty.setOptional(Boolean.FALSE);
+    arrayProperty.setDescription("enum param 1 description");
+
+    RefArrayItem enumArrayItem = new RefArrayItem();
+    enumArrayItem.setRef("SomeRefType");
+    arrayProperty.setItems(enumArrayItem);
+    command.setParameters(Collections.singletonList(arrayProperty));
+
+    domain.setCommands(Collections.singletonList(command));
+
+    expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
+        .andReturn(interfaceBuilder);
+    interfaceBuilder.setJavaDoc("Description");
+
+    Capture<List<MethodParam>> methodParamCapture = Capture.newInstance();
+    interfaceBuilder.addMethod(
+        eq("command"),
+        anyString(),
+        capture(methodParamCapture),
+        eq(null));
+
+    final ArrayType resolvedRefType = new ArrayType();
+    resolvedRefType.setId("arrayRefType");
+
+    final com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem refArrayItem = new com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem();
+    refArrayItem.setRef("TestRefArrayItem");
+    resolvedRefType.setItems(refArrayItem);
+
+    final StringType stringType = new StringType();
+    stringType.setId("stringType");
+
+    expect(resolver.resolve("domainName", "SomeRefType")).andReturn(resolvedRefType);
+    expect(resolver.resolve("domainName", "TestRefArrayItem")).andReturn(stringType);
+
+    interfaceBuilder.addImport("java.util", "List");
+    expectLastCall().times(2);
+
+    replayAll();
+
+    Builder build = commandBuilder.build(domain, resolver);
+
+    verifyAll();
+
+    assertTrue(build instanceof JavaInterfaceBuilder);
+    assertEquals(interfaceBuilder, build);
+
+    List<MethodParam> params = methodParamCapture.getValue();
+    assertEquals(1, params.size());
+
+    Assert.assertEquals(arrayProperty.getName(), params.get(0).getName());
+    assertEquals("List<List<String>>", params.get(0).getType());
+    assertEquals("ParamName", params.get(0).getAnnotations().get(0).getName());
+    assertEquals(arrayProperty.getName(), params.get(0).getAnnotations().get(0).getValue());
+  }
+
+  @Test
+  public void testBuildCommandWithMethodWithDeepArrayRefParam() {
+    final Domain domain = new Domain();
+    domain.setDomain("domainName");
+    domain.setDescription("Description");
+
+    final Command command = new Command();
+    command.setName("command");
+    command.setDescription("command description");
+
+    final ArrayProperty arrayProperty = new ArrayProperty();
+    arrayProperty.setName("enumParam1");
+    arrayProperty.setOptional(Boolean.FALSE);
+    arrayProperty.setDescription("enum param 1 description");
+
+    RefArrayItem enumArrayItem = new RefArrayItem();
+    enumArrayItem.setRef("SomeRefType");
+    arrayProperty.setItems(enumArrayItem);
+    command.setParameters(Collections.singletonList(arrayProperty));
+
+    domain.setCommands(Collections.singletonList(command));
+
+    expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
+        .andReturn(interfaceBuilder);
+    interfaceBuilder.setJavaDoc("Description");
+
+    Capture<List<MethodParam>> methodParamCapture = Capture.newInstance();
+    interfaceBuilder.addMethod(
+        eq("command"),
+        anyString(),
+        capture(methodParamCapture),
+        eq(null));
+
+    final ArrayType resolvedRefType = new ArrayType();
+    resolvedRefType.setId("arrayRefType");
+
+    final com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem refArrayItem = new com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem();
+    refArrayItem.setRef("TestRefArrayItem");
+    resolvedRefType.setItems(refArrayItem);
+
+    final ArrayType resolvedRefType2 = new ArrayType();
+    resolvedRefType2.setId("arrayRefType2");
+
+    final com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem refArrayItem2 = new com.github.kklisura.cdt.protocol.definition.types.type.array.items.RefArrayItem();
+    refArrayItem2.setRef("SomeOtherDomain.TestRefArrayItem2");
+    resolvedRefType2.setItems(refArrayItem2);
+
+    final ObjectType objectType = new ObjectType();
+    objectType.setId("objectType");
+    final StringProperty stringProperty = new StringProperty();
+    stringProperty.setName("stringProperty");
+    objectType.setProperties(Collections.singletonList(stringProperty));
+
+    expect(resolver.resolve("domainName", "SomeRefType")).andReturn(resolvedRefType);
+    expect(resolver.resolve("domainName", "TestRefArrayItem")).andReturn(resolvedRefType2);
+    expect(resolver.resolve("SomeOtherDomain", "TestRefArrayItem2")).andReturn(objectType);
+
+    interfaceBuilder.addImport("com.github.kklisura.types.someotherdomain", "TestRefArrayItem2");
+
+    interfaceBuilder.addImport("java.util", "List");
+    expectLastCall().times(3);
+
+    replayAll();
+
+    Builder build = commandBuilder.build(domain, resolver);
+
+    verifyAll();
+
+    assertTrue(build instanceof JavaInterfaceBuilder);
+    assertEquals(interfaceBuilder, build);
+
+    List<MethodParam> params = methodParamCapture.getValue();
+    assertEquals(1, params.size());
+
+    Assert.assertEquals(arrayProperty.getName(), params.get(0).getName());
+    assertEquals("List<List<List<TestRefArrayItem2>>>", params.get(0).getType());
+    assertEquals("ParamName", params.get(0).getAnnotations().get(0).getName());
+    assertEquals(arrayProperty.getName(), params.get(0).getAnnotations().get(0).getValue());
   }
 
   @Test
