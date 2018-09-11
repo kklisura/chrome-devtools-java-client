@@ -34,9 +34,17 @@ public class ConfigurationUtilsTest {
   public void testSystemProperty() {
     final String propertyName = "testSystemProperty";
     assertEquals(10, ConfigurationUtils.systemProperty(propertyName, 10));
+    assertEquals("10", ConfigurationUtils.systemProperty(propertyName, "10"));
     System.setProperty(propertyName, "invalid-value");
     assertEquals(10, ConfigurationUtils.systemProperty(propertyName, 10));
     System.setProperty(propertyName, "123");
     assertEquals(123, ConfigurationUtils.systemProperty(propertyName, 10));
+    assertEquals("123", ConfigurationUtils.systemProperty(propertyName, "10"));
+    System.setProperty(propertyName, "");
+    assertEquals("10", ConfigurationUtils.systemProperty(propertyName, "10"));
+    System.setProperty(propertyName, "      ");
+    assertEquals("10", ConfigurationUtils.systemProperty(propertyName, "10"));
+    System.setProperty(propertyName, "   123  ");
+    assertEquals("123", ConfigurationUtils.systemProperty(propertyName, "10"));
   }
 }

@@ -27,3 +27,9 @@ build:
 deploy:
 	# Deploying
 	GPG_TTY=$$(tty) $(MVN) clean compile deploy -P release
+
+snapshot:
+	mvn versions:set -DnewVersion=${version}-SNAPSHOT
+
+release:
+	mvn versions:set -DnewVersion=${version}

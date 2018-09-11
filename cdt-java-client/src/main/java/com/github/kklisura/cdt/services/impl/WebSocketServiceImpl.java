@@ -20,12 +20,15 @@ package com.github.kklisura.cdt.services.impl;
  * #L%
  */
 
+import static com.github.kklisura.cdt.services.utils.ConfigurationUtils.systemProperty;
+
 import com.github.kklisura.cdt.services.WebSocketService;
 import com.github.kklisura.cdt.services.exceptions.WebSocketServiceException;
+import com.github.kklisura.cdt.services.factory.WebSocketContainerFactory;
+import com.github.kklisura.cdt.services.factory.impl.DefaultWebSocketContainerFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.util.function.Consumer;
-import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
@@ -41,10 +44,15 @@ import org.slf4j.LoggerFactory;
  * @author Kenan Klisura
  */
 public class WebSocketServiceImpl implements WebSocketService {
+  public static final String WEB_SOCKET_CONTAINER_FACTORY_PROPERTY =
+      "com.github.kklisura.cdt.services.config.webSocketContainerFactory";
+
+  private static final String DEFAULT_WEB_SOCKET_CONTAINER_FACTORY =
+      DefaultWebSocketContainerFactory.class.getName();
+
   private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketServiceImpl.class);
 
-  private static final WebSocketContainer WEB_SOCKET_CONTAINER =
-      ContainerProvider.getWebSocketContainer();
+  private static final WebSocketContainer WEB_SOCKET_CONTAINER = getWebSocketContainer();
 
   private Session session;
 
@@ -137,6 +145,41 @@ public class WebSocketServiceImpl implements WebSocketService {
       session.close();
     } catch (IOException e) {
       LOGGER.error("Failed closing ws session on {}...", session.getRequestURI(), e);
+    }
+  }
+
+  /**
+   * Returns a WebSocketContainer retrieved from class defined in system property
+   * com.github.kklisura.cdt.services.config.webSocketContainerProvider. The default value for this
+   * property is GrizzlyContainerProvider class FQN.
+   *
+   * @return WebSocketContainer.
+   */
+  @SuppressWarnings("unchecked")
+  public static WebSocketContainer getWebSocketContainer() {
+    String containerFactoryClassName =
+        systemProperty(WEB_SOCKET_CONTAINER_FACTORY_PROPERTY, DEFAULT_WEB_SOCKET_CONTAINER_FACTORY);
+    if (containerFactoryClassName == null || containerFactoryClassName.isEmpty()) {
+      throw new RuntimeException(WEB_SOCKET_CONTAINER_FACTORY_PROPERTY + " property not set");
+    }
+
+    try {
+      Class<WebSocketContainerFactory> containerFactoryClass =
+          (Class<WebSocketContainerFactory>) Class.forName(containerFactoryClassName);
+
+      if (WebSocketContainerFactory.class.isAssignableFrom(containerFactoryClass)) {
+        WebSocketContainerFactory containerFactory = containerFactoryClass.newInstance();
+        return containerFactory.getWebSocketContainer();
+      }
+
+      throw new RuntimeException(
+          containerFactoryClassName
+              + " does not implement com.github.kklisura.cdt.services.factory.WebSocketContainerFactory interface.");
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(containerFactoryClassName + " class not found.", e);
+    } catch (IllegalAccessException | InstantiationException e) {
+      throw new RuntimeException(
+          "Could not create instance of " + containerFactoryClassName + " class");
     }
   }
 }

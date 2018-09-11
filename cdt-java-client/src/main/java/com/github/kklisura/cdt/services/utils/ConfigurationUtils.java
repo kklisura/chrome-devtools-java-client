@@ -55,4 +55,20 @@ public final class ConfigurationUtils {
 
     return defaultValue;
   }
+
+  /**
+   * Returns name system property or default value if no property name exists or is invalid.
+   *
+   * @param name Environment name.
+   * @param defaultValue Default value.
+   * @return String value.
+   */
+  public static String systemProperty(String name, String defaultValue) {
+    String propertyValue = System.getProperty(name);
+    if (propertyValue != null && !propertyValue.trim().isEmpty()) {
+      return propertyValue.trim();
+    }
+
+    return defaultValue;
+  }
 }

@@ -26,10 +26,12 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.github.kklisura.cdt.services.WebSocketService;
 import com.github.kklisura.cdt.services.exceptions.WebSocketServiceException;
+import com.github.kklisura.cdt.services.factory.WebSocketContainerFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
@@ -42,10 +44,12 @@ import javax.websocket.DeploymentException;
 import javax.websocket.MessageHandler;
 import javax.websocket.OnMessage;
 import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
 import javax.websocket.server.ServerEndpoint;
 import org.easymock.Capture;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
+import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.server.Server;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -175,6 +179,36 @@ public class WebSocketServiceImplTest extends EasyMockSupport {
     assertEquals(message, messageCapture.getValue());
   }
 
+  @Test
+  public void testGetWebSocketContainerReturnsDefaultContainerFactory() {
+    System.setProperty(WebSocketServiceImpl.WEB_SOCKET_CONTAINER_FACTORY_PROPERTY, "");
+
+    WebSocketContainer webSocketContainer;
+
+    webSocketContainer = WebSocketServiceImpl.getWebSocketContainer();
+    assertTrue(webSocketContainer instanceof ClientManager);
+
+    System.setProperty(
+        WebSocketServiceImpl.WEB_SOCKET_CONTAINER_FACTORY_PROPERTY,
+        CustomWebSocketContainerFactory.class.getName());
+    webSocketContainer = WebSocketServiceImpl.getWebSocketContainer();
+    assertNull(webSocketContainer);
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testGetWebSocketContainerFailsOnUnknownFactoryClass() {
+    System.setProperty(WebSocketServiceImpl.WEB_SOCKET_CONTAINER_FACTORY_PROPERTY, "non-existing");
+    WebSocketServiceImpl.getWebSocketContainer();
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testGetWebSocketContainerFailsOnNonImplementingFactoryClass() {
+    System.setProperty(
+        WebSocketServiceImpl.WEB_SOCKET_CONTAINER_FACTORY_PROPERTY,
+        CustomNonImplementingWebSocketContainerFactory.class.getName());
+    WebSocketServiceImpl.getWebSocketContainer();
+  }
+
   private static Server startServer() {
     Server server;
     while (true) {
@@ -207,6 +241,19 @@ public class WebSocketServiceImplTest extends EasyMockSupport {
       } else {
         session.getBasicRemote().sendText(PING);
       }
+    }
+  }
+
+  public static class CustomWebSocketContainerFactory implements WebSocketContainerFactory {
+    @Override
+    public WebSocketContainer getWebSocketContainer() {
+      return null;
+    }
+  }
+
+  public static class CustomNonImplementingWebSocketContainerFactory {
+    public WebSocketContainer getWebSocketContainer() {
+      return null;
     }
   }
 }
