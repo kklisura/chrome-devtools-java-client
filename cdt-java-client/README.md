@@ -6,6 +6,8 @@ Chrome DevTools Java Client is a DevTools client - in Java. (: It can be used fo
 
 For more information on DevTools, see https://chromedevtools.github.io/devtools-protocol/.
 
+Tested on Google Chrome Version 67.0.3396.87. Protocol files from [dev-tools-protocol#1aa7b31ca7](https://github.com/ChromeDevTools/devtools-protocol/tree/1aa7b31ca7bba982eceea8d4bd494b27850fb0df/json)
+
 [1] https://chromedevtools.github.io/devtools-protocol/.
 
 ## Usage
@@ -16,7 +18,7 @@ Add the following dependency to your `pom.xml`:
 <dependency>
   <groupId>com.github.kklisura.cdt</groupId>
   <artifactId>cdt-java-client</artifactId>
-  <version>1.2.0</version>
+  <version>1.3.1</version>
 </dependency>
 ```
 
@@ -41,7 +43,7 @@ import com.github.kklisura.cdt.services.types.ChromeTab;
  * @author Kenan Klisura
  */
 public class LogRequestsExample {
-  public static void main(String[] args) throws InterruptedException {
+  public static void main(String[] args) {
     // Create chrome launcher.
     final ChromeLauncher launcher = new ChromeLauncher();
 
