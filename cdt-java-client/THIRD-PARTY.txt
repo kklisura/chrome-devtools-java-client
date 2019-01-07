@@ -26,7 +26,7 @@ Lists of 37 third-party dependencies.
      (Dual license consisting of the CDDL v1.1 and GPL v2) Tyrus Container SPI (org.glassfish.tyrus:tyrus-spi:1.13.1 - https://tyrus.java.net/tyrus-spi)
      (BSD 3-Clause License) Hamcrest Core (org.hamcrest:hamcrest-core:1.3 - https://github.com/hamcrest/JavaHamcrest/hamcrest-core)
      (Eclipse Public License v1.0) JaCoCo :: Agent (org.jacoco:org.jacoco.agent:0.8.0 - http://org.jacoco.agent)
-     (LGPL 2.1) (MPL 1.1) (The Apache Software License, Version 2.0) Javassist (org.javassist:javassist:3.22.0-GA - http://www.javassist.org/)
+     (LGPL 2.1) (MPL 1.1) (The Apache Software License, Version 2.0) Javassist (org.javassist:javassist:3.24.1-GA - http://www.javassist.org/)
      (The Apache Software License, Version 2.0) Objenesis (org.objenesis:objenesis:2.2 - http://objenesis.org)
      (The Apache Software License, Version 2.0) powermock-api-easymock (org.powermock:powermock-api-easymock:1.6.6 - http://www.powermock.org/powermock-api/powermock-api-easymock)
      (The Apache Software License, Version 2.0) powermock-api-support (org.powermock:powermock-api-support:1.6.6 - http://www.powermock.org/powermock-api/powermock-api-support)
