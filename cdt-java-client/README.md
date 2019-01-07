@@ -18,7 +18,7 @@ Add the following dependency to your `pom.xml`:
 <dependency>
   <groupId>com.github.kklisura.cdt</groupId>
   <artifactId>cdt-java-client</artifactId>
-  <version>1.3.2</version>
+  <version>1.3.3</version>
 </dependency>
 ```
 
