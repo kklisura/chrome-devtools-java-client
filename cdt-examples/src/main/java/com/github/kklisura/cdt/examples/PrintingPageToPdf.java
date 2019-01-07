@@ -11,8 +11,8 @@ import java.io.IOException;
 import java.util.Base64;
 
 /**
- * The following example opens the http://github.com and prints its page to PDF. PDF printing is supported on chrome
- * headless at the moment.
+ * The following example opens the http://github.com and prints its page to PDF. PDF printing is
+ * supported on chrome headless at the moment.
  *
  * @author Kenan Klisura
  */
@@ -21,7 +21,8 @@ public class PrintingPageToPdf {
     // Create chrome launcher.
     final ChromeLauncher launcher = new ChromeLauncher();
 
-    // Launch chrome either as headless (true) - PDF printing is only supported on Chrome headless at the moment
+    // Launch chrome either as headless (true) - PDF printing is only supported on Chrome headless
+    // at the moment
     final ChromeService chromeService = launcher.launch(true);
 
     // Create empty tab ie about:blank.
@@ -37,49 +38,52 @@ public class PrintingPageToPdf {
     // Navigate to github.com.
     page.navigate("http://github.com");
 
-    page.onLoadEventFired(loadEventFired -> {
-      System.out.println("Printing to PDF...");
+    page.onLoadEventFired(
+        loadEventFired -> {
+          System.out.println("Printing to PDF...");
 
-      final String outputFilename = "test.pdf";
+          final String outputFilename = "test.pdf";
 
-      Boolean landscape = false;
-      Boolean displayHeaderFooter = false;
-      Boolean printBackground = false;
-      Double scale = 1d;
-      Double paperWidth = 8.27d; // A4 paper format
-      Double paperHeight = 11.7d; // A4 paper format
-      Double marginTop = 0d;
-      Double marginBottom  = 0d;
-      Double marginLeft = 0d;
-      Double marginRight = 0d;
-      String pageRanges = "";
-      Boolean ignoreInvalidPageRanges = false;
-      String headerTemplate = "";
-      String footerTemplate = "";
-      Boolean preferCSSPageSize = false;
+          Boolean landscape = false;
+          Boolean displayHeaderFooter = false;
+          Boolean printBackground = false;
+          Double scale = 1d;
+          Double paperWidth = 8.27d; // A4 paper format
+          Double paperHeight = 11.7d; // A4 paper format
+          Double marginTop = 0d;
+          Double marginBottom = 0d;
+          Double marginLeft = 0d;
+          Double marginRight = 0d;
+          String pageRanges = "";
+          Boolean ignoreInvalidPageRanges = false;
+          String headerTemplate = "";
+          String footerTemplate = "";
+          Boolean preferCSSPageSize = false;
 
-      dump(outputFilename,
-          devToolsService.getPage().printToPDF(
-              landscape,
-              displayHeaderFooter,
-              printBackground,
-              scale,
-              paperWidth,
-              paperHeight,
-              marginTop,
-              marginBottom,
-              marginLeft,
-              marginRight,
-              pageRanges,
-              ignoreInvalidPageRanges,
-              headerTemplate,
-              footerTemplate,
-              preferCSSPageSize)
-      );
+          dump(
+              outputFilename,
+              devToolsService
+                  .getPage()
+                  .printToPDF(
+                      landscape,
+                      displayHeaderFooter,
+                      printBackground,
+                      scale,
+                      paperWidth,
+                      paperHeight,
+                      marginTop,
+                      marginBottom,
+                      marginLeft,
+                      marginRight,
+                      pageRanges,
+                      ignoreInvalidPageRanges,
+                      headerTemplate,
+                      footerTemplate,
+                      preferCSSPageSize));
 
-      System.out.println("Done!");
-      devToolsService.close();
-    });
+          System.out.println("Done!");
+          devToolsService.close();
+        });
 
     devToolsService.waitUntilClosed();
   }
