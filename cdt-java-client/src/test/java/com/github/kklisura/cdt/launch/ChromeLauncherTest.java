@@ -26,6 +26,7 @@ import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -176,6 +177,7 @@ public class ChromeLauncherTest extends EasyMockSupport {
 
     final String trigger = "\r\n\r\nDevTools listening on ws://127.0.0.1:9123/";
     expect(process.getInputStream()).andReturn(new ByteArrayInputStream(trigger.getBytes()));
+    expect(process.isAlive()).andReturn(true);
 
     Capture<List<String>> captureArguments = Capture.newInstance();
     expect(processLauncher.launch(eq("test-binary-path"), capture(captureArguments)))
@@ -188,7 +190,6 @@ public class ChromeLauncherTest extends EasyMockSupport {
 
     ChromeService launch = launcher.launch(binaryPath, chromeArguments);
 
-    verifyAll();
     PowerMock.verify(FilesUtils.class);
 
     assertNotNull(launch);
@@ -213,12 +214,16 @@ public class ChromeLauncherTest extends EasyMockSupport {
       // Ignore this exception.
     }
 
+    verifyAll();
+
     // Test closing
     resetAll();
     PowerMock.resetAll(FilesUtils.class);
 
     process.destroy();
     expect(process.waitFor(60, TimeUnit.SECONDS)).andReturn(true);
+    expect(process.isAlive()).andReturn(true);
+    expect(process.isAlive()).andReturn(false);
 
     shutdownHookRegistry.remove(anyObject());
 
@@ -260,12 +265,11 @@ public class ChromeLauncherTest extends EasyMockSupport {
     Capture<List<String>> captureArguments = Capture.newInstance();
     expect(processLauncher.launch(eq("test-binary-path"), capture(captureArguments)))
         .andReturn(process);
+    expect(process.isAlive()).andReturn(true);
 
     replayAll();
 
     ChromeService launch = launcher.launch(binaryPath, chromeArguments);
-
-    verifyAll();
 
     assertNotNull(launch);
     assertTrue(launch instanceof ChromeServiceImpl);
@@ -289,11 +293,16 @@ public class ChromeLauncherTest extends EasyMockSupport {
       // Ignore this exception.
     }
 
+    verifyAll();
+
     // Test closing
     resetAll();
 
     process.destroy();
     expect(process.waitFor(60, TimeUnit.SECONDS)).andReturn(true);
+
+    expect(process.isAlive()).andReturn(true);
+    expect(process.isAlive()).andReturn(false);
 
     shutdownHookRegistry.remove(anyObject());
 
@@ -321,6 +330,7 @@ public class ChromeLauncherTest extends EasyMockSupport {
 
     final String trigger = "\r\n\r\nDevTools listening on ws://127.0.0.1:9123/";
     expect(process.getInputStream()).andReturn(new ByteArrayInputStream(trigger.getBytes()));
+    expect(process.isAlive()).andReturn(true);
 
     Capture<List<String>> captureArguments = Capture.newInstance();
     expect(processLauncher.launch(eq("test-binary-path"), capture(captureArguments)))
@@ -329,8 +339,6 @@ public class ChromeLauncherTest extends EasyMockSupport {
     replayAll();
 
     ChromeService launch = launcher.launch(binaryPath, chromeArguments);
-
-    verifyAll();
 
     assertNotNull(launch);
     assertTrue(launch instanceof ChromeServiceImpl);
@@ -352,6 +360,8 @@ public class ChromeLauncherTest extends EasyMockSupport {
       // Ignore this exception.
     }
 
+    verifyAll();
+
     // Test closing
     resetAll();
 
@@ -359,6 +369,8 @@ public class ChromeLauncherTest extends EasyMockSupport {
     expect(process.waitFor(60, TimeUnit.SECONDS)).andThrow(new InterruptedException());
 
     expect(process.destroyForcibly()).andReturn(process);
+
+    expect(process.isAlive()).andReturn(true);
 
     shutdownHookRegistry.remove(anyObject());
 
@@ -446,6 +458,7 @@ public class ChromeLauncherTest extends EasyMockSupport {
     expect(processLauncher.isExecutable("/test-binary-path")).andReturn(true);
 
     expect(process.getInputStream()).andThrow(new RuntimeException("test exception"));
+    expect(process.isAlive()).andReturn(true);
 
     Capture<List<String>> captureArguments = Capture.newInstance();
     expect(processLauncher.launch(eq("/test-binary-path"), capture(captureArguments)))
@@ -479,6 +492,7 @@ public class ChromeLauncherTest extends EasyMockSupport {
 
     final String trigger = "test\r\ntest";
     expect(process.getInputStream()).andReturn(new ByteArrayInputStream(trigger.getBytes()));
+    expect(process.isAlive()).andReturn(true);
 
     Capture<List<String>> captureArguments = Capture.newInstance();
     expect(processLauncher.launch(eq("test-binary-path"), capture(captureArguments)))
@@ -527,6 +541,7 @@ public class ChromeLauncherTest extends EasyMockSupport {
 
     final String trigger = "test\r\n\r\n";
     expect(process.getInputStream()).andReturn(new ByteArrayInputStream(trigger.getBytes()));
+    expect(process.isAlive()).andReturn(true);
 
     Capture<List<String>> captureArguments = Capture.newInstance();
     expect(processLauncher.launch(eq("test-binary-path"), capture(captureArguments)))
@@ -557,6 +572,67 @@ public class ChromeLauncherTest extends EasyMockSupport {
     }
 
     assertEquals(removeCaptureShutdownThread.getValue(), addCaptureShutdownThread.getValue());
+  }
+
+  @Test
+  public void testIsAlive() throws IOException {
+    assertFalse(launcher.isAlive());
+
+    final Path binaryPath = Paths.get("test-binary-path");
+
+    final ChromeArguments chromeArguments =
+        ChromeArguments.builder().incognito().userDataDir("user-data-dir-param").build();
+
+    shutdownHookRegistry.register(anyObject());
+
+    final String trigger = "\r\n\r\nDevTools listening on ws://127.0.0.1:9123/";
+    expect(process.getInputStream()).andReturn(new ByteArrayInputStream(trigger.getBytes()));
+
+    expect(process.isAlive()).andReturn(true);
+
+    Capture<List<String>> captureArguments = Capture.newInstance();
+    expect(processLauncher.launch(eq("test-binary-path"), capture(captureArguments)))
+        .andReturn(process);
+
+    replayAll();
+
+    launcher.launch(binaryPath, chromeArguments);
+
+    assertTrue(launcher.isAlive());
+
+    verifyAll();
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testExitValueThrowsExceptionWhenProcessNotStarted() throws IOException {
+    launcher.exitValue();
+  }
+
+  @Test
+  public void testExitValue() throws IOException {
+    final Path binaryPath = Paths.get("test-binary-path");
+
+    final ChromeArguments chromeArguments =
+        ChromeArguments.builder().incognito().userDataDir("user-data-dir-param").build();
+
+    shutdownHookRegistry.register(anyObject());
+
+    final String trigger = "\r\n\r\nDevTools listening on ws://127.0.0.1:9123/";
+    expect(process.getInputStream()).andReturn(new ByteArrayInputStream(trigger.getBytes()));
+
+    expect(process.exitValue()).andReturn(123);
+
+    Capture<List<String>> captureArguments = Capture.newInstance();
+    expect(processLauncher.launch(eq("test-binary-path"), capture(captureArguments)))
+        .andReturn(process);
+
+    replayAll();
+
+    launcher.launch(binaryPath, chromeArguments);
+
+    assertEquals(123, launcher.exitValue());
+
+    verifyAll();
   }
 
   private static void assertUserDataDir(List<String> arguments) {

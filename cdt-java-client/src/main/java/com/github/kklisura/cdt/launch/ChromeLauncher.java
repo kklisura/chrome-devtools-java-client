@@ -213,7 +213,7 @@ public class ChromeLauncher implements AutoCloseable {
 
   @Override
   public void close() {
-    if (chromeProcess != null) {
+    if (chromeProcess != null && chromeProcess.isAlive()) {
       LOGGER.info("Closing chrome process...");
       chromeProcess.destroy();
 
@@ -222,14 +222,12 @@ public class ChromeLauncher implements AutoCloseable {
           chromeProcess.destroyForcibly();
           chromeProcess.waitFor(configuration.getShutdownWaitTime(), TimeUnit.SECONDS);
         }
-        chromeProcess = null;
 
         LOGGER.info("Chrome process closed.");
       } catch (InterruptedException e) {
         LOGGER.error("Interrupted while waiting for chrome process to shutdown.", e);
 
         chromeProcess.destroyForcibly();
-        chromeProcess = null;
       } finally {
         deleteQuietly(userDataDirPath);
       }
@@ -240,6 +238,30 @@ public class ChromeLauncher implements AutoCloseable {
         // Ignore this exceptions; We're removing hook even we're still in shutdown.
       }
     }
+  }
+
+  /**
+   * Returns an exit value. This is just proxy to {@link Process#exitValue}.
+   *
+   * @return Exit value of the process if exited.
+   * @throws {@link IllegalThreadStateException} if the subprocess has not yet terminated. {@link
+   *     IllegalStateException} If the process hasn't even started.
+   */
+  public int exitValue() {
+    if (chromeProcess == null) {
+      throw new IllegalStateException("Chrome process has not been started started.");
+    }
+    return chromeProcess.exitValue();
+  }
+
+  /**
+   * Tests whether the subprocess is alive. This is just proxy to {@link Process#isAlive()}.
+   *
+   * @return True if the subprocess has not yet terminated.
+   * @throws IllegalThreadStateException if the subprocess has not yet terminated.
+   */
+  public boolean isAlive() {
+    return chromeProcess != null && chromeProcess.isAlive();
   }
 
   /**
@@ -254,7 +276,7 @@ public class ChromeLauncher implements AutoCloseable {
    */
   private int launchChromeProcess(Path chromeBinary, ChromeArguments chromeArguments)
       throws ChromeProcessException {
-    if (chromeProcess != null) {
+    if (isAlive()) {
       throw new IllegalStateException("Chrome process has already been started started.");
     }
 
