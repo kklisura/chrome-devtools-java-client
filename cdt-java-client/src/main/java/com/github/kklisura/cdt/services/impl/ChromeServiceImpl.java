@@ -175,10 +175,6 @@ public class ChromeServiceImpl implements ChromeService {
       WebSocketService webSocketService =
           webSocketServiceFactory.createWebSocketService(webSocketDebuggerUrl);
 
-      // DevTools service configuration
-      ChromeDevToolsServiceConfiguration serviceConfiguration =
-          new ChromeDevToolsServiceConfiguration();
-
       // Create invocation handler
       CommandInvocationHandler commandInvocationHandler = new CommandInvocationHandler();
 
@@ -190,7 +186,7 @@ public class ChromeServiceImpl implements ChromeService {
           ProxyUtils.createProxyFromAbstract(
               ChromeDevToolsServiceImpl.class,
               new Class[] {WebSocketService.class, ChromeDevToolsServiceConfiguration.class},
-              new Object[] {webSocketService, serviceConfiguration},
+              new Object[] {webSocketService, chromeDevToolsServiceConfiguration},
               (unused, method, args) ->
                   commandsCache.computeIfAbsent(
                       method,
