@@ -345,11 +345,11 @@ public class ChromeLauncher implements AutoCloseable {
                     chromeOutputBuilder.append(System.lineSeparator());
                   }
                   chromeOutputBuilder.append(line);
+                  chromeOutput.set(chromeOutputBuilder.toString());
                 }
               } catch (Exception e) {
                 LOGGER.error("Failed while waiting for dev tools server.", e);
               } finally {
-                chromeOutput.set(chromeOutputBuilder.toString());
                 closeQuietly(reader);
               }
             });
