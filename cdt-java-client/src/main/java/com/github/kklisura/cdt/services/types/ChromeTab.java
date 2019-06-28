@@ -30,6 +30,8 @@ public final class ChromeTab {
 
   private String id;
 
+  private String parentId;
+
   private String description;
 
   private String title;
@@ -60,6 +62,15 @@ public final class ChromeTab {
    */
   public String getId() {
     return id;
+  }
+
+  /**
+   * Gets parent id.
+   *
+   * @return the parent id
+   */
+  public String getParentId() {
+    return parentId;
   }
 
   /**
