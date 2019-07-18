@@ -20,19 +20,12 @@ package com.github.kklisura.cdt.definition.builder.support.protocol.builder;
  * #L%
  */
 
-import static org.easymock.EasyMock.anyString;
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
+import static com.github.kklisura.cdt.definition.builder.support.protocol.builder.CommandBuilder.buildReturnClasses;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.github.kklisura.cdt.definition.builder.support.java.builder.Builder;
-import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaBuilderFactory;
-import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaClassBuilder;
-import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaEnumBuilder;
-import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaInterfaceBuilder;
+import com.github.kklisura.cdt.definition.builder.support.java.builder.*;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.support.CombinedBuilders;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.support.MethodParam;
 import com.github.kklisura.cdt.definition.builder.support.protocol.builder.support.DomainTypeResolver;
@@ -44,11 +37,7 @@ import com.github.kklisura.cdt.protocol.definition.types.type.StringType;
 import com.github.kklisura.cdt.protocol.definition.types.type.array.items.StringArrayItem;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.ObjectType;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.Property;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.ArrayProperty;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.BooleanProperty;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.NumberProperty;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.RefProperty;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.StringProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.*;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.EnumArrayItem;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.RefArrayItem;
 import java.util.Arrays;
@@ -643,6 +632,214 @@ public class CommandBuilderTest extends EasyMockSupport {
   }
 
   @Test
+  public void testBuildCommandWithMethodWithStringTypedReturnParams() {
+    final Domain domain = new Domain();
+    domain.setDomain("domainName");
+
+    final Command command = new Command();
+    command.setName("getStringList");
+    command.setDescription("command description");
+
+    final ArrayProperty arrayStringProperty = new ArrayProperty();
+    arrayStringProperty.setName("arrayStringProperty");
+    arrayStringProperty.setItems(
+        new com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items
+            .StringArrayItem());
+
+    command.setReturns(Collections.singletonList(arrayStringProperty));
+    domain.setCommands(Collections.singletonList(command));
+
+    expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
+        .andReturn(interfaceBuilder);
+
+    interfaceBuilder.addImport("java.util", "List");
+
+    interfaceBuilder.addMethod(
+        eq("getStringList"),
+        eq("command description"),
+        eq(Collections.emptyList()),
+        eq("List<String>"));
+
+    interfaceBuilder.addParametrizedMethodAnnotation(
+        eq("getStringList"), eq("Returns"), eq("arrayStringProperty"));
+
+    interfaceBuilder.addParametrizedMethodAnnotation(
+        eq("getStringList"), eq("ReturnTypeParameter"), eq("{String.class}"));
+
+    replayAll();
+
+    Builder build = commandBuilder.build(domain, resolver);
+
+    verifyAll();
+
+    assertTrue(build instanceof JavaInterfaceBuilder);
+    assertEquals(interfaceBuilder, build);
+  }
+
+  @Test
+  public void testBuildCommandWithMethodWithStringArrayTypedReturnParams() {
+    final Domain domain = new Domain();
+    domain.setDomain("domainName");
+
+    final Command command = new Command();
+    command.setName("getStringList");
+    command.setDescription("command description");
+
+    final RefArrayItem refArrayItem = new RefArrayItem();
+    refArrayItem.setType("RefItemType");
+    refArrayItem.setRef("RefItem");
+
+    final ArrayProperty arrayOfArraysProperty = new ArrayProperty();
+    arrayOfArraysProperty.setName("arrayOfArraysProperty");
+    arrayOfArraysProperty.setItems(refArrayItem);
+
+    command.setReturns(Collections.singletonList(arrayOfArraysProperty));
+    domain.setCommands(Collections.singletonList(command));
+
+    final ArrayType refArrayItemType = new ArrayType();
+    refArrayItemType.setId("RefItem");
+    refArrayItemType.setItems(new StringArrayItem());
+
+    expect(resolver.resolve("domainName", "RefItem")).andReturn(refArrayItemType);
+
+    expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
+        .andReturn(interfaceBuilder);
+
+    interfaceBuilder.addImport("java.util", "List");
+    expectLastCall().times(2);
+
+    interfaceBuilder.addMethod(
+        eq("getStringList"),
+        eq("command description"),
+        eq(Collections.emptyList()),
+        eq("List<List<String>>"));
+
+    interfaceBuilder.addParametrizedMethodAnnotation(
+        eq("getStringList"), eq("Returns"), eq("arrayOfArraysProperty"));
+
+    interfaceBuilder.addParametrizedMethodAnnotation(
+        eq("getStringList"), eq("ReturnTypeParameter"), eq("{List.class,String.class}"));
+
+    replayAll();
+
+    Builder build = commandBuilder.build(domain, resolver);
+
+    verifyAll();
+
+    assertTrue(build instanceof JavaInterfaceBuilder);
+    assertEquals(interfaceBuilder, build);
+  }
+
+  @Test
+  public void testBuildCommandWithMethodWithRefTypedReturnParams() {
+    final Domain domain = new Domain();
+    domain.setDomain("domainName");
+
+    final Command command = new Command();
+    command.setName("getMetricsList");
+    command.setDescription("command description");
+
+    final ArrayProperty arrayStringProperty = new ArrayProperty();
+    arrayStringProperty.setName("arrayMetricsProperty");
+
+    final RefArrayItem refArrayItem = new RefArrayItem();
+    refArrayItem.setRef("Metrics");
+    refArrayItem.setType("Metrics");
+    arrayStringProperty.setItems(refArrayItem);
+
+    command.setReturns(Collections.singletonList(arrayStringProperty));
+    domain.setCommands(Collections.singletonList(command));
+
+    final ObjectType resolvedRefType = new ObjectType();
+    resolvedRefType.setId("Metrics");
+    final StringProperty resolvedRefTypeStringProperty = new StringProperty();
+    resolvedRefTypeStringProperty.setName("arrayMetricsProperty");
+    resolvedRefType.setProperties(Collections.singletonList(resolvedRefTypeStringProperty));
+
+    expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
+        .andReturn(interfaceBuilder);
+
+    expect(resolver.resolve("domainName", "Metrics")).andReturn(resolvedRefType);
+
+    interfaceBuilder.addImport("java.util", "List");
+    interfaceBuilder.addImport("com.github.kklisura.types.domainname", "Metrics");
+
+    interfaceBuilder.addMethod(
+        eq("getMetricsList"),
+        eq("command description"),
+        eq(Collections.emptyList()),
+        eq("List<Metrics>"));
+
+    interfaceBuilder.addParametrizedMethodAnnotation(
+        eq("getMetricsList"), eq("Returns"), eq("arrayMetricsProperty"));
+
+    interfaceBuilder.addParametrizedMethodAnnotation(
+        eq("getMetricsList"), eq("ReturnTypeParameter"), eq("{Metrics.class}"));
+
+    replayAll();
+
+    Builder build = commandBuilder.build(domain, resolver);
+
+    verifyAll();
+
+    assertTrue(build instanceof JavaInterfaceBuilder);
+    assertEquals(interfaceBuilder, build);
+  }
+
+  @Test
+  public void testBuildCommandWithMethodWithEnumTypedReturnParams() {
+    final Domain domain = new Domain();
+    domain.setDomain("domainName");
+
+    final Command command = new Command();
+    command.setName("getEnumList");
+    command.setDescription("command description");
+
+    final ArrayProperty arrayStringProperty = new ArrayProperty();
+    arrayStringProperty.setName("enumListProperty");
+
+    final EnumArrayItem enumArrayItem = new EnumArrayItem();
+    enumArrayItem.setEnumValues(Arrays.asList("A", "B"));
+    arrayStringProperty.setItems(enumArrayItem);
+
+    command.setReturns(Collections.singletonList(arrayStringProperty));
+    domain.setCommands(Collections.singletonList(command));
+
+    expect(
+            javaBuilderFactory.createEnumBuilder(
+                "com.github.kklisura.types.domainname", "EnumListProperty"))
+        .andReturn(javaEnumBuilder);
+    javaEnumBuilder.addEnumConstant("A", "A");
+    javaEnumBuilder.addEnumConstant("B", "B");
+
+    expect(javaBuilderFactory.createInterfaceBuilder(BASE_PACKAGE_NAME, "DomainName"))
+        .andReturn(interfaceBuilder);
+
+    interfaceBuilder.addImport("java.util", "List");
+    interfaceBuilder.addImport("com.github.kklisura.types.domainname", "EnumListProperty");
+
+    interfaceBuilder.addMethod(
+        eq("getEnumList"),
+        eq("command description"),
+        eq(Collections.emptyList()),
+        eq("List<EnumListProperty>"));
+
+    interfaceBuilder.addParametrizedMethodAnnotation(
+        eq("getEnumList"), eq("Returns"), eq("enumListProperty"));
+
+    interfaceBuilder.addParametrizedMethodAnnotation(
+        eq("getEnumList"), eq("ReturnTypeParameter"), eq("{EnumListProperty.class}"));
+
+    replayAll();
+
+    Builder build = commandBuilder.build(domain, resolver);
+
+    verifyAll();
+
+    assertTrue(build instanceof CombinedBuilders);
+  }
+
+  @Test
   public void testBuildCommandWithEvents() {
     final Domain domain = new Domain();
     domain.setDomain("domainName");
@@ -709,6 +906,13 @@ public class CommandBuilderTest extends EasyMockSupport {
     assertEquals(1, value1.size());
     assertEquals("eventListener", value1.get(0).getName());
     assertEquals("EventHandler<SomeEvent1>", value1.get(0).getType());
+  }
+
+  @Test
+  public void testBuildReturnClasses() {
+    assertEquals("{Test.class}", buildReturnClasses("Test"));
+    assertEquals("{List.class,Test.class}", buildReturnClasses("List<Test>"));
+    assertEquals("{List.class,List.class,Test.class}", buildReturnClasses("List<List<Test>>"));
   }
 
   private <T extends Property> T createProperty(Class<T> clazz, String name)

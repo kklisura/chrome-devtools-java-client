@@ -20,50 +20,22 @@ package com.github.kklisura.cdt.definition.builder.support.protocol.builder;
  * #L%
  */
 
-import static com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.buildPackageName;
-import static com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.toEnumClass;
-import static com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.toEnumConstant;
+import static com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.*;
 
-import com.github.kklisura.cdt.definition.builder.support.java.builder.Builder;
-import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaBuilderFactory;
-import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaClassBuilder;
-import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaEnumBuilder;
-import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaImportAwareBuilder;
+import com.github.kklisura.cdt.definition.builder.support.java.builder.*;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.support.CombinedBuilders;
 import com.github.kklisura.cdt.definition.builder.support.protocol.builder.support.DomainTypeResolver;
 import com.github.kklisura.cdt.definition.builder.support.protocol.builder.support.PropertyHandlerResult;
 import com.github.kklisura.cdt.definition.builder.support.protocol.builder.support.TypeBuildRequest;
 import com.github.kklisura.cdt.protocol.definition.types.Domain;
 import com.github.kklisura.cdt.protocol.definition.types.Type;
-import com.github.kklisura.cdt.protocol.definition.types.type.ArrayType;
-import com.github.kklisura.cdt.protocol.definition.types.type.EnumType;
-import com.github.kklisura.cdt.protocol.definition.types.type.IntegerType;
-import com.github.kklisura.cdt.protocol.definition.types.type.NumberType;
-import com.github.kklisura.cdt.protocol.definition.types.type.StringType;
+import com.github.kklisura.cdt.protocol.definition.types.type.*;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.ObjectType;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.Property;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.AnyProperty;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.ArrayProperty;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.BooleanProperty;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.EnumProperty;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.IntegerProperty;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.NumberProperty;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.ObjectProperty;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.RefProperty;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.StringProperty;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.*;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.ArrayItem;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.AnyArrayItem;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.EnumArrayItem;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.IntegerArrayItem;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.NumberArrayItem;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.ObjectArrayItem;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.RefArrayItem;
-import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.StringArrayItem;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.array.items.*;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.Getter;
@@ -89,6 +61,7 @@ public class TypesBuilder {
   public static final String DEPRECATED_ANNOTATION = "Deprecated";
   public static final String EXPERIMENTAL_ANNOTATION = "Experimental";
   public static final String RETURNS_ANNOTATION = "Returns";
+  public static final String RETURN_TYPE_PARAMETER_ANNOTATION = "ReturnTypeParameter";
   public static final String OPTIONAL_ANNOTATION = "Optional";
   public static final String PARAM_NAME_ANNOTATION = "ParamName";
 
@@ -412,6 +385,7 @@ public class TypesBuilder {
     final ArrayItem arrayItem = arrayProperty.getItems();
 
     PropertyHandlerResult result = new PropertyHandlerResult();
+    result.setTyped(true);
 
     Function<ArrayItemBuildRequest, ArrayItemHandlerResult> fn =
         arrayItemHandlers.get(arrayItem.getClass());
@@ -428,8 +402,11 @@ public class TypesBuilder {
 
       result.setBuilder(itemResult.getBuilder());
       result.setType(itemResult.getType());
+      result.setSubType(itemResult.getSubType());
     } else {
-      result.setType(buildArrayJavaType(getArrayItemJavaType(arrayItem)));
+      final String subType = getArrayItemJavaType(arrayItem);
+      result.setType(buildArrayJavaType(subType));
+      result.setSubType(subType);
     }
 
     request.getImportAwareBuilder().addImport(UTILS_PACKAGE, LIST_CLASS_NAME);
@@ -450,6 +427,8 @@ public class TypesBuilder {
 
     ArrayItemHandlerResult result = new ArrayItemHandlerResult();
     result.setType(buildArrayJavaType(objectName));
+    result.setTyped(true);
+    result.setSubType(objectName);
     return result;
   }
 
@@ -464,6 +443,8 @@ public class TypesBuilder {
     result.setBuilder(
         buildEnum(packageName, name, property.getDescription(), property.getEnumValues()));
     result.setType(buildArrayJavaType(name));
+    result.setTyped(true);
+    result.setSubType(name);
     return result;
   }
 
@@ -734,5 +715,7 @@ public class TypesBuilder {
   private class ArrayItemHandlerResult {
     private Builder builder;
     private String type;
+    private String subType;
+    private boolean typed;
   }
 }

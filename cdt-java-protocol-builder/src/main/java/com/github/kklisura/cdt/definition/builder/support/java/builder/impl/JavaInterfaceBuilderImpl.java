@@ -24,21 +24,26 @@ import static com.github.kklisura.cdt.definition.builder.support.java.builder.ut
 import static com.github.kklisura.cdt.definition.builder.support.java.builder.utils.JavadocUtils.INDENTATION_TAB;
 
 import com.github.javaparser.ast.ImportDeclaration;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
-import com.github.javaparser.ast.expr.AnnotationExpr;
-import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
-import com.github.javaparser.ast.expr.Name;
-import com.github.javaparser.ast.expr.StringLiteralExpr;
+import com.github.javaparser.ast.expr.*;
+import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaInterfaceBuilder;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.impl.utils.CompilationUnitUtils;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.support.MethodParam;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.utils.JavadocUtils;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Java interface builder.
@@ -48,9 +53,24 @@ import org.apache.commons.lang3.StringUtils;
 public class JavaInterfaceBuilderImpl extends BaseBuilder implements JavaInterfaceBuilder {
   private static final String DEPRECATED_ANNOTATION = "Deprecated";
 
+  private static final Pattern SINGLE_CLASS = Pattern.compile("\\s*\\S+\\.class\\s*");
+  private static final Pattern CLASS_LIST =
+      Pattern.compile("\\{(\\s*\\S+\\.class)(\\s*,\\s*\\S+\\.class)*\\s*}");
+  private static final Pattern CLASS_LIST_CONTENT = Pattern.compile("\\{(.*)}");
+
   private String name;
   private ClassOrInterfaceDeclaration declaration;
   private String annotationsPackage;
+
+  private static final Logger LOGGER = LoggerFactory.getLogger("TestLogger");
+
+  public static void main(String[] args) {
+    final String name = "test";
+    final RuntimeException e = new RuntimeException("Test exception");
+
+    LOGGER.error("Error while processing event " + name, e);
+    LOGGER.error("Error while processing event {}", name, e);
+  }
 
   /**
    * Instantiates a new class builder implementation.
@@ -107,8 +127,28 @@ public class JavaInterfaceBuilderImpl extends BaseBuilder implements JavaInterfa
     for (MethodDeclaration methodDeclaration : methods) {
       Optional<AnnotationExpr> annotation = methodDeclaration.getAnnotationByName(annotationName);
       if (!annotation.isPresent()) {
-        methodDeclaration.addSingleMemberAnnotation(
-            annotationName, new StringLiteralExpr(parameter));
+
+        if (isClassList(parameter)) {
+          final List<String> classList = getClassList(parameter);
+
+          if (classList.size() == 1) {
+            methodDeclaration.addSingleMemberAnnotation(
+                annotationName,
+                new ClassExpr(new ClassOrInterfaceType(getClassName(classList.get(0)))));
+          } else {
+            final List<Expression> nodes =
+                classList
+                    .stream()
+                    .map(clazz -> new ClassExpr(new ClassOrInterfaceType(getClassName(clazz))))
+                    .collect(Collectors.toList());
+
+            methodDeclaration.addSingleMemberAnnotation(
+                annotationName, new ArrayInitializerExpr(new NodeList<>(nodes)));
+          }
+        } else {
+          methodDeclaration.addSingleMemberAnnotation(
+              annotationName, new StringLiteralExpr(parameter));
+        }
       }
     }
 
@@ -178,5 +218,48 @@ public class JavaInterfaceBuilderImpl extends BaseBuilder implements JavaInterfa
     if (!DEPRECATED_ANNOTATION.equals(annotationName)) {
       addImport(annotationsPackage, annotationName);
     }
+  }
+
+  /**
+   * Given a class property accessor ie TestClass.class, return a class name ie TestClass.
+   *
+   * @param classPropertyAccessor Class property accessor string.
+   * @return Class name.
+   */
+  private static String getClassName(String classPropertyAccessor) {
+    final int i = classPropertyAccessor.indexOf(".class");
+    return classPropertyAccessor.substring(0, i);
+  }
+
+  static boolean isClassList(String value) {
+    if (SINGLE_CLASS.matcher(value).matches()) {
+      return true;
+    }
+
+    return CLASS_LIST.matcher(value).matches();
+  }
+
+  static List<String> getClassList(String value) {
+    final List<String> result = new ArrayList<>();
+
+    if (isClassList(value)) {
+      if (SINGLE_CLASS.matcher(value).matches()) {
+        result.add(value.trim());
+        return result;
+      }
+
+      final Matcher matcher = CLASS_LIST_CONTENT.matcher(value);
+      if (matcher.matches()) {
+        final String content = matcher.group(1);
+
+        final String[] items = content.trim().split(",");
+
+        for (int i = 0; i < items.length; i++) {
+          result.add(items[i].trim());
+        }
+      }
+    }
+
+    return result;
   }
 }
