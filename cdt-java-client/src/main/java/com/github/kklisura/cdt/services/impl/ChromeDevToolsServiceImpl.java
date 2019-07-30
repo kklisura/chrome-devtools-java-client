@@ -294,7 +294,7 @@ public abstract class ChromeDevToolsServiceImpl
 
                   listener.getHandler().onEvent(event);
                 } catch (Exception e) {
-                  LOGGER.error("Error while processing event {}", name, e);
+                  LOGGER.error("Error while processing event " + name, e);
                 }
               }
             });
