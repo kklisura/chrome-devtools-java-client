@@ -117,7 +117,7 @@ Run following:
 make update-protocol
 ```
 
-This will build the tools for parsing and generating Java files, [cdt-protocol-builder](cdt-protocol-builder/) project. The input for this tool are protocol definitions files: `browser_protocol.json` and `js_protocol.json`. The generated Java files will be present in [cdt-java-client](cdt-java-client/) project. After building Java files, the [cdt-java-client](cdt-java-client/) will be compiled. If everything goes successfully, consider the protocol updated. :)
+This will build the tools for parsing and generating Java files, [cdt-java-protocol-builder](cdt-java-protocol-builder/) project. The input for this tool are protocol definitions files: `browser_protocol.json` and `js_protocol.json`. The generated Java files will be present in [cdt-java-client](cdt-java-client/) project. After building Java files, the [cdt-java-client](cdt-java-client/) will be compiled. If everything goes successfully, consider the protocol updated. :)
 
 ## License
 
