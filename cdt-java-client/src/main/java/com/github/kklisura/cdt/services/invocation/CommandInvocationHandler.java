@@ -22,6 +22,7 @@ package com.github.kklisura.cdt.services.invocation;
 
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdt.protocol.support.annotations.ReturnTypeParameter;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
@@ -70,6 +71,12 @@ public class CommandInvocationHandler implements InvocationHandler {
 
     Class<?> returnType = method.getReturnType();
 
+    Class<?>[] returnTypeClasses = null;
+    ReturnTypeParameter returnTypeParameter = method.getAnnotation(ReturnTypeParameter.class);
+    if (returnTypeParameter != null) {
+      returnTypeClasses = returnTypeParameter.value();
+    }
+
     String returnProperty = null;
     Returns returnsAnnotation = method.getAnnotation(Returns.class);
     if (returnsAnnotation != null) {
@@ -77,7 +84,8 @@ public class CommandInvocationHandler implements InvocationHandler {
     }
 
     MethodInvocation methodInvocation = createMethodInvocation(method, args);
-    return chromeDevToolsService.invoke(returnProperty, returnType, methodInvocation);
+    return chromeDevToolsService.invoke(
+        returnProperty, returnType, returnTypeClasses, methodInvocation);
   }
 
   /**

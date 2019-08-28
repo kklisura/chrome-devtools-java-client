@@ -22,8 +22,10 @@ package com.github.kklisura.cdt.services.impl;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.services.ChromeDevToolsService;
@@ -38,11 +40,7 @@ import com.github.kklisura.cdt.services.types.MethodInvocation;
 import com.github.kklisura.cdt.services.utils.ProxyUtils;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -128,6 +126,15 @@ public abstract class ChromeDevToolsServiceImpl
 
   @Override
   public <T> T invoke(String returnProperty, Class<T> clazz, MethodInvocation methodInvocation) {
+    return invoke(returnProperty, clazz, null, methodInvocation);
+  }
+
+  @Override
+  public <T> T invoke(
+      String returnProperty,
+      Class<T> clazz,
+      Class<?>[] returnTypeClasses,
+      MethodInvocation methodInvocation) {
     try {
       InvocationResult invocationResult = new InvocationResult(returnProperty);
       invocationResultMap.put(methodInvocation.getId(), invocationResult);
@@ -148,7 +155,11 @@ public abstract class ChromeDevToolsServiceImpl
           return null;
         }
 
-        return readJsonObject(clazz, invocationResult.getResult());
+        if (returnTypeClasses != null) {
+          return readJsonObject(returnTypeClasses, clazz, invocationResult.getResult());
+        } else {
+          return readJsonObject(clazz, invocationResult.getResult());
+        }
       } else {
         ErrorObject error = readJsonObject(ErrorObject.class, invocationResult.getResult());
         StringBuilder errorMessageBuilder = new StringBuilder(error.getMessage());
@@ -300,6 +311,39 @@ public abstract class ChromeDevToolsServiceImpl
             });
       }
     }
+  }
+
+  private <T> T readJsonObject(
+      Class<?>[] classParameters, Class<T> parameterizedClazz, JsonNode jsonNode)
+      throws IOException {
+    if (jsonNode == null) {
+      throw new ChromeDevToolsInvocationException(
+          "Failed converting null response to clazz " + parameterizedClazz.getName());
+    }
+
+    final TypeFactory typeFactory = OBJECT_MAPPER.getTypeFactory();
+    JavaType javaType = null;
+
+    if (classParameters.length > 1) {
+      for (int i = classParameters.length - 2; i >= 0; i--) {
+        if (javaType == null) {
+          javaType =
+              typeFactory.constructParametricType(classParameters[i], classParameters[i + 1]);
+        } else {
+          javaType = typeFactory.constructParametricType(classParameters[i], javaType);
+        }
+      }
+
+      javaType =
+          OBJECT_MAPPER.getTypeFactory().constructParametricType(parameterizedClazz, javaType);
+    } else {
+      javaType =
+          OBJECT_MAPPER
+              .getTypeFactory()
+              .constructParametricType(parameterizedClazz, classParameters[0]);
+    }
+
+    return OBJECT_MAPPER.readerFor(javaType).readValue(jsonNode);
   }
 
   private <T> T readJsonObject(Class<T> clazz, JsonNode jsonNode) throws IOException {

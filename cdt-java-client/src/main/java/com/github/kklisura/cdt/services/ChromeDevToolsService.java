@@ -32,8 +32,12 @@ import com.github.kklisura.cdt.services.types.MethodInvocation;
  * @author Kenan Klisura
  */
 public interface ChromeDevToolsService extends ChromeDevTools, AutoCloseable {
+
   /**
-   * Invokes a dev tools method.
+   * Invokes a dev tools method. If your return types is a generics please use {@link
+   * #invoke(String, Class, Class[], MethodInvocation)}.
+   *
+   * <p>This method is deprecated and might be removed in future.
    *
    * @param returnProperty Return property.
    * @param clazz Return class type.
@@ -41,8 +45,27 @@ public interface ChromeDevToolsService extends ChromeDevTools, AutoCloseable {
    * @param <T> Type of a return class.
    * @return Return object.
    * @throws ChromeDevToolsInvocationException If invocation fails.
+   * @deprecated Please use {@link #invoke(String, Class, Class[], MethodInvocation)}
    */
+  @Deprecated
   <T> T invoke(String returnProperty, Class<T> clazz, MethodInvocation methodInvocation);
+
+  /**
+   * Invokes a dev tools method.
+   *
+   * @param returnProperty Return property.
+   * @param clazz Return class type.
+   * @param returnTypeClasses List of class to which returnType is parametrized with.
+   * @param methodInvocation Method invocation definition.
+   * @param <T> Type of a return class.
+   * @return Return object.
+   * @throws ChromeDevToolsInvocationException If invocation fails.
+   */
+  <T> T invoke(
+      String returnProperty,
+      Class<T> clazz,
+      Class<?>[] returnTypeClasses,
+      MethodInvocation methodInvocation);
 
   /** Closes the dev tools service. */
   void close();

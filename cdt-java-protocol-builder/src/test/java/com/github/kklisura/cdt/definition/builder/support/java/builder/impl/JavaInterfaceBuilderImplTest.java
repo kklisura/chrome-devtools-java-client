@@ -20,9 +20,11 @@ package com.github.kklisura.cdt.definition.builder.support.java.builder.impl;
  * #L%
  */
 
+import static com.github.kklisura.cdt.definition.builder.support.java.builder.impl.JavaInterfaceBuilderImpl.getClassList;
+import static com.github.kklisura.cdt.definition.builder.support.java.builder.impl.JavaInterfaceBuilderImpl.isClassList;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.eq;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.SourceProject;
@@ -32,6 +34,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import org.easymock.Capture;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
@@ -229,8 +232,14 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
     interfaceBuilder.addMethod("someMethod1", "", Arrays.asList(param1, param2), "String");
     interfaceBuilder.addMethodAnnotation("someMethod1", "Annotation");
     interfaceBuilder.addMethodAnnotation("someMethod1", "Annotation");
+
     interfaceBuilder.addParametrizedMethodAnnotation("someMethod1", "Annotation2", "param");
     interfaceBuilder.addParametrizedMethodAnnotation("someMethod1", "Annotation2", "param");
+    interfaceBuilder.addParametrizedMethodAnnotation("someMethod1", "Annotation3", "String.class");
+    interfaceBuilder.addParametrizedMethodAnnotation(
+        "someMethod1", "Annotation4", "{String.class}");
+    interfaceBuilder.addParametrizedMethodAnnotation(
+        "someMethod1", "Annotation5", "{String.class,Integer.class}");
 
     replayAll();
 
@@ -243,16 +252,49 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
             + "import com.github.kklisura.annotations.Annotation1;\n"
             + "import com.github.kklisura.annotations.ParamValue;\n"
             + "import com.github.kklisura.annotations.Annotation2;\n"
+            + "import com.github.kklisura.annotations.Annotation3;\n"
+            + "import com.github.kklisura.annotations.Annotation4;\n"
+            + "import com.github.kklisura.annotations.Annotation5;\n"
             + "\n"
             + "public interface InterfaceTest {\n"
             + "\n"
             + "    @Annotation\n"
             + "    @Annotation2(\"param\")\n"
+            + "    @Annotation3(String.class)\n"
+            + "    @Annotation4(String.class)\n"
+            + "    @Annotation5({ String.class, Integer.class })\n"
             + "    String someMethod1(Integer param1, @Annotation @Annotation1 @Deprecated @ParamValue(\"paramValueName\") String param2);\n"
             + "}\n",
         compilationUnitCapture.getValue().toString());
 
     verifyAll();
+  }
+
+  @Test
+  public void testIsClassList() {
+    assertFalse(isClassList(""));
+    assertFalse(isClassList("test"));
+    assertTrue(isClassList("test.class"));
+    assertTrue(isClassList("{test.class}"));
+    assertTrue(isClassList("{test.class,test2.class}"));
+    assertTrue(isClassList("{   test.class   ,   test2.class   }"));
+    assertFalse(isClassList("{   test.class   .  test2.class   }"));
+    assertTrue(isClassList("{test.class,test2.class}"));
+    assertTrue(isClassList("{test.class,test2.class,test3.class}"));
+  }
+
+  @Test
+  public void testGetClassList() {
+    assertEquals(
+        list("test.class", "test2.class", "test3.class"),
+        getClassList("{test.class,    test2.class   ,   test3.class   }"));
+    assertEquals(
+        list("test.class", "test2.class", "test3.class"),
+        getClassList("{test.class,test2.class,test3.class}"));
+    assertEquals(list("test.class"), getClassList("{test.class}"));
+    assertEquals(list(), getClassList("{test.clas}"));
+    assertEquals(list(), getClassList("{}"));
+    assertEquals(list("test.class"), getClassList("test.class"));
   }
 
   private MethodParam.Annotation createAnnotation(String name) {
@@ -261,5 +303,9 @@ public class JavaInterfaceBuilderImplTest extends EasyMockSupport {
 
   private MethodParam.Annotation createAnnotation(String name, String value) {
     return new MethodParam.Annotation(name, value);
+  }
+
+  private static List<String> list(String... values) {
+    return Arrays.asList(values);
   }
 }

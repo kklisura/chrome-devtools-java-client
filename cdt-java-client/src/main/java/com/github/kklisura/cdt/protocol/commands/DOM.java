@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 Kenan Klisura
+ * Copyright (C) 2018 - 2019 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdt.protocol.support.annotations.ReturnTypeParameter;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
@@ -67,6 +68,7 @@ public interface DOM {
    */
   @Experimental
   @Returns("classNames")
+  @ReturnTypeParameter(String.class)
   List<String> collectClassNamesFromSubtree(@ParamName("nodeId") Integer nodeId);
 
   /**
@@ -160,6 +162,7 @@ public interface DOM {
    * @param nodeId Id of the node to retrieve attibutes for.
    */
   @Returns("attributes")
+  @ReturnTypeParameter(String.class)
   List<String> getAttributes(@ParamName("nodeId") Integer nodeId);
 
   /** Returns boxes for the given node. */
@@ -185,6 +188,7 @@ public interface DOM {
    */
   @Experimental
   @Returns("quads")
+  @ReturnTypeParameter({List.class, Double.class})
   List<List<Double>> getContentQuads();
 
   /**
@@ -197,6 +201,7 @@ public interface DOM {
    */
   @Experimental
   @Returns("quads")
+  @ReturnTypeParameter({List.class, Double.class})
   List<List<Double>> getContentQuads(
       @Optional @ParamName("nodeId") Integer nodeId,
       @Optional @ParamName("backendNodeId") Integer backendNodeId,
@@ -220,6 +225,7 @@ public interface DOM {
 
   /** Returns the root DOM node (and optionally the subtree) to the caller. */
   @Returns("nodes")
+  @ReturnTypeParameter(Node.class)
   List<Node> getFlattenedDocument();
 
   /**
@@ -231,6 +237,7 @@ public interface DOM {
    *     subtree (default is false).
    */
   @Returns("nodes")
+  @ReturnTypeParameter(Node.class)
   List<Node> getFlattenedDocument(
       @Optional @ParamName("depth") Integer depth, @Optional @ParamName("pierce") Boolean pierce);
 
@@ -295,6 +302,7 @@ public interface DOM {
    */
   @Experimental
   @Returns("nodeIds")
+  @ReturnTypeParameter(Integer.class)
   List<Integer> getSearchResults(
       @ParamName("searchId") String searchId,
       @ParamName("fromIndex") Integer fromIndex,
@@ -365,6 +373,7 @@ public interface DOM {
    */
   @Experimental
   @Returns("nodeIds")
+  @ReturnTypeParameter(Integer.class)
   List<Integer> pushNodesByBackendIdsToFrontend(
       @ParamName("backendNodeIds") List<Integer> backendNodeIds);
 
@@ -385,6 +394,7 @@ public interface DOM {
    * @param selector Selector string.
    */
   @Returns("nodeIds")
+  @ReturnTypeParameter(Integer.class)
   List<Integer> querySelectorAll(
       @ParamName("nodeId") Integer nodeId, @ParamName("selector") String selector);
 

@@ -21,9 +21,7 @@ package com.github.kklisura.cdt.definition.builder.support.protocol.builder;
  */
 
 import static com.github.kklisura.cdt.definition.builder.support.protocol.builder.TypesBuilder.LIST_CLASS_NAME;
-import static com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.buildPackageName;
-import static com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.getReturnTypeFromGetter;
-import static com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.toEnumClass;
+import static com.github.kklisura.cdt.definition.builder.support.utils.StringUtils.*;
 
 import com.github.kklisura.cdt.definition.builder.support.java.builder.Builder;
 import com.github.kklisura.cdt.definition.builder.support.java.builder.JavaBuilderFactory;
@@ -62,6 +60,7 @@ public class CommandBuilder {
 
   private static final String COMMENT_PARAM = "@param";
   private static final String EMPTY_SPACE = " ";
+  private static final String OBJECT_CLASS_PROPERTY = ".class";
 
   private String basePackageName;
   private String typesPackageName;
@@ -221,12 +220,12 @@ public class CommandBuilder {
     List<MethodParam> methodParams =
         buildMethodParams(command, domain, interfaceBuilder, domainTypeResolver, builders);
 
-    String returnType =
+    ReturnType returnType =
         buildReturnType(command, domain, interfaceBuilder, domainTypeResolver, builders);
     String description =
         buildMethodParamDescription(command.getDescription(), command.getParameters());
 
-    interfaceBuilder.addMethod(method, description, methodParams, returnType);
+    interfaceBuilder.addMethod(method, description, methodParams, returnType.getType());
 
     if (Boolean.TRUE.equals(command.getDeprecated())) {
       interfaceBuilder.addMethodAnnotation(method, TypesBuilder.DEPRECATED_ANNOTATION);
@@ -241,6 +240,13 @@ public class CommandBuilder {
       if (returns.size() == 1) {
         interfaceBuilder.addParametrizedMethodAnnotation(
             method, TypesBuilder.RETURNS_ANNOTATION, returns.get(0).getName());
+
+        if (returnType.isTyped()) {
+          interfaceBuilder.addParametrizedMethodAnnotation(
+              method,
+              TypesBuilder.RETURN_TYPE_PARAMETER_ANNOTATION,
+              buildReturnClasses(returnType.getSubType()));
+        }
       }
     }
   }
@@ -268,7 +274,37 @@ public class CommandBuilder {
     return result.toString();
   }
 
-  private String buildReturnType(
+  public static class ReturnType {
+    private static final ReturnType VOID = new ReturnType(null);
+
+    private final String type;
+    private final String subType;
+    private final boolean typed;
+
+    public ReturnType(String type) {
+      this(type, null, false);
+    }
+
+    public ReturnType(String type, String subType, boolean typed) {
+      this.type = type;
+      this.subType = subType;
+      this.typed = typed;
+    }
+
+    public String getType() {
+      return type;
+    }
+
+    public String getSubType() {
+      return subType;
+    }
+
+    public boolean isTyped() {
+      return typed;
+    }
+  }
+
+  private ReturnType buildReturnType(
       Command command,
       Domain domain,
       JavaInterfaceBuilder interfaceBuilder,
@@ -292,7 +328,7 @@ public class CommandBuilder {
 
         addBuilder(domain, property, result, interfaceBuilder, builders);
 
-        return result.getType();
+        return new ReturnType(result.getType(), result.getSubType(), result.isTyped());
       } else {
         String name = getReturnTypeFromGetter(command.getName());
 
@@ -311,11 +347,11 @@ public class CommandBuilder {
         String packageName = buildPackageName(typesPackageName, domain.getDomain().toLowerCase());
         interfaceBuilder.addImport(packageName, name);
 
-        return name;
+        return new ReturnType(name);
       }
     }
 
-    return null;
+    return ReturnType.VOID;
   }
 
   private List<MethodParam> buildMethodParams(
@@ -409,5 +445,23 @@ public class CommandBuilder {
     }
 
     return type;
+  }
+
+  static String buildReturnClasses(String returnType) {
+    return "{" + buildReturnClassesRecursive(returnType) + "}";
+  }
+
+  private static String buildReturnClassesRecursive(String returnType) {
+    if (!returnType.contains("<")) {
+      return returnType + OBJECT_CLASS_PROPERTY;
+    }
+
+    final int start = returnType.indexOf("<");
+    final int end = returnType.lastIndexOf(">");
+
+    final String clazz = returnType.substring(0, start);
+    final String parameter = returnType.substring(start + 1, end);
+
+    return clazz + OBJECT_CLASS_PROPERTY + "," + buildReturnClassesRecursive(parameter);
   }
 }

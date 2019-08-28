@@ -34,4 +34,6 @@ import lombok.Setter;
 public class PropertyHandlerResult {
   private Builder builder;
   private String type;
+  private String subType;
+  private boolean typed;
 }

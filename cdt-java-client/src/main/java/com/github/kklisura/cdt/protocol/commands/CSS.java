@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 Kenan Klisura
+ * Copyright (C) 2018 - 2019 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import com.github.kklisura.cdt.protocol.events.css.StyleSheetRemoved;
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdt.protocol.support.annotations.ReturnTypeParameter;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
@@ -77,6 +78,7 @@ public interface CSS {
    * @param styleSheetId
    */
   @Returns("classNames")
+  @ReturnTypeParameter(String.class)
   List<String> collectClassNames(@ParamName("styleSheetId") String styleSheetId);
 
   /**
@@ -116,6 +118,7 @@ public interface CSS {
    * @param nodeId
    */
   @Returns("computedStyle")
+  @ReturnTypeParameter(CSSComputedStyleProperty.class)
   List<CSSComputedStyleProperty> getComputedStyleForNode(@ParamName("nodeId") Integer nodeId);
 
   /**
@@ -135,6 +138,7 @@ public interface CSS {
 
   /** Returns all media queries parsed by the rendering engine. */
   @Returns("medias")
+  @ReturnTypeParameter(CSSMedia.class)
   List<CSSMedia> getMediaQueries();
 
   /**
@@ -144,6 +148,7 @@ public interface CSS {
    * @param nodeId
    */
   @Returns("fonts")
+  @ReturnTypeParameter(PlatformFontUsage.class)
   List<PlatformFontUsage> getPlatformFontsForNode(@ParamName("nodeId") Integer nodeId);
 
   /**
@@ -222,6 +227,7 @@ public interface CSS {
    * @param edits
    */
   @Returns("styles")
+  @ReturnTypeParameter(CSSStyle.class)
   List<CSSStyle> setStyleTexts(@ParamName("edits") List<StyleDeclarationEdit> edits);
 
   /** Enables the selector recording. */
@@ -232,6 +238,7 @@ public interface CSS {
    * `takeCoverageDelta` (or since start of coverage instrumentation)
    */
   @Returns("ruleUsage")
+  @ReturnTypeParameter(RuleUsage.class)
   List<RuleUsage> stopRuleUsageTracking();
 
   /**
@@ -239,6 +246,7 @@ public interface CSS {
    * coverage instrumentation)
    */
   @Returns("coverage")
+  @ReturnTypeParameter(RuleUsage.class)
   List<RuleUsage> takeCoverageDelta();
 
   /**

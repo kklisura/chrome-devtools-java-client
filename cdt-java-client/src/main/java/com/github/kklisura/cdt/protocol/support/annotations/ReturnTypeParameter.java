@@ -1,4 +1,4 @@
-package com.github.kklisura.cdt.protocol.events.runtime;
+package com.github.kklisura.cdt.protocol.support.annotations;
 
 /*-
  * #%L
@@ -20,18 +20,21 @@ package com.github.kklisura.cdt.protocol.events.runtime;
  * #L%
  */
 
-/** Issued when execution context is destroyed. */
-public class ExecutionContextDestroyed {
+import static java.lang.annotation.ElementType.METHOD;
 
-  private Integer executionContextId;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-  /** Id of the destroyed context */
-  public Integer getExecutionContextId() {
-    return executionContextId;
-  }
-
-  /** Id of the destroyed context */
-  public void setExecutionContextId(Integer executionContextId) {
-    this.executionContextId = executionContextId;
-  }
+/**
+ * This describes a type parameter for generics return types, if for return type of List<Metrics>
+ * this will contain Metrics class. If the type parameter is Object or is of primitive type, this
+ * annotation will not be present.
+ *
+ * @author Kenan Klisura
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(value = {METHOD})
+public @interface ReturnTypeParameter {
+  Class<?>[] value();
 }

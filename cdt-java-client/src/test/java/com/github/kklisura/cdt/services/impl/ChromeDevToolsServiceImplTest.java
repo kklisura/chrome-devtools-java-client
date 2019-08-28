@@ -20,16 +20,8 @@ package com.github.kklisura.cdt.services.impl;
  * #L%
  */
 
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
@@ -45,6 +37,7 @@ import com.github.kklisura.cdt.services.types.MethodInvocation;
 import com.github.kklisura.cdt.services.utils.ProxyUtils;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import org.easymock.Capture;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
@@ -122,7 +115,7 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
 
     ChromeDevToolsInvocationException capturedException = null;
     try {
-      service.invoke(null, Void.TYPE, methodInvocation);
+      service.invoke(null, Void.TYPE, null, methodInvocation);
     } catch (ChromeDevToolsInvocationException ex) {
       capturedException = ex;
     }
@@ -167,7 +160,7 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
 
     ChromeDevToolsInvocationException capturedException = null;
     try {
-      service.invoke(null, Void.TYPE, methodInvocation);
+      service.invoke(null, Void.TYPE, null, methodInvocation);
     } catch (ChromeDevToolsInvocationException ex) {
       capturedException = ex;
     }
@@ -198,7 +191,7 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
     replayAll();
 
     resolveMessage("{\"id\":1,\"result\":{}}");
-    assertNull(service.invoke(null, Void.TYPE, methodInvocation));
+    assertNull(service.invoke(null, Void.TYPE, null, methodInvocation));
 
     verifyAll();
 
@@ -223,7 +216,86 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
     replayAll();
 
     resolveMessage("{\"id\":1,\"result\":{\"resultProperty\":\"resultValue\"}}");
-    assertEquals("resultValue", service.invoke("resultProperty", String.class, methodInvocation));
+    assertEquals(
+        "resultValue", service.invoke("resultProperty", String.class, null, methodInvocation));
+
+    verifyAll();
+
+    MethodInvocation sentInvocation =
+        OBJECT_MAPPER.readerFor(MethodInvocation.class).readValue(messageCapture.getValue());
+    assertEquals(methodInvocation.getId(), sentInvocation.getId());
+    assertEquals(methodInvocation.getMethod(), sentInvocation.getMethod());
+    assertEquals(methodInvocation.getParams(), sentInvocation.getParams());
+  }
+
+  @Test
+  public void testInvokeMethodReturningListOfComplexObjects()
+      throws WebSocketServiceException, IOException {
+    MethodInvocation methodInvocation = new MethodInvocation();
+    methodInvocation.setId(1L);
+    methodInvocation.setMethod("SomeMethod");
+    methodInvocation.setParams(new HashMap<>());
+    methodInvocation.getParams().put("param", "value");
+
+    Capture<String> messageCapture = Capture.newInstance();
+    webSocketService.send(capture(messageCapture));
+
+    replayAll();
+
+    resolveMessage("{\"id\":1,\"result\":[{\"testProperty\":\"1\"},{\"testProperty\":\"2\"}]}");
+
+    List<TestMessage> result =
+        (List<TestMessage>)
+            service.invoke(null, List.class, new Class[] {TestMessage.class}, methodInvocation);
+
+    assertNotNull(result);
+    assertEquals(2, result.size());
+    assertNotNull(result.get(0));
+    assertNotNull(result.get(1));
+    assertEquals("1", result.get(0).getTestProperty());
+    assertEquals("2", result.get(1).getTestProperty());
+
+    verifyAll();
+
+    MethodInvocation sentInvocation =
+        OBJECT_MAPPER.readerFor(MethodInvocation.class).readValue(messageCapture.getValue());
+    assertEquals(methodInvocation.getId(), sentInvocation.getId());
+    assertEquals(methodInvocation.getMethod(), sentInvocation.getMethod());
+    assertEquals(methodInvocation.getParams(), sentInvocation.getParams());
+  }
+
+  @Test
+  public void testInvokeMethodReturningListOfComplexObjects2()
+      throws WebSocketServiceException, IOException {
+    MethodInvocation methodInvocation = new MethodInvocation();
+    methodInvocation.setId(1L);
+    methodInvocation.setMethod("SomeMethod");
+    methodInvocation.setParams(new HashMap<>());
+    methodInvocation.getParams().put("param", "value");
+
+    Capture<String> messageCapture = Capture.newInstance();
+    webSocketService.send(capture(messageCapture));
+
+    replayAll();
+
+    resolveMessage("{\"id\":1,\"result\":[[{\"testProperty\":\"1\"},{\"testProperty\":\"2\"}]]}");
+
+    List<List<TestMessage>> resultWrapper =
+        (List<List<TestMessage>>)
+            service.invoke(
+                null, List.class, new Class[] {List.class, TestMessage.class}, methodInvocation);
+
+    assertNotNull(resultWrapper);
+    assertEquals(1, resultWrapper.size());
+
+    List<TestMessage> result = resultWrapper.get(0);
+
+    assertNotNull(result);
+    assertEquals(2, result.size());
+    assertNotNull(result.get(0));
+    assertNotNull(result.get(1));
+    assertEquals("1", result.get(0).getTestProperty());
+    assertEquals("2", result.get(1).getTestProperty());
 
     verifyAll();
 
@@ -248,7 +320,7 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
     replayAll();
 
     resolveMessage("{\"id\":1}");
-    service.invoke("resultProperty", String.class, methodInvocation);
+    service.invoke("resultProperty", String.class, null, methodInvocation);
   }
 
   @Test
@@ -266,7 +338,7 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
 
     resolveMessage(
         "{\"id\":1,\"result\":{\"testProperty\":\"resultValue\",\"testProperty2\":\"resultValue2\"}}");
-    TestMessage testMessage = service.invoke(null, TestMessage.class, methodInvocation);
+    TestMessage testMessage = service.invoke(null, TestMessage.class, null, methodInvocation);
 
     verifyAll();
 
@@ -296,7 +368,7 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
 
     resolveMessage(
         "{\"id\":1,\"result\":{\"testProperty\":\"resultValue\",\"testProperty2\":\"resultValue2\",\"unknownProperty\":false}}");
-    TestMessage testMessage = service.invoke(null, TestMessage.class, methodInvocation);
+    TestMessage testMessage = service.invoke(null, TestMessage.class, null, methodInvocation);
 
     verifyAll();
 
@@ -346,7 +418,7 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
         "{\"id\":1,\"result\":{\"testProperty\":\"resultValue\",\"testProperty2\"-\"resultValue2\"}}");
     ChromeDevToolsInvocationException capturedException = null;
     try {
-      service.invoke(null, Void.TYPE, methodInvocation);
+      service.invoke(null, Void.TYPE, null, methodInvocation);
     } catch (ChromeDevToolsInvocationException ex) {
       capturedException = ex;
     }
@@ -381,7 +453,7 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
 
     ChromeDevToolsInvocationException capturedException = null;
     try {
-      service.invoke(null, Void.TYPE, methodInvocation);
+      service.invoke(null, Void.TYPE, null, methodInvocation);
     } catch (ChromeDevToolsInvocationException ex) {
       capturedException = ex;
     }
@@ -412,7 +484,7 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
 
     ChromeDevToolsInvocationException capturedException = null;
     try {
-      service.invoke(null, Void.TYPE, methodInvocation);
+      service.invoke(null, Void.TYPE, null, methodInvocation);
     } catch (ChromeDevToolsInvocationException ex) {
       capturedException = ex;
     }
@@ -591,7 +663,7 @@ public class ChromeDevToolsServiceImplTest extends EasyMockSupport {
   }
 
   @Test
-  public void testEventReceivedHandlerThrowsExeption() throws InterruptedException {
+  public void testEventReceivedHandlerThrowsException() throws InterruptedException {
     // Non existing event handler
     service.accept("{\"method\":\"Domain.name\",\"params\":{\"testProperty\":\"testValue\"}}");
 

@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 Kenan Klisura
+ * Copyright (C) 2018 - 2019 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdt.protocol.support.annotations.ReturnTypeParameter;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
@@ -42,6 +43,7 @@ public interface LayerTree {
    * @param layerId The id of the layer for which we want to get the reasons it was composited.
    */
   @Returns("compositingReasons")
+  @ReturnTypeParameter(String.class)
   List<String> compositingReasons(@ParamName("layerId") String layerId);
 
   /** Disables compositing tree inspection. */
@@ -68,6 +70,7 @@ public interface LayerTree {
 
   /** @param snapshotId The id of the layer snapshot. */
   @Returns("timings")
+  @ReturnTypeParameter({List.class, Double.class})
   List<List<Double>> profileSnapshot(@ParamName("snapshotId") String snapshotId);
 
   /**
@@ -77,6 +80,7 @@ public interface LayerTree {
    * @param clipRect The clip rectangle to apply when replaying the snapshot.
    */
   @Returns("timings")
+  @ReturnTypeParameter({List.class, Double.class})
   List<List<Double>> profileSnapshot(
       @ParamName("snapshotId") String snapshotId,
       @Optional @ParamName("minRepeatCount") Integer minRepeatCount,
@@ -119,6 +123,7 @@ public interface LayerTree {
    * @param snapshotId The id of the layer snapshot.
    */
   @Returns("commandLog")
+  @ReturnTypeParameter(Object.class)
   List<Object> snapshotCommandLog(@ParamName("snapshotId") String snapshotId);
 
   @EventName("layerPainted")

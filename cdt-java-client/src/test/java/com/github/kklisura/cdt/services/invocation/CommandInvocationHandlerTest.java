@@ -25,12 +25,15 @@ import static org.junit.Assert.*;
 
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdt.protocol.support.annotations.ReturnTypeParameter;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.services.ChromeDevToolsService;
 import com.github.kklisura.cdt.services.types.MethodInvocation;
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.List;
 import org.easymock.Capture;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
@@ -60,7 +63,9 @@ public class CommandInvocationHandlerTest extends EasyMockSupport {
   @Test
   public void testInvokeVoidMethod() throws Throwable {
     Capture<MethodInvocation> methodInvocationCapture = Capture.newInstance();
-    expect(chromeDevToolsService.invoke(eq(null), eq(Void.TYPE), capture(methodInvocationCapture)))
+    expect(
+            chromeDevToolsService.invoke(
+                eq(null), eq(Void.TYPE), eq(null), capture(methodInvocationCapture)))
         .andReturn(null);
 
     replayAll();
@@ -78,7 +83,9 @@ public class CommandInvocationHandlerTest extends EasyMockSupport {
     resetAll();
 
     methodInvocationCapture = Capture.newInstance();
-    expect(chromeDevToolsService.invoke(eq(null), eq(Void.TYPE), capture(methodInvocationCapture)))
+    expect(
+            chromeDevToolsService.invoke(
+                eq(null), eq(Void.TYPE), eq(null), capture(methodInvocationCapture)))
         .andReturn(null);
 
     replayAll();
@@ -99,7 +106,7 @@ public class CommandInvocationHandlerTest extends EasyMockSupport {
     Capture<MethodInvocation> methodInvocationCapture = Capture.newInstance();
     expect(
             chromeDevToolsService.invoke(
-                eq(null), eq(String.class), capture(methodInvocationCapture)))
+                eq(null), eq(String.class), eq(null), capture(methodInvocationCapture)))
         .andReturn(null);
 
     replayAll();
@@ -126,7 +133,7 @@ public class CommandInvocationHandlerTest extends EasyMockSupport {
     Capture<MethodInvocation> methodInvocationCapture = Capture.newInstance();
     expect(
             chromeDevToolsService.invoke(
-                eq("ReturnsValue"), eq(String.class), capture(methodInvocationCapture)))
+                eq("ReturnsValue"), eq(String.class), eq(null), capture(methodInvocationCapture)))
         .andReturn(null);
 
     replayAll();
@@ -144,6 +151,39 @@ public class CommandInvocationHandlerTest extends EasyMockSupport {
     assertNotNull(methodInvocation.getId());
     assertEquals(
         "CommandInvocationHandlerTest.stringMethodWithParamsAndAnnotation",
+        methodInvocation.getMethod());
+    assertFalse(methodInvocation.getParams().isEmpty());
+
+    assertEquals("Test", methodInvocation.getParams().get("paramTest"));
+    assertEquals(1, (int) methodInvocation.getParams().get("paramTest1"));
+  }
+
+  @Test
+  public void testInvokeStringMethodWithParamsAndReturnTypeAnnotation() throws Throwable {
+    Capture<MethodInvocation> methodInvocationCapture = Capture.newInstance();
+    expect(
+            chromeDevToolsService.invoke(
+                eq("ReturnsValue"),
+                eq(List.class),
+                aryEq(new Class[] {String.class}),
+                capture(methodInvocationCapture)))
+        .andReturn(null);
+
+    replayAll();
+
+    assertNull(
+        invocationHandler.invoke(
+            this,
+            getMethodByName("stringMethodWithParamsAndReturnTypeAnnotation"),
+            new Object[] {"Test", 1}));
+
+    verifyAll();
+
+    MethodInvocation methodInvocation = methodInvocationCapture.getValue();
+
+    assertNotNull(methodInvocation.getId());
+    assertEquals(
+        "CommandInvocationHandlerTest.stringMethodWithParamsAndReturnTypeAnnotation",
         methodInvocation.getMethod());
     assertFalse(methodInvocation.getParams().isEmpty());
 
@@ -232,5 +272,12 @@ public class CommandInvocationHandlerTest extends EasyMockSupport {
   private String stringMethodWithParamsAndAnnotation(
       @ParamName("paramTest") String param1, @ParamName("paramTest1") Integer param2) {
     return "EMPTY-STRING";
+  }
+
+  @Returns("ReturnsValue")
+  @ReturnTypeParameter(String.class)
+  private List<String> stringMethodWithParamsAndReturnTypeAnnotation(
+      @ParamName("paramTest") String param1, @ParamName("paramTest1") Integer param2) {
+    return Collections.emptyList();
   }
 }
