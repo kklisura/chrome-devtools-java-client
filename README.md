@@ -8,7 +8,7 @@ For more information on DevTools, see https://chromedevtools.github.io/devtools-
 
 [v1.3.6](https://github.com/kklisura/chrome-devtools-java-client/tree/v1.3.6) tested on Google Chrome Version 67.0.3396.87. Protocol files from [dev-tools-protocol#1aa7b31ca7](https://github.com/ChromeDevTools/devtools-protocol/tree/1aa7b31ca7bba982eceea8d4bd494b27850fb0df/json)
 
-[vX.X.X](https://github.com/kklisura/chrome-devtools-java-client/tree/vX.X.X) tested on Google Chrome Version 76.0.3809.100. Protocol files from [dev-tools-protocol#e1fb93bd76](https://github.com/ChromeDevTools/devtools-protocol/tree/e1fb93bd76f99cdf401b949757c874c579e15434/json)
+[v2.0.0](https://github.com/kklisura/chrome-devtools-java-client/tree/v2.0.0) tested on Google Chrome Version 76.0.3809.100. Protocol files from [dev-tools-protocol#e1fb93bd76](https://github.com/ChromeDevTools/devtools-protocol/tree/e1fb93bd76f99cdf401b949757c874c579e15434/json)
 
 [1] https://chromedevtools.github.io/devtools-protocol/.
 
@@ -20,7 +20,7 @@ Add the following dependency to your `pom.xml`:
 <dependency>
   <groupId>com.github.kklisura.cdt</groupId>
   <artifactId>cdt-java-client</artifactId>
-  <version>1.3.6</version>
+  <version>2.0.0</version>
 </dependency>
 ```
 
