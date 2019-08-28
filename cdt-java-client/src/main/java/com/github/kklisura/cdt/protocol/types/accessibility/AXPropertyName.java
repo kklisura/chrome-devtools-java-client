@@ -23,17 +23,23 @@ package com.github.kklisura.cdt.protocol.types.accessibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Values of AXProperty name: from 'busy' to 'roledescription' - states which apply to every AX
- * node, from 'live' to 'root' - attributes which apply to nodes in live regions, from
- * 'autocomplete' to 'valuetext' - attributes which apply to widgets, from 'checked' to 'selected' -
- * states which apply to widgets, from 'activedescendant' to 'owns' - relationships between elements
- * other than parent/child/sibling.
+ * Values of AXProperty name: - from 'busy' to 'roledescription': states which apply to every AX
+ * node - from 'live' to 'root': attributes which apply to nodes in live regions - from
+ * 'autocomplete' to 'valuetext': attributes which apply to widgets - from 'checked' to 'selected':
+ * states which apply to widgets - from 'activedescendant' to 'owns' - relationships between
+ * elements other than parent/child/sibling.
  */
 public enum AXPropertyName {
   @JsonProperty("busy")
   BUSY,
   @JsonProperty("disabled")
   DISABLED,
+  @JsonProperty("editable")
+  EDITABLE,
+  @JsonProperty("focusable")
+  FOCUSABLE,
+  @JsonProperty("focused")
+  FOCUSED,
   @JsonProperty("hidden")
   HIDDEN,
   @JsonProperty("hiddenRoot")
@@ -42,6 +48,8 @@ public enum AXPropertyName {
   INVALID,
   @JsonProperty("keyshortcuts")
   KEYSHORTCUTS,
+  @JsonProperty("settable")
+  SETTABLE,
   @JsonProperty("roledescription")
   ROLEDESCRIPTION,
   @JsonProperty("live")

@@ -35,6 +35,9 @@ public interface Memory {
 
   void prepareForLeakDetection();
 
+  /** Simulate OomIntervention by purging V8 memory. */
+  void forciblyPurgeJavaScriptMemory();
+
   /**
    * Enable/disable suppressing memory pressure notifications in all processes.
    *

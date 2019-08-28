@@ -27,7 +27,7 @@ public class DatabaseWithObjectStores {
 
   private String name;
 
-  private Integer version;
+  private Double version;
 
   private List<ObjectStore> objectStores;
 
@@ -41,13 +41,19 @@ public class DatabaseWithObjectStores {
     this.name = name;
   }
 
-  /** Database version. */
-  public Integer getVersion() {
+  /**
+   * Database version (type is not 'integer', as the standard requires the version number to be
+   * 'unsigned long long')
+   */
+  public Double getVersion() {
     return version;
   }
 
-  /** Database version. */
-  public void setVersion(Integer version) {
+  /**
+   * Database version (type is not 'integer', as the standard requires the version number to be
+   * 'unsigned long long')
+   */
+  public void setVersion(Double version) {
     this.version = version;
   }
 

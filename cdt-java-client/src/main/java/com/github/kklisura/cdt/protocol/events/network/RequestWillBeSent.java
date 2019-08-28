@@ -23,8 +23,8 @@ package com.github.kklisura.cdt.protocol.events.network;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.network.Initiator;
 import com.github.kklisura.cdt.protocol.types.network.Request;
+import com.github.kklisura.cdt.protocol.types.network.ResourceType;
 import com.github.kklisura.cdt.protocol.types.network.Response;
-import com.github.kklisura.cdt.protocol.types.page.ResourceType;
 
 /** Fired when page is about to send HTTP request. */
 public class RequestWillBeSent {

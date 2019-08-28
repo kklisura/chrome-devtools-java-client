@@ -20,6 +20,8 @@ package com.github.kklisura.cdt.protocol.types.page;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
+
 /** Visual viewport position, dimensions, and scale. */
 public class VisualViewport {
 
@@ -36,6 +38,8 @@ public class VisualViewport {
   private Double clientHeight;
 
   private Double scale;
+
+  @Optional private Double zoom;
 
   /** Horizontal offset relative to the layout viewport (CSS pixels). */
   public Double getOffsetX() {
@@ -105,5 +109,15 @@ public class VisualViewport {
   /** Scale relative to the ideal viewport (size at width=device-width). */
   public void setScale(Double scale) {
     this.scale = scale;
+  }
+
+  /** Page zoom factor (CSS to device independent pixels ratio). */
+  public Double getZoom() {
+    return zoom;
+  }
+
+  /** Page zoom factor (CSS to device independent pixels ratio). */
+  public void setZoom(Double zoom) {
+    this.zoom = zoom;
   }
 }

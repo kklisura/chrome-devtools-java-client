@@ -27,6 +27,9 @@ import com.github.kklisura.cdt.protocol.support.annotations.ReturnTypeParameter;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.types.browser.Bounds;
 import com.github.kklisura.cdt.protocol.types.browser.Histogram;
+import com.github.kklisura.cdt.protocol.types.browser.PermissionDescriptor;
+import com.github.kklisura.cdt.protocol.types.browser.PermissionSetting;
+import com.github.kklisura.cdt.protocol.types.browser.PermissionType;
 import com.github.kklisura.cdt.protocol.types.browser.Version;
 import com.github.kklisura.cdt.protocol.types.browser.WindowForTarget;
 import java.util.List;
@@ -34,8 +37,82 @@ import java.util.List;
 /** The Browser domain defines methods and events for browser managing. */
 public interface Browser {
 
+  /**
+   * Set permission settings for given origin.
+   *
+   * @param origin Origin the permission applies to.
+   * @param permission Descriptor of permission to override.
+   * @param setting Setting of the permission.
+   */
+  @Experimental
+  void setPermission(
+      @ParamName("origin") String origin,
+      @ParamName("permission") PermissionDescriptor permission,
+      @ParamName("setting") PermissionSetting setting);
+
+  /**
+   * Set permission settings for given origin.
+   *
+   * @param origin Origin the permission applies to.
+   * @param permission Descriptor of permission to override.
+   * @param setting Setting of the permission.
+   * @param browserContextId Context to override. When omitted, default browser context is used.
+   */
+  @Experimental
+  void setPermission(
+      @ParamName("origin") String origin,
+      @ParamName("permission") PermissionDescriptor permission,
+      @ParamName("setting") PermissionSetting setting,
+      @Optional @ParamName("browserContextId") String browserContextId);
+
+  /**
+   * Grant specific permissions to the given origin and reject all others.
+   *
+   * @param origin
+   * @param permissions
+   */
+  @Experimental
+  void grantPermissions(
+      @ParamName("origin") String origin,
+      @ParamName("permissions") List<PermissionType> permissions);
+
+  /**
+   * Grant specific permissions to the given origin and reject all others.
+   *
+   * @param origin
+   * @param permissions
+   * @param browserContextId BrowserContext to override permissions. When omitted, default browser
+   *     context is used.
+   */
+  @Experimental
+  void grantPermissions(
+      @ParamName("origin") String origin,
+      @ParamName("permissions") List<PermissionType> permissions,
+      @Optional @ParamName("browserContextId") String browserContextId);
+
+  /** Reset all permission management for all origins. */
+  @Experimental
+  void resetPermissions();
+
+  /**
+   * Reset all permission management for all origins.
+   *
+   * @param browserContextId BrowserContext to reset permissions. When omitted, default browser
+   *     context is used.
+   */
+  @Experimental
+  void resetPermissions(@Optional @ParamName("browserContextId") String browserContextId);
+
   /** Close browser gracefully. */
   void close();
+
+  /** Crashes browser on the main thread. */
+  @Experimental
+  void crash();
+
+  /** Crashes GPU process. */
+  @Experimental
+  void crashGpuProcess();
 
   /** Returns version information. */
   Version getVersion();
@@ -97,13 +174,18 @@ public interface Browser {
   @Returns("bounds")
   Bounds getWindowBounds(@ParamName("windowId") Integer windowId);
 
+  /** Get the browser window that contains the devtools target. */
+  @Experimental
+  WindowForTarget getWindowForTarget();
+
   /**
    * Get the browser window that contains the devtools target.
    *
-   * @param targetId Devtools agent host id.
+   * @param targetId Devtools agent host id. If called as a part of the session, associated targetId
+   *     is used.
    */
   @Experimental
-  WindowForTarget getWindowForTarget(@ParamName("targetId") String targetId);
+  WindowForTarget getWindowForTarget(@Optional @ParamName("targetId") String targetId);
 
   /**
    * Set position and/or size of the browser window.
@@ -114,4 +196,19 @@ public interface Browser {
    */
   @Experimental
   void setWindowBounds(@ParamName("windowId") Integer windowId, @ParamName("bounds") Bounds bounds);
+
+  /** Set dock tile details, platform-specific. */
+  @Experimental
+  void setDockTile();
+
+  /**
+   * Set dock tile details, platform-specific.
+   *
+   * @param badgeLabel
+   * @param image Png encoded image.
+   */
+  @Experimental
+  void setDockTile(
+      @Optional @ParamName("badgeLabel") String badgeLabel,
+      @Optional @ParamName("image") String image);
 }

@@ -20,7 +20,7 @@ package com.github.kklisura.cdt.protocol.events.network;
  * #L%
  */
 
-/** Fired when WebSocket frame error occurs. */
+/** Fired when WebSocket message error occurs. */
 public class WebSocketFrameError {
 
   private String requestId;
@@ -49,12 +49,12 @@ public class WebSocketFrameError {
     this.timestamp = timestamp;
   }
 
-  /** WebSocket frame error message. */
+  /** WebSocket error message. */
   public String getErrorMessage() {
     return errorMessage;
   }
 
-  /** WebSocket frame error message. */
+  /** WebSocket error message. */
   public void setErrorMessage(String errorMessage) {
     this.errorMessage = errorMessage;
   }

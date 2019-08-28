@@ -21,8 +21,8 @@ package com.github.kklisura.cdt.protocol.events.network;
  */
 
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
+import com.github.kklisura.cdt.protocol.types.network.ResourceType;
 import com.github.kklisura.cdt.protocol.types.network.Response;
-import com.github.kklisura.cdt.protocol.types.page.ResourceType;
 
 /** Fired when HTTP response is available. */
 public class ResponseReceived {

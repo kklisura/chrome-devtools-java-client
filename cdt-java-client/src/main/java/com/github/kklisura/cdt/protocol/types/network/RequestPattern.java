@@ -22,7 +22,6 @@ package com.github.kklisura.cdt.protocol.types.network;
 
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
-import com.github.kklisura.cdt.protocol.types.page.ResourceType;
 
 /** Request pattern for interception. */
 @Experimental

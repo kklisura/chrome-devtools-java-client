@@ -53,5 +53,9 @@ public enum RemoteObjectSubtype {
   @JsonProperty("promise")
   PROMISE,
   @JsonProperty("typedarray")
-  TYPEDARRAY
+  TYPEDARRAY,
+  @JsonProperty("arraybuffer")
+  ARRAYBUFFER,
+  @JsonProperty("dataview")
+  DATAVIEW
 }

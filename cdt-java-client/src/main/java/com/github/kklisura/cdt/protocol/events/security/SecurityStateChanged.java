@@ -31,11 +31,11 @@ public class SecurityStateChanged {
 
   private SecurityState securityState;
 
-  private Boolean schemeIsCryptographic;
+  @Deprecated private Boolean schemeIsCryptographic;
 
   private List<SecurityStateExplanation> explanations;
 
-  private InsecureContentStatus insecureContentStatus;
+  @Deprecated private InsecureContentStatus insecureContentStatus;
 
   @Optional private String summary;
 

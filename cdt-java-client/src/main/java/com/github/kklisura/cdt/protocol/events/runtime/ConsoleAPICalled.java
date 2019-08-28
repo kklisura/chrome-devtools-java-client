@@ -81,12 +81,20 @@ public class ConsoleAPICalled {
     this.timestamp = timestamp;
   }
 
-  /** Stack trace captured when the call was made. */
+  /**
+   * Stack trace captured when the call was made. The async stack chain is automatically reported
+   * for the following call types: `assert`, `error`, `trace`, `warning`. For other types the async
+   * call chain can be retrieved using `Debugger.getStackTrace` and `stackTrace.parentId` field.
+   */
   public StackTrace getStackTrace() {
     return stackTrace;
   }
 
-  /** Stack trace captured when the call was made. */
+  /**
+   * Stack trace captured when the call was made. The async stack chain is automatically reported
+   * for the following call types: `assert`, `error`, `trace`, `warning`. For other types the async
+   * call chain can be retrieved using `Debugger.getStackTrace` and `stackTrace.parentId` field.
+   */
   public void setStackTrace(StackTrace stackTrace) {
     this.stackTrace = stackTrace;
   }

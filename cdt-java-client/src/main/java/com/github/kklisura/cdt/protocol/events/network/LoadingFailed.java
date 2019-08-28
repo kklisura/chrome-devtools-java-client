@@ -22,7 +22,7 @@ package com.github.kklisura.cdt.protocol.events.network;
 
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.network.BlockedReason;
-import com.github.kklisura.cdt.protocol.types.page.ResourceType;
+import com.github.kklisura.cdt.protocol.types.network.ResourceType;
 
 /** Fired when HTTP request has failed to load. */
 public class LoadingFailed {

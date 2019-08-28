@@ -69,6 +69,11 @@ public interface Target {
       @ParamName("targetId") String targetId,
       @Experimental @Optional @ParamName("flatten") Boolean flatten);
 
+  /** Attaches to the browser target, only uses flat sessionId mode. */
+  @Experimental
+  @Returns("sessionId")
+  String attachToBrowserTarget();
+
   /**
    * Closes the target. If the target is a page that gets closed too.
    *
@@ -141,6 +146,9 @@ public interface Target {
    * @param browserContextId The browser context to create the page in.
    * @param enableBeginFrameControl Whether BeginFrames for this target will be controlled via
    *     DevTools (headless chrome only, not supported on MacOS yet, false by default).
+   * @param newWindow Whether to create a new Window or Tab (chrome-only, false by default).
+   * @param background Whether to create the target in background or foreground (chrome-only, false
+   *     by default).
    */
   @Returns("targetId")
   String createTarget(
@@ -148,8 +156,9 @@ public interface Target {
       @Optional @ParamName("width") Integer width,
       @Optional @ParamName("height") Integer height,
       @Optional @ParamName("browserContextId") String browserContextId,
-      @Experimental @Optional @ParamName("enableBeginFrameControl")
-          Boolean enableBeginFrameControl);
+      @Experimental @Optional @ParamName("enableBeginFrameControl") Boolean enableBeginFrameControl,
+      @Optional @ParamName("newWindow") Boolean newWindow,
+      @Optional @ParamName("background") Boolean background);
 
   /** Detaches session with given id. */
   void detachFromTarget();
@@ -224,6 +233,23 @@ public interface Target {
   void setAutoAttach(
       @ParamName("autoAttach") Boolean autoAttach,
       @ParamName("waitForDebuggerOnStart") Boolean waitForDebuggerOnStart);
+
+  /**
+   * Controls whether to automatically attach to new targets which are considered to be related to
+   * this one. When turned on, attaches to all existing related targets as well. When turned off,
+   * automatically detaches from all currently attached targets.
+   *
+   * @param autoAttach Whether to auto-attach to related targets.
+   * @param waitForDebuggerOnStart Whether to pause new targets when attaching to them. Use
+   *     `Runtime.runIfWaitingForDebugger` to run paused targets.
+   * @param flatten Enables "flat" access to the session via specifying sessionId attribute in the
+   *     commands.
+   */
+  @Experimental
+  void setAutoAttach(
+      @ParamName("autoAttach") Boolean autoAttach,
+      @ParamName("waitForDebuggerOnStart") Boolean waitForDebuggerOnStart,
+      @Experimental @Optional @ParamName("flatten") Boolean flatten);
 
   /**
    * Controls whether to discover available targets and notify via

@@ -34,6 +34,7 @@ import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.tracing.RequestMemoryDump;
 import com.github.kklisura.cdt.protocol.types.tracing.StartTransferMode;
 import com.github.kklisura.cdt.protocol.types.tracing.StreamCompression;
+import com.github.kklisura.cdt.protocol.types.tracing.StreamFormat;
 import com.github.kklisura.cdt.protocol.types.tracing.TraceConfig;
 import java.util.List;
 
@@ -70,6 +71,8 @@ public interface Tracing {
    *     interval, specified in milliseconds
    * @param transferMode Whether to report trace events as series of dataCollected events or to save
    *     trace to a stream (defaults to `ReportEvents`).
+   * @param streamFormat Trace data format to use. This only applies when using `ReturnAsStream`
+   *     transfer mode (defaults to `json`).
    * @param streamCompression Compression format to use. This only applies when using
    *     `ReturnAsStream` transfer mode (defaults to `none`)
    * @param traceConfig
@@ -79,6 +82,7 @@ public interface Tracing {
       @Deprecated @Optional @ParamName("options") String options,
       @Optional @ParamName("bufferUsageReportingInterval") Double bufferUsageReportingInterval,
       @Optional @ParamName("transferMode") StartTransferMode transferMode,
+      @Optional @ParamName("streamFormat") StreamFormat streamFormat,
       @Optional @ParamName("streamCompression") StreamCompression streamCompression,
       @Optional @ParamName("traceConfig") TraceConfig traceConfig);
 

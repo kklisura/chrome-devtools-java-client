@@ -22,7 +22,7 @@ package com.github.kklisura.cdt.protocol.events.network;
 
 import com.github.kklisura.cdt.protocol.types.network.WebSocketFrame;
 
-/** Fired when WebSocket frame is sent. */
+/** Fired when WebSocket message is sent. */
 public class WebSocketFrameSent {
 
   private String requestId;

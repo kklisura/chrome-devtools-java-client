@@ -21,7 +21,6 @@ package com.github.kklisura.cdt.protocol.types.network;
  */
 
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
-import com.github.kklisura.cdt.protocol.types.page.ResourceType;
 
 /** Information about the cached resource. */
 public class CachedResource {

@@ -27,8 +27,10 @@ import com.github.kklisura.cdt.protocol.events.network.LoadingFinished;
 import com.github.kklisura.cdt.protocol.events.network.RequestIntercepted;
 import com.github.kklisura.cdt.protocol.events.network.RequestServedFromCache;
 import com.github.kklisura.cdt.protocol.events.network.RequestWillBeSent;
+import com.github.kklisura.cdt.protocol.events.network.RequestWillBeSentExtraInfo;
 import com.github.kklisura.cdt.protocol.events.network.ResourceChangedPriority;
 import com.github.kklisura.cdt.protocol.events.network.ResponseReceived;
+import com.github.kklisura.cdt.protocol.events.network.ResponseReceivedExtraInfo;
 import com.github.kklisura.cdt.protocol.events.network.SignedExchangeReceived;
 import com.github.kklisura.cdt.protocol.events.network.WebSocketClosed;
 import com.github.kklisura.cdt.protocol.events.network.WebSocketCreated;
@@ -89,10 +91,12 @@ public interface Network {
    * Response to Network.requestIntercepted which either modifies the request to continue with any
    * modifications, or blocks it, or completes it with the provided response bytes. If a network
    * fetch occurs as a result which encounters a redirect an additional Network.requestIntercepted
-   * event will be sent with the same InterceptionId.
+   * event will be sent with the same InterceptionId. Deprecated, use Fetch.continueRequest,
+   * Fetch.fulfillRequest and Fetch.failRequest instead.
    *
    * @param interceptionId
    */
+  @Deprecated
   @Experimental
   void continueInterceptedRequest(@ParamName("interceptionId") String interceptionId);
 
@@ -100,7 +104,8 @@ public interface Network {
    * Response to Network.requestIntercepted which either modifies the request to continue with any
    * modifications, or blocks it, or completes it with the provided response bytes. If a network
    * fetch occurs as a result which encounters a redirect an additional Network.requestIntercepted
-   * event will be sent with the same InterceptionId.
+   * event will be sent with the same InterceptionId. Deprecated, use Fetch.continueRequest,
+   * Fetch.fulfillRequest and Fetch.failRequest instead.
    *
    * @param interceptionId
    * @param errorReason If set this causes the request to fail with the given reason. Passing
@@ -120,6 +125,7 @@ public interface Network {
    * @param authChallengeResponse Response to a requestIntercepted with an authChallenge. Must not
    *     be set otherwise.
    */
+  @Deprecated
   @Experimental
   void continueInterceptedRequest(
       @ParamName("interceptionId") String interceptionId,
@@ -405,12 +411,13 @@ public interface Network {
   void setExtraHTTPHeaders(@ParamName("headers") Map<String, Object> headers);
 
   /**
-   * Sets the requests to intercept that match a the provided patterns and optionally resource
-   * types.
+   * Sets the requests to intercept that match the provided patterns and optionally resource types.
+   * Deprecated, please use Fetch.enable instead.
    *
    * @param patterns Requests matching any of these patterns will be forwarded and wait for the
    *     corresponding continueInterceptedRequest call.
    */
+  @Deprecated
   @Experimental
   void setRequestInterception(@ParamName("patterns") List<RequestPattern> patterns);
 
@@ -433,9 +440,10 @@ public interface Network {
 
   /**
    * Details of an intercepted HTTP request, which must be either allowed, blocked, modified or
-   * mocked.
+   * mocked. Deprecated, use Fetch.requestPaused instead.
    */
   @EventName("requestIntercepted")
+  @Deprecated
   @Experimental
   EventListener onRequestIntercepted(EventHandler<RequestIntercepted> eventListener);
 
@@ -469,15 +477,15 @@ public interface Network {
   @EventName("webSocketCreated")
   EventListener onWebSocketCreated(EventHandler<WebSocketCreated> eventListener);
 
-  /** Fired when WebSocket frame error occurs. */
+  /** Fired when WebSocket message error occurs. */
   @EventName("webSocketFrameError")
   EventListener onWebSocketFrameError(EventHandler<WebSocketFrameError> eventListener);
 
-  /** Fired when WebSocket frame is received. */
+  /** Fired when WebSocket message is received. */
   @EventName("webSocketFrameReceived")
   EventListener onWebSocketFrameReceived(EventHandler<WebSocketFrameReceived> eventListener);
 
-  /** Fired when WebSocket frame is sent. */
+  /** Fired when WebSocket message is sent. */
   @EventName("webSocketFrameSent")
   EventListener onWebSocketFrameSent(EventHandler<WebSocketFrameSent> eventListener);
 
@@ -490,4 +498,24 @@ public interface Network {
   @EventName("webSocketWillSendHandshakeRequest")
   EventListener onWebSocketWillSendHandshakeRequest(
       EventHandler<WebSocketWillSendHandshakeRequest> eventListener);
+
+  /**
+   * Fired when additional information about a requestWillBeSent event is available from the network
+   * stack. Not every requestWillBeSent event will have an additional requestWillBeSentExtraInfo
+   * fired for it, and there is no guarantee whether requestWillBeSent or requestWillBeSentExtraInfo
+   * will be fired first for the same request.
+   */
+  @EventName("requestWillBeSentExtraInfo")
+  @Experimental
+  EventListener onRequestWillBeSentExtraInfo(
+      EventHandler<RequestWillBeSentExtraInfo> eventListener);
+
+  /**
+   * Fired when additional information about a responseReceived event is available from the network
+   * stack. Not every responseReceived event will have an additional responseReceivedExtraInfo for
+   * it, and responseReceivedExtraInfo may be fired before or after responseReceived.
+   */
+  @EventName("responseReceivedExtraInfo")
+  @Experimental
+  EventListener onResponseReceivedExtraInfo(EventHandler<ResponseReceivedExtraInfo> eventListener);
 }

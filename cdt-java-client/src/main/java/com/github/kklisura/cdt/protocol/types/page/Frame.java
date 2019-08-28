@@ -36,6 +36,8 @@ public class Frame {
 
   private String url;
 
+  @Experimental @Optional private String urlFragment;
+
   private String securityOrigin;
 
   private String mimeType;
@@ -82,14 +84,24 @@ public class Frame {
     this.name = name;
   }
 
-  /** Frame document's URL. */
+  /** Frame document's URL without fragment. */
   public String getUrl() {
     return url;
   }
 
-  /** Frame document's URL. */
+  /** Frame document's URL without fragment. */
   public void setUrl(String url) {
     this.url = url;
+  }
+
+  /** Frame document's URL fragment including the '#'. */
+  public String getUrlFragment() {
+    return urlFragment;
+  }
+
+  /** Frame document's URL fragment including the '#'. */
+  public void setUrlFragment(String urlFragment) {
+    this.urlFragment = urlFragment;
   }
 
   /** Frame document's security origin. */
@@ -112,12 +124,18 @@ public class Frame {
     this.mimeType = mimeType;
   }
 
-  /** If the frame failed to load, this contains the URL that could not be loaded. */
+  /**
+   * If the frame failed to load, this contains the URL that could not be loaded. Note that unlike
+   * url above, this URL may contain a fragment.
+   */
   public String getUnreachableUrl() {
     return unreachableUrl;
   }
 
-  /** If the frame failed to load, this contains the URL that could not be loaded. */
+  /**
+   * If the frame failed to load, this contains the URL that could not be loaded. Note that unlike
+   * url above, this URL may contain a fragment.
+   */
   public void setUnreachableUrl(String unreachableUrl) {
     this.unreachableUrl = unreachableUrl;
   }

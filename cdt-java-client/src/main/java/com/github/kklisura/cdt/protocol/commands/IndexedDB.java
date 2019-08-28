@@ -27,6 +27,7 @@ import com.github.kklisura.cdt.protocol.support.annotations.ReturnTypeParameter;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.types.indexeddb.DatabaseWithObjectStores;
 import com.github.kklisura.cdt.protocol.types.indexeddb.KeyRange;
+import com.github.kklisura.cdt.protocol.types.indexeddb.Metadata;
 import com.github.kklisura.cdt.protocol.types.indexeddb.RequestData;
 import java.util.List;
 
@@ -112,6 +113,18 @@ public interface IndexedDB {
       @ParamName("skipCount") Integer skipCount,
       @ParamName("pageSize") Integer pageSize,
       @Optional @ParamName("keyRange") KeyRange keyRange);
+
+  /**
+   * Gets metadata of an object store
+   *
+   * @param securityOrigin Security origin.
+   * @param databaseName Database name.
+   * @param objectStoreName Object store name.
+   */
+  Metadata getMetadata(
+      @ParamName("securityOrigin") String securityOrigin,
+      @ParamName("databaseName") String databaseName,
+      @ParamName("objectStoreName") String objectStoreName);
 
   /**
    * Requests database with given name in given frame.

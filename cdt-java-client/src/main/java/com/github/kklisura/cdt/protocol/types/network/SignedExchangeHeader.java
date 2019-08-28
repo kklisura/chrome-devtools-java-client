@@ -33,13 +33,13 @@ public class SignedExchangeHeader {
 
   private String requestUrl;
 
-  private String requestMethod;
-
   private Integer responseCode;
 
   private Map<String, Object> responseHeaders;
 
   private List<SignedExchangeSignature> signatures;
+
+  private String headerIntegrity;
 
   /** Signed exchange request URL. */
   public String getRequestUrl() {
@@ -49,16 +49,6 @@ public class SignedExchangeHeader {
   /** Signed exchange request URL. */
   public void setRequestUrl(String requestUrl) {
     this.requestUrl = requestUrl;
-  }
-
-  /** Signed exchange request method. */
-  public String getRequestMethod() {
-    return requestMethod;
-  }
-
-  /** Signed exchange request method. */
-  public void setRequestMethod(String requestMethod) {
-    this.requestMethod = requestMethod;
   }
 
   /** Signed exchange response code. */
@@ -89,5 +79,15 @@ public class SignedExchangeHeader {
   /** Signed exchange response signature. */
   public void setSignatures(List<SignedExchangeSignature> signatures) {
     this.signatures = signatures;
+  }
+
+  /** Signed exchange header integrity hash in the form of "sha256-<base64-hash-value>". */
+  public String getHeaderIntegrity() {
+    return headerIntegrity;
+  }
+
+  /** Signed exchange header integrity hash in the form of "sha256-<base64-hash-value>". */
+  public void setHeaderIntegrity(String headerIntegrity) {
+    this.headerIntegrity = headerIntegrity;
   }
 }

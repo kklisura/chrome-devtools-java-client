@@ -56,6 +56,16 @@ public interface ServiceWorker {
       @ParamName("tag") String tag,
       @ParamName("lastChance") Boolean lastChance);
 
+  /**
+   * @param origin
+   * @param registrationId
+   * @param tag
+   */
+  void dispatchPeriodicSyncEvent(
+      @ParamName("origin") String origin,
+      @ParamName("registrationId") String registrationId,
+      @ParamName("tag") String tag);
+
   void enable();
 
   /** @param versionId */

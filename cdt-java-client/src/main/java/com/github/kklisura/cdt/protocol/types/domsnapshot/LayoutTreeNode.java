@@ -39,6 +39,8 @@ public class LayoutTreeNode {
 
   @Optional private Integer paintOrder;
 
+  @Optional private Boolean isStackingContext;
+
   /** The index of the related DOM node in the `domNodes` array returned by `getSnapshot`. */
   public Integer getDomNodeIndex() {
     return domNodeIndex;
@@ -49,12 +51,16 @@ public class LayoutTreeNode {
     this.domNodeIndex = domNodeIndex;
   }
 
-  /** The absolute position bounding box. */
+  /**
+   * The bounding box in document coordinates. Note that scroll offset of the document is ignored.
+   */
   public Rect getBoundingBox() {
     return boundingBox;
   }
 
-  /** The absolute position bounding box. */
+  /**
+   * The bounding box in document coordinates. Note that scroll offset of the document is ignored.
+   */
   public void setBoundingBox(Rect boundingBox) {
     this.boundingBox = boundingBox;
   }
@@ -105,5 +111,15 @@ public class LayoutTreeNode {
    */
   public void setPaintOrder(Integer paintOrder) {
     this.paintOrder = paintOrder;
+  }
+
+  /** Set to true to indicate the element begins a new stacking context. */
+  public Boolean getIsStackingContext() {
+    return isStackingContext;
+  }
+
+  /** Set to true to indicate the element begins a new stacking context. */
+  public void setIsStackingContext(Boolean isStackingContext) {
+    this.isStackingContext = isStackingContext;
   }
 }

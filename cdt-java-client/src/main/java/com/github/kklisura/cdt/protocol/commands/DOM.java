@@ -43,9 +43,12 @@ import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.dom.BoxModel;
+import com.github.kklisura.cdt.protocol.types.dom.FrameOwner;
 import com.github.kklisura.cdt.protocol.types.dom.Node;
+import com.github.kklisura.cdt.protocol.types.dom.NodeForLocation;
 import com.github.kklisura.cdt.protocol.types.dom.PerformSearch;
 import com.github.kklisura.cdt.protocol.types.runtime.RemoteObject;
+import com.github.kklisura.cdt.protocol.types.runtime.StackTrace;
 import java.util.List;
 
 /**
@@ -242,17 +245,18 @@ public interface DOM {
       @Optional @ParamName("depth") Integer depth, @Optional @ParamName("pierce") Boolean pierce);
 
   /**
-   * Returns node id at given location.
+   * Returns node id at given location. Depending on whether DOM domain is enabled, nodeId is either
+   * returned or not.
    *
    * @param x X coordinate.
    * @param y Y coordinate.
    */
   @Experimental
-  @Returns("nodeId")
-  Integer getNodeForLocation(@ParamName("x") Integer x, @ParamName("y") Integer y);
+  NodeForLocation getNodeForLocation(@ParamName("x") Integer x, @ParamName("y") Integer y);
 
   /**
-   * Returns node id at given location.
+   * Returns node id at given location. Depending on whether DOM domain is enabled, nodeId is either
+   * returned or not.
    *
    * @param x X coordinate.
    * @param y Y coordinate.
@@ -260,8 +264,7 @@ public interface DOM {
    *     (default: false).
    */
   @Experimental
-  @Returns("nodeId")
-  Integer getNodeForLocation(
+  NodeForLocation getNodeForLocation(
       @ParamName("x") Integer x,
       @ParamName("y") Integer y,
       @Optional @ParamName("includeUserAgentShadowDOM") Boolean includeUserAgentShadowDOM);
@@ -462,12 +465,14 @@ public interface DOM {
    * @param nodeId Id of the node to resolve.
    * @param backendNodeId Backend identifier of the node to resolve.
    * @param objectGroup Symbolic group name that can be used to release multiple objects.
+   * @param executionContextId Execution context in which to resolve the node.
    */
   @Returns("object")
   RemoteObject resolveNode(
       @Optional @ParamName("nodeId") Integer nodeId,
       @Optional @ParamName("backendNodeId") Integer backendNodeId,
-      @Optional @ParamName("objectGroup") String objectGroup);
+      @Optional @ParamName("objectGroup") String objectGroup,
+      @Optional @ParamName("executionContextId") Integer executionContextId);
 
   /**
    * Sets attribute for an element with given id.
@@ -526,6 +531,34 @@ public interface DOM {
       @Optional @ParamName("objectId") String objectId);
 
   /**
+   * Sets if stack traces should be captured for Nodes. See `Node.getNodeStackTraces`. Default is
+   * disabled.
+   *
+   * @param enable Enable or disable.
+   */
+  @Experimental
+  void setNodeStackTracesEnabled(@ParamName("enable") Boolean enable);
+
+  /**
+   * Gets stack traces associated with a Node. As of now, only provides stack trace for Node
+   * creation.
+   *
+   * @param nodeId Id of the node to get stack traces for.
+   */
+  @Experimental
+  @Returns("creation")
+  StackTrace getNodeStackTraces(@ParamName("nodeId") Integer nodeId);
+
+  /**
+   * Returns file information for the given File wrapper.
+   *
+   * @param objectId JavaScript object id of the node wrapper.
+   */
+  @Experimental
+  @Returns("path")
+  String getFileInfo(@ParamName("objectId") String objectId);
+
+  /**
    * Enables console to refer to the node with given id via $x (see Command Line API for more
    * details $x functions).
    *
@@ -569,8 +602,7 @@ public interface DOM {
    * @param frameId
    */
   @Experimental
-  @Returns("nodeId")
-  Integer getFrameOwner(@ParamName("frameId") String frameId);
+  FrameOwner getFrameOwner(@ParamName("frameId") String frameId);
 
   /** Fired when `Element`'s attribute is modified. */
   @EventName("attributeModified")

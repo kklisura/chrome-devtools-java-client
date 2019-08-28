@@ -20,9 +20,10 @@ package com.github.kklisura.cdt.protocol.types.domsnapshot;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import java.util.List;
 
-/** Details of an element in the DOM tree with a LayoutObject. */
+/** Table of details of an element in the DOM tree with a LayoutObject. */
 public class LayoutTreeSnapshot {
 
   private List<Integer> nodeIndex;
@@ -33,24 +34,42 @@ public class LayoutTreeSnapshot {
 
   private List<Integer> text;
 
-  private TextBoxSnapshot textBoxes;
+  private RareBooleanData stackingContexts;
 
-  /** The index of the related DOM node in the `domNodes` array returned by `getSnapshot`. */
+  @Optional private List<Integer> paintOrders;
+
+  @Optional private List<List<Double>> offsetRects;
+
+  @Optional private List<List<Double>> scrollRects;
+
+  @Optional private List<List<Double>> clientRects;
+
+  /**
+   * Index of the corresponding node in the `NodeTreeSnapshot` array returned by `captureSnapshot`.
+   */
   public List<Integer> getNodeIndex() {
     return nodeIndex;
   }
 
-  /** The index of the related DOM node in the `domNodes` array returned by `getSnapshot`. */
+  /**
+   * Index of the corresponding node in the `NodeTreeSnapshot` array returned by `captureSnapshot`.
+   */
   public void setNodeIndex(List<Integer> nodeIndex) {
     this.nodeIndex = nodeIndex;
   }
 
-  /** Index into the `computedStyles` array returned by `captureSnapshot`. */
+  /**
+   * Array of indexes specifying computed style strings, filtered according to the `computedStyles`
+   * parameter passed to `captureSnapshot`.
+   */
   public List<List<Integer>> getStyles() {
     return styles;
   }
 
-  /** Index into the `computedStyles` array returned by `captureSnapshot`. */
+  /**
+   * Array of indexes specifying computed style strings, filtered according to the `computedStyles`
+   * parameter passed to `captureSnapshot`.
+   */
   public void setStyles(List<List<Integer>> styles) {
     this.styles = styles;
   }
@@ -75,13 +94,61 @@ public class LayoutTreeSnapshot {
     this.text = text;
   }
 
-  /** The post-layout inline text nodes */
-  public TextBoxSnapshot getTextBoxes() {
-    return textBoxes;
+  /** Stacking context information. */
+  public RareBooleanData getStackingContexts() {
+    return stackingContexts;
   }
 
-  /** The post-layout inline text nodes */
-  public void setTextBoxes(TextBoxSnapshot textBoxes) {
-    this.textBoxes = textBoxes;
+  /** Stacking context information. */
+  public void setStackingContexts(RareBooleanData stackingContexts) {
+    this.stackingContexts = stackingContexts;
+  }
+
+  /**
+   * Global paint order index, which is determined by the stacking order of the nodes. Nodes that
+   * are painted together will have the same index. Only provided if includePaintOrder in
+   * captureSnapshot was true.
+   */
+  public List<Integer> getPaintOrders() {
+    return paintOrders;
+  }
+
+  /**
+   * Global paint order index, which is determined by the stacking order of the nodes. Nodes that
+   * are painted together will have the same index. Only provided if includePaintOrder in
+   * captureSnapshot was true.
+   */
+  public void setPaintOrders(List<Integer> paintOrders) {
+    this.paintOrders = paintOrders;
+  }
+
+  /** The offset rect of nodes. Only available when includeDOMRects is set to true */
+  public List<List<Double>> getOffsetRects() {
+    return offsetRects;
+  }
+
+  /** The offset rect of nodes. Only available when includeDOMRects is set to true */
+  public void setOffsetRects(List<List<Double>> offsetRects) {
+    this.offsetRects = offsetRects;
+  }
+
+  /** The scroll rect of nodes. Only available when includeDOMRects is set to true */
+  public List<List<Double>> getScrollRects() {
+    return scrollRects;
+  }
+
+  /** The scroll rect of nodes. Only available when includeDOMRects is set to true */
+  public void setScrollRects(List<List<Double>> scrollRects) {
+    this.scrollRects = scrollRects;
+  }
+
+  /** The client rect of nodes. Only available when includeDOMRects is set to true */
+  public List<List<Double>> getClientRects() {
+    return clientRects;
+  }
+
+  /** The client rect of nodes. Only available when includeDOMRects is set to true */
+  public void setClientRects(List<List<Double>> clientRects) {
+    this.clientRects = clientRects;
   }
 }

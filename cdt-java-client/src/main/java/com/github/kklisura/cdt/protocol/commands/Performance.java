@@ -22,11 +22,14 @@ package com.github.kklisura.cdt.protocol.commands;
 
 import com.github.kklisura.cdt.protocol.events.performance.Metrics;
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
 import com.github.kklisura.cdt.protocol.support.annotations.ReturnTypeParameter;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.performance.Metric;
+import com.github.kklisura.cdt.protocol.types.performance.SetTimeDomainTimeDomain;
 import java.util.List;
 
 public interface Performance {
@@ -36,6 +39,16 @@ public interface Performance {
 
   /** Enable collecting and reporting metrics. */
   void enable();
+
+  /**
+   * Sets time domain to use for collecting and reporting duration metrics. Note that this must be
+   * called before enabling metrics collection. Calling this method while metrics collection is
+   * enabled returns an error.
+   *
+   * @param timeDomain Time domain
+   */
+  @Experimental
+  void setTimeDomain(@ParamName("timeDomain") SetTimeDomainTimeDomain timeDomain);
 
   /** Retrieve current values of run-time metrics. */
   @Returns("metrics")

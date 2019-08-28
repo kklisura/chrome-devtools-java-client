@@ -69,10 +69,6 @@ public class DOMNode {
 
   @Optional private Integer contentDocumentIndex;
 
-  @Optional private Integer importedDocumentIndex;
-
-  @Optional private Integer templateContentIndex;
-
   @Optional private PseudoType pseudoType;
 
   @Optional private ShadowRootType shadowRootType;
@@ -84,6 +80,10 @@ public class DOMNode {
   @Optional private String currentSourceURL;
 
   @Optional private String originURL;
+
+  @Optional private Double scrollOffsetX;
+
+  @Optional private Double scrollOffsetY;
 
   /** `Node`'s nodeType. */
   public Integer getNodeType() {
@@ -309,38 +309,6 @@ public class DOMNode {
     this.contentDocumentIndex = contentDocumentIndex;
   }
 
-  /**
-   * Index of the imported document's node of a link element in the `domNodes` array returned by
-   * `getSnapshot`, if any.
-   */
-  public Integer getImportedDocumentIndex() {
-    return importedDocumentIndex;
-  }
-
-  /**
-   * Index of the imported document's node of a link element in the `domNodes` array returned by
-   * `getSnapshot`, if any.
-   */
-  public void setImportedDocumentIndex(Integer importedDocumentIndex) {
-    this.importedDocumentIndex = importedDocumentIndex;
-  }
-
-  /**
-   * Index of the content node of a template element in the `domNodes` array returned by
-   * `getSnapshot`.
-   */
-  public Integer getTemplateContentIndex() {
-    return templateContentIndex;
-  }
-
-  /**
-   * Index of the content node of a template element in the `domNodes` array returned by
-   * `getSnapshot`.
-   */
-  public void setTemplateContentIndex(Integer templateContentIndex) {
-    this.templateContentIndex = templateContentIndex;
-  }
-
   /** Type of a pseudo element node. */
   public PseudoType getPseudoType() {
     return pseudoType;
@@ -405,5 +373,23 @@ public class DOMNode {
   /** The url of the script (if any) that generates this node. */
   public void setOriginURL(String originURL) {
     this.originURL = originURL;
+  }
+
+  /** Scroll offsets, set when this node is a Document. */
+  public Double getScrollOffsetX() {
+    return scrollOffsetX;
+  }
+
+  /** Scroll offsets, set when this node is a Document. */
+  public void setScrollOffsetX(Double scrollOffsetX) {
+    this.scrollOffsetX = scrollOffsetX;
+  }
+
+  public Double getScrollOffsetY() {
+    return scrollOffsetY;
+  }
+
+  public void setScrollOffsetY(Double scrollOffsetY) {
+    this.scrollOffsetY = scrollOffsetY;
   }
 }

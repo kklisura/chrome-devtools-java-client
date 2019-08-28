@@ -66,3 +66,7 @@ verify:
 	cd $(JAVA_CLIENT_DIR)/ && make verify
 	$(MVN) --file "$(JAVA_CLIENT_DIR)/" clean install && \
 	  $(MVN) --file "$(EXAMPLES_DIR)/" clean compile
+
+download-latest-protocol:
+	curl -o browser_protocol.json https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/json/browser_protocol.json
+	curl -o js_protocol.json https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/json/js_protocol.json

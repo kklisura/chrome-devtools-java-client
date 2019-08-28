@@ -332,6 +332,15 @@
                 {
                     "name": "enable",
                     "description": "Enables debugger for the given page. Clients should not assume that the debugging has been\nenabled until the result for this command is received.",
+                    "parameters": [
+                        {
+                            "name": "maxScriptsCacheSize",
+                            "description": "The maximum size in bytes of collected scripts (not referenced by other heap objects)\nthe debugger can hold. Puts no limit if paramter is omitted.",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "number"
+                        }
+                    ],
                     "returns": [
                         {
                             "name": "debuggerId",
@@ -546,11 +555,6 @@
                     "description": "Resumes JavaScript execution."
                 },
                 {
-                    "name": "scheduleStepIntoAsync",
-                    "description": "This method is deprecated - use Debugger.stepInto with breakOnAsyncCall and\nDebugger.pauseOnAsyncTask instead. Steps into next scheduled async task if any is scheduled\nbefore next pause. Returns success when async task is actually scheduled, returns error if no\ntask were scheduled or another scheduleStepIntoAsync was called.",
-                    "experimental": true
-                },
-                {
                     "name": "searchInContent",
                     "description": "Searches for given string in script content.",
                     "parameters": [
@@ -659,6 +663,28 @@
                             "name": "actualLocation",
                             "description": "Location this breakpoint resolved into.",
                             "$ref": "Location"
+                        }
+                    ]
+                },
+                {
+                    "name": "setInstrumentationBreakpoint",
+                    "description": "Sets instrumentation breakpoint.",
+                    "parameters": [
+                        {
+                            "name": "instrumentation",
+                            "description": "Instrumentation name.",
+                            "type": "string",
+                            "enum": [
+                                "beforeScriptExecution",
+                                "beforeScriptWithSourceMapExecution"
+                            ]
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "breakpointId",
+                            "description": "Id of the created breakpoint for further reference.",
+                            "$ref": "BreakpointId"
                         }
                     ]
                 },
@@ -933,16 +959,17 @@
                             "description": "Pause reason.",
                             "type": "string",
                             "enum": [
-                                "XHR",
+                                "ambiguous",
+                                "assert",
+                                "debugCommand",
                                 "DOM",
                                 "EventListener",
                                 "exception",
-                                "assert",
-                                "debugCommand",
-                                "promiseRejection",
+                                "instrumentation",
                                 "OOM",
                                 "other",
-                                "ambiguous"
+                                "promiseRejection",
+                                "XHR"
                             ]
                         },
                         {
@@ -1189,6 +1216,11 @@
                             "type": "number"
                         },
                         {
+                            "name": "id",
+                            "description": "Node id. Ids are unique across all profiles collected between startSampling and stopSampling.",
+                            "type": "integer"
+                        },
+                        {
                             "name": "children",
                             "description": "Child nodes.",
                             "type": "array",
@@ -1199,13 +1231,42 @@
                     ]
                 },
                 {
+                    "id": "SamplingHeapProfileSample",
+                    "description": "A single sample from a sampling profile.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "size",
+                            "description": "Allocation size in bytes attributed to the sample.",
+                            "type": "number"
+                        },
+                        {
+                            "name": "nodeId",
+                            "description": "Id of the corresponding profile tree node.",
+                            "type": "integer"
+                        },
+                        {
+                            "name": "ordinal",
+                            "description": "Time-ordered sample ordinal number. It is unique across all profiles retrieved\nbetween startSampling and stopSampling.",
+                            "type": "number"
+                        }
+                    ]
+                },
+                {
                     "id": "SamplingHeapProfile",
-                    "description": "Profile.",
+                    "description": "Sampling profile.",
                     "type": "object",
                     "properties": [
                         {
                             "name": "head",
                             "$ref": "SamplingHeapProfileNode"
+                        },
+                        {
+                            "name": "samples",
+                            "type": "array",
+                            "items": {
+                                "$ref": "SamplingHeapProfileSample"
+                            }
                         }
                     ]
                 }
@@ -1856,7 +1917,9 @@
                                 "error",
                                 "proxy",
                                 "promise",
-                                "typedarray"
+                                "typedarray",
+                                "arraybuffer",
+                                "dataview"
                             ]
                         },
                         {
@@ -1911,22 +1974,12 @@
                     "properties": [
                         {
                             "name": "header",
+                            "description": "The JSON-stringified result of formatter.header(object, config) call.\nIt contains json ML array that represents RemoteObject.",
                             "type": "string"
                         },
                         {
-                            "name": "hasBody",
-                            "type": "boolean"
-                        },
-                        {
-                            "name": "formatterObjectId",
-                            "$ref": "RemoteObjectId"
-                        },
-                        {
-                            "name": "bindRemoteObjectFunctionId",
-                            "$ref": "RemoteObjectId"
-                        },
-                        {
-                            "name": "configObjectId",
+                            "name": "bodyGetterId",
+                            "description": "If formatter returns true as a result of formatter.hasBody call then bodyGetterId will\ncontain RemoteObjectId for the function that returns result of formatter.body(object, config) call.\nThe result value is json ML array.",
                             "optional": true,
                             "$ref": "RemoteObjectId"
                         }
@@ -2159,6 +2212,24 @@
                             "name": "value",
                             "description": "The value associated with the property.",
                             "optional": true,
+                            "$ref": "RemoteObject"
+                        }
+                    ]
+                },
+                {
+                    "id": "PrivatePropertyDescriptor",
+                    "description": "Object private field descriptor.",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "name",
+                            "description": "Private property name.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "value",
+                            "description": "The value associated with the private property.",
                             "$ref": "RemoteObject"
                         }
                     ]
@@ -2715,6 +2786,16 @@
                             }
                         },
                         {
+                            "name": "privateProperties",
+                            "description": "Object private properties.",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "$ref": "PrivatePropertyDescriptor"
+                            }
+                        },
+                        {
                             "name": "exceptionDetails",
                             "description": "Exception details.",
                             "optional": true,
@@ -2993,7 +3074,7 @@
                         },
                         {
                             "name": "stackTrace",
-                            "description": "Stack trace captured when the call was made.",
+                            "description": "Stack trace captured when the call was made. The async stack chain is automatically reported for\nthe following call types: `assert`, `error`, `trace`, `warning`. For other types the async call\nchain can be retrieved using `Debugger.getStackTrace` and `stackTrace.parentId` field.",
                             "optional": true,
                             "$ref": "StackTrace"
                         },

@@ -35,6 +35,12 @@ public class GPUInfo {
 
   private List<String> driverBugWorkarounds;
 
+  private List<VideoDecodeAcceleratorCapability> videoDecoding;
+
+  private List<VideoEncodeAcceleratorCapability> videoEncoding;
+
+  private List<ImageDecodeAcceleratorCapability> imageDecoding;
+
   /** The graphics devices on the system. Element 0 is the primary GPU. */
   public List<GPUDevice> getDevices() {
     return devices;
@@ -73,5 +79,35 @@ public class GPUInfo {
   /** An optional array of GPU driver bug workarounds. */
   public void setDriverBugWorkarounds(List<String> driverBugWorkarounds) {
     this.driverBugWorkarounds = driverBugWorkarounds;
+  }
+
+  /** Supported accelerated video decoding capabilities. */
+  public List<VideoDecodeAcceleratorCapability> getVideoDecoding() {
+    return videoDecoding;
+  }
+
+  /** Supported accelerated video decoding capabilities. */
+  public void setVideoDecoding(List<VideoDecodeAcceleratorCapability> videoDecoding) {
+    this.videoDecoding = videoDecoding;
+  }
+
+  /** Supported accelerated video encoding capabilities. */
+  public List<VideoEncodeAcceleratorCapability> getVideoEncoding() {
+    return videoEncoding;
+  }
+
+  /** Supported accelerated video encoding capabilities. */
+  public void setVideoEncoding(List<VideoEncodeAcceleratorCapability> videoEncoding) {
+    this.videoEncoding = videoEncoding;
+  }
+
+  /** Supported accelerated image decoding capabilities. */
+  public List<ImageDecodeAcceleratorCapability> getImageDecoding() {
+    return imageDecoding;
+  }
+
+  /** Supported accelerated image decoding capabilities. */
+  public void setImageDecoding(List<ImageDecodeAcceleratorCapability> imageDecoding) {
+    this.imageDecoding = imageDecoding;
   }
 }

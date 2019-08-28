@@ -31,8 +31,6 @@ public class BackgroundColors {
 
   @Optional private String computedFontWeight;
 
-  @Optional private String computedBodyFontSize;
-
   /**
    * The range of background colors behind this element, if it contains any visible text. If no
    * visible text is present, this will be undefined. In the case of a flat background color, this
@@ -79,15 +77,5 @@ public class BackgroundColors {
    */
   public void setComputedFontWeight(String computedFontWeight) {
     this.computedFontWeight = computedFontWeight;
-  }
-
-  /** The computed font size for the document body, as a computed CSS value string (e.g. '16px'). */
-  public String getComputedBodyFontSize() {
-    return computedBodyFontSize;
-  }
-
-  /** The computed font size for the document body, as a computed CSS value string (e.g. '16px'). */
-  public void setComputedBodyFontSize(String computedBodyFontSize) {
-    this.computedBodyFontSize = computedBodyFontSize;
   }
 }

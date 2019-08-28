@@ -42,6 +42,7 @@ import com.github.kklisura.cdt.protocol.types.debugger.ScriptPosition;
 import com.github.kklisura.cdt.protocol.types.debugger.SearchMatch;
 import com.github.kklisura.cdt.protocol.types.debugger.SetBreakpoint;
 import com.github.kklisura.cdt.protocol.types.debugger.SetBreakpointByUrl;
+import com.github.kklisura.cdt.protocol.types.debugger.SetInstrumentationBreakpointInstrumentation;
 import com.github.kklisura.cdt.protocol.types.debugger.SetPauseOnExceptionsState;
 import com.github.kklisura.cdt.protocol.types.debugger.SetScriptSource;
 import com.github.kklisura.cdt.protocol.types.runtime.CallArgument;
@@ -81,6 +82,17 @@ public interface Debugger {
    */
   @Returns("debuggerId")
   String enable();
+
+  /**
+   * Enables debugger for the given page. Clients should not assume that the debugging has been
+   * enabled until the result for this command is received.
+   *
+   * @param maxScriptsCacheSize The maximum size in bytes of collected scripts (not referenced by
+   *     other heap objects) the debugger can hold. Puts no limit if paramter is omitted.
+   */
+  @Returns("debuggerId")
+  String enable(
+      @Experimental @Optional @ParamName("maxScriptsCacheSize") Double maxScriptsCacheSize);
 
   /**
    * Evaluates expression on a given call frame.
@@ -192,15 +204,6 @@ public interface Debugger {
   void resume();
 
   /**
-   * This method is deprecated - use Debugger.stepInto with breakOnAsyncCall and
-   * Debugger.pauseOnAsyncTask instead. Steps into next scheduled async task if any is scheduled
-   * before next pause. Returns success when async task is actually scheduled, returns error if no
-   * task were scheduled or another scheduleStepIntoAsync was called.
-   */
-  @Experimental
-  void scheduleStepIntoAsync();
-
-  /**
    * Searches for given string in script content.
    *
    * @param scriptId Id of the script to search in.
@@ -275,6 +278,15 @@ public interface Debugger {
    */
   SetBreakpoint setBreakpoint(
       @ParamName("location") Location location, @Optional @ParamName("condition") String condition);
+
+  /**
+   * Sets instrumentation breakpoint.
+   *
+   * @param instrumentation Instrumentation name.
+   */
+  @Returns("breakpointId")
+  String setInstrumentationBreakpoint(
+      @ParamName("instrumentation") SetInstrumentationBreakpointInstrumentation instrumentation);
 
   /**
    * Sets JavaScript breakpoint at given location specified either by URL or URL regex. Once this

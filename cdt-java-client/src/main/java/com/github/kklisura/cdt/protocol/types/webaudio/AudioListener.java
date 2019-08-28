@@ -1,4 +1,4 @@
-package com.github.kklisura.cdt.protocol.types.domsnapshot;
+package com.github.kklisura.cdt.protocol.types.webaudio;
 
 /*-
  * #%L
@@ -20,20 +20,26 @@ package com.github.kklisura.cdt.protocol.types.domsnapshot;
  * #L%
  */
 
-import java.util.List;
+/** Protocol object for AudioListner */
+public class AudioListener {
 
-/** Computed style snapshot. */
-public class StylesSnapshot {
+  private String listenerId;
 
-  private List<List<Integer>> values;
+  private String contextId;
 
-  /** Whitelisted ComputedStyle property values referenced by styleIndex. */
-  public List<List<Integer>> getValues() {
-    return values;
+  public String getListenerId() {
+    return listenerId;
   }
 
-  /** Whitelisted ComputedStyle property values referenced by styleIndex. */
-  public void setValues(List<List<Integer>> values) {
-    this.values = values;
+  public void setListenerId(String listenerId) {
+    this.listenerId = listenerId;
+  }
+
+  public String getContextId() {
+    return contextId;
+  }
+
+  public void setContextId(String contextId) {
+    this.contextId = contextId;
   }
 }

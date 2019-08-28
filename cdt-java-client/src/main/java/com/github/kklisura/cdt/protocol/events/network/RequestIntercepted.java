@@ -25,14 +25,15 @@ import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.network.AuthChallenge;
 import com.github.kklisura.cdt.protocol.types.network.ErrorReason;
 import com.github.kklisura.cdt.protocol.types.network.Request;
-import com.github.kklisura.cdt.protocol.types.page.ResourceType;
+import com.github.kklisura.cdt.protocol.types.network.ResourceType;
 import java.util.Map;
 
 /**
  * Details of an intercepted HTTP request, which must be either allowed, blocked, modified or
- * mocked.
+ * mocked. Deprecated, use Fetch.requestPaused instead.
  */
 @Experimental
+@Deprecated
 public class RequestIntercepted {
 
   private String interceptionId;
@@ -56,6 +57,8 @@ public class RequestIntercepted {
   @Optional private Integer responseStatusCode;
 
   @Optional private Map<String, Object> responseHeaders;
+
+  @Optional private String requestId;
 
   /**
    * Each request the page makes will have a unique id, however if any redirects are encountered
@@ -201,5 +204,21 @@ public class RequestIntercepted {
    */
   public void setResponseHeaders(Map<String, Object> responseHeaders) {
     this.responseHeaders = responseHeaders;
+  }
+
+  /**
+   * If the intercepted request had a corresponding requestWillBeSent event fired for it, then this
+   * requestId will be the same as the requestId present in the requestWillBeSent event.
+   */
+  public String getRequestId() {
+    return requestId;
+  }
+
+  /**
+   * If the intercepted request had a corresponding requestWillBeSent event fired for it, then this
+   * requestId will be the same as the requestId present in the requestWillBeSent event.
+   */
+  public void setRequestId(String requestId) {
+    this.requestId = requestId;
   }
 }

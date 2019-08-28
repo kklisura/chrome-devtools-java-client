@@ -24,30 +24,18 @@ import java.util.List;
 
 public class CaptureSnapshot {
 
-  private DOMTreeSnapshot nodes;
-
-  private LayoutTreeSnapshot layout;
+  private List<DocumentSnapshot> documents;
 
   private List<String> strings;
 
   /** The nodes in the DOM tree. The DOMNode at index 0 corresponds to the root document. */
-  public DOMTreeSnapshot getNodes() {
-    return nodes;
+  public List<DocumentSnapshot> getDocuments() {
+    return documents;
   }
 
   /** The nodes in the DOM tree. The DOMNode at index 0 corresponds to the root document. */
-  public void setNodes(DOMTreeSnapshot nodes) {
-    this.nodes = nodes;
-  }
-
-  /** The nodes in the layout tree. */
-  public LayoutTreeSnapshot getLayout() {
-    return layout;
-  }
-
-  /** The nodes in the layout tree. */
-  public void setLayout(LayoutTreeSnapshot layout) {
-    this.layout = layout;
+  public void setDocuments(List<DocumentSnapshot> documents) {
+    this.documents = documents;
   }
 
   /** Shared string table that all string properties refer to with indexes. */

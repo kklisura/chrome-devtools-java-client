@@ -30,5 +30,9 @@ public enum CookieSameSite {
   @JsonProperty("Strict")
   STRICT,
   @JsonProperty("Lax")
-  LAX
+  LAX,
+  @JsonProperty("Extended")
+  EXTENDED,
+  @JsonProperty("None")
+  NONE
 }

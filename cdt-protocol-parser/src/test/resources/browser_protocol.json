@@ -205,15 +205,19 @@
                 },
                 {
                     "id": "AXPropertyName",
-                    "description": "Values of AXProperty name: from 'busy' to 'roledescription' - states which apply to every AX\nnode, from 'live' to 'root' - attributes which apply to nodes in live regions, from\n'autocomplete' to 'valuetext' - attributes which apply to widgets, from 'checked' to 'selected'\n- states which apply to widgets, from 'activedescendant' to 'owns' - relationships between\nelements other than parent/child/sibling.",
+                    "description": "Values of AXProperty name:\n- from 'busy' to 'roledescription': states which apply to every AX node\n- from 'live' to 'root': attributes which apply to nodes in live regions\n- from 'autocomplete' to 'valuetext': attributes which apply to widgets\n- from 'checked' to 'selected': states which apply to widgets\n- from 'activedescendant' to 'owns' - relationships between elements other than parent/child/sibling.",
                     "type": "string",
                     "enum": [
                         "busy",
                         "disabled",
+                        "editable",
+                        "focusable",
+                        "focused",
                         "hidden",
                         "hiddenRoot",
                         "invalid",
                         "keyshortcuts",
+                        "settable",
                         "roledescription",
                         "live",
                         "atomic",
@@ -322,6 +326,14 @@
             ],
             "commands": [
                 {
+                    "name": "disable",
+                    "description": "Disables the accessibility domain."
+                },
+                {
+                    "name": "enable",
+                    "description": "Enables the accessibility domain which causes `AXNodeId`s to remain consistent between method calls.\nThis turns on accessibility for the page, which can impact performance until accessibility is disabled."
+                },
+                {
                     "name": "getPartialAXTree",
                     "description": "Fetches the accessibility node and partial accessibility tree for this DOM node, if it exists.",
                     "experimental": true,
@@ -355,6 +367,20 @@
                         {
                             "name": "nodes",
                             "description": "The `Accessibility.AXNode` for this DOM node, if it exists, plus its ancestors, siblings and\nchildren, if requested.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "AXNode"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "getFullAXTree",
+                    "description": "Fetches the entire accessibility tree",
+                    "experimental": true,
+                    "returns": [
+                        {
+                            "name": "nodes",
                             "type": "array",
                             "items": {
                                 "$ref": "AXNode"
@@ -945,6 +971,157 @@
             ]
         },
         {
+            "domain": "BackgroundService",
+            "description": "Defines events for background web platform features.",
+            "experimental": true,
+            "types": [
+                {
+                    "id": "ServiceName",
+                    "description": "The Background Service that will be associated with the commands/events.\nEvery Background Service operates independently, but they share the same\nAPI.",
+                    "type": "string",
+                    "enum": [
+                        "backgroundFetch",
+                        "backgroundSync",
+                        "pushMessaging",
+                        "notifications",
+                        "paymentHandler",
+                        "periodicBackgroundSync"
+                    ]
+                },
+                {
+                    "id": "EventMetadata",
+                    "description": "A key-value pair for additional event information to pass along.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "key",
+                            "type": "string"
+                        },
+                        {
+                            "name": "value",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "id": "BackgroundServiceEvent",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "timestamp",
+                            "description": "Timestamp of the event (in seconds).",
+                            "$ref": "Network.TimeSinceEpoch"
+                        },
+                        {
+                            "name": "origin",
+                            "description": "The origin this event belongs to.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "serviceWorkerRegistrationId",
+                            "description": "The Service Worker ID that initiated the event.",
+                            "$ref": "ServiceWorker.RegistrationID"
+                        },
+                        {
+                            "name": "service",
+                            "description": "The Background Service this event belongs to.",
+                            "$ref": "ServiceName"
+                        },
+                        {
+                            "name": "eventName",
+                            "description": "A description of the event.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "instanceId",
+                            "description": "An identifier that groups related events together.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "eventMetadata",
+                            "description": "A list of event-specific information.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "EventMetadata"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "commands": [
+                {
+                    "name": "startObserving",
+                    "description": "Enables event updates for the service.",
+                    "parameters": [
+                        {
+                            "name": "service",
+                            "$ref": "ServiceName"
+                        }
+                    ]
+                },
+                {
+                    "name": "stopObserving",
+                    "description": "Disables event updates for the service.",
+                    "parameters": [
+                        {
+                            "name": "service",
+                            "$ref": "ServiceName"
+                        }
+                    ]
+                },
+                {
+                    "name": "setRecording",
+                    "description": "Set the recording state for the service.",
+                    "parameters": [
+                        {
+                            "name": "shouldRecord",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "service",
+                            "$ref": "ServiceName"
+                        }
+                    ]
+                },
+                {
+                    "name": "clearEvents",
+                    "description": "Clears all stored data for the service.",
+                    "parameters": [
+                        {
+                            "name": "service",
+                            "$ref": "ServiceName"
+                        }
+                    ]
+                }
+            ],
+            "events": [
+                {
+                    "name": "recordingStateChanged",
+                    "description": "Called when the recording state for the service has been updated.",
+                    "parameters": [
+                        {
+                            "name": "isRecording",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "service",
+                            "$ref": "ServiceName"
+                        }
+                    ]
+                },
+                {
+                    "name": "backgroundServiceEventReceived",
+                    "description": "Called with all existing backgroundServiceEvents when enabled, and all new\nevents afterwards if enabled and recording.",
+                    "parameters": [
+                        {
+                            "name": "backgroundServiceEvent",
+                            "$ref": "BackgroundServiceEvent"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "domain": "Browser",
             "description": "The Browser domain defines methods and events for browser managing.",
             "types": [
@@ -1000,6 +1177,74 @@
                             "description": "The window state. Default to normal.",
                             "optional": true,
                             "$ref": "WindowState"
+                        }
+                    ]
+                },
+                {
+                    "id": "PermissionType",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "accessibilityEvents",
+                        "audioCapture",
+                        "backgroundSync",
+                        "backgroundFetch",
+                        "clipboardRead",
+                        "clipboardWrite",
+                        "durableStorage",
+                        "flash",
+                        "geolocation",
+                        "midi",
+                        "midiSysex",
+                        "notifications",
+                        "paymentHandler",
+                        "periodicBackgroundSync",
+                        "protectedMediaIdentifier",
+                        "sensors",
+                        "videoCapture",
+                        "idleDetection",
+                        "wakeLockScreen",
+                        "wakeLockSystem"
+                    ]
+                },
+                {
+                    "id": "PermissionSetting",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "granted",
+                        "denied",
+                        "prompt"
+                    ]
+                },
+                {
+                    "id": "PermissionDescriptor",
+                    "description": "Definition of PermissionDescriptor defined in the Permissions API:\nhttps://w3c.github.io/permissions/#dictdef-permissiondescriptor.",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "name",
+                            "description": "Name of permission.\nSee https://cs.chromium.org/chromium/src/third_party/blink/renderer/modules/permissions/permission_descriptor.idl for valid permission names.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "sysex",
+                            "description": "For \"midi\" permission, may also specify sysex control.",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "userVisibleOnly",
+                            "description": "For \"push\" permission, may specify userVisibleOnly.\nNote that userVisibleOnly = true is the only currently supported type.",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "type",
+                            "description": "For \"wake-lock\" permission, must specify type as either \"screen\" or \"system\".",
+                            "optional": true,
+                            "type": "string"
                         }
                     ]
                 },
@@ -1060,8 +1305,83 @@
             ],
             "commands": [
                 {
+                    "name": "setPermission",
+                    "description": "Set permission settings for given origin.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "origin",
+                            "description": "Origin the permission applies to.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "permission",
+                            "description": "Descriptor of permission to override.",
+                            "$ref": "PermissionDescriptor"
+                        },
+                        {
+                            "name": "setting",
+                            "description": "Setting of the permission.",
+                            "$ref": "PermissionSetting"
+                        },
+                        {
+                            "name": "browserContextId",
+                            "description": "Context to override. When omitted, default browser context is used.",
+                            "optional": true,
+                            "$ref": "Target.TargetID"
+                        }
+                    ]
+                },
+                {
+                    "name": "grantPermissions",
+                    "description": "Grant specific permissions to the given origin and reject all others.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "origin",
+                            "type": "string"
+                        },
+                        {
+                            "name": "permissions",
+                            "type": "array",
+                            "items": {
+                                "$ref": "PermissionType"
+                            }
+                        },
+                        {
+                            "name": "browserContextId",
+                            "description": "BrowserContext to override permissions. When omitted, default browser context is used.",
+                            "optional": true,
+                            "$ref": "Target.BrowserContextID"
+                        }
+                    ]
+                },
+                {
+                    "name": "resetPermissions",
+                    "description": "Reset all permission management for all origins.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "browserContextId",
+                            "description": "BrowserContext to reset permissions. When omitted, default browser context is used.",
+                            "optional": true,
+                            "$ref": "Target.BrowserContextID"
+                        }
+                    ]
+                },
+                {
                     "name": "close",
                     "description": "Close browser gracefully."
+                },
+                {
+                    "name": "crash",
+                    "description": "Crashes browser on the main thread.",
+                    "experimental": true
+                },
+                {
+                    "name": "crashGpuProcess",
+                    "description": "Crashes GPU process.",
+                    "experimental": true
                 },
                 {
                     "name": "getVersion",
@@ -1189,7 +1509,8 @@
                     "parameters": [
                         {
                             "name": "targetId",
-                            "description": "Devtools agent host id.",
+                            "description": "Devtools agent host id. If called as a part of the session, associated targetId is used.",
+                            "optional": true,
                             "$ref": "Target.TargetID"
                         }
                     ],
@@ -1220,6 +1541,24 @@
                             "name": "bounds",
                             "description": "New window bounds. The 'minimized', 'maximized' and 'fullscreen' states cannot be combined\nwith 'left', 'top', 'width' or 'height'. Leaves unspecified fields unchanged.",
                             "$ref": "Bounds"
+                        }
+                    ]
+                },
+                {
+                    "name": "setDockTile",
+                    "description": "Set dock tile details, platform-specific.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "badgeLabel",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "image",
+                            "description": "Png encoded image.",
+                            "optional": true,
+                            "type": "string"
                         }
                     ]
                 }
@@ -2013,12 +2352,6 @@
                             "description": "The computed font weight for this node, as a CSS computed value string (e.g. 'normal' or\n'100').",
                             "optional": true,
                             "type": "string"
-                        },
-                        {
-                            "name": "computedBodyFontSize",
-                            "description": "The computed font size for the document body, as a computed CSS value string (e.g. '16px').",
-                            "optional": true,
-                            "type": "string"
                         }
                     ]
                 },
@@ -2407,6 +2740,19 @@
                     "type": "string"
                 },
                 {
+                    "id": "CachedResponseType",
+                    "description": "type of HTTP response cached",
+                    "type": "string",
+                    "enum": [
+                        "basic",
+                        "cors",
+                        "default",
+                        "error",
+                        "opaqueResponse",
+                        "opaqueRedirect"
+                    ]
+                },
+                {
                     "id": "DataEntry",
                     "description": "Data entry.",
                     "type": "object",
@@ -2443,6 +2789,11 @@
                             "name": "responseStatusText",
                             "description": "HTTP response status text.",
                             "type": "string"
+                        },
+                        {
+                            "name": "responseType",
+                            "description": "HTTP response type",
+                            "$ref": "CachedResponseType"
                         },
                         {
                             "name": "responseHeaders",
@@ -2558,13 +2909,21 @@
                     "parameters": [
                         {
                             "name": "cacheId",
-                            "description": "Id of cache that contains the enty.",
+                            "description": "Id of cache that contains the entry.",
                             "$ref": "CacheId"
                         },
                         {
                             "name": "requestURL",
                             "description": "URL spec of the request.",
                             "type": "string"
+                        },
+                        {
+                            "name": "requestHeaders",
+                            "description": "headers of the request.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "Header"
+                            }
                         }
                     ],
                     "returns": [
@@ -2593,6 +2952,12 @@
                             "name": "pageSize",
                             "description": "Number of records to fetch.",
                             "type": "integer"
+                        },
+                        {
+                            "name": "pathFilter",
+                            "description": "If present, only return the entries containing this substring in the path",
+                            "optional": true,
+                            "type": "string"
                         }
                     ],
                     "returns": [
@@ -2605,9 +2970,108 @@
                             }
                         },
                         {
-                            "name": "hasMore",
-                            "description": "If true, there are more entries to fetch in the given range.",
-                            "type": "boolean"
+                            "name": "returnCount",
+                            "description": "Count of returned entries from this storage. If pathFilter is empty, it\nis the count of all entries from this storage.",
+                            "type": "number"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "domain": "Cast",
+            "description": "A domain for interacting with Cast, Presentation API, and Remote Playback API\nfunctionalities.",
+            "experimental": true,
+            "types": [
+                {
+                    "id": "Sink",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "name",
+                            "type": "string"
+                        },
+                        {
+                            "name": "id",
+                            "type": "string"
+                        },
+                        {
+                            "name": "session",
+                            "description": "Text describing the current session. Present only if there is an active\nsession on the sink.",
+                            "optional": true,
+                            "type": "string"
+                        }
+                    ]
+                }
+            ],
+            "commands": [
+                {
+                    "name": "enable",
+                    "description": "Starts observing for sinks that can be used for tab mirroring, and if set,\nsinks compatible with |presentationUrl| as well. When sinks are found, a\n|sinksUpdated| event is fired.\nAlso starts observing for issue messages. When an issue is added or removed,\nan |issueUpdated| event is fired.",
+                    "parameters": [
+                        {
+                            "name": "presentationUrl",
+                            "optional": true,
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "disable",
+                    "description": "Stops observing for sinks and issues."
+                },
+                {
+                    "name": "setSinkToUse",
+                    "description": "Sets a sink to be used when the web page requests the browser to choose a\nsink via Presentation API, Remote Playback API, or Cast SDK.",
+                    "parameters": [
+                        {
+                            "name": "sinkName",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "startTabMirroring",
+                    "description": "Starts mirroring the tab to the sink.",
+                    "parameters": [
+                        {
+                            "name": "sinkName",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "stopCasting",
+                    "description": "Stops the active Cast session on the sink.",
+                    "parameters": [
+                        {
+                            "name": "sinkName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ],
+            "events": [
+                {
+                    "name": "sinksUpdated",
+                    "description": "This is fired whenever the list of available sinks changes. A sink is a\ndevice or a software surface that you can cast to.",
+                    "parameters": [
+                        {
+                            "name": "sinks",
+                            "type": "array",
+                            "items": {
+                                "$ref": "Sink"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "issueUpdated",
+                    "description": "This is fired whenever the outstanding issue/error message changes.\n|issueMessage| is empty if there is no issue.",
+                    "parameters": [
+                        {
+                            "name": "issueMessage",
+                            "type": "string"
                         }
                     ]
                 }
@@ -3284,7 +3748,7 @@
                 },
                 {
                     "name": "getNodeForLocation",
-                    "description": "Returns node id at given location.",
+                    "description": "Returns node id at given location. Depending on whether DOM domain is enabled, nodeId is\neither returned or not.",
                     "experimental": true,
                     "parameters": [
                         {
@@ -3306,8 +3770,14 @@
                     ],
                     "returns": [
                         {
+                            "name": "backendNodeId",
+                            "description": "Resulting node.",
+                            "$ref": "BackendNodeId"
+                        },
+                        {
                             "name": "nodeId",
-                            "description": "Id of the node at given coordinates.",
+                            "description": "Id of the node at given coordinates, only when enabled and requested document.",
+                            "optional": true,
                             "$ref": "NodeId"
                         }
                     ]
@@ -3660,6 +4130,12 @@
                             "description": "Symbolic group name that can be used to release multiple objects.",
                             "optional": true,
                             "type": "string"
+                        },
+                        {
+                            "name": "executionContextId",
+                            "description": "Execution context in which to resolve the node.",
+                            "optional": true,
+                            "$ref": "Runtime.ExecutionContextId"
                         }
                     ],
                     "returns": [
@@ -3742,6 +4218,56 @@
                             "description": "JavaScript object id of the node wrapper.",
                             "optional": true,
                             "$ref": "Runtime.RemoteObjectId"
+                        }
+                    ]
+                },
+                {
+                    "name": "setNodeStackTracesEnabled",
+                    "description": "Sets if stack traces should be captured for Nodes. See `Node.getNodeStackTraces`. Default is disabled.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "enable",
+                            "description": "Enable or disable.",
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                {
+                    "name": "getNodeStackTraces",
+                    "description": "Gets stack traces associated with a Node. As of now, only provides stack trace for Node creation.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "nodeId",
+                            "description": "Id of the node to get stack traces for.",
+                            "$ref": "NodeId"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "creation",
+                            "description": "Creation stack trace, if available.",
+                            "optional": true,
+                            "$ref": "Runtime.StackTrace"
+                        }
+                    ]
+                },
+                {
+                    "name": "getFileInfo",
+                    "description": "Returns file information for the given\nFile wrapper.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "objectId",
+                            "description": "JavaScript object id of the node wrapper.",
+                            "$ref": "Runtime.RemoteObjectId"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "path",
+                            "type": "string"
                         }
                     ]
                 },
@@ -3829,7 +4355,14 @@
                     ],
                     "returns": [
                         {
+                            "name": "backendNodeId",
+                            "description": "Resulting node.",
+                            "$ref": "BackendNodeId"
+                        },
+                        {
                             "name": "nodeId",
+                            "description": "Id of the node at given coordinates, only when enabled and requested document.",
+                            "optional": true,
                             "$ref": "NodeId"
                         }
                     ]
@@ -4075,7 +4608,8 @@
             "description": "DOM debugging allows setting breakpoints on particular DOM operations and events. JavaScript\nexecution will stop on these operations as if there was a regular breakpoint set.",
             "dependencies": [
                 "DOM",
-                "Debugger"
+                "Debugger",
+                "Runtime"
             ],
             "types": [
                 {
@@ -4441,18 +4975,6 @@
                             "type": "integer"
                         },
                         {
-                            "name": "importedDocumentIndex",
-                            "description": "Index of the imported document's node of a link element in the `domNodes` array returned by\n`getSnapshot`, if any.",
-                            "optional": true,
-                            "type": "integer"
-                        },
-                        {
-                            "name": "templateContentIndex",
-                            "description": "Index of the content node of a template element in the `domNodes` array returned by\n`getSnapshot`.",
-                            "optional": true,
-                            "type": "integer"
-                        },
-                        {
                             "name": "pseudoType",
                             "description": "Type of a pseudo element node.",
                             "optional": true,
@@ -4490,6 +5012,17 @@
                             "description": "The url of the script (if any) that generates this node.",
                             "optional": true,
                             "type": "string"
+                        },
+                        {
+                            "name": "scrollOffsetX",
+                            "description": "Scroll offsets, set when this node is a Document.",
+                            "optional": true,
+                            "type": "number"
+                        },
+                        {
+                            "name": "scrollOffsetY",
+                            "optional": true,
+                            "type": "number"
                         }
                     ]
                 },
@@ -4500,7 +5033,7 @@
                     "properties": [
                         {
                             "name": "boundingBox",
-                            "description": "The absolute position bounding box.",
+                            "description": "The bounding box in document coordinates. Note that scroll offset of the document is ignored.",
                             "$ref": "DOM.Rect"
                         },
                         {
@@ -4527,7 +5060,7 @@
                         },
                         {
                             "name": "boundingBox",
-                            "description": "The absolute position bounding box.",
+                            "description": "The bounding box in document coordinates. Note that scroll offset of the document is ignored.",
                             "$ref": "DOM.Rect"
                         },
                         {
@@ -4556,6 +5089,12 @@
                             "description": "Global paint order index, which is determined by the stacking order of the nodes. Nodes\nthat are painted together will have the same index. Only provided if includePaintOrder in\ngetSnapshot was true.",
                             "optional": true,
                             "type": "integer"
+                        },
+                        {
+                            "name": "isStackingContext",
+                            "description": "Set to true to indicate the element begins a new stacking context.",
+                            "optional": true,
+                            "type": "boolean"
                         }
                     ]
                 },
@@ -4666,8 +5205,77 @@
                     }
                 },
                 {
-                    "id": "DOMTreeSnapshot",
-                    "description": "DOM tree snapshot.",
+                    "id": "DocumentSnapshot",
+                    "description": "Document snapshot.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "documentURL",
+                            "description": "Document URL that `Document` or `FrameOwner` node points to.",
+                            "$ref": "StringIndex"
+                        },
+                        {
+                            "name": "baseURL",
+                            "description": "Base URL that `Document` or `FrameOwner` node uses for URL completion.",
+                            "$ref": "StringIndex"
+                        },
+                        {
+                            "name": "contentLanguage",
+                            "description": "Contains the document's content language.",
+                            "$ref": "StringIndex"
+                        },
+                        {
+                            "name": "encodingName",
+                            "description": "Contains the document's character set encoding.",
+                            "$ref": "StringIndex"
+                        },
+                        {
+                            "name": "publicId",
+                            "description": "`DocumentType` node's publicId.",
+                            "$ref": "StringIndex"
+                        },
+                        {
+                            "name": "systemId",
+                            "description": "`DocumentType` node's systemId.",
+                            "$ref": "StringIndex"
+                        },
+                        {
+                            "name": "frameId",
+                            "description": "Frame ID for frame owner elements and also for the document node.",
+                            "$ref": "StringIndex"
+                        },
+                        {
+                            "name": "nodes",
+                            "description": "A table with dom nodes.",
+                            "$ref": "NodeTreeSnapshot"
+                        },
+                        {
+                            "name": "layout",
+                            "description": "The nodes in the layout tree.",
+                            "$ref": "LayoutTreeSnapshot"
+                        },
+                        {
+                            "name": "textBoxes",
+                            "description": "The post-layout inline text nodes.",
+                            "$ref": "TextBoxSnapshot"
+                        },
+                        {
+                            "name": "scrollOffsetX",
+                            "description": "Horizontal scroll offset.",
+                            "optional": true,
+                            "type": "number"
+                        },
+                        {
+                            "name": "scrollOffsetY",
+                            "description": "Vertical scroll offset.",
+                            "optional": true,
+                            "type": "number"
+                        }
+                    ]
+                },
+                {
+                    "id": "NodeTreeSnapshot",
+                    "description": "Table containing nodes.",
                     "type": "object",
                     "properties": [
                         {
@@ -4725,15 +5333,6 @@
                             }
                         },
                         {
-                            "name": "layoutNodeIndex",
-                            "description": "The index of the node's related layout tree node in the `layoutTreeNodes` array returned by\n`captureSnapshot`, if any.",
-                            "optional": true,
-                            "type": "array",
-                            "items": {
-                                "type": "integer"
-                            }
-                        },
-                        {
                             "name": "textValue",
                             "description": "Only set for textarea elements, contains the text value.",
                             "optional": true,
@@ -4758,62 +5357,8 @@
                             "$ref": "RareBooleanData"
                         },
                         {
-                            "name": "documentURL",
-                            "description": "Document URL that `Document` or `FrameOwner` node points to.",
-                            "optional": true,
-                            "$ref": "RareStringData"
-                        },
-                        {
-                            "name": "baseURL",
-                            "description": "Base URL that `Document` or `FrameOwner` node uses for URL completion.",
-                            "optional": true,
-                            "$ref": "RareStringData"
-                        },
-                        {
-                            "name": "contentLanguage",
-                            "description": "Only set for documents, contains the document's content language.",
-                            "optional": true,
-                            "$ref": "RareStringData"
-                        },
-                        {
-                            "name": "documentEncoding",
-                            "description": "Only set for documents, contains the document's character set encoding.",
-                            "optional": true,
-                            "$ref": "RareStringData"
-                        },
-                        {
-                            "name": "publicId",
-                            "description": "`DocumentType` node's publicId.",
-                            "optional": true,
-                            "$ref": "RareStringData"
-                        },
-                        {
-                            "name": "systemId",
-                            "description": "`DocumentType` node's systemId.",
-                            "optional": true,
-                            "$ref": "RareStringData"
-                        },
-                        {
-                            "name": "frameId",
-                            "description": "Frame ID for frame owner elements and also for the document node.",
-                            "optional": true,
-                            "$ref": "RareStringData"
-                        },
-                        {
                             "name": "contentDocumentIndex",
-                            "description": "The index of a frame owner element's content document in the `domNodes` array returned by\n`captureSnapshot`, if any.",
-                            "optional": true,
-                            "$ref": "RareIntegerData"
-                        },
-                        {
-                            "name": "importedDocumentIndex",
-                            "description": "Index of the imported document's node of a link element in the `domNodes` array returned by\n`captureSnapshot`, if any.",
-                            "optional": true,
-                            "$ref": "RareIntegerData"
-                        },
-                        {
-                            "name": "templateContentIndex",
-                            "description": "Index of the content node of a template element in the `domNodes` array returned by\n`captureSnapshot`.",
+                            "description": "The index of the document in the list of the snapshot documents.",
                             "optional": true,
                             "$ref": "RareIntegerData"
                         },
@@ -4844,13 +5389,93 @@
                     ]
                 },
                 {
+                    "id": "LayoutTreeSnapshot",
+                    "description": "Table of details of an element in the DOM tree with a LayoutObject.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "nodeIndex",
+                            "description": "Index of the corresponding node in the `NodeTreeSnapshot` array returned by `captureSnapshot`.",
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        },
+                        {
+                            "name": "styles",
+                            "description": "Array of indexes specifying computed style strings, filtered according to the `computedStyles` parameter passed to `captureSnapshot`.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "ArrayOfStrings"
+                            }
+                        },
+                        {
+                            "name": "bounds",
+                            "description": "The absolute position bounding box.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "Rectangle"
+                            }
+                        },
+                        {
+                            "name": "text",
+                            "description": "Contents of the LayoutText, if any.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "StringIndex"
+                            }
+                        },
+                        {
+                            "name": "stackingContexts",
+                            "description": "Stacking context information.",
+                            "$ref": "RareBooleanData"
+                        },
+                        {
+                            "name": "paintOrders",
+                            "description": "Global paint order index, which is determined by the stacking order of the nodes. Nodes\nthat are painted together will have the same index. Only provided if includePaintOrder in\ncaptureSnapshot was true.",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        },
+                        {
+                            "name": "offsetRects",
+                            "description": "The offset rect of nodes. Only available when includeDOMRects is set to true",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "$ref": "Rectangle"
+                            }
+                        },
+                        {
+                            "name": "scrollRects",
+                            "description": "The scroll rect of nodes. Only available when includeDOMRects is set to true",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "$ref": "Rectangle"
+                            }
+                        },
+                        {
+                            "name": "clientRects",
+                            "description": "The client rect of nodes. Only available when includeDOMRects is set to true",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "$ref": "Rectangle"
+                            }
+                        }
+                    ]
+                },
+                {
                     "id": "TextBoxSnapshot",
-                    "description": "Details of post layout rendered text positions. The exact layout should not be regarded as\nstable and may change between versions.",
+                    "description": "Table of details of the post layout rendered text positions. The exact layout should not be regarded as\nstable and may change between versions.",
                     "type": "object",
                     "properties": [
                         {
                             "name": "layoutIndex",
-                            "description": "Intex of th elayout tree node that owns this box collection.",
+                            "description": "Index of the layout tree node that owns this box collection.",
                             "type": "array",
                             "items": {
                                 "type": "integer"
@@ -4878,65 +5503,6 @@
                             "type": "array",
                             "items": {
                                 "type": "integer"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "id": "LayoutTreeSnapshot",
-                    "description": "Details of an element in the DOM tree with a LayoutObject.",
-                    "type": "object",
-                    "properties": [
-                        {
-                            "name": "nodeIndex",
-                            "description": "The index of the related DOM node in the `domNodes` array returned by `getSnapshot`.",
-                            "type": "array",
-                            "items": {
-                                "type": "integer"
-                            }
-                        },
-                        {
-                            "name": "styles",
-                            "description": "Index into the `computedStyles` array returned by `captureSnapshot`.",
-                            "type": "array",
-                            "items": {
-                                "$ref": "ArrayOfStrings"
-                            }
-                        },
-                        {
-                            "name": "bounds",
-                            "description": "The absolute position bounding box.",
-                            "type": "array",
-                            "items": {
-                                "$ref": "Rectangle"
-                            }
-                        },
-                        {
-                            "name": "text",
-                            "description": "Contents of the LayoutText, if any.",
-                            "type": "array",
-                            "items": {
-                                "$ref": "StringIndex"
-                            }
-                        },
-                        {
-                            "name": "textBoxes",
-                            "description": "The post-layout inline text nodes",
-                            "$ref": "TextBoxSnapshot"
-                        }
-                    ]
-                },
-                {
-                    "id": "StylesSnapshot",
-                    "description": "Computed style snapshot.",
-                    "type": "object",
-                    "properties": [
-                        {
-                            "name": "values",
-                            "description": "Whitelisted ComputedStyle property values referenced by styleIndex.",
-                            "type": "array",
-                            "items": {
-                                "$ref": "ArrayOfStrings"
                             }
                         }
                     ]
@@ -5021,18 +5587,28 @@
                             "items": {
                                 "type": "string"
                             }
+                        },
+                        {
+                            "name": "includePaintOrder",
+                            "description": "Whether to include layout object paint orders into the snapshot.",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "includeDOMRects",
+                            "description": "Whether to include DOM rectangles (offsetRects, clientRects, scrollRects) into the snapshot",
+                            "optional": true,
+                            "type": "boolean"
                         }
                     ],
                     "returns": [
                         {
-                            "name": "nodes",
+                            "name": "documents",
                             "description": "The nodes in the DOM tree. The DOMNode at index 0 corresponds to the root document.",
-                            "$ref": "DOMTreeSnapshot"
-                        },
-                        {
-                            "name": "layout",
-                            "description": "The nodes in the layout tree.",
-                            "$ref": "LayoutTreeSnapshot"
+                            "type": "array",
+                            "items": {
+                                "$ref": "DocumentSnapshot"
+                            }
                         },
                         {
                             "name": "strings",
@@ -5438,6 +6014,18 @@
                     "experimental": true
                 },
                 {
+                    "name": "setFocusEmulationEnabled",
+                    "description": "Enables or disables simulating a focused and active page.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "enabled",
+                            "description": "Whether to enable to disable focus emulation.",
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                {
                     "name": "setCPUThrottlingRate",
                     "description": "Enables CPU throttling to emulate slow CPUs.",
                     "experimental": true,
@@ -5716,6 +6304,18 @@
                     ]
                 },
                 {
+                    "name": "setTimezoneOverride",
+                    "description": "Overrides default host system timezone with the specified one.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "timezoneId",
+                            "description": "The timezone identifier. If empty, disables the override and\nrestores default host system timezone.",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
                     "name": "setVisibleSize",
                     "description": "Resizes the frame/viewport of the page. Note that this does not affect the frame's container\n(e.g. browser window). Can be used to produce screenshots of the specified size. Not supported\non Android.",
                     "experimental": true,
@@ -5759,33 +6359,9 @@
             ],
             "events": [
                 {
-                    "name": "virtualTimeAdvanced",
-                    "description": "Notification sent after the virtual time has advanced.",
-                    "experimental": true,
-                    "parameters": [
-                        {
-                            "name": "virtualTimeElapsed",
-                            "description": "The amount of virtual time that has elapsed in milliseconds since virtual time was first\nenabled.",
-                            "type": "number"
-                        }
-                    ]
-                },
-                {
                     "name": "virtualTimeBudgetExpired",
                     "description": "Notification sent after the virtual time budget for the current VirtualTimePolicy has run out.",
                     "experimental": true
-                },
-                {
-                    "name": "virtualTimePaused",
-                    "description": "Notification sent after the virtual time has paused.",
-                    "experimental": true,
-                    "parameters": [
-                        {
-                            "name": "virtualTimeElapsed",
-                            "description": "The amount of virtual time that has elapsed in milliseconds since virtual time was first\nenabled.",
-                            "type": "number"
-                        }
-                    ]
                 }
             ]
         },
@@ -5991,8 +6567,8 @@
                         },
                         {
                             "name": "version",
-                            "description": "Database version.",
-                            "type": "integer"
+                            "description": "Database version (type is not 'integer', as the standard\nrequires the version number to be 'unsigned long long')",
+                            "type": "number"
                         },
                         {
                             "name": "objectStores",
@@ -6317,6 +6893,39 @@
                     ]
                 },
                 {
+                    "name": "getMetadata",
+                    "description": "Gets metadata of an object store",
+                    "parameters": [
+                        {
+                            "name": "securityOrigin",
+                            "description": "Security origin.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "databaseName",
+                            "description": "Database name.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "objectStoreName",
+                            "description": "Object store name.",
+                            "type": "string"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "entriesCount",
+                            "description": "the entries count",
+                            "type": "number"
+                        },
+                        {
+                            "name": "keyGeneratorValue",
+                            "description": "the current value of key generator, to become the next inserted\nkey into the object store. Valid if objectStore.autoIncrement\nis true.",
+                            "type": "number"
+                        }
+                    ]
+                },
+                {
                     "name": "requestDatabase",
                     "description": "Requests database with given name in given frame.",
                     "parameters": [
@@ -6524,6 +7133,18 @@
                     ]
                 },
                 {
+                    "name": "insertText",
+                    "description": "This method emulates inserting text that doesn't come from a key press,\nfor example an emoji keyboard or an IME.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "text",
+                            "description": "The text to insert.",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
                     "name": "dispatchMouseEvent",
                     "description": "Dispatches a mouse event to the page.",
                     "parameters": [
@@ -6569,8 +7190,16 @@
                                 "none",
                                 "left",
                                 "middle",
-                                "right"
+                                "right",
+                                "back",
+                                "forward"
                             ]
+                        },
+                        {
+                            "name": "buttons",
+                            "description": "A number indicating which buttons are pressed on the mouse when a mouse event is triggered.\nLeft=1, Right=2, Middle=4, Back=8, Forward=16, None=0.",
+                            "optional": true,
+                            "type": "integer"
                         },
                         {
                             "name": "clickCount",
@@ -6589,6 +7218,16 @@
                             "description": "Y delta in CSS pixels for mouse wheel event (default: 0).",
                             "optional": true,
                             "type": "number"
+                        },
+                        {
+                            "name": "pointerType",
+                            "description": "Pointer type (default: \"mouse\").",
+                            "optional": true,
+                            "type": "string",
+                            "enum": [
+                                "mouse",
+                                "pen"
+                            ]
                         }
                     ]
                 },
@@ -7518,6 +8157,40 @@
                             "items": {
                                 "$ref": "SamplingProfileNode"
                             }
+                        },
+                        {
+                            "name": "modules",
+                            "type": "array",
+                            "items": {
+                                "$ref": "Module"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "Module",
+                    "description": "Executable module information",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "name",
+                            "description": "Name of the module.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "uuid",
+                            "description": "UUID of the module.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "baseAddress",
+                            "description": "Base address where the module is loaded into memory. Encoded as a decimal\nor hexadecimal (0x prefixed) string.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "size",
+                            "description": "Size of the module in bytes.",
+                            "type": "number"
                         }
                     ]
                 }
@@ -7542,6 +8215,10 @@
                 },
                 {
                     "name": "prepareForLeakDetection"
+                },
+                {
+                    "name": "forciblyPurgeJavaScriptMemory",
+                    "description": "Simulate OomIntervention by purging V8 memory."
                 },
                 {
                     "name": "setPressureNotificationsSuppressed",
@@ -7629,6 +8306,29 @@
             ],
             "types": [
                 {
+                    "id": "ResourceType",
+                    "description": "Resource type as it was perceived by the rendering engine.",
+                    "type": "string",
+                    "enum": [
+                        "Document",
+                        "Stylesheet",
+                        "Image",
+                        "Media",
+                        "Font",
+                        "Script",
+                        "TextTrack",
+                        "XHR",
+                        "Fetch",
+                        "EventSource",
+                        "WebSocket",
+                        "Manifest",
+                        "SignedExchange",
+                        "Ping",
+                        "CSPViolationReport",
+                        "Other"
+                    ]
+                },
+                {
                     "id": "LoaderId",
                     "description": "Unique loader identifier.",
                     "type": "string"
@@ -7701,7 +8401,9 @@
                     "type": "string",
                     "enum": [
                         "Strict",
-                        "Lax"
+                        "Lax",
+                        "Extended",
+                        "None"
                     ]
                 },
                 {
@@ -8114,6 +8816,12 @@
                             "type": "boolean"
                         },
                         {
+                            "name": "fromPrefetchCache",
+                            "description": "Specifies that the request was served from the prefetch cache.",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
                             "name": "encodedDataLength",
                             "description": "Total number of bytes received for this request so far.",
                             "type": "number"
@@ -8197,22 +8905,22 @@
                 },
                 {
                     "id": "WebSocketFrame",
-                    "description": "WebSocket frame data.",
+                    "description": "WebSocket message data. This represents an entire WebSocket message, not just a fragmented frame as the name suggests.",
                     "type": "object",
                     "properties": [
                         {
                             "name": "opcode",
-                            "description": "WebSocket frame opcode.",
+                            "description": "WebSocket message opcode.",
                             "type": "number"
                         },
                         {
                             "name": "mask",
-                            "description": "WebSocke frame mask.",
+                            "description": "WebSocket message mask.",
                             "type": "boolean"
                         },
                         {
                             "name": "payloadData",
-                            "description": "WebSocke frame payload data.",
+                            "description": "WebSocket message payload data.\nIf the opcode is 1, this is a text message and payloadData is a UTF-8 string.\nIf the opcode isn't 1, then payloadData is a base64 encoded string representing binary data.",
                             "type": "string"
                         }
                     ]
@@ -8230,7 +8938,7 @@
                         {
                             "name": "type",
                             "description": "Type of this resource.",
-                            "$ref": "Page.ResourceType"
+                            "$ref": "ResourceType"
                         },
                         {
                             "name": "response",
@@ -8337,6 +9045,87 @@
                             "description": "Cookie SameSite type.",
                             "optional": true,
                             "$ref": "CookieSameSite"
+                        }
+                    ]
+                },
+                {
+                    "id": "SetCookieBlockedReason",
+                    "description": "Types of reasons why a cookie may not be stored from a response.",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "SecureOnly",
+                        "SameSiteStrict",
+                        "SameSiteLax",
+                        "SameSiteExtended",
+                        "SameSiteUnspecifiedTreatedAsLax",
+                        "SameSiteNoneInsecure",
+                        "UserPreferences",
+                        "SyntaxError",
+                        "SchemeNotSupported",
+                        "OverwriteSecure",
+                        "InvalidDomain",
+                        "InvalidPrefix",
+                        "UnknownError"
+                    ]
+                },
+                {
+                    "id": "CookieBlockedReason",
+                    "description": "Types of reasons why a cookie may not be sent with a request.",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "SecureOnly",
+                        "NotOnPath",
+                        "DomainMismatch",
+                        "SameSiteStrict",
+                        "SameSiteLax",
+                        "SameSiteExtended",
+                        "SameSiteUnspecifiedTreatedAsLax",
+                        "SameSiteNoneInsecure",
+                        "UserPreferences",
+                        "UnknownError"
+                    ]
+                },
+                {
+                    "id": "BlockedSetCookieWithReason",
+                    "description": "A cookie which was not stored from a response with the corresponding reason.",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "blockedReason",
+                            "description": "The reason this cookie was blocked.",
+                            "$ref": "SetCookieBlockedReason"
+                        },
+                        {
+                            "name": "cookieLine",
+                            "description": "The string representing this individual cookie as it would appear in the header.\nThis is not the entire \"cookie\" or \"set-cookie\" header which could have multiple cookies.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "cookie",
+                            "description": "The cookie object which represents the cookie which was not stored. It is optional because\nsometimes complete cookie information is not available, such as in the case of parsing\nerrors.",
+                            "optional": true,
+                            "$ref": "Cookie"
+                        }
+                    ]
+                },
+                {
+                    "id": "BlockedCookieWithReason",
+                    "description": "A cookie with was not sent with a request with the corresponding reason.",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "blockedReason",
+                            "description": "The reason the cookie was blocked.",
+                            "$ref": "CookieBlockedReason"
+                        },
+                        {
+                            "name": "cookie",
+                            "description": "The cookie object representing the cookie which was not sent.",
+                            "$ref": "Cookie"
                         }
                     ]
                 },
@@ -8488,7 +9277,7 @@
                             "name": "resourceType",
                             "description": "If set, only requests for matching resource types will be intercepted.",
                             "optional": true,
-                            "$ref": "Page.ResourceType"
+                            "$ref": "ResourceType"
                         },
                         {
                             "name": "interceptionStage",
@@ -8569,11 +9358,6 @@
                             "type": "string"
                         },
                         {
-                            "name": "requestMethod",
-                            "description": "Signed exchange request method.",
-                            "type": "string"
-                        },
-                        {
                             "name": "responseCode",
                             "description": "Signed exchange response code.",
                             "type": "integer"
@@ -8590,6 +9374,11 @@
                             "items": {
                                 "$ref": "SignedExchangeSignature"
                             }
+                        },
+                        {
+                            "name": "headerIntegrity",
+                            "description": "Signed exchange header integrity hash in the form of \"sha256-<base64-hash-value>\".",
+                            "type": "string"
                         }
                     ]
                 },
@@ -8714,8 +9503,9 @@
                 },
                 {
                     "name": "continueInterceptedRequest",
-                    "description": "Response to Network.requestIntercepted which either modifies the request to continue with any\nmodifications, or blocks it, or completes it with the provided response bytes. If a network\nfetch occurs as a result which encounters a redirect an additional Network.requestIntercepted\nevent will be sent with the same InterceptionId.",
+                    "description": "Response to Network.requestIntercepted which either modifies the request to continue with any\nmodifications, or blocks it, or completes it with the provided response bytes. If a network\nfetch occurs as a result which encounters a redirect an additional Network.requestIntercepted\nevent will be sent with the same InterceptionId.\nDeprecated, use Fetch.continueRequest, Fetch.fulfillRequest and Fetch.failRequest instead.",
                     "experimental": true,
+                    "deprecated": true,
                     "parameters": [
                         {
                             "name": "interceptionId",
@@ -8952,7 +9742,7 @@
                     "returns": [
                         {
                             "name": "postData",
-                            "description": "Base64-encoded request body.",
+                            "description": "Request body string, omitting files from multipart requests",
                             "type": "string"
                         }
                     ]
@@ -9196,8 +9986,9 @@
                 },
                 {
                     "name": "setRequestInterception",
-                    "description": "Sets the requests to intercept that match a the provided patterns and optionally resource types.",
+                    "description": "Sets the requests to intercept that match the provided patterns and optionally resource types.\nDeprecated, please use Fetch.enable instead.",
                     "experimental": true,
+                    "deprecated": true,
                     "parameters": [
                         {
                             "name": "patterns",
@@ -9309,7 +10100,7 @@
                         {
                             "name": "type",
                             "description": "Resource type.",
-                            "$ref": "Page.ResourceType"
+                            "$ref": "ResourceType"
                         },
                         {
                             "name": "errorText",
@@ -9359,8 +10150,9 @@
                 },
                 {
                     "name": "requestIntercepted",
-                    "description": "Details of an intercepted HTTP request, which must be either allowed, blocked, modified or\nmocked.",
+                    "description": "Details of an intercepted HTTP request, which must be either allowed, blocked, modified or\nmocked.\nDeprecated, use Fetch.requestPaused instead.",
                     "experimental": true,
+                    "deprecated": true,
                     "parameters": [
                         {
                             "name": "interceptionId",
@@ -9379,7 +10171,7 @@
                         {
                             "name": "resourceType",
                             "description": "How the requested resource will be used.",
-                            "$ref": "Page.ResourceType"
+                            "$ref": "ResourceType"
                         },
                         {
                             "name": "isNavigationRequest",
@@ -9421,6 +10213,12 @@
                             "description": "Response headers if intercepted at the response stage or if redirect occurred while\nintercepting request or auth retry occurred.",
                             "optional": true,
                             "$ref": "Headers"
+                        },
+                        {
+                            "name": "requestId",
+                            "description": "If the intercepted request had a corresponding requestWillBeSent event fired for it, then\nthis requestId will be the same as the requestId present in the requestWillBeSent event.",
+                            "optional": true,
+                            "$ref": "RequestId"
                         }
                     ]
                 },
@@ -9484,7 +10282,7 @@
                             "name": "type",
                             "description": "Type of this resource.",
                             "optional": true,
-                            "$ref": "Page.ResourceType"
+                            "$ref": "ResourceType"
                         },
                         {
                             "name": "frameId",
@@ -9561,7 +10359,7 @@
                         {
                             "name": "type",
                             "description": "Resource type.",
-                            "$ref": "Page.ResourceType"
+                            "$ref": "ResourceType"
                         },
                         {
                             "name": "response",
@@ -9616,7 +10414,7 @@
                 },
                 {
                     "name": "webSocketFrameError",
-                    "description": "Fired when WebSocket frame error occurs.",
+                    "description": "Fired when WebSocket message error occurs.",
                     "parameters": [
                         {
                             "name": "requestId",
@@ -9630,14 +10428,14 @@
                         },
                         {
                             "name": "errorMessage",
-                            "description": "WebSocket frame error message.",
+                            "description": "WebSocket error message.",
                             "type": "string"
                         }
                     ]
                 },
                 {
                     "name": "webSocketFrameReceived",
-                    "description": "Fired when WebSocket frame is received.",
+                    "description": "Fired when WebSocket message is received.",
                     "parameters": [
                         {
                             "name": "requestId",
@@ -9658,7 +10456,7 @@
                 },
                 {
                     "name": "webSocketFrameSent",
-                    "description": "Fired when WebSocket frame is sent.",
+                    "description": "Fired when WebSocket message is sent.",
                     "parameters": [
                         {
                             "name": "requestId",
@@ -9723,6 +10521,62 @@
                             "$ref": "WebSocketRequest"
                         }
                     ]
+                },
+                {
+                    "name": "requestWillBeSentExtraInfo",
+                    "description": "Fired when additional information about a requestWillBeSent event is available from the\nnetwork stack. Not every requestWillBeSent event will have an additional\nrequestWillBeSentExtraInfo fired for it, and there is no guarantee whether requestWillBeSent\nor requestWillBeSentExtraInfo will be fired first for the same request.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "requestId",
+                            "description": "Request identifier. Used to match this information to an existing requestWillBeSent event.",
+                            "$ref": "RequestId"
+                        },
+                        {
+                            "name": "blockedCookies",
+                            "description": "A list of cookies which will not be sent with this request along with corresponding reasons\nfor blocking.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "BlockedCookieWithReason"
+                            }
+                        },
+                        {
+                            "name": "headers",
+                            "description": "Raw request headers as they will be sent over the wire.",
+                            "$ref": "Headers"
+                        }
+                    ]
+                },
+                {
+                    "name": "responseReceivedExtraInfo",
+                    "description": "Fired when additional information about a responseReceived event is available from the network\nstack. Not every responseReceived event will have an additional responseReceivedExtraInfo for\nit, and responseReceivedExtraInfo may be fired before or after responseReceived.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "requestId",
+                            "description": "Request identifier. Used to match this information to another responseReceived event.",
+                            "$ref": "RequestId"
+                        },
+                        {
+                            "name": "blockedCookies",
+                            "description": "A list of cookies which were not stored from the response along with the corresponding\nreasons for blocking. The cookies here may not be valid due to syntax errors, which\nare represented by the invalid cookie line string instead of a proper cookie.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "BlockedSetCookieWithReason"
+                            }
+                        },
+                        {
+                            "name": "headers",
+                            "description": "Raw response headers as they were received over the wire.",
+                            "$ref": "Headers"
+                        },
+                        {
+                            "name": "headersText",
+                            "description": "Raw response header text as it was received over the wire. The raw text may not always be\navailable, such as in the case of HTTP/2 or QUIC.",
+                            "optional": true,
+                            "type": "string"
+                        }
+                    ]
                 }
             ]
         },
@@ -9748,6 +10602,12 @@
                             "type": "boolean"
                         },
                         {
+                            "name": "showStyles",
+                            "description": "Whether the node styles in the tooltip (default: false).",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
                             "name": "showRulers",
                             "description": "Whether the rulers should be shown (default: false).",
                             "optional": true,
@@ -9756,11 +10616,6 @@
                         {
                             "name": "showExtensionLines",
                             "description": "Whether the extension lines from node to the rulers should be shown (default: false).",
-                            "optional": true,
-                            "type": "boolean"
-                        },
-                        {
-                            "name": "displayAsMaterial",
                             "optional": true,
                             "type": "boolean"
                         },
@@ -9807,12 +10662,6 @@
                             "$ref": "DOM.RGBA"
                         },
                         {
-                            "name": "selectorList",
-                            "description": "Selectors to highlight relevant nodes.",
-                            "optional": true,
-                            "type": "string"
-                        },
-                        {
                             "name": "cssGridColor",
                             "description": "The grid layout color (default: transparent).",
                             "optional": true,
@@ -9826,6 +10675,8 @@
                     "enum": [
                         "searchForNode",
                         "searchForUAShadowDOM",
+                        "captureAreaScreenshot",
+                        "showDistances",
                         "none"
                     ]
                 }
@@ -9847,6 +10698,18 @@
                             "name": "nodeId",
                             "description": "Id of the node to get highlight object for.",
                             "$ref": "DOM.NodeId"
+                        },
+                        {
+                            "name": "includeDistance",
+                            "description": "Whether to include distance info.",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "includeStyle",
+                            "description": "Whether to include style info.",
+                            "optional": true,
+                            "type": "boolean"
                         }
                     ],
                     "returns": [
@@ -9910,6 +10773,12 @@
                             "description": "JavaScript object id of the node to be highlighted.",
                             "optional": true,
                             "$ref": "Runtime.RemoteObjectId"
+                        },
+                        {
+                            "name": "selector",
+                            "description": "Selectors to highlight relevant nodes.",
+                            "optional": true,
+                            "type": "string"
                         }
                     ]
                 },
@@ -9992,6 +10861,17 @@
                     ]
                 },
                 {
+                    "name": "setShowAdHighlights",
+                    "description": "Highlights owner element of all frames detected to be ads.",
+                    "parameters": [
+                        {
+                            "name": "show",
+                            "description": "True for showing ad highlights",
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                {
                     "name": "setPausedInDebuggerMessage",
                     "parameters": [
                         {
@@ -10036,6 +10916,17 @@
                     ]
                 },
                 {
+                    "name": "setShowLayoutShiftRegions",
+                    "description": "Requests that backend shows layout shift regions",
+                    "parameters": [
+                        {
+                            "name": "result",
+                            "description": "True for showing layout shift regions",
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                {
                     "name": "setShowScrollBottleneckRects",
                     "description": "Requests that backend shows scroll bottleneck rects",
                     "parameters": [
@@ -10047,22 +10938,23 @@
                     ]
                 },
                 {
+                    "name": "setShowHitTestBorders",
+                    "description": "Requests that backend shows hit-test borders on layers",
+                    "parameters": [
+                        {
+                            "name": "show",
+                            "description": "True for showing hit-test borders",
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                {
                     "name": "setShowViewportSizeOnResize",
                     "description": "Paints viewport size upon main frame resize.",
                     "parameters": [
                         {
                             "name": "show",
                             "description": "Whether to paint size or not.",
-                            "type": "boolean"
-                        }
-                    ]
-                },
-                {
-                    "name": "setSuspended",
-                    "parameters": [
-                        {
-                            "name": "suspended",
-                            "description": "Whether overlay should be suspended and not consume any resources until resumed.",
                             "type": "boolean"
                         }
                     ]
@@ -10096,10 +10988,14 @@
                     "parameters": [
                         {
                             "name": "viewport",
-                            "description": "Viewport to capture, in CSS.",
+                            "description": "Viewport to capture, in device independent pixels (dip).",
                             "$ref": "Page.Viewport"
                         }
                     ]
+                },
+                {
+                    "name": "inspectModeCanceled",
+                    "description": "Fired when user cancels the inspect mode."
                 }
             ]
         },
@@ -10109,32 +11005,11 @@
             "dependencies": [
                 "Debugger",
                 "DOM",
-                "Network"
+                "IO",
+                "Network",
+                "Runtime"
             ],
             "types": [
-                {
-                    "id": "ResourceType",
-                    "description": "Resource type as it was perceived by the rendering engine.",
-                    "type": "string",
-                    "enum": [
-                        "Document",
-                        "Stylesheet",
-                        "Image",
-                        "Media",
-                        "Font",
-                        "Script",
-                        "TextTrack",
-                        "XHR",
-                        "Fetch",
-                        "EventSource",
-                        "WebSocket",
-                        "Manifest",
-                        "SignedExchange",
-                        "Ping",
-                        "CSPViolationReport",
-                        "Other"
-                    ]
-                },
                 {
                     "id": "FrameId",
                     "description": "Unique frame identifier.",
@@ -10148,7 +11023,7 @@
                         {
                             "name": "id",
                             "description": "Frame unique identifier.",
-                            "type": "string"
+                            "$ref": "FrameId"
                         },
                         {
                             "name": "parentId",
@@ -10169,7 +11044,14 @@
                         },
                         {
                             "name": "url",
-                            "description": "Frame document's URL.",
+                            "description": "Frame document's URL without fragment.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "urlFragment",
+                            "description": "Frame document's URL fragment including the '#'.",
+                            "experimental": true,
+                            "optional": true,
                             "type": "string"
                         },
                         {
@@ -10184,7 +11066,7 @@
                         },
                         {
                             "name": "unreachableUrl",
-                            "description": "If the frame failed to load, this contains the URL that could not be loaded.",
+                            "description": "If the frame failed to load, this contains the URL that could not be loaded. Note that unlike url above, this URL may contain a fragment.",
                             "experimental": true,
                             "optional": true,
                             "type": "string"
@@ -10205,7 +11087,7 @@
                         {
                             "name": "type",
                             "description": "Type of this resource.",
-                            "$ref": "ResourceType"
+                            "$ref": "Network.ResourceType"
                         },
                         {
                             "name": "mimeType",
@@ -10301,6 +11183,7 @@
                     "enum": [
                         "link",
                         "typed",
+                        "address_bar",
                         "auto_bookmark",
                         "auto_subframe",
                         "manual_subframe",
@@ -10493,6 +11376,12 @@
                             "name": "scale",
                             "description": "Scale relative to the ideal viewport (size at width=device-width).",
                             "type": "number"
+                        },
+                        {
+                            "name": "zoom",
+                            "description": "Page zoom factor (CSS to device independent pixels ratio).",
+                            "optional": true,
+                            "type": "number"
                         }
                     ]
                 },
@@ -10503,22 +11392,22 @@
                     "properties": [
                         {
                             "name": "x",
-                            "description": "X offset in CSS pixels.",
+                            "description": "X offset in device independent pixels (dip).",
                             "type": "number"
                         },
                         {
                             "name": "y",
-                            "description": "Y offset in CSS pixels",
+                            "description": "Y offset in device independent pixels (dip).",
                             "type": "number"
                         },
                         {
                             "name": "width",
-                            "description": "Rectangle width in CSS pixels",
+                            "description": "Rectangle width in device independent pixels (dip).",
                             "type": "number"
                         },
                         {
                             "name": "height",
-                            "description": "Rectangle height in CSS pixels",
+                            "description": "Rectangle height in device independent pixels (dip).",
                             "type": "number"
                         },
                         {
@@ -10597,6 +11486,20 @@
                             "type": "integer"
                         }
                     ]
+                },
+                {
+                    "id": "ClientNavigationReason",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "formSubmissionGet",
+                        "formSubmissionPost",
+                        "httpHeaderRefresh",
+                        "scriptInitiated",
+                        "metaTagRefresh",
+                        "pageBlockInterstitial",
+                        "reload"
+                    ]
                 }
             ],
             "commands": [
@@ -10625,6 +11528,13 @@
                     "parameters": [
                         {
                             "name": "source",
+                            "type": "string"
+                        },
+                        {
+                            "name": "worldName",
+                            "description": "If specified, creates an isolated world with the given name and evaluates given script in it.\nThis world name will be used as the ExecutionContextDescription::name when the corresponding\nevent is emitted.",
+                            "experimental": true,
+                            "optional": true,
                             "type": "string"
                         }
                     ],
@@ -10678,6 +11588,29 @@
                         {
                             "name": "data",
                             "description": "Base64-encoded image data.",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "captureSnapshot",
+                    "description": "Returns a snapshot of the page as a string. For MHTML format, the serialization includes\niframes, shadow DOM, external resources, and element-inline styles.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "format",
+                            "description": "Format (defaults to mhtml).",
+                            "optional": true,
+                            "type": "string",
+                            "enum": [
+                                "mhtml"
+                            ]
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "data",
+                            "description": "Serialized page data.",
                             "type": "string"
                         }
                     ]
@@ -10783,6 +11716,19 @@
                     ]
                 },
                 {
+                    "name": "getInstallabilityErrors",
+                    "experimental": true,
+                    "returns": [
+                        {
+                            "name": "errors",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                {
                     "name": "getCookies",
                     "description": "Returns all browser cookies. Depending on the backend support, will return detailed cookie\ninformation in the `cookies` field.",
                     "experimental": true,
@@ -10849,6 +11795,10 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "resetNavigationHistory",
+                    "description": "Resets navigation history for the current page."
                 },
                 {
                     "name": "getResourceContent",
@@ -11060,13 +12010,31 @@
                             "description": "Whether or not to prefer page size as defined by css. Defaults to false,\nin which case the content will be scaled to fit the paper size.",
                             "optional": true,
                             "type": "boolean"
+                        },
+                        {
+                            "name": "transferMode",
+                            "description": "return as stream",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "string",
+                            "enum": [
+                                "ReturnAsBase64",
+                                "ReturnAsStream"
+                            ]
                         }
                     ],
                     "returns": [
                         {
                             "name": "data",
-                            "description": "Base64-encoded pdf data.",
+                            "description": "Base64-encoded pdf data. Empty if |returnAsStream| is specified.",
                             "type": "string"
+                        },
+                        {
+                            "name": "stream",
+                            "description": "A handle of the stream that holds resulting PDF data.",
+                            "experimental": true,
+                            "optional": true,
+                            "$ref": "IO.StreamHandle"
                         }
                     ]
                 },
@@ -11109,10 +12077,6 @@
                             "$ref": "ScriptIdentifier"
                         }
                     ]
-                },
-                {
-                    "name": "requestAppBanner",
-                    "experimental": true
                 },
                 {
                     "name": "screencastFrameAck",
@@ -11495,6 +12459,97 @@
                     "name": "stopScreencast",
                     "description": "Stops sending each frame in the `screencastFrame`.",
                     "experimental": true
+                },
+                {
+                    "name": "setProduceCompilationCache",
+                    "description": "Forces compilation cache to be generated for every subresource script.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "enabled",
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                {
+                    "name": "addCompilationCache",
+                    "description": "Seeds compilation cache for given url. Compilation cache does not survive\ncross-process navigation.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "url",
+                            "type": "string"
+                        },
+                        {
+                            "name": "data",
+                            "description": "Base64-encoded data",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "clearCompilationCache",
+                    "description": "Clears seeded compilation cache.",
+                    "experimental": true
+                },
+                {
+                    "name": "generateTestReport",
+                    "description": "Generates a report for testing.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "message",
+                            "description": "Message to be displayed in the report.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "group",
+                            "description": "Specifies the endpoint group to deliver the report to.",
+                            "optional": true,
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "waitForDebugger",
+                    "description": "Pauses page execution. Can be resumed using generic Runtime.runIfWaitingForDebugger.",
+                    "experimental": true
+                },
+                {
+                    "name": "setInterceptFileChooserDialog",
+                    "description": "Intercept file chooser requests and transfer control to protocol clients.\nWhen file chooser interception is enabled, native file chooser dialog is not shown.\nInstead, a protocol event `Page.fileChooserOpened` is emitted.\nFile chooser can be handled with `page.handleFileChooser` command.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "enabled",
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                {
+                    "name": "handleFileChooser",
+                    "description": "Accepts or cancels an intercepted file chooser dialog.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "action",
+                            "type": "string",
+                            "enum": [
+                                "accept",
+                                "cancel",
+                                "fallback"
+                            ]
+                        },
+                        {
+                            "name": "files",
+                            "description": "Array of absolute file paths to set, only respected with `accept` action.",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    ]
                 }
             ],
             "events": [
@@ -11504,6 +12559,20 @@
                         {
                             "name": "timestamp",
                             "$ref": "Network.MonotonicTime"
+                        }
+                    ]
+                },
+                {
+                    "name": "fileChooserOpened",
+                    "description": "Emitted only when `page.interceptFileChooser` is enabled.",
+                    "parameters": [
+                        {
+                            "name": "mode",
+                            "type": "string",
+                            "enum": [
+                                "selectSingle",
+                                "selectMultiple"
+                            ]
                         }
                     ]
                 },
@@ -11532,7 +12601,7 @@
                 {
                     "name": "frameClearedScheduledNavigation",
                     "description": "Fired when frame no longer has a scheduled navigation.",
-                    "experimental": true,
+                    "deprecated": true,
                     "parameters": [
                         {
                             "name": "frameId",
@@ -11568,9 +12637,31 @@
                     "experimental": true
                 },
                 {
+                    "name": "frameRequestedNavigation",
+                    "description": "Fired when a renderer-initiated navigation is requested.\nNavigation may still be cancelled after the event is issued.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "frameId",
+                            "description": "Id of the frame that is being navigated.",
+                            "$ref": "FrameId"
+                        },
+                        {
+                            "name": "reason",
+                            "description": "The reason for the navigation.",
+                            "$ref": "ClientNavigationReason"
+                        },
+                        {
+                            "name": "url",
+                            "description": "The destination URL for the requested navigation.",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
                     "name": "frameScheduledNavigation",
                     "description": "Fired when frame schedules a potential navigation.",
-                    "experimental": true,
+                    "deprecated": true,
                     "parameters": [
                         {
                             "name": "frameId",
@@ -11624,6 +12715,23 @@
                             "name": "frameId",
                             "description": "Id of the frame that has stopped loading.",
                             "$ref": "FrameId"
+                        }
+                    ]
+                },
+                {
+                    "name": "downloadWillBegin",
+                    "description": "Fired when page is about to start a download.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "frameId",
+                            "description": "Id of the frame that caused download to begin.",
+                            "$ref": "FrameId"
+                        },
+                        {
+                            "name": "url",
+                            "description": "URL of the resource being downloaded.",
+                            "type": "string"
                         }
                     ]
                 },
@@ -11795,6 +12903,22 @@
                             "type": "boolean"
                         }
                     ]
+                },
+                {
+                    "name": "compilationCacheProduced",
+                    "description": "Issued for every compilation cache generated. Is only available\nif Page.setGenerateCompilationCache is enabled.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "url",
+                            "type": "string"
+                        },
+                        {
+                            "name": "data",
+                            "description": "Base64-encoded data",
+                            "type": "string"
+                        }
+                    ]
                 }
             ]
         },
@@ -11827,6 +12951,22 @@
                 {
                     "name": "enable",
                     "description": "Enable collecting and reporting metrics."
+                },
+                {
+                    "name": "setTimeDomain",
+                    "description": "Sets time domain to use for collecting and reporting duration metrics.\nNote that this must be called before enabling metrics collection. Calling\nthis method while metrics collection is enabled returns an error.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "timeDomain",
+                            "description": "Time domain",
+                            "type": "string",
+                            "enum": [
+                                "timeTicks",
+                                "threadTicks"
+                            ]
+                        }
+                    ]
                 },
                 {
                     "name": "getMetrics",
@@ -11933,47 +13073,57 @@
                             "items": {
                                 "type": "string"
                             }
+                        },
+                        {
+                            "name": "recommendations",
+                            "description": "Recommendations to fix any issues.",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     ]
                 },
                 {
                     "id": "InsecureContentStatus",
                     "description": "Information about insecure content on the page.",
+                    "deprecated": true,
                     "type": "object",
                     "properties": [
                         {
                             "name": "ranMixedContent",
-                            "description": "True if the page was loaded over HTTPS and ran mixed (HTTP) content such as scripts.",
+                            "description": "Always false.",
                             "type": "boolean"
                         },
                         {
                             "name": "displayedMixedContent",
-                            "description": "True if the page was loaded over HTTPS and displayed mixed (HTTP) content such as images.",
+                            "description": "Always false.",
                             "type": "boolean"
                         },
                         {
                             "name": "containedMixedForm",
-                            "description": "True if the page was loaded over HTTPS and contained a form targeting an insecure url.",
+                            "description": "Always false.",
                             "type": "boolean"
                         },
                         {
                             "name": "ranContentWithCertErrors",
-                            "description": "True if the page was loaded over HTTPS without certificate errors, and ran content such as\nscripts that were loaded with certificate errors.",
+                            "description": "Always false.",
                             "type": "boolean"
                         },
                         {
                             "name": "displayedContentWithCertErrors",
-                            "description": "True if the page was loaded over HTTPS without certificate errors, and displayed content\nsuch as images that were loaded with certificate errors.",
+                            "description": "Always false.",
                             "type": "boolean"
                         },
                         {
                             "name": "ranInsecureContentStyle",
-                            "description": "Security state representing a page that ran insecure content.",
+                            "description": "Always set to unknown.",
                             "$ref": "SecurityState"
                         },
                         {
                             "name": "displayedInsecureContentStyle",
-                            "description": "Security state representing a page that displayed insecure content.",
+                            "description": "Always set to unknown.",
                             "$ref": "SecurityState"
                         }
                     ]
@@ -12074,6 +13224,7 @@
                         {
                             "name": "schemeIsCryptographic",
                             "description": "True if the page was loaded over cryptographic transport such as HTTPS.",
+                            "deprecated": true,
                             "type": "boolean"
                         },
                         {
@@ -12087,6 +13238,7 @@
                         {
                             "name": "insecureContentStatus",
                             "description": "Information about insecure content on the page.",
+                            "deprecated": true,
                             "$ref": "InsecureContentStatus"
                         },
                         {
@@ -12104,13 +13256,17 @@
             "experimental": true,
             "types": [
                 {
+                    "id": "RegistrationID",
+                    "type": "string"
+                },
+                {
                     "id": "ServiceWorkerRegistration",
                     "description": "ServiceWorker registration.",
                     "type": "object",
                     "properties": [
                         {
                             "name": "registrationId",
-                            "type": "string"
+                            "$ref": "RegistrationID"
                         },
                         {
                             "name": "scopeURL",
@@ -12155,7 +13311,7 @@
                         },
                         {
                             "name": "registrationId",
-                            "type": "string"
+                            "$ref": "RegistrationID"
                         },
                         {
                             "name": "scriptURL",
@@ -12207,7 +13363,7 @@
                         },
                         {
                             "name": "registrationId",
-                            "type": "string"
+                            "$ref": "RegistrationID"
                         },
                         {
                             "name": "versionId",
@@ -12238,7 +13394,7 @@
                         },
                         {
                             "name": "registrationId",
-                            "type": "string"
+                            "$ref": "RegistrationID"
                         },
                         {
                             "name": "data",
@@ -12258,7 +13414,7 @@
                         },
                         {
                             "name": "registrationId",
-                            "type": "string"
+                            "$ref": "RegistrationID"
                         },
                         {
                             "name": "tag",
@@ -12267,6 +13423,23 @@
                         {
                             "name": "lastChance",
                             "type": "boolean"
+                        }
+                    ]
+                },
+                {
+                    "name": "dispatchPeriodicSyncEvent",
+                    "parameters": [
+                        {
+                            "name": "origin",
+                            "type": "string"
+                        },
+                        {
+                            "name": "registrationId",
+                            "$ref": "RegistrationID"
+                        },
+                        {
+                            "name": "tag",
+                            "type": "string"
                         }
                     ]
                 },
@@ -12428,7 +13601,7 @@
                         },
                         {
                             "name": "storageTypes",
-                            "description": "Comma separated origin names.",
+                            "description": "Comma separated list of StorageType to clear.",
                             "type": "string"
                         }
                     ]
@@ -12600,6 +13773,131 @@
                             "name": "deviceString",
                             "description": "String description of the GPU device, if the PCI ID is not available.",
                             "type": "string"
+                        },
+                        {
+                            "name": "driverVendor",
+                            "description": "String description of the GPU driver vendor.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "driverVersion",
+                            "description": "String description of the GPU driver version.",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "id": "Size",
+                    "description": "Describes the width and height dimensions of an entity.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "width",
+                            "description": "Width in pixels.",
+                            "type": "integer"
+                        },
+                        {
+                            "name": "height",
+                            "description": "Height in pixels.",
+                            "type": "integer"
+                        }
+                    ]
+                },
+                {
+                    "id": "VideoDecodeAcceleratorCapability",
+                    "description": "Describes a supported video decoding profile with its associated minimum and\nmaximum resolutions.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "profile",
+                            "description": "Video codec profile that is supported, e.g. VP9 Profile 2.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "maxResolution",
+                            "description": "Maximum video dimensions in pixels supported for this |profile|.",
+                            "$ref": "Size"
+                        },
+                        {
+                            "name": "minResolution",
+                            "description": "Minimum video dimensions in pixels supported for this |profile|.",
+                            "$ref": "Size"
+                        }
+                    ]
+                },
+                {
+                    "id": "VideoEncodeAcceleratorCapability",
+                    "description": "Describes a supported video encoding profile with its associated maximum\nresolution and maximum framerate.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "profile",
+                            "description": "Video codec profile that is supported, e.g H264 Main.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "maxResolution",
+                            "description": "Maximum video dimensions in pixels supported for this |profile|.",
+                            "$ref": "Size"
+                        },
+                        {
+                            "name": "maxFramerateNumerator",
+                            "description": "Maximum encoding framerate in frames per second supported for this\n|profile|, as fraction's numerator and denominator, e.g. 24/1 fps,\n24000/1001 fps, etc.",
+                            "type": "integer"
+                        },
+                        {
+                            "name": "maxFramerateDenominator",
+                            "type": "integer"
+                        }
+                    ]
+                },
+                {
+                    "id": "SubsamplingFormat",
+                    "description": "YUV subsampling type of the pixels of a given image.",
+                    "type": "string",
+                    "enum": [
+                        "yuv420",
+                        "yuv422",
+                        "yuv444"
+                    ]
+                },
+                {
+                    "id": "ImageType",
+                    "description": "Image format of a given image.",
+                    "type": "string",
+                    "enum": [
+                        "jpeg",
+                        "webp",
+                        "unknown"
+                    ]
+                },
+                {
+                    "id": "ImageDecodeAcceleratorCapability",
+                    "description": "Describes a supported image decoding profile with its associated minimum and\nmaximum resolutions and subsampling.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "imageType",
+                            "description": "Image coded, e.g. Jpeg.",
+                            "$ref": "ImageType"
+                        },
+                        {
+                            "name": "maxDimensions",
+                            "description": "Maximum supported dimensions of the image in pixels.",
+                            "$ref": "Size"
+                        },
+                        {
+                            "name": "minDimensions",
+                            "description": "Minimum supported dimensions of the image in pixels.",
+                            "$ref": "Size"
+                        },
+                        {
+                            "name": "subsamplings",
+                            "description": "Optional array of supported subsampling formats, e.g. 4:2:0, if known.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "SubsamplingFormat"
+                            }
                         }
                     ]
                 },
@@ -12635,6 +13933,52 @@
                             "items": {
                                 "type": "string"
                             }
+                        },
+                        {
+                            "name": "videoDecoding",
+                            "description": "Supported accelerated video decoding capabilities.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "VideoDecodeAcceleratorCapability"
+                            }
+                        },
+                        {
+                            "name": "videoEncoding",
+                            "description": "Supported accelerated video encoding capabilities.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "VideoEncodeAcceleratorCapability"
+                            }
+                        },
+                        {
+                            "name": "imageDecoding",
+                            "description": "Supported accelerated image decoding capabilities.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "ImageDecodeAcceleratorCapability"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "ProcessInfo",
+                    "description": "Represents process info.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "type",
+                            "description": "Specifies process type.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "id",
+                            "description": "Specifies process id.",
+                            "type": "integer"
+                        },
+                        {
+                            "name": "cpuTime",
+                            "description": "Specifies cumulative CPU usage in seconds across all threads of the\nprocess since the process start.",
+                            "type": "number"
                         }
                     ]
                 }
@@ -12663,6 +14007,20 @@
                             "name": "commandLine",
                             "description": "The command line string used to launch the browser. Will be the empty string if not\nsupported.",
                             "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "getProcessInfo",
+                    "description": "Returns information about all running processes.",
+                    "returns": [
+                        {
+                            "name": "processInfo",
+                            "description": "An array of process info blocks.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "ProcessInfo"
+                            }
                         }
                     ]
                 }
@@ -12777,6 +14135,18 @@
                     ]
                 },
                 {
+                    "name": "attachToBrowserTarget",
+                    "description": "Attaches to the browser target, only uses flat sessionId mode.",
+                    "experimental": true,
+                    "returns": [
+                        {
+                            "name": "sessionId",
+                            "description": "Id assigned to the session.",
+                            "$ref": "SessionID"
+                        }
+                    ]
+                },
+                {
                     "name": "closeTarget",
                     "description": "Closes the target. If the target is a page that gets closed too.",
                     "parameters": [
@@ -12867,6 +14237,18 @@
                             "name": "enableBeginFrameControl",
                             "description": "Whether BeginFrames for this target will be controlled via DevTools (headless chrome only,\nnot supported on MacOS yet, false by default).",
                             "experimental": true,
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "newWindow",
+                            "description": "Whether to create a new Window or Tab (chrome-only, false by default).",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "background",
+                            "description": "Whether to create the target in background or foreground (chrome-only,\nfalse by default).",
                             "optional": true,
                             "type": "boolean"
                         }
@@ -12977,6 +14359,13 @@
                         {
                             "name": "waitForDebuggerOnStart",
                             "description": "Whether to pause new targets when attaching to them. Use `Runtime.runIfWaitingForDebugger`\nto run paused targets.",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "flatten",
+                            "description": "Enables \"flat\" access to the session via specifying sessionId attribute in the commands.",
+                            "experimental": true,
+                            "optional": true,
                             "type": "boolean"
                         }
                     ]
@@ -13251,6 +14640,15 @@
                     ]
                 },
                 {
+                    "id": "StreamFormat",
+                    "description": "Data format of a trace. Can be either the legacy JSON format or the\nprotocol buffer format. Note that the JSON format will be deprecated soon.",
+                    "type": "string",
+                    "enum": [
+                        "json",
+                        "proto"
+                    ]
+                },
+                {
                     "id": "StreamCompression",
                     "description": "Compression type to use for traces returned via streams.",
                     "type": "string",
@@ -13341,6 +14739,12 @@
                             ]
                         },
                         {
+                            "name": "streamFormat",
+                            "description": "Trace data format to use. This only applies when using `ReturnAsStream`\ntransfer mode (defaults to `json`).",
+                            "optional": true,
+                            "$ref": "StreamFormat"
+                        },
+                        {
                             "name": "streamCompression",
                             "description": "Compression format to use. This only applies when using `ReturnAsStream`\ntransfer mode (defaults to `none`)",
                             "optional": true,
@@ -13396,10 +14800,21 @@
                     "description": "Signals that tracing is stopped and there is no trace buffers pending flush, all data were\ndelivered via dataCollected events.",
                     "parameters": [
                         {
+                            "name": "dataLossOccurred",
+                            "description": "Indicates whether some trace data is known to have been lost, e.g. because the trace ring\nbuffer wrapped around.",
+                            "type": "boolean"
+                        },
+                        {
                             "name": "stream",
                             "description": "A handle of the stream that holds resulting trace data.",
                             "optional": true,
                             "$ref": "IO.StreamHandle"
+                        },
+                        {
+                            "name": "traceFormat",
+                            "description": "Trace data format of returned stream.",
+                            "optional": true,
+                            "$ref": "StreamFormat"
                         },
                         {
                             "name": "streamCompression",
@@ -13408,6 +14823,1203 @@
                             "$ref": "StreamCompression"
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "domain": "Fetch",
+            "description": "A domain for letting clients substitute browser's network layer with client code.",
+            "experimental": true,
+            "dependencies": [
+                "Network",
+                "IO",
+                "Page"
+            ],
+            "types": [
+                {
+                    "id": "RequestId",
+                    "description": "Unique request identifier.",
+                    "type": "string"
+                },
+                {
+                    "id": "RequestStage",
+                    "description": "Stages of the request to handle. Request will intercept before the request is\nsent. Response will intercept after the response is received (but before response\nbody is received.",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "Request",
+                        "Response"
+                    ]
+                },
+                {
+                    "id": "RequestPattern",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "urlPattern",
+                            "description": "Wildcards ('*' -> zero or more, '?' -> exactly one) are allowed. Escape character is\nbackslash. Omitting is equivalent to \"*\".",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "resourceType",
+                            "description": "If set, only requests for matching resource types will be intercepted.",
+                            "optional": true,
+                            "$ref": "Network.ResourceType"
+                        },
+                        {
+                            "name": "requestStage",
+                            "description": "Stage at wich to begin intercepting requests. Default is Request.",
+                            "optional": true,
+                            "$ref": "RequestStage"
+                        }
+                    ]
+                },
+                {
+                    "id": "HeaderEntry",
+                    "description": "Response HTTP header entry",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "name",
+                            "type": "string"
+                        },
+                        {
+                            "name": "value",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "id": "AuthChallenge",
+                    "description": "Authorization challenge for HTTP status code 401 or 407.",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "source",
+                            "description": "Source of the authentication challenge.",
+                            "optional": true,
+                            "type": "string",
+                            "enum": [
+                                "Server",
+                                "Proxy"
+                            ]
+                        },
+                        {
+                            "name": "origin",
+                            "description": "Origin of the challenger.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "scheme",
+                            "description": "The authentication scheme used, such as basic or digest",
+                            "type": "string"
+                        },
+                        {
+                            "name": "realm",
+                            "description": "The realm of the challenge. May be empty.",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "id": "AuthChallengeResponse",
+                    "description": "Response to an AuthChallenge.",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "response",
+                            "description": "The decision on what to do in response to the authorization challenge.  Default means\ndeferring to the default behavior of the net stack, which will likely either the Cancel\nauthentication or display a popup dialog box.",
+                            "type": "string",
+                            "enum": [
+                                "Default",
+                                "CancelAuth",
+                                "ProvideCredentials"
+                            ]
+                        },
+                        {
+                            "name": "username",
+                            "description": "The username to provide, possibly empty. Should only be set if response is\nProvideCredentials.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "password",
+                            "description": "The password to provide, possibly empty. Should only be set if response is\nProvideCredentials.",
+                            "optional": true,
+                            "type": "string"
+                        }
+                    ]
+                }
+            ],
+            "commands": [
+                {
+                    "name": "disable",
+                    "description": "Disables the fetch domain."
+                },
+                {
+                    "name": "enable",
+                    "description": "Enables issuing of requestPaused events. A request will be paused until client\ncalls one of failRequest, fulfillRequest or continueRequest/continueWithAuth.",
+                    "parameters": [
+                        {
+                            "name": "patterns",
+                            "description": "If specified, only requests matching any of these patterns will produce\nfetchRequested event and will be paused until clients response. If not set,\nall requests will be affected.",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "$ref": "RequestPattern"
+                            }
+                        },
+                        {
+                            "name": "handleAuthRequests",
+                            "description": "If true, authRequired events will be issued and requests will be paused\nexpecting a call to continueWithAuth.",
+                            "optional": true,
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                {
+                    "name": "failRequest",
+                    "description": "Causes the request to fail with specified reason.",
+                    "parameters": [
+                        {
+                            "name": "requestId",
+                            "description": "An id the client received in requestPaused event.",
+                            "$ref": "RequestId"
+                        },
+                        {
+                            "name": "errorReason",
+                            "description": "Causes the request to fail with the given reason.",
+                            "$ref": "Network.ErrorReason"
+                        }
+                    ]
+                },
+                {
+                    "name": "fulfillRequest",
+                    "description": "Provides response to the request.",
+                    "parameters": [
+                        {
+                            "name": "requestId",
+                            "description": "An id the client received in requestPaused event.",
+                            "$ref": "RequestId"
+                        },
+                        {
+                            "name": "responseCode",
+                            "description": "An HTTP response code.",
+                            "type": "integer"
+                        },
+                        {
+                            "name": "responseHeaders",
+                            "description": "Response headers.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "HeaderEntry"
+                            }
+                        },
+                        {
+                            "name": "body",
+                            "description": "A response body.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "responsePhrase",
+                            "description": "A textual representation of responseCode.\nIf absent, a standard phrase mathcing responseCode is used.",
+                            "optional": true,
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "continueRequest",
+                    "description": "Continues the request, optionally modifying some of its parameters.",
+                    "parameters": [
+                        {
+                            "name": "requestId",
+                            "description": "An id the client received in requestPaused event.",
+                            "$ref": "RequestId"
+                        },
+                        {
+                            "name": "url",
+                            "description": "If set, the request url will be modified in a way that's not observable by page.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "method",
+                            "description": "If set, the request method is overridden.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "postData",
+                            "description": "If set, overrides the post data in the request.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "headers",
+                            "description": "If set, overrides the request headrts.",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "$ref": "HeaderEntry"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "continueWithAuth",
+                    "description": "Continues a request supplying authChallengeResponse following authRequired event.",
+                    "parameters": [
+                        {
+                            "name": "requestId",
+                            "description": "An id the client received in authRequired event.",
+                            "$ref": "RequestId"
+                        },
+                        {
+                            "name": "authChallengeResponse",
+                            "description": "Response to  with an authChallenge.",
+                            "$ref": "AuthChallengeResponse"
+                        }
+                    ]
+                },
+                {
+                    "name": "getResponseBody",
+                    "description": "Causes the body of the response to be received from the server and\nreturned as a single string. May only be issued for a request that\nis paused in the Response stage and is mutually exclusive with\ntakeResponseBodyForInterceptionAsStream. Calling other methods that\naffect the request or disabling fetch domain before body is received\nresults in an undefined behavior.",
+                    "parameters": [
+                        {
+                            "name": "requestId",
+                            "description": "Identifier for the intercepted request to get body for.",
+                            "$ref": "RequestId"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "body",
+                            "description": "Response body.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "base64Encoded",
+                            "description": "True, if content was sent as base64.",
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                {
+                    "name": "takeResponseBodyAsStream",
+                    "description": "Returns a handle to the stream representing the response body.\nThe request must be paused in the HeadersReceived stage.\nNote that after this command the request can't be continued\nas is -- client either needs to cancel it or to provide the\nresponse body.\nThe stream only supports sequential read, IO.read will fail if the position\nis specified.\nThis method is mutually exclusive with getResponseBody.\nCalling other methods that affect the request or disabling fetch\ndomain before body is received results in an undefined behavior.",
+                    "parameters": [
+                        {
+                            "name": "requestId",
+                            "$ref": "RequestId"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "stream",
+                            "$ref": "IO.StreamHandle"
+                        }
+                    ]
+                }
+            ],
+            "events": [
+                {
+                    "name": "requestPaused",
+                    "description": "Issued when the domain is enabled and the request URL matches the\nspecified filter. The request is paused until the client responds\nwith one of continueRequest, failRequest or fulfillRequest.\nThe stage of the request can be determined by presence of responseErrorReason\nand responseStatusCode -- the request is at the response stage if either\nof these fields is present and in the request stage otherwise.",
+                    "parameters": [
+                        {
+                            "name": "requestId",
+                            "description": "Each request the page makes will have a unique id.",
+                            "$ref": "RequestId"
+                        },
+                        {
+                            "name": "request",
+                            "description": "The details of the request.",
+                            "$ref": "Network.Request"
+                        },
+                        {
+                            "name": "frameId",
+                            "description": "The id of the frame that initiated the request.",
+                            "$ref": "Page.FrameId"
+                        },
+                        {
+                            "name": "resourceType",
+                            "description": "How the requested resource will be used.",
+                            "$ref": "Network.ResourceType"
+                        },
+                        {
+                            "name": "responseErrorReason",
+                            "description": "Response error if intercepted at response stage.",
+                            "optional": true,
+                            "$ref": "Network.ErrorReason"
+                        },
+                        {
+                            "name": "responseStatusCode",
+                            "description": "Response code if intercepted at response stage.",
+                            "optional": true,
+                            "type": "integer"
+                        },
+                        {
+                            "name": "responseHeaders",
+                            "description": "Response headers if intercepted at the response stage.",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "$ref": "HeaderEntry"
+                            }
+                        },
+                        {
+                            "name": "networkId",
+                            "description": "If the intercepted request had a corresponding Network.requestWillBeSent event fired for it,\nthen this networkId will be the same as the requestId present in the requestWillBeSent event.",
+                            "optional": true,
+                            "$ref": "RequestId"
+                        }
+                    ]
+                },
+                {
+                    "name": "authRequired",
+                    "description": "Issued when the domain is enabled with handleAuthRequests set to true.\nThe request is paused until client responds with continueWithAuth.",
+                    "parameters": [
+                        {
+                            "name": "requestId",
+                            "description": "Each request the page makes will have a unique id.",
+                            "$ref": "RequestId"
+                        },
+                        {
+                            "name": "request",
+                            "description": "The details of the request.",
+                            "$ref": "Network.Request"
+                        },
+                        {
+                            "name": "frameId",
+                            "description": "The id of the frame that initiated the request.",
+                            "$ref": "Page.FrameId"
+                        },
+                        {
+                            "name": "resourceType",
+                            "description": "How the requested resource will be used.",
+                            "$ref": "Network.ResourceType"
+                        },
+                        {
+                            "name": "authChallenge",
+                            "description": "Details of the Authorization Challenge encountered.\nIf this is set, client should respond with continueRequest that\ncontains AuthChallengeResponse.",
+                            "$ref": "AuthChallenge"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "domain": "WebAudio",
+            "description": "This domain allows inspection of Web Audio API.\nhttps://webaudio.github.io/web-audio-api/",
+            "experimental": true,
+            "types": [
+                {
+                    "id": "GraphObjectId",
+                    "description": "An unique ID for a graph object (AudioContext, AudioNode, AudioParam) in Web Audio API",
+                    "type": "string"
+                },
+                {
+                    "id": "ContextType",
+                    "description": "Enum of BaseAudioContext types",
+                    "type": "string",
+                    "enum": [
+                        "realtime",
+                        "offline"
+                    ]
+                },
+                {
+                    "id": "ContextState",
+                    "description": "Enum of AudioContextState from the spec",
+                    "type": "string",
+                    "enum": [
+                        "suspended",
+                        "running",
+                        "closed"
+                    ]
+                },
+                {
+                    "id": "NodeType",
+                    "description": "Enum of AudioNode types",
+                    "type": "string"
+                },
+                {
+                    "id": "ChannelCountMode",
+                    "description": "Enum of AudioNode::ChannelCountMode from the spec",
+                    "type": "string",
+                    "enum": [
+                        "clamped-max",
+                        "explicit",
+                        "max"
+                    ]
+                },
+                {
+                    "id": "ChannelInterpretation",
+                    "description": "Enum of AudioNode::ChannelInterpretation from the spec",
+                    "type": "string",
+                    "enum": [
+                        "discrete",
+                        "speakers"
+                    ]
+                },
+                {
+                    "id": "ParamType",
+                    "description": "Enum of AudioParam types",
+                    "type": "string"
+                },
+                {
+                    "id": "AutomationRate",
+                    "description": "Enum of AudioParam::AutomationRate from the spec",
+                    "type": "string",
+                    "enum": [
+                        "a-rate",
+                        "k-rate"
+                    ]
+                },
+                {
+                    "id": "ContextRealtimeData",
+                    "description": "Fields in AudioContext that change in real-time.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "currentTime",
+                            "description": "The current context time in second in BaseAudioContext.",
+                            "type": "number"
+                        },
+                        {
+                            "name": "renderCapacity",
+                            "description": "The time spent on rendering graph divided by render qunatum duration,\nand multiplied by 100. 100 means the audio renderer reached the full\ncapacity and glitch may occur.",
+                            "type": "number"
+                        },
+                        {
+                            "name": "callbackIntervalMean",
+                            "description": "A running mean of callback interval.",
+                            "type": "number"
+                        },
+                        {
+                            "name": "callbackIntervalVariance",
+                            "description": "A running variance of callback interval.",
+                            "type": "number"
+                        }
+                    ]
+                },
+                {
+                    "id": "BaseAudioContext",
+                    "description": "Protocol object for BaseAudioContext",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "contextId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "contextType",
+                            "$ref": "ContextType"
+                        },
+                        {
+                            "name": "contextState",
+                            "$ref": "ContextState"
+                        },
+                        {
+                            "name": "realtimeData",
+                            "optional": true,
+                            "$ref": "ContextRealtimeData"
+                        },
+                        {
+                            "name": "callbackBufferSize",
+                            "description": "Platform-dependent callback buffer size.",
+                            "type": "number"
+                        },
+                        {
+                            "name": "maxOutputChannelCount",
+                            "description": "Number of output channels supported by audio hardware in use.",
+                            "type": "number"
+                        },
+                        {
+                            "name": "sampleRate",
+                            "description": "Context sample rate.",
+                            "type": "number"
+                        }
+                    ]
+                },
+                {
+                    "id": "AudioListener",
+                    "description": "Protocol object for AudioListner",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "listenerId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "contextId",
+                            "$ref": "GraphObjectId"
+                        }
+                    ]
+                },
+                {
+                    "id": "AudioNode",
+                    "description": "Protocol object for AudioNode",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "nodeId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "contextId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "nodeType",
+                            "$ref": "NodeType"
+                        },
+                        {
+                            "name": "numberOfInputs",
+                            "type": "number"
+                        },
+                        {
+                            "name": "numberOfOutputs",
+                            "type": "number"
+                        },
+                        {
+                            "name": "channelCount",
+                            "type": "number"
+                        },
+                        {
+                            "name": "channelCountMode",
+                            "$ref": "ChannelCountMode"
+                        },
+                        {
+                            "name": "channelInterpretation",
+                            "$ref": "ChannelInterpretation"
+                        }
+                    ]
+                },
+                {
+                    "id": "AudioParam",
+                    "description": "Protocol object for AudioParam",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "paramId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "nodeId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "contextId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "paramType",
+                            "$ref": "ParamType"
+                        },
+                        {
+                            "name": "rate",
+                            "$ref": "AutomationRate"
+                        },
+                        {
+                            "name": "defaultValue",
+                            "type": "number"
+                        },
+                        {
+                            "name": "minValue",
+                            "type": "number"
+                        },
+                        {
+                            "name": "maxValue",
+                            "type": "number"
+                        }
+                    ]
+                }
+            ],
+            "commands": [
+                {
+                    "name": "enable",
+                    "description": "Enables the WebAudio domain and starts sending context lifetime events."
+                },
+                {
+                    "name": "disable",
+                    "description": "Disables the WebAudio domain."
+                },
+                {
+                    "name": "getRealtimeData",
+                    "description": "Fetch the realtime data from the registered contexts.",
+                    "parameters": [
+                        {
+                            "name": "contextId",
+                            "$ref": "GraphObjectId"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "realtimeData",
+                            "$ref": "ContextRealtimeData"
+                        }
+                    ]
+                }
+            ],
+            "events": [
+                {
+                    "name": "contextCreated",
+                    "description": "Notifies that a new BaseAudioContext has been created.",
+                    "parameters": [
+                        {
+                            "name": "context",
+                            "$ref": "BaseAudioContext"
+                        }
+                    ]
+                },
+                {
+                    "name": "contextWillBeDestroyed",
+                    "description": "Notifies that an existing BaseAudioContext will be destroyed.",
+                    "parameters": [
+                        {
+                            "name": "contextId",
+                            "$ref": "GraphObjectId"
+                        }
+                    ]
+                },
+                {
+                    "name": "contextChanged",
+                    "description": "Notifies that existing BaseAudioContext has changed some properties (id stays the same)..",
+                    "parameters": [
+                        {
+                            "name": "context",
+                            "$ref": "BaseAudioContext"
+                        }
+                    ]
+                },
+                {
+                    "name": "audioListenerCreated",
+                    "description": "Notifies that the construction of an AudioListener has finished.",
+                    "parameters": [
+                        {
+                            "name": "listener",
+                            "$ref": "AudioListener"
+                        }
+                    ]
+                },
+                {
+                    "name": "audioListenerWillBeDestroyed",
+                    "description": "Notifies that a new AudioListener has been created.",
+                    "parameters": [
+                        {
+                            "name": "contextId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "listenerId",
+                            "$ref": "GraphObjectId"
+                        }
+                    ]
+                },
+                {
+                    "name": "audioNodeCreated",
+                    "description": "Notifies that a new AudioNode has been created.",
+                    "parameters": [
+                        {
+                            "name": "node",
+                            "$ref": "AudioNode"
+                        }
+                    ]
+                },
+                {
+                    "name": "audioNodeWillBeDestroyed",
+                    "description": "Notifies that an existing AudioNode has been destroyed.",
+                    "parameters": [
+                        {
+                            "name": "contextId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "nodeId",
+                            "$ref": "GraphObjectId"
+                        }
+                    ]
+                },
+                {
+                    "name": "audioParamCreated",
+                    "description": "Notifies that a new AudioParam has been created.",
+                    "parameters": [
+                        {
+                            "name": "param",
+                            "$ref": "AudioParam"
+                        }
+                    ]
+                },
+                {
+                    "name": "audioParamWillBeDestroyed",
+                    "description": "Notifies that an existing AudioParam has been destroyed.",
+                    "parameters": [
+                        {
+                            "name": "contextId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "nodeId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "paramId",
+                            "$ref": "GraphObjectId"
+                        }
+                    ]
+                },
+                {
+                    "name": "nodesConnected",
+                    "description": "Notifies that two AudioNodes are connected.",
+                    "parameters": [
+                        {
+                            "name": "contextId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "sourceId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "destinationId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "sourceOutputIndex",
+                            "optional": true,
+                            "type": "number"
+                        },
+                        {
+                            "name": "destinationInputIndex",
+                            "optional": true,
+                            "type": "number"
+                        }
+                    ]
+                },
+                {
+                    "name": "nodesDisconnected",
+                    "description": "Notifies that AudioNodes are disconnected. The destination can be null, and it means all the outgoing connections from the source are disconnected.",
+                    "parameters": [
+                        {
+                            "name": "contextId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "sourceId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "destinationId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "sourceOutputIndex",
+                            "optional": true,
+                            "type": "number"
+                        },
+                        {
+                            "name": "destinationInputIndex",
+                            "optional": true,
+                            "type": "number"
+                        }
+                    ]
+                },
+                {
+                    "name": "nodeParamConnected",
+                    "description": "Notifies that an AudioNode is connected to an AudioParam.",
+                    "parameters": [
+                        {
+                            "name": "contextId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "sourceId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "destinationId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "sourceOutputIndex",
+                            "optional": true,
+                            "type": "number"
+                        }
+                    ]
+                },
+                {
+                    "name": "nodeParamDisconnected",
+                    "description": "Notifies that an AudioNode is disconnected to an AudioParam.",
+                    "parameters": [
+                        {
+                            "name": "contextId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "sourceId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "destinationId",
+                            "$ref": "GraphObjectId"
+                        },
+                        {
+                            "name": "sourceOutputIndex",
+                            "optional": true,
+                            "type": "number"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "domain": "WebAuthn",
+            "description": "This domain allows configuring virtual authenticators to test the WebAuthn\nAPI.",
+            "experimental": true,
+            "types": [
+                {
+                    "id": "AuthenticatorId",
+                    "type": "string"
+                },
+                {
+                    "id": "AuthenticatorProtocol",
+                    "type": "string",
+                    "enum": [
+                        "u2f",
+                        "ctap2"
+                    ]
+                },
+                {
+                    "id": "AuthenticatorTransport",
+                    "type": "string",
+                    "enum": [
+                        "usb",
+                        "nfc",
+                        "ble",
+                        "cable",
+                        "internal"
+                    ]
+                },
+                {
+                    "id": "VirtualAuthenticatorOptions",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "protocol",
+                            "$ref": "AuthenticatorProtocol"
+                        },
+                        {
+                            "name": "transport",
+                            "$ref": "AuthenticatorTransport"
+                        },
+                        {
+                            "name": "hasResidentKey",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "hasUserVerification",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "automaticPresenceSimulation",
+                            "description": "If set to true, tests of user presence will succeed immediately.\nOtherwise, they will not be resolved. Defaults to true.",
+                            "optional": true,
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                {
+                    "id": "Credential",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "credentialId",
+                            "type": "string"
+                        },
+                        {
+                            "name": "isResidentCredential",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "rpId",
+                            "description": "Relying Party ID the credential is scoped to. Must be set when adding a\ncredential.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "privateKey",
+                            "description": "The ECDSA P-256 private key in PKCS#8 format.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "userHandle",
+                            "description": "An opaque byte sequence with a maximum size of 64 bytes mapping the\ncredential to a specific user.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "signCount",
+                            "description": "Signature counter. This is incremented by one for each successful\nassertion.\nSee https://w3c.github.io/webauthn/#signature-counter",
+                            "type": "integer"
+                        }
+                    ]
+                }
+            ],
+            "commands": [
+                {
+                    "name": "enable",
+                    "description": "Enable the WebAuthn domain and start intercepting credential storage and\nretrieval with a virtual authenticator."
+                },
+                {
+                    "name": "disable",
+                    "description": "Disable the WebAuthn domain."
+                },
+                {
+                    "name": "addVirtualAuthenticator",
+                    "description": "Creates and adds a virtual authenticator.",
+                    "parameters": [
+                        {
+                            "name": "options",
+                            "$ref": "VirtualAuthenticatorOptions"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "authenticatorId",
+                            "$ref": "AuthenticatorId"
+                        }
+                    ]
+                },
+                {
+                    "name": "removeVirtualAuthenticator",
+                    "description": "Removes the given authenticator.",
+                    "parameters": [
+                        {
+                            "name": "authenticatorId",
+                            "$ref": "AuthenticatorId"
+                        }
+                    ]
+                },
+                {
+                    "name": "addCredential",
+                    "description": "Adds the credential to the specified authenticator.",
+                    "parameters": [
+                        {
+                            "name": "authenticatorId",
+                            "$ref": "AuthenticatorId"
+                        },
+                        {
+                            "name": "credential",
+                            "$ref": "Credential"
+                        }
+                    ]
+                },
+                {
+                    "name": "getCredential",
+                    "description": "Returns a single credential stored in the given virtual authenticator that\nmatches the credential ID.",
+                    "parameters": [
+                        {
+                            "name": "authenticatorId",
+                            "$ref": "AuthenticatorId"
+                        },
+                        {
+                            "name": "credentialId",
+                            "type": "string"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "credential",
+                            "$ref": "Credential"
+                        }
+                    ]
+                },
+                {
+                    "name": "getCredentials",
+                    "description": "Returns all the credentials stored in the given virtual authenticator.",
+                    "parameters": [
+                        {
+                            "name": "authenticatorId",
+                            "$ref": "AuthenticatorId"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "credentials",
+                            "type": "array",
+                            "items": {
+                                "$ref": "Credential"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "removeCredential",
+                    "description": "Removes a credential from the authenticator.",
+                    "parameters": [
+                        {
+                            "name": "authenticatorId",
+                            "$ref": "AuthenticatorId"
+                        },
+                        {
+                            "name": "credentialId",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "clearCredentials",
+                    "description": "Clears all the credentials from the specified device.",
+                    "parameters": [
+                        {
+                            "name": "authenticatorId",
+                            "$ref": "AuthenticatorId"
+                        }
+                    ]
+                },
+                {
+                    "name": "setUserVerified",
+                    "description": "Sets whether User Verification succeeds or fails for an authenticator.\nThe default is true.",
+                    "parameters": [
+                        {
+                            "name": "authenticatorId",
+                            "$ref": "AuthenticatorId"
+                        },
+                        {
+                            "name": "isUserVerified",
+                            "type": "boolean"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "domain": "Media",
+            "description": "This domain allows detailed inspection of media elements",
+            "experimental": true,
+            "types": [
+                {
+                    "id": "PlayerId",
+                    "description": "Players will get an ID that is unique within the agent context.",
+                    "type": "string"
+                },
+                {
+                    "id": "Timestamp",
+                    "type": "number"
+                },
+                {
+                    "id": "PlayerProperty",
+                    "description": "Player Property type",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "name",
+                            "type": "string"
+                        },
+                        {
+                            "name": "value",
+                            "optional": true,
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "id": "PlayerEventType",
+                    "description": "Break out events into different types",
+                    "type": "string",
+                    "enum": [
+                        "playbackEvent",
+                        "systemEvent",
+                        "messageEvent"
+                    ]
+                },
+                {
+                    "id": "PlayerEvent",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "type",
+                            "$ref": "PlayerEventType"
+                        },
+                        {
+                            "name": "timestamp",
+                            "description": "Events are timestamped relative to the start of the player creation\nnot relative to the start of playback.",
+                            "$ref": "Timestamp"
+                        },
+                        {
+                            "name": "name",
+                            "type": "string"
+                        },
+                        {
+                            "name": "value",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ],
+            "events": [
+                {
+                    "name": "playerPropertiesChanged",
+                    "description": "This can be called multiple times, and can be used to set / override /\nremove player properties. A null propValue indicates removal.",
+                    "parameters": [
+                        {
+                            "name": "playerId",
+                            "$ref": "PlayerId"
+                        },
+                        {
+                            "name": "properties",
+                            "type": "array",
+                            "items": {
+                                "$ref": "PlayerProperty"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "playerEventsAdded",
+                    "description": "Send events as a list, allowing them to be batched on the browser for less\ncongestion. If batched, events must ALWAYS be in chronological order.",
+                    "parameters": [
+                        {
+                            "name": "playerId",
+                            "$ref": "PlayerId"
+                        },
+                        {
+                            "name": "events",
+                            "type": "array",
+                            "items": {
+                                "$ref": "PlayerEvent"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "playersCreated",
+                    "description": "Called whenever a player is created, or when a new agent joins and recieves\na list of active players. If an agent is restored, it will recieve the full\nlist of player ids and all events again.",
+                    "parameters": [
+                        {
+                            "name": "players",
+                            "type": "array",
+                            "items": {
+                                "$ref": "PlayerId"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "commands": [
+                {
+                    "name": "enable",
+                    "description": "Enables the Media domain"
+                },
+                {
+                    "name": "disable",
+                    "description": "Disables the Media domain."
                 }
             ]
         }

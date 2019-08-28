@@ -55,6 +55,8 @@ public class Response {
 
   @Optional private Boolean fromServiceWorker;
 
+  @Optional private Boolean fromPrefetchCache;
+
   private Double encodedDataLength;
 
   @Optional private ResourceTiming timing;
@@ -203,6 +205,16 @@ public class Response {
   /** Specifies that the request was served from the ServiceWorker. */
   public void setFromServiceWorker(Boolean fromServiceWorker) {
     this.fromServiceWorker = fromServiceWorker;
+  }
+
+  /** Specifies that the request was served from the prefetch cache. */
+  public Boolean getFromPrefetchCache() {
+    return fromPrefetchCache;
+  }
+
+  /** Specifies that the request was served from the prefetch cache. */
+  public void setFromPrefetchCache(Boolean fromPrefetchCache) {
+    this.fromPrefetchCache = fromPrefetchCache;
   }
 
   /** Total number of bytes received for this request so far. */

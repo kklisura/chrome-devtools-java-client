@@ -34,12 +34,16 @@ public class InlineTextBox {
 
   private Integer numCharacters;
 
-  /** The absolute position bounding box. */
+  /**
+   * The bounding box in document coordinates. Note that scroll offset of the document is ignored.
+   */
   public Rect getBoundingBox() {
     return boundingBox;
   }
 
-  /** The absolute position bounding box. */
+  /**
+   * The bounding box in document coordinates. Note that scroll offset of the document is ignored.
+   */
   public void setBoundingBox(Rect boundingBox) {
     this.boundingBox = boundingBox;
   }

@@ -23,8 +23,8 @@ package com.github.kklisura.cdt.protocol.types.domsnapshot;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import java.util.List;
 
-/** DOM tree snapshot. */
-public class DOMTreeSnapshot {
+/** Table containing nodes. */
+public class NodeTreeSnapshot {
 
   @Optional private List<Integer> parentIndex;
 
@@ -38,8 +38,6 @@ public class DOMTreeSnapshot {
 
   @Optional private List<List<Integer>> attributes;
 
-  @Optional private List<Integer> layoutNodeIndex;
-
   @Optional private RareStringData textValue;
 
   @Optional private RareStringData inputValue;
@@ -48,25 +46,7 @@ public class DOMTreeSnapshot {
 
   @Optional private RareBooleanData optionSelected;
 
-  @Optional private RareStringData documentURL;
-
-  @Optional private RareStringData baseURL;
-
-  @Optional private RareStringData contentLanguage;
-
-  @Optional private RareStringData documentEncoding;
-
-  @Optional private RareStringData publicId;
-
-  @Optional private RareStringData systemId;
-
-  @Optional private RareStringData frameId;
-
   @Optional private RareIntegerData contentDocumentIndex;
-
-  @Optional private RareIntegerData importedDocumentIndex;
-
-  @Optional private RareIntegerData templateContentIndex;
 
   @Optional private RareStringData pseudoType;
 
@@ -136,22 +116,6 @@ public class DOMTreeSnapshot {
     this.attributes = attributes;
   }
 
-  /**
-   * The index of the node's related layout tree node in the `layoutTreeNodes` array returned by
-   * `captureSnapshot`, if any.
-   */
-  public List<Integer> getLayoutNodeIndex() {
-    return layoutNodeIndex;
-  }
-
-  /**
-   * The index of the node's related layout tree node in the `layoutTreeNodes` array returned by
-   * `captureSnapshot`, if any.
-   */
-  public void setLayoutNodeIndex(List<Integer> layoutNodeIndex) {
-    this.layoutNodeIndex = layoutNodeIndex;
-  }
-
   /** Only set for textarea elements, contains the text value. */
   public RareStringData getTextValue() {
     return textValue;
@@ -192,122 +156,14 @@ public class DOMTreeSnapshot {
     this.optionSelected = optionSelected;
   }
 
-  /** Document URL that `Document` or `FrameOwner` node points to. */
-  public RareStringData getDocumentURL() {
-    return documentURL;
-  }
-
-  /** Document URL that `Document` or `FrameOwner` node points to. */
-  public void setDocumentURL(RareStringData documentURL) {
-    this.documentURL = documentURL;
-  }
-
-  /** Base URL that `Document` or `FrameOwner` node uses for URL completion. */
-  public RareStringData getBaseURL() {
-    return baseURL;
-  }
-
-  /** Base URL that `Document` or `FrameOwner` node uses for URL completion. */
-  public void setBaseURL(RareStringData baseURL) {
-    this.baseURL = baseURL;
-  }
-
-  /** Only set for documents, contains the document's content language. */
-  public RareStringData getContentLanguage() {
-    return contentLanguage;
-  }
-
-  /** Only set for documents, contains the document's content language. */
-  public void setContentLanguage(RareStringData contentLanguage) {
-    this.contentLanguage = contentLanguage;
-  }
-
-  /** Only set for documents, contains the document's character set encoding. */
-  public RareStringData getDocumentEncoding() {
-    return documentEncoding;
-  }
-
-  /** Only set for documents, contains the document's character set encoding. */
-  public void setDocumentEncoding(RareStringData documentEncoding) {
-    this.documentEncoding = documentEncoding;
-  }
-
-  /** `DocumentType` node's publicId. */
-  public RareStringData getPublicId() {
-    return publicId;
-  }
-
-  /** `DocumentType` node's publicId. */
-  public void setPublicId(RareStringData publicId) {
-    this.publicId = publicId;
-  }
-
-  /** `DocumentType` node's systemId. */
-  public RareStringData getSystemId() {
-    return systemId;
-  }
-
-  /** `DocumentType` node's systemId. */
-  public void setSystemId(RareStringData systemId) {
-    this.systemId = systemId;
-  }
-
-  /** Frame ID for frame owner elements and also for the document node. */
-  public RareStringData getFrameId() {
-    return frameId;
-  }
-
-  /** Frame ID for frame owner elements and also for the document node. */
-  public void setFrameId(RareStringData frameId) {
-    this.frameId = frameId;
-  }
-
-  /**
-   * The index of a frame owner element's content document in the `domNodes` array returned by
-   * `captureSnapshot`, if any.
-   */
+  /** The index of the document in the list of the snapshot documents. */
   public RareIntegerData getContentDocumentIndex() {
     return contentDocumentIndex;
   }
 
-  /**
-   * The index of a frame owner element's content document in the `domNodes` array returned by
-   * `captureSnapshot`, if any.
-   */
+  /** The index of the document in the list of the snapshot documents. */
   public void setContentDocumentIndex(RareIntegerData contentDocumentIndex) {
     this.contentDocumentIndex = contentDocumentIndex;
-  }
-
-  /**
-   * Index of the imported document's node of a link element in the `domNodes` array returned by
-   * `captureSnapshot`, if any.
-   */
-  public RareIntegerData getImportedDocumentIndex() {
-    return importedDocumentIndex;
-  }
-
-  /**
-   * Index of the imported document's node of a link element in the `domNodes` array returned by
-   * `captureSnapshot`, if any.
-   */
-  public void setImportedDocumentIndex(RareIntegerData importedDocumentIndex) {
-    this.importedDocumentIndex = importedDocumentIndex;
-  }
-
-  /**
-   * Index of the content node of a template element in the `domNodes` array returned by
-   * `captureSnapshot`.
-   */
-  public RareIntegerData getTemplateContentIndex() {
-    return templateContentIndex;
-  }
-
-  /**
-   * Index of the content node of a template element in the `domNodes` array returned by
-   * `captureSnapshot`.
-   */
-  public void setTemplateContentIndex(RareIntegerData templateContentIndex) {
-    this.templateContentIndex = templateContentIndex;
   }
 
   /** Type of a pseudo element node. */

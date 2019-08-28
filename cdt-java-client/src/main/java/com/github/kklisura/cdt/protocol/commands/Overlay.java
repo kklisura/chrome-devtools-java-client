@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.events.overlay.InspectModeCanceled;
 import com.github.kklisura.cdt.protocol.events.overlay.InspectNodeRequested;
 import com.github.kklisura.cdt.protocol.events.overlay.NodeHighlightRequested;
 import com.github.kklisura.cdt.protocol.events.overlay.ScreenshotRequested;
@@ -53,6 +54,19 @@ public interface Overlay {
    */
   @Returns("highlight")
   Map<String, Object> getHighlightObjectForTest(@ParamName("nodeId") Integer nodeId);
+
+  /**
+   * For testing.
+   *
+   * @param nodeId Id of the node to get highlight object for.
+   * @param includeDistance Whether to include distance info.
+   * @param includeStyle Whether to include style info.
+   */
+  @Returns("highlight")
+  Map<String, Object> getHighlightObjectForTest(
+      @ParamName("nodeId") Integer nodeId,
+      @Optional @ParamName("includeDistance") Boolean includeDistance,
+      @Optional @ParamName("includeStyle") Boolean includeStyle);
 
   /** Hides any highlight. */
   void hideHighlight();
@@ -92,12 +106,14 @@ public interface Overlay {
    * @param nodeId Identifier of the node to highlight.
    * @param backendNodeId Identifier of the backend node to highlight.
    * @param objectId JavaScript object id of the node to be highlighted.
+   * @param selector Selectors to highlight relevant nodes.
    */
   void highlightNode(
       @ParamName("highlightConfig") HighlightConfig highlightConfig,
       @Optional @ParamName("nodeId") Integer nodeId,
       @Optional @ParamName("backendNodeId") Integer backendNodeId,
-      @Optional @ParamName("objectId") String objectId);
+      @Optional @ParamName("objectId") String objectId,
+      @Optional @ParamName("selector") String selector);
 
   /**
    * Highlights given quad. Coordinates are absolute with respect to the main frame viewport.
@@ -170,6 +186,13 @@ public interface Overlay {
       @ParamName("mode") InspectMode mode,
       @Optional @ParamName("highlightConfig") HighlightConfig highlightConfig);
 
+  /**
+   * Highlights owner element of all frames detected to be ads.
+   *
+   * @param show True for showing ad highlights
+   */
+  void setShowAdHighlights(@ParamName("show") Boolean show);
+
   void setPausedInDebuggerMessage();
 
   /** @param message The message to display, also triggers resume and step over controls. */
@@ -197,6 +220,13 @@ public interface Overlay {
   void setShowPaintRects(@ParamName("result") Boolean result);
 
   /**
+   * Requests that backend shows layout shift regions
+   *
+   * @param result True for showing layout shift regions
+   */
+  void setShowLayoutShiftRegions(@ParamName("result") Boolean result);
+
+  /**
    * Requests that backend shows scroll bottleneck rects
    *
    * @param show True for showing scroll bottleneck rects
@@ -204,17 +234,18 @@ public interface Overlay {
   void setShowScrollBottleneckRects(@ParamName("show") Boolean show);
 
   /**
+   * Requests that backend shows hit-test borders on layers
+   *
+   * @param show True for showing hit-test borders
+   */
+  void setShowHitTestBorders(@ParamName("show") Boolean show);
+
+  /**
    * Paints viewport size upon main frame resize.
    *
    * @param show Whether to paint size or not.
    */
   void setShowViewportSizeOnResize(@ParamName("show") Boolean show);
-
-  /**
-   * @param suspended Whether overlay should be suspended and not consume any resources until
-   *     resumed.
-   */
-  void setSuspended(@ParamName("suspended") Boolean suspended);
 
   /**
    * Fired when the node should be inspected. This happens after call to `setInspectMode` or when
@@ -230,4 +261,8 @@ public interface Overlay {
   /** Fired when user asks to capture screenshot of some area on the page. */
   @EventName("screenshotRequested")
   EventListener onScreenshotRequested(EventHandler<ScreenshotRequested> eventListener);
+
+  /** Fired when user cancels the inspect mode. */
+  @EventName("inspectModeCanceled")
+  EventListener onInspectModeCanceled(EventHandler<InspectModeCanceled> eventListener);
 }

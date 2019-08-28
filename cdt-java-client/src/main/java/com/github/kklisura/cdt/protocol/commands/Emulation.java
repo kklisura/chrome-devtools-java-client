@@ -20,9 +20,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.events.emulation.VirtualTimeAdvanced;
 import com.github.kklisura.cdt.protocol.events.emulation.VirtualTimeBudgetExpired;
-import com.github.kklisura.cdt.protocol.events.emulation.VirtualTimePaused;
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
@@ -52,6 +50,14 @@ public interface Emulation {
   /** Requests that page scale factor is reset to initial values. */
   @Experimental
   void resetPageScaleFactor();
+
+  /**
+   * Enables or disables simulating a focused and active page.
+   *
+   * @param enabled Whether to enable to disable focus emulation.
+   */
+  @Experimental
+  void setFocusEmulationEnabled(@ParamName("enabled") Boolean enabled);
 
   /**
    * Enables CPU throttling to emulate slow CPUs.
@@ -255,6 +261,15 @@ public interface Emulation {
       @Optional @ParamName("initialVirtualTime") Double initialVirtualTime);
 
   /**
+   * Overrides default host system timezone with the specified one.
+   *
+   * @param timezoneId The timezone identifier. If empty, disables the override and restores default
+   *     host system timezone.
+   */
+  @Experimental
+  void setTimezoneOverride(@ParamName("timezoneId") String timezoneId);
+
+  /**
    * Resizes the frame/viewport of the page. Note that this does not affect the frame's container
    * (e.g. browser window). Can be used to produce screenshots of the specified size. Not supported
    * on Android.
@@ -285,20 +300,10 @@ public interface Emulation {
       @Optional @ParamName("acceptLanguage") String acceptLanguage,
       @Optional @ParamName("platform") String platform);
 
-  /** Notification sent after the virtual time has advanced. */
-  @EventName("virtualTimeAdvanced")
-  @Experimental
-  EventListener onVirtualTimeAdvanced(EventHandler<VirtualTimeAdvanced> eventListener);
-
   /**
    * Notification sent after the virtual time budget for the current VirtualTimePolicy has run out.
    */
   @EventName("virtualTimeBudgetExpired")
   @Experimental
   EventListener onVirtualTimeBudgetExpired(EventHandler<VirtualTimeBudgetExpired> eventListener);
-
-  /** Notification sent after the virtual time has paused. */
-  @EventName("virtualTimePaused")
-  @Experimental
-  EventListener onVirtualTimePaused(EventHandler<VirtualTimePaused> eventListener);
 }

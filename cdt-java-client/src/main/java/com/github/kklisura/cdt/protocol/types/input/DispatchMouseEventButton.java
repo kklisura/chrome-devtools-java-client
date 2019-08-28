@@ -31,5 +31,9 @@ public enum DispatchMouseEventButton {
   @JsonProperty("middle")
   MIDDLE,
   @JsonProperty("right")
-  RIGHT
+  RIGHT,
+  @JsonProperty("back")
+  BACK,
+  @JsonProperty("forward")
+  FORWARD
 }

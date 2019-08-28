@@ -21,11 +21,13 @@ package com.github.kklisura.cdt.protocol.commands;
  */
 
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
 import com.github.kklisura.cdt.protocol.support.annotations.ReturnTypeParameter;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.types.cachestorage.Cache;
 import com.github.kklisura.cdt.protocol.types.cachestorage.CachedResponse;
+import com.github.kklisura.cdt.protocol.types.cachestorage.Header;
 import com.github.kklisura.cdt.protocol.types.cachestorage.RequestEntries;
 import java.util.List;
 
@@ -59,12 +61,15 @@ public interface CacheStorage {
   /**
    * Fetches cache entry.
    *
-   * @param cacheId Id of cache that contains the enty.
+   * @param cacheId Id of cache that contains the entry.
    * @param requestURL URL spec of the request.
+   * @param requestHeaders headers of the request.
    */
   @Returns("response")
   CachedResponse requestCachedResponse(
-      @ParamName("cacheId") String cacheId, @ParamName("requestURL") String requestURL);
+      @ParamName("cacheId") String cacheId,
+      @ParamName("requestURL") String requestURL,
+      @ParamName("requestHeaders") List<Header> requestHeaders);
 
   /**
    * Requests data from cache.
@@ -77,4 +82,18 @@ public interface CacheStorage {
       @ParamName("cacheId") String cacheId,
       @ParamName("skipCount") Integer skipCount,
       @ParamName("pageSize") Integer pageSize);
+
+  /**
+   * Requests data from cache.
+   *
+   * @param cacheId ID of cache to get entries from.
+   * @param skipCount Number of records to skip.
+   * @param pageSize Number of records to fetch.
+   * @param pathFilter If present, only return the entries containing this substring in the path
+   */
+  RequestEntries requestEntries(
+      @ParamName("cacheId") String cacheId,
+      @ParamName("skipCount") Integer skipCount,
+      @ParamName("pageSize") Integer pageSize,
+      @Optional @ParamName("pathFilter") String pathFilter);
 }

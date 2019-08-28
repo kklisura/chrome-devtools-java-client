@@ -22,6 +22,7 @@ package com.github.kklisura.cdt.protocol.types.page;
 
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
+import com.github.kklisura.cdt.protocol.types.network.ResourceType;
 
 /** Information about the Resource on the page. */
 @Experimental

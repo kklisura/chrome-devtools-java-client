@@ -25,6 +25,7 @@ import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
 import com.github.kklisura.cdt.protocol.types.input.DispatchKeyEventType;
 import com.github.kklisura.cdt.protocol.types.input.DispatchMouseEventButton;
+import com.github.kklisura.cdt.protocol.types.input.DispatchMouseEventPointerType;
 import com.github.kklisura.cdt.protocol.types.input.DispatchMouseEventType;
 import com.github.kklisura.cdt.protocol.types.input.DispatchTouchEventType;
 import com.github.kklisura.cdt.protocol.types.input.EmulateTouchFromMouseEventButton;
@@ -82,6 +83,15 @@ public interface Input {
       @Optional @ParamName("location") Integer location);
 
   /**
+   * This method emulates inserting text that doesn't come from a key press, for example an emoji
+   * keyboard or an IME.
+   *
+   * @param text The text to insert.
+   */
+  @Experimental
+  void insertText(@ParamName("text") String text);
+
+  /**
    * Dispatches a mouse event to the page.
    *
    * @param type Type of the mouse event.
@@ -107,9 +117,12 @@ public interface Input {
    *     Shift=8 (default: 0).
    * @param timestamp Time at which the event occurred.
    * @param button Mouse button (default: "none").
+   * @param buttons A number indicating which buttons are pressed on the mouse when a mouse event is
+   *     triggered. Left=1, Right=2, Middle=4, Back=8, Forward=16, None=0.
    * @param clickCount Number of times the mouse button was clicked (default: 0).
    * @param deltaX X delta in CSS pixels for mouse wheel event (default: 0).
    * @param deltaY Y delta in CSS pixels for mouse wheel event (default: 0).
+   * @param pointerType Pointer type (default: "mouse").
    */
   void dispatchMouseEvent(
       @ParamName("type") DispatchMouseEventType type,
@@ -118,9 +131,11 @@ public interface Input {
       @Optional @ParamName("modifiers") Integer modifiers,
       @Optional @ParamName("timestamp") Double timestamp,
       @Optional @ParamName("button") DispatchMouseEventButton button,
+      @Optional @ParamName("buttons") Integer buttons,
       @Optional @ParamName("clickCount") Integer clickCount,
       @Optional @ParamName("deltaX") Double deltaX,
-      @Optional @ParamName("deltaY") Double deltaY);
+      @Optional @ParamName("deltaY") Double deltaY,
+      @Optional @ParamName("pointerType") DispatchMouseEventPointerType pointerType);
 
   /**
    * Dispatches a touch event to the page.

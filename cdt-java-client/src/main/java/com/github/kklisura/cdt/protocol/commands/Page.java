@@ -20,11 +20,15 @@ package com.github.kklisura.cdt.protocol.commands;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.events.page.CompilationCacheProduced;
 import com.github.kklisura.cdt.protocol.events.page.DomContentEventFired;
+import com.github.kklisura.cdt.protocol.events.page.DownloadWillBegin;
+import com.github.kklisura.cdt.protocol.events.page.FileChooserOpened;
 import com.github.kklisura.cdt.protocol.events.page.FrameAttached;
 import com.github.kklisura.cdt.protocol.events.page.FrameClearedScheduledNavigation;
 import com.github.kklisura.cdt.protocol.events.page.FrameDetached;
 import com.github.kklisura.cdt.protocol.events.page.FrameNavigated;
+import com.github.kklisura.cdt.protocol.events.page.FrameRequestedNavigation;
 import com.github.kklisura.cdt.protocol.events.page.FrameResized;
 import com.github.kklisura.cdt.protocol.events.page.FrameScheduledNavigation;
 import com.github.kklisura.cdt.protocol.events.page.FrameStartedLoading;
@@ -50,13 +54,17 @@ import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.debugger.SearchMatch;
 import com.github.kklisura.cdt.protocol.types.page.AppManifest;
 import com.github.kklisura.cdt.protocol.types.page.CaptureScreenshotFormat;
+import com.github.kklisura.cdt.protocol.types.page.CaptureSnapshotFormat;
 import com.github.kklisura.cdt.protocol.types.page.FontFamilies;
 import com.github.kklisura.cdt.protocol.types.page.FontSizes;
 import com.github.kklisura.cdt.protocol.types.page.FrameResourceTree;
 import com.github.kklisura.cdt.protocol.types.page.FrameTree;
+import com.github.kklisura.cdt.protocol.types.page.HandleFileChooserAction;
 import com.github.kklisura.cdt.protocol.types.page.LayoutMetrics;
 import com.github.kklisura.cdt.protocol.types.page.Navigate;
 import com.github.kklisura.cdt.protocol.types.page.NavigationHistory;
+import com.github.kklisura.cdt.protocol.types.page.PrintToPDF;
+import com.github.kklisura.cdt.protocol.types.page.PrintToPDFTransferMode;
 import com.github.kklisura.cdt.protocol.types.page.ResourceContent;
 import com.github.kklisura.cdt.protocol.types.page.SetDownloadBehaviorBehavior;
 import com.github.kklisura.cdt.protocol.types.page.SetWebLifecycleStateState;
@@ -86,6 +94,19 @@ public interface Page {
   @Returns("identifier")
   String addScriptToEvaluateOnNewDocument(@ParamName("source") String source);
 
+  /**
+   * Evaluates given script in every frame upon creation (before loading frame's scripts).
+   *
+   * @param source
+   * @param worldName If specified, creates an isolated world with the given name and evaluates
+   *     given script in it. This world name will be used as the ExecutionContextDescription::name
+   *     when the corresponding event is emitted.
+   */
+  @Returns("identifier")
+  String addScriptToEvaluateOnNewDocument(
+      @ParamName("source") String source,
+      @Experimental @Optional @ParamName("worldName") String worldName);
+
   /** Brings page to front (activates tab). */
   void bringToFront();
 
@@ -108,6 +129,24 @@ public interface Page {
       @Optional @ParamName("quality") Integer quality,
       @Optional @ParamName("clip") Viewport clip,
       @Experimental @Optional @ParamName("fromSurface") Boolean fromSurface);
+
+  /**
+   * Returns a snapshot of the page as a string. For MHTML format, the serialization includes
+   * iframes, shadow DOM, external resources, and element-inline styles.
+   */
+  @Experimental
+  @Returns("data")
+  String captureSnapshot();
+
+  /**
+   * Returns a snapshot of the page as a string. For MHTML format, the serialization includes
+   * iframes, shadow DOM, external resources, and element-inline styles.
+   *
+   * @param format Format (defaults to mhtml).
+   */
+  @Experimental
+  @Returns("data")
+  String captureSnapshot(@Optional @ParamName("format") CaptureSnapshotFormat format);
 
   /**
    * Creates an isolated world for the given frame.
@@ -139,6 +178,11 @@ public interface Page {
 
   AppManifest getAppManifest();
 
+  @Experimental
+  @Returns("errors")
+  @ReturnTypeParameter(String.class)
+  List<String> getInstallabilityErrors();
+
   /** Returns present frame tree structure. */
   @Returns("frameTree")
   FrameTree getFrameTree();
@@ -148,6 +192,9 @@ public interface Page {
 
   /** Returns navigation history for the current page. */
   NavigationHistory getNavigationHistory();
+
+  /** Resets navigation history for the current page. */
+  void resetNavigationHistory();
 
   /**
    * Returns content of the given resource.
@@ -210,8 +257,7 @@ public interface Page {
   void navigateToHistoryEntry(@ParamName("entryId") Integer entryId);
 
   /** Print page as PDF. */
-  @Returns("data")
-  String printToPDF();
+  PrintToPDF printToPDF();
 
   /**
    * Print page as PDF.
@@ -239,9 +285,9 @@ public interface Page {
    *     `headerTemplate`.
    * @param preferCSSPageSize Whether or not to prefer page size as defined by css. Defaults to
    *     false, in which case the content will be scaled to fit the paper size.
+   * @param transferMode return as stream
    */
-  @Returns("data")
-  String printToPDF(
+  PrintToPDF printToPDF(
       @Optional @ParamName("landscape") Boolean landscape,
       @Optional @ParamName("displayHeaderFooter") Boolean displayHeaderFooter,
       @Optional @ParamName("printBackground") Boolean printBackground,
@@ -256,7 +302,8 @@ public interface Page {
       @Optional @ParamName("ignoreInvalidPageRanges") Boolean ignoreInvalidPageRanges,
       @Optional @ParamName("headerTemplate") String headerTemplate,
       @Optional @ParamName("footerTemplate") String footerTemplate,
-      @Optional @ParamName("preferCSSPageSize") Boolean preferCSSPageSize);
+      @Optional @ParamName("preferCSSPageSize") Boolean preferCSSPageSize,
+      @Experimental @Optional @ParamName("transferMode") PrintToPDFTransferMode transferMode);
 
   /** Reloads given page optionally ignoring the cache. */
   void reload();
@@ -287,9 +334,6 @@ public interface Page {
    * @param identifier
    */
   void removeScriptToEvaluateOnNewDocument(@ParamName("identifier") String identifier);
-
-  @Experimental
-  void requestAppBanner();
 
   /**
    * Acknowledges that a screencast frame has been received by the frontend.
@@ -450,8 +494,86 @@ public interface Page {
   @Experimental
   void stopScreencast();
 
+  /**
+   * Forces compilation cache to be generated for every subresource script.
+   *
+   * @param enabled
+   */
+  @Experimental
+  void setProduceCompilationCache(@ParamName("enabled") Boolean enabled);
+
+  /**
+   * Seeds compilation cache for given url. Compilation cache does not survive cross-process
+   * navigation.
+   *
+   * @param url
+   * @param data Base64-encoded data
+   */
+  @Experimental
+  void addCompilationCache(@ParamName("url") String url, @ParamName("data") String data);
+
+  /** Clears seeded compilation cache. */
+  @Experimental
+  void clearCompilationCache();
+
+  /**
+   * Generates a report for testing.
+   *
+   * @param message Message to be displayed in the report.
+   */
+  @Experimental
+  void generateTestReport(@ParamName("message") String message);
+
+  /**
+   * Generates a report for testing.
+   *
+   * @param message Message to be displayed in the report.
+   * @param group Specifies the endpoint group to deliver the report to.
+   */
+  @Experimental
+  void generateTestReport(
+      @ParamName("message") String message, @Optional @ParamName("group") String group);
+
+  /** Pauses page execution. Can be resumed using generic Runtime.runIfWaitingForDebugger. */
+  @Experimental
+  void waitForDebugger();
+
+  /**
+   * Intercept file chooser requests and transfer control to protocol clients. When file chooser
+   * interception is enabled, native file chooser dialog is not shown. Instead, a protocol event
+   * `Page.fileChooserOpened` is emitted. File chooser can be handled with `page.handleFileChooser`
+   * command.
+   *
+   * @param enabled
+   */
+  @Experimental
+  void setInterceptFileChooserDialog(@ParamName("enabled") Boolean enabled);
+
+  /**
+   * Accepts or cancels an intercepted file chooser dialog.
+   *
+   * @param action
+   */
+  @Experimental
+  void handleFileChooser(@ParamName("action") HandleFileChooserAction action);
+
+  /**
+   * Accepts or cancels an intercepted file chooser dialog.
+   *
+   * @param action
+   * @param files Array of absolute file paths to set, only respected with `accept` action.
+   */
+  @Experimental
+  void handleFileChooser(
+      @ParamName("action") HandleFileChooserAction action,
+      @Optional @ParamName("files") List<String> files);
+
   @EventName("domContentEventFired")
   EventListener onDomContentEventFired(EventHandler<DomContentEventFired> eventListener);
+
+  /** Emitted only when `page.interceptFileChooser` is enabled. */
+  @EventName("fileChooserOpened")
+  EventListener onFileChooserOpened(EventHandler<FileChooserOpened> eventListener);
 
   /** Fired when frame has been attached to its parent. */
   @EventName("frameAttached")
@@ -459,7 +581,7 @@ public interface Page {
 
   /** Fired when frame no longer has a scheduled navigation. */
   @EventName("frameClearedScheduledNavigation")
-  @Experimental
+  @Deprecated
   EventListener onFrameClearedScheduledNavigation(
       EventHandler<FrameClearedScheduledNavigation> eventListener);
 
@@ -477,9 +599,17 @@ public interface Page {
   @Experimental
   EventListener onFrameResized(EventHandler<FrameResized> eventListener);
 
+  /**
+   * Fired when a renderer-initiated navigation is requested. Navigation may still be cancelled
+   * after the event is issued.
+   */
+  @EventName("frameRequestedNavigation")
+  @Experimental
+  EventListener onFrameRequestedNavigation(EventHandler<FrameRequestedNavigation> eventListener);
+
   /** Fired when frame schedules a potential navigation. */
   @EventName("frameScheduledNavigation")
-  @Experimental
+  @Deprecated
   EventListener onFrameScheduledNavigation(EventHandler<FrameScheduledNavigation> eventListener);
 
   /** Fired when frame has started loading. */
@@ -491,6 +621,11 @@ public interface Page {
   @EventName("frameStoppedLoading")
   @Experimental
   EventListener onFrameStoppedLoading(EventHandler<FrameStoppedLoading> eventListener);
+
+  /** Fired when page is about to start a download. */
+  @EventName("downloadWillBegin")
+  @Experimental
+  EventListener onDownloadWillBegin(EventHandler<DownloadWillBegin> eventListener);
 
   /** Fired when interstitial page was hidden */
   @EventName("interstitialHidden")
@@ -546,4 +681,12 @@ public interface Page {
    */
   @EventName("windowOpen")
   EventListener onWindowOpen(EventHandler<WindowOpen> eventListener);
+
+  /**
+   * Issued for every compilation cache generated. Is only available if
+   * Page.setGenerateCompilationCache is enabled.
+   */
+  @EventName("compilationCacheProduced")
+  @Experimental
+  EventListener onCompilationCacheProduced(EventHandler<CompilationCacheProduced> eventListener);
 }

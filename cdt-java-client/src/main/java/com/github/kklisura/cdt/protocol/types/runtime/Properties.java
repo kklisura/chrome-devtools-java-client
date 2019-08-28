@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.protocol.types.runtime;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import java.util.List;
 
@@ -28,6 +29,8 @@ public class Properties {
   private List<PropertyDescriptor> result;
 
   @Optional private List<InternalPropertyDescriptor> internalProperties;
+
+  @Experimental @Optional private List<PrivatePropertyDescriptor> privateProperties;
 
   @Optional private ExceptionDetails exceptionDetails;
 
@@ -49,6 +52,16 @@ public class Properties {
   /** Internal object properties (only of the element itself). */
   public void setInternalProperties(List<InternalPropertyDescriptor> internalProperties) {
     this.internalProperties = internalProperties;
+  }
+
+  /** Object private properties. */
+  public List<PrivatePropertyDescriptor> getPrivateProperties() {
+    return privateProperties;
+  }
+
+  /** Object private properties. */
+  public void setPrivateProperties(List<PrivatePropertyDescriptor> privateProperties) {
+    this.privateProperties = privateProperties;
   }
 
   /** Exception details. */

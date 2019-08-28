@@ -33,42 +33,42 @@ public class Viewport {
 
   private Double scale;
 
-  /** X offset in CSS pixels. */
+  /** X offset in device independent pixels (dip). */
   public Double getX() {
     return x;
   }
 
-  /** X offset in CSS pixels. */
+  /** X offset in device independent pixels (dip). */
   public void setX(Double x) {
     this.x = x;
   }
 
-  /** Y offset in CSS pixels */
+  /** Y offset in device independent pixels (dip). */
   public Double getY() {
     return y;
   }
 
-  /** Y offset in CSS pixels */
+  /** Y offset in device independent pixels (dip). */
   public void setY(Double y) {
     this.y = y;
   }
 
-  /** Rectangle width in CSS pixels */
+  /** Rectangle width in device independent pixels (dip). */
   public Double getWidth() {
     return width;
   }
 
-  /** Rectangle width in CSS pixels */
+  /** Rectangle width in device independent pixels (dip). */
   public void setWidth(Double width) {
     this.width = width;
   }
 
-  /** Rectangle height in CSS pixels */
+  /** Rectangle height in device independent pixels (dip). */
   public Double getHeight() {
     return height;
   }
 
-  /** Rectangle height in CSS pixels */
+  /** Rectangle height in device independent pixels (dip). */
   public void setHeight(Double height) {
     this.height = height;
   }

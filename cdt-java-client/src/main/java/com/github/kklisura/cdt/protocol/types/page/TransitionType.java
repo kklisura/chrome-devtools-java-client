@@ -28,6 +28,8 @@ public enum TransitionType {
   LINK,
   @JsonProperty("typed")
   TYPED,
+  @JsonProperty("address_bar")
+  ADDRESS_BAR,
   @JsonProperty("auto_bookmark")
   AUTO_BOOKMARK,
   @JsonProperty("auto_subframe")

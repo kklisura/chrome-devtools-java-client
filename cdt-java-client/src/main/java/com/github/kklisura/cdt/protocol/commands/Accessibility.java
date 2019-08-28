@@ -31,6 +31,16 @@ import java.util.List;
 @Experimental
 public interface Accessibility {
 
+  /** Disables the accessibility domain. */
+  void disable();
+
+  /**
+   * Enables the accessibility domain which causes `AXNodeId`s to remain consistent between method
+   * calls. This turns on accessibility for the page, which can impact performance until
+   * accessibility is disabled.
+   */
+  void enable();
+
   /**
    * Fetches the accessibility node and partial accessibility tree for this DOM node, if it exists.
    */
@@ -57,4 +67,10 @@ public interface Accessibility {
       @Optional @ParamName("backendNodeId") Integer backendNodeId,
       @Optional @ParamName("objectId") String objectId,
       @Optional @ParamName("fetchRelatives") Boolean fetchRelatives);
+
+  /** Fetches the entire accessibility tree */
+  @Experimental
+  @Returns("nodes")
+  @ReturnTypeParameter(AXNode.class)
+  List<AXNode> getFullAXTree();
 }

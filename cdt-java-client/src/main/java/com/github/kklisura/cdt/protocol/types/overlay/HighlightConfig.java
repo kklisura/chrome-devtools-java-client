@@ -28,11 +28,11 @@ public class HighlightConfig {
 
   @Optional private Boolean showInfo;
 
+  @Optional private Boolean showStyles;
+
   @Optional private Boolean showRulers;
 
   @Optional private Boolean showExtensionLines;
-
-  @Optional private Boolean displayAsMaterial;
 
   @Optional private RGBA contentColor;
 
@@ -48,8 +48,6 @@ public class HighlightConfig {
 
   @Optional private RGBA shapeMarginColor;
 
-  @Optional private String selectorList;
-
   @Optional private RGBA cssGridColor;
 
   /** Whether the node info tooltip should be shown (default: false). */
@@ -60,6 +58,16 @@ public class HighlightConfig {
   /** Whether the node info tooltip should be shown (default: false). */
   public void setShowInfo(Boolean showInfo) {
     this.showInfo = showInfo;
+  }
+
+  /** Whether the node styles in the tooltip (default: false). */
+  public Boolean getShowStyles() {
+    return showStyles;
+  }
+
+  /** Whether the node styles in the tooltip (default: false). */
+  public void setShowStyles(Boolean showStyles) {
+    this.showStyles = showStyles;
   }
 
   /** Whether the rulers should be shown (default: false). */
@@ -80,14 +88,6 @@ public class HighlightConfig {
   /** Whether the extension lines from node to the rulers should be shown (default: false). */
   public void setShowExtensionLines(Boolean showExtensionLines) {
     this.showExtensionLines = showExtensionLines;
-  }
-
-  public Boolean getDisplayAsMaterial() {
-    return displayAsMaterial;
-  }
-
-  public void setDisplayAsMaterial(Boolean displayAsMaterial) {
-    this.displayAsMaterial = displayAsMaterial;
   }
 
   /** The content box highlight fill color (default: transparent). */
@@ -158,16 +158,6 @@ public class HighlightConfig {
   /** The shape margin fill color (default: transparent). */
   public void setShapeMarginColor(RGBA shapeMarginColor) {
     this.shapeMarginColor = shapeMarginColor;
-  }
-
-  /** Selectors to highlight relevant nodes. */
-  public String getSelectorList() {
-    return selectorList;
-  }
-
-  /** Selectors to highlight relevant nodes. */
-  public void setSelectorList(String selectorList) {
-    this.selectorList = selectorList;
   }
 
   /** The grid layout color (default: transparent). */

@@ -24,24 +24,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Pause reason. */
 public enum PausedReason {
-  @JsonProperty("XHR")
-  XHR,
+  @JsonProperty("ambiguous")
+  AMBIGUOUS,
+  @JsonProperty("assert")
+  ASSERT,
+  @JsonProperty("debugCommand")
+  DEBUG_COMMAND,
   @JsonProperty("DOM")
   DOM,
   @JsonProperty("EventListener")
   EVENT_LISTENER,
   @JsonProperty("exception")
   EXCEPTION,
-  @JsonProperty("assert")
-  ASSERT,
-  @JsonProperty("debugCommand")
-  DEBUG_COMMAND,
-  @JsonProperty("promiseRejection")
-  PROMISE_REJECTION,
+  @JsonProperty("instrumentation")
+  INSTRUMENTATION,
   @JsonProperty("OOM")
   OOM,
   @JsonProperty("other")
   OTHER,
-  @JsonProperty("ambiguous")
-  AMBIGUOUS
+  @JsonProperty("promiseRejection")
+  PROMISE_REJECTION,
+  @JsonProperty("XHR")
+  XHR
 }

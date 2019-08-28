@@ -1,4 +1,4 @@
-package com.github.kklisura.cdt.protocol.events.emulation;
+package com.github.kklisura.cdt.protocol.types.page;
 
 /*-
  * #%L
@@ -21,26 +21,31 @@ package com.github.kklisura.cdt.protocol.events.emulation;
  */
 
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
-/** Notification sent after the virtual time has advanced. */
-@Experimental
-public class VirtualTimeAdvanced {
+public class PrintToPDF {
 
-  private Double virtualTimeElapsed;
+  private String data;
 
-  /**
-   * The amount of virtual time that has elapsed in milliseconds since virtual time was first
-   * enabled.
-   */
-  public Double getVirtualTimeElapsed() {
-    return virtualTimeElapsed;
+  @Experimental @Optional private String stream;
+
+  /** Base64-encoded pdf data. Empty if |returnAsStream| is specified. */
+  public String getData() {
+    return data;
   }
 
-  /**
-   * The amount of virtual time that has elapsed in milliseconds since virtual time was first
-   * enabled.
-   */
-  public void setVirtualTimeElapsed(Double virtualTimeElapsed) {
-    this.virtualTimeElapsed = virtualTimeElapsed;
+  /** Base64-encoded pdf data. Empty if |returnAsStream| is specified. */
+  public void setData(String data) {
+    this.data = data;
+  }
+
+  /** A handle of the stream that holds resulting PDF data. */
+  public String getStream() {
+    return stream;
+  }
+
+  /** A handle of the stream that holds resulting PDF data. */
+  public void setStream(String stream) {
+    this.stream = stream;
   }
 }

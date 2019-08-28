@@ -28,51 +28,39 @@ public class CustomPreview {
 
   private String header;
 
-  private Boolean hasBody;
+  @Optional private String bodyGetterId;
 
-  private String formatterObjectId;
-
-  private String bindRemoteObjectFunctionId;
-
-  @Optional private String configObjectId;
-
+  /**
+   * The JSON-stringified result of formatter.header(object, config) call. It contains json ML array
+   * that represents RemoteObject.
+   */
   public String getHeader() {
     return header;
   }
 
+  /**
+   * The JSON-stringified result of formatter.header(object, config) call. It contains json ML array
+   * that represents RemoteObject.
+   */
   public void setHeader(String header) {
     this.header = header;
   }
 
-  public Boolean getHasBody() {
-    return hasBody;
+  /**
+   * If formatter returns true as a result of formatter.hasBody call then bodyGetterId will contain
+   * RemoteObjectId for the function that returns result of formatter.body(object, config) call. The
+   * result value is json ML array.
+   */
+  public String getBodyGetterId() {
+    return bodyGetterId;
   }
 
-  public void setHasBody(Boolean hasBody) {
-    this.hasBody = hasBody;
-  }
-
-  public String getFormatterObjectId() {
-    return formatterObjectId;
-  }
-
-  public void setFormatterObjectId(String formatterObjectId) {
-    this.formatterObjectId = formatterObjectId;
-  }
-
-  public String getBindRemoteObjectFunctionId() {
-    return bindRemoteObjectFunctionId;
-  }
-
-  public void setBindRemoteObjectFunctionId(String bindRemoteObjectFunctionId) {
-    this.bindRemoteObjectFunctionId = bindRemoteObjectFunctionId;
-  }
-
-  public String getConfigObjectId() {
-    return configObjectId;
-  }
-
-  public void setConfigObjectId(String configObjectId) {
-    this.configObjectId = configObjectId;
+  /**
+   * If formatter returns true as a result of formatter.hasBody call then bodyGetterId will contain
+   * RemoteObjectId for the function that returns result of formatter.body(object, config) call. The
+   * result value is json ML array.
+   */
+  public void setBodyGetterId(String bodyGetterId) {
+    this.bodyGetterId = bodyGetterId;
   }
 }

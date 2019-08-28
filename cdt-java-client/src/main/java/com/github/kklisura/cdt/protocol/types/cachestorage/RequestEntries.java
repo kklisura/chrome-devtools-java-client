@@ -26,7 +26,7 @@ public class RequestEntries {
 
   private List<DataEntry> cacheDataEntries;
 
-  private Boolean hasMore;
+  private Double returnCount;
 
   /** Array of object store data entries. */
   public List<DataEntry> getCacheDataEntries() {
@@ -38,13 +38,19 @@ public class RequestEntries {
     this.cacheDataEntries = cacheDataEntries;
   }
 
-  /** If true, there are more entries to fetch in the given range. */
-  public Boolean getHasMore() {
-    return hasMore;
+  /**
+   * Count of returned entries from this storage. If pathFilter is empty, it is the count of all
+   * entries from this storage.
+   */
+  public Double getReturnCount() {
+    return returnCount;
   }
 
-  /** If true, there are more entries to fetch in the given range. */
-  public void setHasMore(Boolean hasMore) {
-    this.hasMore = hasMore;
+  /**
+   * Count of returned entries from this storage. If pathFilter is empty, it is the count of all
+   * entries from this storage.
+   */
+  public void setReturnCount(Double returnCount) {
+    this.returnCount = returnCount;
   }
 }

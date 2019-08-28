@@ -37,6 +37,8 @@ public class DataEntry {
 
   private String responseStatusText;
 
+  private CachedResponseType responseType;
+
   private List<Header> responseHeaders;
 
   /** Request URL. */
@@ -97,6 +99,16 @@ public class DataEntry {
   /** HTTP response status text. */
   public void setResponseStatusText(String responseStatusText) {
     this.responseStatusText = responseStatusText;
+  }
+
+  /** HTTP response type */
+  public CachedResponseType getResponseType() {
+    return responseType;
+  }
+
+  /** HTTP response type */
+  public void setResponseType(CachedResponseType responseType) {
+    this.responseType = responseType;
   }
 
   /** Response headers */

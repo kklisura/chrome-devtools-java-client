@@ -21,6 +21,7 @@ package com.github.kklisura.cdt.protocol.types.security;
  */
 
 /** Information about insecure content on the page. */
+@Deprecated
 public class InsecureContentStatus {
 
   private Boolean ranMixedContent;
@@ -37,84 +38,72 @@ public class InsecureContentStatus {
 
   private SecurityState displayedInsecureContentStyle;
 
-  /** True if the page was loaded over HTTPS and ran mixed (HTTP) content such as scripts. */
+  /** Always false. */
   public Boolean getRanMixedContent() {
     return ranMixedContent;
   }
 
-  /** True if the page was loaded over HTTPS and ran mixed (HTTP) content such as scripts. */
+  /** Always false. */
   public void setRanMixedContent(Boolean ranMixedContent) {
     this.ranMixedContent = ranMixedContent;
   }
 
-  /** True if the page was loaded over HTTPS and displayed mixed (HTTP) content such as images. */
+  /** Always false. */
   public Boolean getDisplayedMixedContent() {
     return displayedMixedContent;
   }
 
-  /** True if the page was loaded over HTTPS and displayed mixed (HTTP) content such as images. */
+  /** Always false. */
   public void setDisplayedMixedContent(Boolean displayedMixedContent) {
     this.displayedMixedContent = displayedMixedContent;
   }
 
-  /** True if the page was loaded over HTTPS and contained a form targeting an insecure url. */
+  /** Always false. */
   public Boolean getContainedMixedForm() {
     return containedMixedForm;
   }
 
-  /** True if the page was loaded over HTTPS and contained a form targeting an insecure url. */
+  /** Always false. */
   public void setContainedMixedForm(Boolean containedMixedForm) {
     this.containedMixedForm = containedMixedForm;
   }
 
-  /**
-   * True if the page was loaded over HTTPS without certificate errors, and ran content such as
-   * scripts that were loaded with certificate errors.
-   */
+  /** Always false. */
   public Boolean getRanContentWithCertErrors() {
     return ranContentWithCertErrors;
   }
 
-  /**
-   * True if the page was loaded over HTTPS without certificate errors, and ran content such as
-   * scripts that were loaded with certificate errors.
-   */
+  /** Always false. */
   public void setRanContentWithCertErrors(Boolean ranContentWithCertErrors) {
     this.ranContentWithCertErrors = ranContentWithCertErrors;
   }
 
-  /**
-   * True if the page was loaded over HTTPS without certificate errors, and displayed content such
-   * as images that were loaded with certificate errors.
-   */
+  /** Always false. */
   public Boolean getDisplayedContentWithCertErrors() {
     return displayedContentWithCertErrors;
   }
 
-  /**
-   * True if the page was loaded over HTTPS without certificate errors, and displayed content such
-   * as images that were loaded with certificate errors.
-   */
+  /** Always false. */
   public void setDisplayedContentWithCertErrors(Boolean displayedContentWithCertErrors) {
     this.displayedContentWithCertErrors = displayedContentWithCertErrors;
   }
 
-  /** Security state representing a page that ran insecure content. */
+  /** Always set to unknown. */
   public SecurityState getRanInsecureContentStyle() {
     return ranInsecureContentStyle;
   }
 
-  /** Security state representing a page that ran insecure content. */
+  /** Always set to unknown. */
   public void setRanInsecureContentStyle(SecurityState ranInsecureContentStyle) {
     this.ranInsecureContentStyle = ranInsecureContentStyle;
   }
 
-  /** Security state representing a page that displayed insecure content. */
+  /** Always set to unknown. */
   public SecurityState getDisplayedInsecureContentStyle() {
     return displayedInsecureContentStyle;
   }
 
-  /** Security state representing a page that displayed insecure content. */
+  /** Always set to unknown. */
   public void setDisplayedInsecureContentStyle(SecurityState displayedInsecureContentStyle) {
     this.displayedInsecureContentStyle = displayedInsecureContentStyle;
   }

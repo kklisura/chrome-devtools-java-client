@@ -27,12 +27,12 @@ public class ScreenshotRequested {
 
   private Viewport viewport;
 
-  /** Viewport to capture, in CSS. */
+  /** Viewport to capture, in device independent pixels (dip). */
   public Viewport getViewport() {
     return viewport;
   }
 
-  /** Viewport to capture, in CSS. */
+  /** Viewport to capture, in device independent pixels (dip). */
   public void setViewport(Viewport viewport) {
     this.viewport = viewport;
   }

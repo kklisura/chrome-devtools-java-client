@@ -24,9 +24,11 @@ import com.github.kklisura.cdt.protocol.commands.Accessibility;
 import com.github.kklisura.cdt.protocol.commands.Animation;
 import com.github.kklisura.cdt.protocol.commands.ApplicationCache;
 import com.github.kklisura.cdt.protocol.commands.Audits;
+import com.github.kklisura.cdt.protocol.commands.BackgroundService;
 import com.github.kklisura.cdt.protocol.commands.Browser;
 import com.github.kklisura.cdt.protocol.commands.CSS;
 import com.github.kklisura.cdt.protocol.commands.CacheStorage;
+import com.github.kklisura.cdt.protocol.commands.Cast;
 import com.github.kklisura.cdt.protocol.commands.Console;
 import com.github.kklisura.cdt.protocol.commands.DOM;
 import com.github.kklisura.cdt.protocol.commands.DOMDebugger;
@@ -36,6 +38,7 @@ import com.github.kklisura.cdt.protocol.commands.Database;
 import com.github.kklisura.cdt.protocol.commands.Debugger;
 import com.github.kklisura.cdt.protocol.commands.DeviceOrientation;
 import com.github.kklisura.cdt.protocol.commands.Emulation;
+import com.github.kklisura.cdt.protocol.commands.Fetch;
 import com.github.kklisura.cdt.protocol.commands.HeadlessExperimental;
 import com.github.kklisura.cdt.protocol.commands.HeapProfiler;
 import com.github.kklisura.cdt.protocol.commands.IO;
@@ -44,6 +47,7 @@ import com.github.kklisura.cdt.protocol.commands.Input;
 import com.github.kklisura.cdt.protocol.commands.Inspector;
 import com.github.kklisura.cdt.protocol.commands.LayerTree;
 import com.github.kklisura.cdt.protocol.commands.Log;
+import com.github.kklisura.cdt.protocol.commands.Media;
 import com.github.kklisura.cdt.protocol.commands.Memory;
 import com.github.kklisura.cdt.protocol.commands.Network;
 import com.github.kklisura.cdt.protocol.commands.Overlay;
@@ -59,6 +63,8 @@ import com.github.kklisura.cdt.protocol.commands.SystemInfo;
 import com.github.kklisura.cdt.protocol.commands.Target;
 import com.github.kklisura.cdt.protocol.commands.Tethering;
 import com.github.kklisura.cdt.protocol.commands.Tracing;
+import com.github.kklisura.cdt.protocol.commands.WebAudio;
+import com.github.kklisura.cdt.protocol.commands.WebAuthn;
 
 public interface ChromeDevTools {
 
@@ -92,6 +98,9 @@ public interface ChromeDevTools {
   /** Returns the Audits command. */
   Audits getAudits();
 
+  /** Returns the BackgroundService command. */
+  BackgroundService getBackgroundService();
+
   /** Returns the Browser command. */
   Browser getBrowser();
 
@@ -100,6 +109,9 @@ public interface ChromeDevTools {
 
   /** Returns the CacheStorage command. */
   CacheStorage getCacheStorage();
+
+  /** Returns the Cast command. */
+  Cast getCast();
 
   /** Returns the DOM command. */
   DOM getDOM();
@@ -178,4 +190,16 @@ public interface ChromeDevTools {
 
   /** Returns the Tracing command. */
   Tracing getTracing();
+
+  /** Returns the Fetch command. */
+  Fetch getFetch();
+
+  /** Returns the WebAudio command. */
+  WebAudio getWebAudio();
+
+  /** Returns the WebAuthn command. */
+  WebAuthn getWebAuthn();
+
+  /** Returns the Media command. */
+  Media getMedia();
 }

@@ -20,10 +20,8 @@ package com.github.kklisura.cdt.protocol.events.page;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
-
 /** Fired when frame schedules a potential navigation. */
-@Experimental
+@Deprecated
 public class FrameScheduledNavigation {
 
   private String frameId;

@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.protocol.types.security;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import java.util.List;
 
 /** An explanation of an factor contributing to the security state. */
@@ -36,6 +37,8 @@ public class SecurityStateExplanation {
   private MixedContentType mixedContentType;
 
   private List<String> certificate;
+
+  @Optional private List<String> recommendations;
 
   /** Security state representing the severity of the factor being explained. */
   public SecurityState getSecurityState() {
@@ -95,5 +98,15 @@ public class SecurityStateExplanation {
   /** Page certificate. */
   public void setCertificate(List<String> certificate) {
     this.certificate = certificate;
+  }
+
+  /** Recommendations to fix any issues. */
+  public List<String> getRecommendations() {
+    return recommendations;
+  }
+
+  /** Recommendations to fix any issues. */
+  public void setRecommendations(List<String> recommendations) {
+    this.recommendations = recommendations;
   }
 }
