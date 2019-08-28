@@ -9,7 +9,6 @@ import com.github.kklisura.cdt.protocol.types.page.Viewport;
 import com.github.kklisura.cdt.services.ChromeDevToolsService;
 import com.github.kklisura.cdt.services.ChromeService;
 import com.github.kklisura.cdt.services.types.ChromeTab;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -23,14 +22,16 @@ import java.util.Base64;
  */
 public class FullPageScreenshotExample {
 
-  private static void captureFullPageScreenshot(ChromeDevToolsService devToolsService, Page page, String outputFilename) {
+  private static void captureFullPageScreenshot(
+      ChromeDevToolsService devToolsService, Page page, String outputFilename) {
     final LayoutMetrics layoutMetrics = page.getLayoutMetrics();
 
     final double width = layoutMetrics.getContentSize().getWidth();
     final double height = layoutMetrics.getContentSize().getHeight();
 
     final Emulation emulation = devToolsService.getEmulation();
-    emulation.setDeviceMetricsOverride(Double.valueOf(width).intValue(), Double.valueOf(height).intValue(), 1.0d, Boolean.FALSE);
+    emulation.setDeviceMetricsOverride(
+        Double.valueOf(width).intValue(), Double.valueOf(height).intValue(), 1.0d, Boolean.FALSE);
 
     Viewport viewport = new Viewport();
     viewport.setScale(1d);

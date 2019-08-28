@@ -8,7 +8,6 @@ import com.github.kklisura.cdt.protocol.types.performance.Metric;
 import com.github.kklisura.cdt.services.ChromeDevToolsService;
 import com.github.kklisura.cdt.services.ChromeService;
 import com.github.kklisura.cdt.services.types.ChromeTab;
-
 import java.util.List;
 
 /**

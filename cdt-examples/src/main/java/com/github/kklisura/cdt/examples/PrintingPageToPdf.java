@@ -2,6 +2,8 @@ package com.github.kklisura.cdt.examples;
 
 import com.github.kklisura.cdt.launch.ChromeLauncher;
 import com.github.kklisura.cdt.protocol.commands.Page;
+import com.github.kklisura.cdt.protocol.types.page.PrintToPDF;
+import com.github.kklisura.cdt.protocol.types.page.PrintToPDFTransferMode;
 import com.github.kklisura.cdt.services.ChromeDevToolsService;
 import com.github.kklisura.cdt.services.ChromeService;
 import com.github.kklisura.cdt.services.types.ChromeTab;
@@ -59,6 +61,7 @@ public class PrintingPageToPdf {
           String headerTemplate = "";
           String footerTemplate = "";
           Boolean preferCSSPageSize = false;
+          PrintToPDFTransferMode mode = PrintToPDFTransferMode.RETURN_AS_BASE_64;
 
           dump(
               outputFilename,
@@ -79,7 +82,8 @@ public class PrintingPageToPdf {
                       ignoreInvalidPageRanges,
                       headerTemplate,
                       footerTemplate,
-                      preferCSSPageSize));
+                      preferCSSPageSize,
+                      mode));
 
           System.out.println("Done!");
           devToolsService.close();
@@ -88,12 +92,12 @@ public class PrintingPageToPdf {
     devToolsService.waitUntilClosed();
   }
 
-  private static void dump(String fileName, String data) {
+  private static void dump(String fileName, PrintToPDF printToPDF) {
     FileOutputStream fileOutputStream = null;
     try {
       File file = new File(fileName);
       fileOutputStream = new FileOutputStream(file);
-      fileOutputStream.write(Base64.getDecoder().decode(data));
+      fileOutputStream.write(Base64.getDecoder().decode(printToPDF.getData()));
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
