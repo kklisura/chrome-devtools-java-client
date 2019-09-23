@@ -20,6 +20,9 @@ package com.github.kklisura.cdt.services.factory.impl;
  * #L%
  */
 
+import static com.github.kklisura.cdt.services.factory.impl.ConfigurableTyrusClientFactory.INCOMING_BUFFER_SIZE_PROPERTY;
+import static com.github.kklisura.cdt.services.factory.impl.ConfigurableTyrusClientFactory.MB;
+
 import com.github.kklisura.cdt.services.factory.WebSocketContainerFactory;
 import javax.websocket.WebSocketContainer;
 import org.glassfish.tyrus.client.ClientManager;
@@ -31,8 +34,12 @@ import org.glassfish.tyrus.container.grizzly.client.GrizzlyClientContainer;
  * @author Kenan Klisura
  */
 public class DefaultWebSocketContainerFactory implements WebSocketContainerFactory {
+  private static final int INCOMING_BUFFER_SIZE = 8 * MB;
+
   @Override
   public WebSocketContainer getWebSocketContainer() {
-    return ClientManager.createClient(GrizzlyClientContainer.class.getName());
+    final ClientManager client = ClientManager.createClient(GrizzlyClientContainer.class.getName());
+    client.getProperties().put(INCOMING_BUFFER_SIZE_PROPERTY, INCOMING_BUFFER_SIZE);
+    return client;
   }
 }

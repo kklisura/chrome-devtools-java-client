@@ -53,4 +53,11 @@ public interface WebSocketService {
 
   /** Closes the service. */
   void close();
+
+  /**
+   * Checks if connection is closed.
+   *
+   * @return True if connection is closed.
+   */
+  boolean closed();
 }

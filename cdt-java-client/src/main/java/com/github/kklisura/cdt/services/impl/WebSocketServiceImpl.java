@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.services.impl;
  * #L%
  */
 
+import static com.github.kklisura.cdt.services.impl.utils.WebSocketUtils.isTyrusBufferOverflowCloseReason;
 import static com.github.kklisura.cdt.services.utils.ConfigurationUtils.systemProperty;
 
 import com.github.kklisura.cdt.services.WebSocketService;
@@ -29,12 +30,7 @@ import com.github.kklisura.cdt.services.factory.impl.DefaultWebSocketContainerFa
 import java.io.IOException;
 import java.net.URI;
 import java.util.function.Consumer;
-import javax.websocket.DeploymentException;
-import javax.websocket.Endpoint;
-import javax.websocket.EndpointConfig;
-import javax.websocket.MessageHandler;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
+import javax.websocket.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,16 +85,28 @@ public class WebSocketServiceImpl implements WebSocketService {
   public void connect(URI uri) throws WebSocketServiceException {
     LOGGER.debug("Connecting to ws server {}", uri);
 
+    final WebSocketServiceImpl webSocketService = this;
+
     try {
       session =
           WEB_SOCKET_CONTAINER.connectToServer(
               new Endpoint() {
                 @Override
                 public void onOpen(Session session, EndpointConfig config) {
-                  LOGGER.info("Connected to ws server {}", uri);
+                  webSocketService.onOpen(session, config);
                 }
 
-                // TODO(kklisura): Add close handler.
+                @Override
+                public void onClose(Session session, CloseReason closeReason) {
+                  super.onClose(session, closeReason);
+                  webSocketService.onClose(session, closeReason);
+                }
+
+                @Override
+                public void onError(Session session, Throwable thr) {
+                  super.onError(session, thr);
+                  webSocketService.onError(session, thr);
+                }
               },
               uri);
     } catch (DeploymentException | IOException e) {
@@ -143,9 +151,37 @@ public class WebSocketServiceImpl implements WebSocketService {
   public void close() {
     try {
       session.close();
+      session = null;
     } catch (IOException e) {
       LOGGER.error("Failed closing ws session on {}...", session.getRequestURI(), e);
     }
+  }
+
+  @Override
+  public boolean closed() {
+    return session == null || !session.isOpen();
+  }
+
+  private void onOpen(Session session, EndpointConfig config) {
+    LOGGER.info("Connected to ws {}", session.getRequestURI());
+  }
+
+  private void onClose(Session session, CloseReason closeReason) {
+    LOGGER.info(
+        "Web socket connection closed {}, {}",
+        closeReason.getCloseCode(),
+        closeReason.getReasonPhrase());
+
+    if (isTyrusBufferOverflowCloseReason(closeReason)) {
+      LOGGER.info(
+          "Web socket connection closed due to BufferOverflow raised by Tyrus client. This indicates the message "
+              + "about to be received is larger than the incoming buffer in Tyrus client. "
+              + "See ConfigurableTyrusClientFactory class source on how to increase the incoming buffer size in Tyrus or visit https://github.com/kklisura/chrome-devtools-java-client/blob/master/cdt-examples/src/main/java/com/github/kklisura/cdt/examples/IncreasedIncomingBufferInTyrusExample.java");
+    }
+  }
+
+  private void onError(Session session, Throwable thr) {
+    LOGGER.error("Error in web socket session.", thr);
   }
 
   /**

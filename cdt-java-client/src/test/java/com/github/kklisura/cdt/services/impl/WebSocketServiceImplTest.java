@@ -20,31 +20,19 @@ package com.github.kklisura.cdt.services.impl;
  * #L%
  */
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static java.lang.Thread.sleep;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 import com.github.kklisura.cdt.services.WebSocketService;
 import com.github.kklisura.cdt.services.exceptions.WebSocketServiceException;
 import com.github.kklisura.cdt.services.factory.WebSocketContainerFactory;
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.websocket.DeploymentException;
-import javax.websocket.MessageHandler;
-import javax.websocket.OnMessage;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
+import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import org.easymock.Capture;
 import org.easymock.EasyMockRunner;
@@ -67,8 +55,28 @@ public class WebSocketServiceImplTest extends EasyMockSupport {
   private static final int MAX_PORT = 65535;
   private static final int RESERVED_PORTS = 1025;
 
+  private static final int KB = 1024;
+  private static final int MB = 1024 * KB;
+  private static final int LARGE_MESSAGE_SIZE = 9 * MB;
+
   private static final String PING = "PING";
   private static final String PONG = "PONG";
+  private static final String EMIT_LARGE_MESSAGE = "EMIT_LARGE_MESSAGE";
+
+  @Test
+  public void testTyrusMessageLimit() throws WebSocketServiceException, InterruptedException {
+    final Server server = startServer();
+
+    final WebSocketService webSocketService =
+        WebSocketServiceImpl.create(createURI(server.getPort()));
+
+    webSocketService.send(EMIT_LARGE_MESSAGE);
+    sleep(500);
+
+    assertTrue(webSocketService.closed());
+
+    server.stop();
+  }
 
   @Test
   public void testConnectionAndMessageSending()
@@ -108,7 +116,7 @@ public class WebSocketServiceImplTest extends EasyMockSupport {
         WebSocketServiceImpl.create(createURI(server.getPort()));
     server.stop();
 
-    Thread.sleep(500);
+    sleep(500);
 
     try {
       webSocketService.send(PING);
@@ -235,11 +243,19 @@ public class WebSocketServiceImplTest extends EasyMockSupport {
   @ServerEndpoint(value = "/test")
   public static class SimpleEndpoint {
     @OnMessage
-    public void onMessage(String message, Session session) throws IOException {
-      if (PING.equals(message)) {
-        session.getBasicRemote().sendText(PONG);
-      } else {
-        session.getBasicRemote().sendText(PING);
+    public void onMessage(String message, Session session) {
+      try {
+        if (PING.equals(message)) {
+          session.getBasicRemote().sendText(PONG);
+        } else {
+          if (EMIT_LARGE_MESSAGE.equals(message)) {
+            final char[] chars = new char[LARGE_MESSAGE_SIZE];
+            Arrays.fill(chars, 'K');
+            session.getBasicRemote().sendText(new String(chars));
+          }
+        }
+      } catch (IOException e) {
+        // Ignore this exception.
       }
     }
   }
