@@ -93,9 +93,9 @@ For more examples, see [examples](cdt-examples/src/main/java/com/github/kklisura
 
 ## Known-issues
 
-### API hangs when printing PDFs
+### API hangs (ie when printing PDFs)
 
-**What:** If you're using `cdt-java-client` before version `2.1.0` for printing to PDF and the resulting PDF is more than 4MB, API will hang and will never respond with requesting print.
+**What:** If you're using `cdt-java-client` before version `2.1.0` for printing to PDF or using API which requests large amount of data, API may hang if the requesting data exceeds 4MB.
 
 **Why:** This is due to underlying WebSocket library having 4MB buffer for receiving data from browser.
 
