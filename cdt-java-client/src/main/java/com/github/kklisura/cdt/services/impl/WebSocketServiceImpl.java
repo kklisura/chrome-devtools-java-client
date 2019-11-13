@@ -30,7 +30,13 @@ import com.github.kklisura.cdt.services.factory.impl.DefaultWebSocketContainerFa
 import java.io.IOException;
 import java.net.URI;
 import java.util.function.Consumer;
-import javax.websocket.*;
+import javax.websocket.CloseReason;
+import javax.websocket.DeploymentException;
+import javax.websocket.Endpoint;
+import javax.websocket.EndpointConfig;
+import javax.websocket.MessageHandler;
+import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -173,10 +179,10 @@ public class WebSocketServiceImpl implements WebSocketService {
         closeReason.getReasonPhrase());
 
     if (isTyrusBufferOverflowCloseReason(closeReason)) {
-      LOGGER.info(
+      LOGGER.error(
           "Web socket connection closed due to BufferOverflow raised by Tyrus client. This indicates the message "
               + "about to be received is larger than the incoming buffer in Tyrus client. "
-              + "See ConfigurableTyrusClientFactory class source on how to increase the incoming buffer size in Tyrus or visit https://github.com/kklisura/chrome-devtools-java-client/blob/master/cdt-examples/src/main/java/com/github/kklisura/cdt/examples/IncreasedIncomingBufferInTyrusExample.java");
+              + "See DefaultWebSocketContainerFactory class source on how to increase the incoming buffer size in Tyrus or visit https://github.com/kklisura/chrome-devtools-java-client/blob/master/cdt-examples/src/main/java/com/github/kklisura/cdt/examples/IncreasedIncomingBufferInTyrusExample.java");
     }
   }
 

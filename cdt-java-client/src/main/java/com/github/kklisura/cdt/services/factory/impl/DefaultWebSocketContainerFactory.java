@@ -20,8 +20,7 @@ package com.github.kklisura.cdt.services.factory.impl;
  * #L%
  */
 
-import static com.github.kklisura.cdt.services.factory.impl.ConfigurableTyrusClientFactory.INCOMING_BUFFER_SIZE_PROPERTY;
-import static com.github.kklisura.cdt.services.factory.impl.ConfigurableTyrusClientFactory.MB;
+import static com.github.kklisura.cdt.services.utils.ConfigurationUtils.systemProperty;
 
 import com.github.kklisura.cdt.services.factory.WebSocketContainerFactory;
 import javax.websocket.WebSocketContainer;
@@ -30,11 +29,36 @@ import org.glassfish.tyrus.container.grizzly.client.GrizzlyClientContainer;
 
 /**
  * Default WebSocketContainer factory creates a WebSocketContainer from GrizzlyContainerProvider.
+ * This class sets 8MB as internal receiving buffer, which was 4MB by default. By using {@link
+ * #WEBSOCKET_INCOMING_BUFFER_PROPERTY} this can further be increased if required. The following
+ * code sets the the incoming buffer size to 24 MB.
+ *
+ * <pre>
+ *   static {
+ *     System.setProperty(
+ *         DefaultWebSocketContainerFactory.WEBSOCKET_INCOMING_BUFFER_PROPERTY,
+ *         Long.toString((long) DefaultWebSocketContainerFactory.MB * 24)
+ *     );
+ *   }
+ * </pre>
  *
  * @author Kenan Klisura
  */
 public class DefaultWebSocketContainerFactory implements WebSocketContainerFactory {
-  private static final int INCOMING_BUFFER_SIZE = 8 * MB;
+
+  public static final String WEBSOCKET_INCOMING_BUFFER_PROPERTY =
+      "com.github.kklisura.cdt.services.config.incomingBuffer";
+
+  public static final int KB = 1024;
+  public static final int MB = 1024 * KB;
+
+  private static final int DEFAULT_INCOMING_BUFFER_SIZE = 8 * MB;
+
+  private static final long INCOMING_BUFFER_SIZE =
+      systemProperty(WEBSOCKET_INCOMING_BUFFER_PROPERTY, DEFAULT_INCOMING_BUFFER_SIZE);
+
+  public static final String INCOMING_BUFFER_SIZE_PROPERTY =
+      "org.glassfish.tyrus.incomingBufferSize";
 
   @Override
   public WebSocketContainer getWebSocketContainer() {

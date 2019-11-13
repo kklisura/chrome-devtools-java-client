@@ -91,6 +91,16 @@ public class LogRequestsExample {
 
 For more examples, see [examples](cdt-examples/src/main/java/com/github/kklisura/cdt/examples).
 
+## Known-issues
+
+### API hangs when printing PDFs
+
+**What:** If you're using `cdt-java-client` before version `2.1.0` for printing to PDF and the resulting PDF is more than 4MB, API will hang and will never respond with requesting print.
+
+**Why:** This is due to underlying WebSocket library having 4MB buffer for receiving data from browser.
+
+**How to fix:** With the version `2.1.0` and above, this buffer was increased to 8MB and can be further increased if necessary by setting the appropriate [configuration property](cdt-examples/src/main/java/com/github/kklisura/cdt/examples/IncreasedIncomingBufferInTyrusExample.java).
+
 ## Running unit tests
 
 `make verify`

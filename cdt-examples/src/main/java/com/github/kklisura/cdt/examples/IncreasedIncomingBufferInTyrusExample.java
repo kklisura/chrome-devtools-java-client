@@ -6,7 +6,7 @@ import com.github.kklisura.cdt.protocol.types.page.PrintToPDF;
 import com.github.kklisura.cdt.protocol.types.page.PrintToPDFTransferMode;
 import com.github.kklisura.cdt.services.ChromeDevToolsService;
 import com.github.kklisura.cdt.services.ChromeService;
-import com.github.kklisura.cdt.services.factory.impl.ConfigurableTyrusClientFactory;
+import com.github.kklisura.cdt.services.factory.impl.DefaultWebSocketContainerFactory;
 import com.github.kklisura.cdt.services.types.ChromeTab;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,10 +21,12 @@ import java.util.Base64;
  * @author Kenan Klisura
  */
 public class IncreasedIncomingBufferInTyrusExample {
+
   static {
+    // Set the incoming buffer to 24MB
     System.setProperty(
-        "com.github.kklisura.cdt.services.config.webSocketContainerFactory",
-        ConfigurableTyrusClientFactory.class.getName());
+        DefaultWebSocketContainerFactory.WEBSOCKET_INCOMING_BUFFER_PROPERTY,
+        Long.toString((long) DefaultWebSocketContainerFactory.MB * 24));
   }
 
   public static void main(String[] args) {
