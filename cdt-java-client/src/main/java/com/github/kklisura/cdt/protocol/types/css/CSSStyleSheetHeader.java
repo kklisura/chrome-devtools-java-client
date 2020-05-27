@@ -51,6 +51,10 @@ public class CSSStyleSheetHeader {
 
   private Double length;
 
+  private Double endLine;
+
+  private Double endColumn;
+
   /** The stylesheet identifier. */
   public String getStyleSheetId() {
     return styleSheetId;
@@ -185,5 +189,25 @@ public class CSSStyleSheetHeader {
   /** Size of the content (in characters). */
   public void setLength(Double length) {
     this.length = length;
+  }
+
+  /** Line offset of the end of the stylesheet within the resource (zero based). */
+  public Double getEndLine() {
+    return endLine;
+  }
+
+  /** Line offset of the end of the stylesheet within the resource (zero based). */
+  public void setEndLine(Double endLine) {
+    this.endLine = endLine;
+  }
+
+  /** Column offset of the end of the stylesheet within the resource (zero based). */
+  public Double getEndColumn() {
+    return endColumn;
+  }
+
+  /** Column offset of the end of the stylesheet within the resource (zero based). */
+  public void setEndColumn(Double endColumn) {
+    this.endColumn = endColumn;
   }
 }

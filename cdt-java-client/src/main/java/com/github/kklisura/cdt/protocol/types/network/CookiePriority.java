@@ -1,4 +1,4 @@
-package com.github.kklisura.cdt.protocol.events.page;
+package com.github.kklisura.cdt.protocol.types.network;
 
 /*-
  * #%L
@@ -22,20 +22,15 @@ package com.github.kklisura.cdt.protocol.events.page;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The reason for the navigation. */
-public enum FrameScheduledNavigationReason {
-  @JsonProperty("formSubmissionGet")
-  FORM_SUBMISSION_GET,
-  @JsonProperty("formSubmissionPost")
-  FORM_SUBMISSION_POST,
-  @JsonProperty("httpHeaderRefresh")
-  HTTP_HEADER_REFRESH,
-  @JsonProperty("scriptInitiated")
-  SCRIPT_INITIATED,
-  @JsonProperty("metaTagRefresh")
-  META_TAG_REFRESH,
-  @JsonProperty("pageBlockInterstitial")
-  PAGE_BLOCK_INTERSTITIAL,
-  @JsonProperty("reload")
-  RELOAD
+/**
+ * Represents the cookie's 'Priority' status:
+ * https://tools.ietf.org/html/draft-west-cookie-priority-00
+ */
+public enum CookiePriority {
+  @JsonProperty("Low")
+  LOW,
+  @JsonProperty("Medium")
+  MEDIUM,
+  @JsonProperty("High")
+  HIGH
 }

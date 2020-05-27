@@ -31,6 +31,7 @@ import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.dom.Rect;
+import com.github.kklisura.cdt.protocol.types.layertree.CompositingReasons;
 import com.github.kklisura.cdt.protocol.types.layertree.PictureTile;
 import java.util.List;
 
@@ -42,9 +43,7 @@ public interface LayerTree {
    *
    * @param layerId The id of the layer for which we want to get the reasons it was composited.
    */
-  @Returns("compositingReasons")
-  @ReturnTypeParameter(String.class)
-  List<String> compositingReasons(@ParamName("layerId") String layerId);
+  CompositingReasons compositingReasons(@ParamName("layerId") String layerId);
 
   /** Disables compositing tree inspection. */
   void disable();

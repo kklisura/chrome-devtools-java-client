@@ -34,8 +34,6 @@ public enum CookieBlockedReason {
   SAME_SITE_STRICT,
   @JsonProperty("SameSiteLax")
   SAME_SITE_LAX,
-  @JsonProperty("SameSiteExtended")
-  SAME_SITE_EXTENDED,
   @JsonProperty("SameSiteUnspecifiedTreatedAsLax")
   SAME_SITE_UNSPECIFIED_TREATED_AS_LAX,
   @JsonProperty("SameSiteNoneInsecure")

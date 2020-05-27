@@ -62,12 +62,12 @@ public interface Target {
    *
    * @param targetId
    * @param flatten Enables "flat" access to the session via specifying sessionId attribute in the
-   *     commands.
+   *     commands. We plan to make this the default, deprecate non-flattened mode, and eventually
+   *     retire it. See crbug.com/991325.
    */
   @Returns("sessionId")
   String attachToTarget(
-      @ParamName("targetId") String targetId,
-      @Experimental @Optional @ParamName("flatten") Boolean flatten);
+      @ParamName("targetId") String targetId, @Optional @ParamName("flatten") Boolean flatten);
 
   /** Attaches to the browser target, only uses flat sessionId mode. */
   @Experimental
@@ -122,6 +122,16 @@ public interface Target {
   @Experimental
   @Returns("browserContextId")
   String createBrowserContext();
+
+  /**
+   * Creates a new empty BrowserContext. Similar to an incognito profile but you can have more than
+   * one.
+   *
+   * @param disposeOnDetach If specified, disposes this context when debugging session disconnects.
+   */
+  @Experimental
+  @Returns("browserContextId")
+  String createBrowserContext(@Optional @ParamName("disposeOnDetach") Boolean disposeOnDetach);
 
   /** Returns all browser contexts created with `Target.createBrowserContext` method. */
   @Experimental
@@ -202,19 +212,23 @@ public interface Target {
   List<TargetInfo> getTargets();
 
   /**
-   * Sends protocol message over session with given id.
+   * Sends protocol message over session with given id. Consider using flat mode instead; see
+   * commands attachToTarget, setAutoAttach, and crbug.com/991325.
    *
    * @param message
    */
+  @Deprecated
   void sendMessageToTarget(@ParamName("message") String message);
 
   /**
-   * Sends protocol message over session with given id.
+   * Sends protocol message over session with given id. Consider using flat mode instead; see
+   * commands attachToTarget, setAutoAttach, and crbug.com/991325.
    *
    * @param message
    * @param sessionId Identifier of the session.
    * @param targetId Deprecated.
    */
+  @Deprecated
   void sendMessageToTarget(
       @ParamName("message") String message,
       @Optional @ParamName("sessionId") String sessionId,
@@ -243,13 +257,14 @@ public interface Target {
    * @param waitForDebuggerOnStart Whether to pause new targets when attaching to them. Use
    *     `Runtime.runIfWaitingForDebugger` to run paused targets.
    * @param flatten Enables "flat" access to the session via specifying sessionId attribute in the
-   *     commands.
+   *     commands. We plan to make this the default, deprecate non-flattened mode, and eventually
+   *     retire it. See crbug.com/991325.
    */
   @Experimental
   void setAutoAttach(
       @ParamName("autoAttach") Boolean autoAttach,
       @ParamName("waitForDebuggerOnStart") Boolean waitForDebuggerOnStart,
-      @Experimental @Optional @ParamName("flatten") Boolean flatten);
+      @Optional @ParamName("flatten") Boolean flatten);
 
   /**
    * Controls whether to discover available targets and notify via

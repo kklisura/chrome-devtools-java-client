@@ -93,16 +93,23 @@ public interface HeapProfiler {
   /**
    * @param reportProgress If true 'reportHeapSnapshotProgress' events will be generated while
    *     snapshot is being taken when the tracking is stopped.
+   * @param treatGlobalObjectsAsRoots
    */
-  void stopTrackingHeapObjects(@Optional @ParamName("reportProgress") Boolean reportProgress);
+  void stopTrackingHeapObjects(
+      @Optional @ParamName("reportProgress") Boolean reportProgress,
+      @Optional @ParamName("treatGlobalObjectsAsRoots") Boolean treatGlobalObjectsAsRoots);
 
   void takeHeapSnapshot();
 
   /**
    * @param reportProgress If true 'reportHeapSnapshotProgress' events will be generated while
    *     snapshot is being taken.
+   * @param treatGlobalObjectsAsRoots If true, a raw snapshot without artifical roots will be
+   *     generated
    */
-  void takeHeapSnapshot(@Optional @ParamName("reportProgress") Boolean reportProgress);
+  void takeHeapSnapshot(
+      @Optional @ParamName("reportProgress") Boolean reportProgress,
+      @Optional @ParamName("treatGlobalObjectsAsRoots") Boolean treatGlobalObjectsAsRoots);
 
   @EventName("addHeapSnapshotChunk")
   EventListener onAddHeapSnapshotChunk(EventHandler<AddHeapSnapshotChunk> eventListener);

@@ -33,5 +33,7 @@ public enum SecurityState {
   @JsonProperty("secure")
   SECURE,
   @JsonProperty("info")
-  INFO
+  INFO,
+  @JsonProperty("insecure-broken")
+  INSECURE_BROKEN
 }

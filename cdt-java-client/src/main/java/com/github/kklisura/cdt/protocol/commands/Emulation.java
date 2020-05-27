@@ -29,10 +29,14 @@ import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.dom.RGBA;
+import com.github.kklisura.cdt.protocol.types.emulation.MediaFeature;
 import com.github.kklisura.cdt.protocol.types.emulation.ScreenOrientation;
 import com.github.kklisura.cdt.protocol.types.emulation.SetEmitTouchEventsForMouseConfiguration;
+import com.github.kklisura.cdt.protocol.types.emulation.SetEmulatedVisionDeficiencyType;
+import com.github.kklisura.cdt.protocol.types.emulation.UserAgentMetadata;
 import com.github.kklisura.cdt.protocol.types.emulation.VirtualTimePolicy;
 import com.github.kklisura.cdt.protocol.types.page.Viewport;
+import java.util.List;
 
 /** This domain emulates different environments for the page. */
 public interface Emulation {
@@ -159,12 +163,26 @@ public interface Emulation {
       @ParamName("enabled") Boolean enabled,
       @Optional @ParamName("configuration") SetEmitTouchEventsForMouseConfiguration configuration);
 
+  /** Emulates the given media type or media feature for CSS media queries. */
+  void setEmulatedMedia();
+
   /**
-   * Emulates the given media for CSS media queries.
+   * Emulates the given media type or media feature for CSS media queries.
    *
    * @param media Media type to emulate. Empty string disables the override.
+   * @param features Media features to emulate.
    */
-  void setEmulatedMedia(@ParamName("media") String media);
+  void setEmulatedMedia(
+      @Optional @ParamName("media") String media,
+      @Optional @ParamName("features") List<MediaFeature> features);
+
+  /**
+   * Emulates the given vision deficiency.
+   *
+   * @param type Vision deficiency to emulate.
+   */
+  @Experimental
+  void setEmulatedVisionDeficiency(@ParamName("type") SetEmulatedVisionDeficiencyType type);
 
   /**
    * Overrides the Geolocation Position or Error. Omitting any of the parameters emulates position
@@ -260,6 +278,19 @@ public interface Emulation {
       @Optional @ParamName("waitForNavigation") Boolean waitForNavigation,
       @Optional @ParamName("initialVirtualTime") Double initialVirtualTime);
 
+  /** Overrides default host system locale with the specified one. */
+  @Experimental
+  void setLocaleOverride();
+
+  /**
+   * Overrides default host system locale with the specified one.
+   *
+   * @param locale ICU style C locale (e.g. "en_US"). If not specified or empty, disables the
+   *     override and restores default host system locale.
+   */
+  @Experimental
+  void setLocaleOverride(@Optional @ParamName("locale") String locale);
+
   /**
    * Overrides default host system timezone with the specified one.
    *
@@ -294,11 +325,14 @@ public interface Emulation {
    * @param userAgent User agent to use.
    * @param acceptLanguage Browser langugage to emulate.
    * @param platform The platform navigator.platform should return.
+   * @param userAgentMetadata To be sent in Sec-CH-UA-* headers and returned in
+   *     navigator.userAgentData
    */
   void setUserAgentOverride(
       @ParamName("userAgent") String userAgent,
       @Optional @ParamName("acceptLanguage") String acceptLanguage,
-      @Optional @ParamName("platform") String platform);
+      @Optional @ParamName("platform") String platform,
+      @Experimental @Optional @ParamName("userAgentMetadata") UserAgentMetadata userAgentMetadata);
 
   /**
    * Notification sent after the virtual time budget for the current VirtualTimePolicy has run out.

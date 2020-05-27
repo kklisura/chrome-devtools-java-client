@@ -1,4 +1,4 @@
-package com.github.kklisura.cdt.protocol.types.input;
+package com.github.kklisura.cdt.protocol.types.audits;
 
 /*-
  * #%L
@@ -20,20 +20,16 @@ package com.github.kklisura.cdt.protocol.types.input;
  * #L%
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+/** Information about the frame affected by an inspector issue. */
+public class AffectedFrame {
 
-/** Mouse button (default: "none"). */
-public enum DispatchMouseEventButton {
-  @JsonProperty("none")
-  NONE,
-  @JsonProperty("left")
-  LEFT,
-  @JsonProperty("middle")
-  MIDDLE,
-  @JsonProperty("right")
-  RIGHT,
-  @JsonProperty("back")
-  BACK,
-  @JsonProperty("forward")
-  FORWARD
+  private String frameId;
+
+  public String getFrameId() {
+    return frameId;
+  }
+
+  public void setFrameId(String frameId) {
+    this.frameId = frameId;
+  }
 }

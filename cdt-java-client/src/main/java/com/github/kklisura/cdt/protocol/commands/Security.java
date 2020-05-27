@@ -22,6 +22,7 @@ package com.github.kklisura.cdt.protocol.commands;
 
 import com.github.kklisura.cdt.protocol.events.security.CertificateError;
 import com.github.kklisura.cdt.protocol.events.security.SecurityStateChanged;
+import com.github.kklisura.cdt.protocol.events.security.VisibleSecurityStateChanged;
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
@@ -75,6 +76,12 @@ public interface Security {
   @EventName("certificateError")
   @Deprecated
   EventListener onCertificateError(EventHandler<CertificateError> eventListener);
+
+  /** The security state of the page changed. */
+  @EventName("visibleSecurityStateChanged")
+  @Experimental
+  EventListener onVisibleSecurityStateChanged(
+      EventHandler<VisibleSecurityStateChanged> eventListener);
 
   /** The security state of the page changed. */
   @EventName("securityStateChanged")

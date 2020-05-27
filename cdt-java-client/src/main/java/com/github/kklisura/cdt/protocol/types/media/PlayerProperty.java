@@ -20,14 +20,12 @@ package com.github.kklisura.cdt.protocol.types.media;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Optional;
-
-/** Player Property type */
+/** Corresponds to kMediaPropertyChange */
 public class PlayerProperty {
 
   private String name;
 
-  @Optional private String value;
+  private String value;
 
   public String getName() {
     return name;

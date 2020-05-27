@@ -75,13 +75,8 @@ public interface CacheStorage {
    * Requests data from cache.
    *
    * @param cacheId ID of cache to get entries from.
-   * @param skipCount Number of records to skip.
-   * @param pageSize Number of records to fetch.
    */
-  RequestEntries requestEntries(
-      @ParamName("cacheId") String cacheId,
-      @ParamName("skipCount") Integer skipCount,
-      @ParamName("pageSize") Integer pageSize);
+  RequestEntries requestEntries(@ParamName("cacheId") String cacheId);
 
   /**
    * Requests data from cache.
@@ -93,7 +88,7 @@ public interface CacheStorage {
    */
   RequestEntries requestEntries(
       @ParamName("cacheId") String cacheId,
-      @ParamName("skipCount") Integer skipCount,
-      @ParamName("pageSize") Integer pageSize,
+      @Optional @ParamName("skipCount") Integer skipCount,
+      @Optional @ParamName("pageSize") Integer pageSize,
       @Optional @ParamName("pathFilter") String pathFilter);
 }

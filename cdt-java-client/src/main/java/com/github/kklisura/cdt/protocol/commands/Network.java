@@ -52,6 +52,7 @@ import com.github.kklisura.cdt.protocol.types.network.AuthChallengeResponse;
 import com.github.kklisura.cdt.protocol.types.network.ConnectionType;
 import com.github.kklisura.cdt.protocol.types.network.Cookie;
 import com.github.kklisura.cdt.protocol.types.network.CookieParam;
+import com.github.kklisura.cdt.protocol.types.network.CookiePriority;
 import com.github.kklisura.cdt.protocol.types.network.CookieSameSite;
 import com.github.kklisura.cdt.protocol.types.network.ErrorReason;
 import com.github.kklisura.cdt.protocol.types.network.RequestPattern;
@@ -372,6 +373,7 @@ public interface Network {
    * @param httpOnly True if cookie is http-only.
    * @param sameSite Cookie SameSite type.
    * @param expires Cookie expiration date, session cookie if not set
+   * @param priority Cookie Priority type.
    */
   @Returns("success")
   Boolean setCookie(
@@ -383,7 +385,8 @@ public interface Network {
       @Optional @ParamName("secure") Boolean secure,
       @Optional @ParamName("httpOnly") Boolean httpOnly,
       @Optional @ParamName("sameSite") CookieSameSite sameSite,
-      @Optional @ParamName("expires") Double expires);
+      @Optional @ParamName("expires") Double expires,
+      @Experimental @Optional @ParamName("priority") CookiePriority priority);
 
   /**
    * Sets given cookies.

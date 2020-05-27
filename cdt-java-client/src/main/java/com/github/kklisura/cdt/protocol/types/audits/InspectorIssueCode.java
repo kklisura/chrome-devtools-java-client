@@ -1,4 +1,4 @@
-package com.github.kklisura.cdt.protocol.types.input;
+package com.github.kklisura.cdt.protocol.types.audits;
 
 /*-
  * #%L
@@ -22,14 +22,15 @@ package com.github.kklisura.cdt.protocol.types.input;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Mouse button. */
-public enum EmulateTouchFromMouseEventButton {
-  @JsonProperty("none")
-  NONE,
-  @JsonProperty("left")
-  LEFT,
-  @JsonProperty("middle")
-  MIDDLE,
-  @JsonProperty("right")
-  RIGHT
+/**
+ * A unique identifier for the type of issue. Each type may use one of the optional fields in
+ * InspectorIssueDetails to convey more specific information about the kind of issue.
+ */
+public enum InspectorIssueCode {
+  @JsonProperty("SameSiteCookieIssue")
+  SAME_SITE_COOKIE_ISSUE,
+  @JsonProperty("MixedContentIssue")
+  MIXED_CONTENT_ISSUE,
+  @JsonProperty("BlockedByResponseIssue")
+  BLOCKED_BY_RESPONSE_ISSUE
 }

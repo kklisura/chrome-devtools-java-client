@@ -50,6 +50,10 @@ public class HighlightConfig {
 
   @Optional private RGBA cssGridColor;
 
+  @Optional private ColorFormat colorFormat;
+
+  @Optional private GridHighlightConfig gridHighlightConfig;
+
   /** Whether the node info tooltip should be shown (default: false). */
   public Boolean getShowInfo() {
     return showInfo;
@@ -168,5 +172,25 @@ public class HighlightConfig {
   /** The grid layout color (default: transparent). */
   public void setCssGridColor(RGBA cssGridColor) {
     this.cssGridColor = cssGridColor;
+  }
+
+  /** The color format used to format color styles (default: hex). */
+  public ColorFormat getColorFormat() {
+    return colorFormat;
+  }
+
+  /** The color format used to format color styles (default: hex). */
+  public void setColorFormat(ColorFormat colorFormat) {
+    this.colorFormat = colorFormat;
+  }
+
+  /** The grid layout highlight configuration (default: all transparent). */
+  public GridHighlightConfig getGridHighlightConfig() {
+    return gridHighlightConfig;
+  }
+
+  /** The grid layout highlight configuration (default: all transparent). */
+  public void setGridHighlightConfig(GridHighlightConfig gridHighlightConfig) {
+    this.gridHighlightConfig = gridHighlightConfig;
   }
 }

@@ -32,7 +32,9 @@ import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.dom.RGBA;
+import com.github.kklisura.cdt.protocol.types.overlay.ColorFormat;
 import com.github.kklisura.cdt.protocol.types.overlay.HighlightConfig;
+import com.github.kklisura.cdt.protocol.types.overlay.HingeConfig;
 import com.github.kklisura.cdt.protocol.types.overlay.InspectMode;
 import java.util.List;
 import java.util.Map;
@@ -61,12 +63,14 @@ public interface Overlay {
    * @param nodeId Id of the node to get highlight object for.
    * @param includeDistance Whether to include distance info.
    * @param includeStyle Whether to include style info.
+   * @param colorFormat The color format to get config with (default: hex)
    */
   @Returns("highlight")
   Map<String, Object> getHighlightObjectForTest(
       @ParamName("nodeId") Integer nodeId,
       @Optional @ParamName("includeDistance") Boolean includeDistance,
-      @Optional @ParamName("includeStyle") Boolean includeStyle);
+      @Optional @ParamName("includeStyle") Boolean includeStyle,
+      @Optional @ParamName("colorFormat") ColorFormat colorFormat);
 
   /** Hides any highlight. */
   void hideHighlight();
@@ -246,6 +250,16 @@ public interface Overlay {
    * @param show Whether to paint size or not.
    */
   void setShowViewportSizeOnResize(@ParamName("show") Boolean show);
+
+  /** Add a dual screen device hinge */
+  void setShowHinge();
+
+  /**
+   * Add a dual screen device hinge
+   *
+   * @param hingeConfig hinge data, null means hideHinge
+   */
+  void setShowHinge(@Optional @ParamName("hingeConfig") HingeConfig hingeConfig);
 
   /**
    * Fired when the node should be inspected. This happens after call to `setInspectMode` or when

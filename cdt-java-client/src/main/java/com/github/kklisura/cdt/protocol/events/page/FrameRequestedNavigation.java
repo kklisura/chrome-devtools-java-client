@@ -21,6 +21,7 @@ package com.github.kklisura.cdt.protocol.events.page;
  */
 
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdt.protocol.types.page.ClientNavigationDisposition;
 import com.github.kklisura.cdt.protocol.types.page.ClientNavigationReason;
 
 /**
@@ -35,6 +36,8 @@ public class FrameRequestedNavigation {
   private ClientNavigationReason reason;
 
   private String url;
+
+  private ClientNavigationDisposition disposition;
 
   /** Id of the frame that is being navigated. */
   public String getFrameId() {
@@ -64,5 +67,15 @@ public class FrameRequestedNavigation {
   /** The destination URL for the requested navigation. */
   public void setUrl(String url) {
     this.url = url;
+  }
+
+  /** The disposition for the navigation. */
+  public ClientNavigationDisposition getDisposition() {
+    return disposition;
+  }
+
+  /** The disposition for the navigation. */
+  public void setDisposition(ClientNavigationDisposition disposition) {
+    this.disposition = disposition;
   }
 }

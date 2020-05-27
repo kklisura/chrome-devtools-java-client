@@ -31,10 +31,10 @@ public enum PermissionType {
   BACKGROUND_SYNC,
   @JsonProperty("backgroundFetch")
   BACKGROUND_FETCH,
-  @JsonProperty("clipboardRead")
-  CLIPBOARD_READ,
-  @JsonProperty("clipboardWrite")
-  CLIPBOARD_WRITE,
+  @JsonProperty("clipboardReadWrite")
+  CLIPBOARD_READ_WRITE,
+  @JsonProperty("clipboardSanitizedWrite")
+  CLIPBOARD_SANITIZED_WRITE,
   @JsonProperty("durableStorage")
   DURABLE_STORAGE,
   @JsonProperty("flash")
@@ -45,6 +45,8 @@ public enum PermissionType {
   MIDI,
   @JsonProperty("midiSysex")
   MIDI_SYSEX,
+  @JsonProperty("nfc")
+  NFC,
   @JsonProperty("notifications")
   NOTIFICATIONS,
   @JsonProperty("paymentHandler")

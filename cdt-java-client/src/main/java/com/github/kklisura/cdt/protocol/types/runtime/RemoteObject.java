@@ -54,12 +54,12 @@ public class RemoteObject {
     this.type = type;
   }
 
-  /** Object subtype hint. Specified for `object` type values only. */
+  /** Object subtype hint. Specified for `object` or `wasm` type values only. */
   public RemoteObjectSubtype getSubtype() {
     return subtype;
   }
 
-  /** Object subtype hint. Specified for `object` type values only. */
+  /** Object subtype hint. Specified for `object` or `wasm` type values only. */
   public void setSubtype(RemoteObjectSubtype subtype) {
     this.subtype = subtype;
   }

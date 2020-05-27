@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
 /** Cookie object */
@@ -44,6 +45,8 @@ public class Cookie {
   private Boolean session;
 
   @Optional private CookieSameSite sameSite;
+
+  @Experimental private CookiePriority priority;
 
   /** Cookie name. */
   public String getName() {
@@ -143,5 +146,15 @@ public class Cookie {
   /** Cookie SameSite type. */
   public void setSameSite(CookieSameSite sameSite) {
     this.sameSite = sameSite;
+  }
+
+  /** Cookie Priority */
+  public CookiePriority getPriority() {
+    return priority;
+  }
+
+  /** Cookie Priority */
+  public void setPriority(CookiePriority priority) {
+    this.priority = priority;
   }
 }

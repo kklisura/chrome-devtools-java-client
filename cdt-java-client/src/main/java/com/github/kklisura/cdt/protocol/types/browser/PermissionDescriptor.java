@@ -38,6 +38,8 @@ public class PermissionDescriptor {
 
   @Optional private String type;
 
+  @Optional private Boolean allowWithoutSanitization;
+
   /**
    * Name of permission. See
    * https://cs.chromium.org/chromium/src/third_party/blink/renderer/modules/permissions/permission_descriptor.idl
@@ -90,5 +92,15 @@ public class PermissionDescriptor {
   /** For "wake-lock" permission, must specify type as either "screen" or "system". */
   public void setType(String type) {
     this.type = type;
+  }
+
+  /** For "clipboard" permission, may specify allowWithoutSanitization. */
+  public Boolean getAllowWithoutSanitization() {
+    return allowWithoutSanitization;
+  }
+
+  /** For "clipboard" permission, may specify allowWithoutSanitization. */
+  public void setAllowWithoutSanitization(Boolean allowWithoutSanitization) {
+    this.allowWithoutSanitization = allowWithoutSanitization;
   }
 }

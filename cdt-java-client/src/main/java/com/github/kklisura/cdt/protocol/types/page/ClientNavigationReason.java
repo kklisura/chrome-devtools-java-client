@@ -36,5 +36,7 @@ public enum ClientNavigationReason {
   @JsonProperty("pageBlockInterstitial")
   PAGE_BLOCK_INTERSTITIAL,
   @JsonProperty("reload")
-  RELOAD
+  RELOAD,
+  @JsonProperty("anchorClick")
+  ANCHOR_CLICK
 }

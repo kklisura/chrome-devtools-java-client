@@ -28,7 +28,11 @@ public class DownloadWillBegin {
 
   private String frameId;
 
+  private String guid;
+
   private String url;
+
+  private String suggestedFilename;
 
   /** Id of the frame that caused download to begin. */
   public String getFrameId() {
@@ -40,6 +44,16 @@ public class DownloadWillBegin {
     this.frameId = frameId;
   }
 
+  /** Global unique identifier of the download. */
+  public String getGuid() {
+    return guid;
+  }
+
+  /** Global unique identifier of the download. */
+  public void setGuid(String guid) {
+    this.guid = guid;
+  }
+
   /** URL of the resource being downloaded. */
   public String getUrl() {
     return url;
@@ -48,5 +62,15 @@ public class DownloadWillBegin {
   /** URL of the resource being downloaded. */
   public void setUrl(String url) {
     this.url = url;
+  }
+
+  /** Suggested file name of the resource (the actual name of the file saved on disk may differ). */
+  public String getSuggestedFilename() {
+    return suggestedFilename;
+  }
+
+  /** Suggested file name of the resource (the actual name of the file saved on disk may differ). */
+  public void setSuggestedFilename(String suggestedFilename) {
+    this.suggestedFilename = suggestedFilename;
   }
 }

@@ -32,6 +32,8 @@ public enum PseudoType {
   BEFORE,
   @JsonProperty("after")
   AFTER,
+  @JsonProperty("marker")
+  MARKER,
   @JsonProperty("backdrop")
   BACKDROP,
   @JsonProperty("selection")

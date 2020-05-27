@@ -26,10 +26,16 @@ import com.github.kklisura.cdt.protocol.events.storage.IndexedDBContentUpdated;
 import com.github.kklisura.cdt.protocol.events.storage.IndexedDBListUpdated;
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdt.protocol.support.annotations.ReturnTypeParameter;
+import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
+import com.github.kklisura.cdt.protocol.types.network.Cookie;
+import com.github.kklisura.cdt.protocol.types.network.CookieParam;
 import com.github.kklisura.cdt.protocol.types.storage.UsageAndQuota;
+import java.util.List;
 
 @Experimental
 public interface Storage {
@@ -42,6 +48,47 @@ public interface Storage {
    */
   void clearDataForOrigin(
       @ParamName("origin") String origin, @ParamName("storageTypes") String storageTypes);
+
+  /** Returns all browser cookies. */
+  @Returns("cookies")
+  @ReturnTypeParameter(Cookie.class)
+  List<Cookie> getCookies();
+
+  /**
+   * Returns all browser cookies.
+   *
+   * @param browserContextId Browser context to use when called on the browser endpoint.
+   */
+  @Returns("cookies")
+  @ReturnTypeParameter(Cookie.class)
+  List<Cookie> getCookies(@Optional @ParamName("browserContextId") String browserContextId);
+
+  /**
+   * Sets given cookies.
+   *
+   * @param cookies Cookies to be set.
+   */
+  void setCookies(@ParamName("cookies") List<CookieParam> cookies);
+
+  /**
+   * Sets given cookies.
+   *
+   * @param cookies Cookies to be set.
+   * @param browserContextId Browser context to use when called on the browser endpoint.
+   */
+  void setCookies(
+      @ParamName("cookies") List<CookieParam> cookies,
+      @Optional @ParamName("browserContextId") String browserContextId);
+
+  /** Clears cookies. */
+  void clearCookies();
+
+  /**
+   * Clears cookies.
+   *
+   * @param browserContextId Browser context to use when called on the browser endpoint.
+   */
+  void clearCookies(@Optional @ParamName("browserContextId") String browserContextId);
 
   /**
    * Returns usage and quota in bytes.

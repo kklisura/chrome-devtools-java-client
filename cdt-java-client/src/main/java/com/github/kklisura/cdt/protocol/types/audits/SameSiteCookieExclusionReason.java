@@ -1,4 +1,4 @@
-package com.github.kklisura.cdt.protocol.types.page;
+package com.github.kklisura.cdt.protocol.types.audits;
 
 /*-
  * #%L
@@ -22,11 +22,9 @@ package com.github.kklisura.cdt.protocol.types.page;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public enum HandleFileChooserAction {
-  @JsonProperty("accept")
-  ACCEPT,
-  @JsonProperty("cancel")
-  CANCEL,
-  @JsonProperty("fallback")
-  FALLBACK
+public enum SameSiteCookieExclusionReason {
+  @JsonProperty("ExcludeSameSiteUnspecifiedTreatedAsLax")
+  EXCLUDE_SAME_SITE_UNSPECIFIED_TREATED_AS_LAX,
+  @JsonProperty("ExcludeSameSiteNoneInsecure")
+  EXCLUDE_SAME_SITE_NONE_INSECURE
 }

@@ -30,6 +30,7 @@ import com.github.kklisura.cdt.protocol.types.browser.Histogram;
 import com.github.kklisura.cdt.protocol.types.browser.PermissionDescriptor;
 import com.github.kklisura.cdt.protocol.types.browser.PermissionSetting;
 import com.github.kklisura.cdt.protocol.types.browser.PermissionType;
+import com.github.kklisura.cdt.protocol.types.browser.SetDownloadBehaviorBehavior;
 import com.github.kklisura.cdt.protocol.types.browser.Version;
 import com.github.kklisura.cdt.protocol.types.browser.WindowForTarget;
 import java.util.List;
@@ -40,54 +41,49 @@ public interface Browser {
   /**
    * Set permission settings for given origin.
    *
-   * @param origin Origin the permission applies to.
    * @param permission Descriptor of permission to override.
    * @param setting Setting of the permission.
    */
   @Experimental
   void setPermission(
-      @ParamName("origin") String origin,
       @ParamName("permission") PermissionDescriptor permission,
       @ParamName("setting") PermissionSetting setting);
 
   /**
    * Set permission settings for given origin.
    *
-   * @param origin Origin the permission applies to.
    * @param permission Descriptor of permission to override.
    * @param setting Setting of the permission.
+   * @param origin Origin the permission applies to, all origins if not specified.
    * @param browserContextId Context to override. When omitted, default browser context is used.
    */
   @Experimental
   void setPermission(
-      @ParamName("origin") String origin,
       @ParamName("permission") PermissionDescriptor permission,
       @ParamName("setting") PermissionSetting setting,
+      @Optional @ParamName("origin") String origin,
       @Optional @ParamName("browserContextId") String browserContextId);
 
   /**
    * Grant specific permissions to the given origin and reject all others.
    *
-   * @param origin
    * @param permissions
    */
   @Experimental
-  void grantPermissions(
-      @ParamName("origin") String origin,
-      @ParamName("permissions") List<PermissionType> permissions);
+  void grantPermissions(@ParamName("permissions") List<PermissionType> permissions);
 
   /**
    * Grant specific permissions to the given origin and reject all others.
    *
-   * @param origin
    * @param permissions
+   * @param origin Origin the permission applies to, all origins if not specified.
    * @param browserContextId BrowserContext to override permissions. When omitted, default browser
    *     context is used.
    */
   @Experimental
   void grantPermissions(
-      @ParamName("origin") String origin,
       @ParamName("permissions") List<PermissionType> permissions,
+      @Optional @ParamName("origin") String origin,
       @Optional @ParamName("browserContextId") String browserContextId);
 
   /** Reset all permission management for all origins. */
@@ -102,6 +98,33 @@ public interface Browser {
    */
   @Experimental
   void resetPermissions(@Optional @ParamName("browserContextId") String browserContextId);
+
+  /**
+   * Set the behavior when downloading a file.
+   *
+   * @param behavior Whether to allow all or deny all download requests, or use default Chrome
+   *     behavior if available (otherwise deny). |allowAndName| allows download and names files
+   *     according to their dowmload guids.
+   */
+  @Experimental
+  void setDownloadBehavior(@ParamName("behavior") SetDownloadBehaviorBehavior behavior);
+
+  /**
+   * Set the behavior when downloading a file.
+   *
+   * @param behavior Whether to allow all or deny all download requests, or use default Chrome
+   *     behavior if available (otherwise deny). |allowAndName| allows download and names files
+   *     according to their dowmload guids.
+   * @param browserContextId BrowserContext to set download behavior. When omitted, default browser
+   *     context is used.
+   * @param downloadPath The default path to save downloaded files to. This is requred if behavior
+   *     is set to 'allow' or 'allowAndName'.
+   */
+  @Experimental
+  void setDownloadBehavior(
+      @ParamName("behavior") SetDownloadBehaviorBehavior behavior,
+      @Optional @ParamName("browserContextId") String browserContextId,
+      @Optional @ParamName("downloadPath") String downloadPath);
 
   /** Close browser gracefully. */
   void close();

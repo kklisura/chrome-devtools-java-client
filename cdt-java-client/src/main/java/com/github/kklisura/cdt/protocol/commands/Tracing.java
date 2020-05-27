@@ -59,6 +59,13 @@ public interface Tracing {
   /** Request a global memory dump. */
   RequestMemoryDump requestMemoryDump();
 
+  /**
+   * Request a global memory dump.
+   *
+   * @param deterministic Enables more deterministic results by forcing garbage collection
+   */
+  RequestMemoryDump requestMemoryDump(@Optional @ParamName("deterministic") Boolean deterministic);
+
   /** Start trace events collection. */
   void start();
 

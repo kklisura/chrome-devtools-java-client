@@ -26,6 +26,8 @@ public class NodeForLocation {
 
   private Integer backendNodeId;
 
+  private String frameId;
+
   @Optional private Integer nodeId;
 
   /** Resulting node. */
@@ -36,6 +38,16 @@ public class NodeForLocation {
   /** Resulting node. */
   public void setBackendNodeId(Integer backendNodeId) {
     this.backendNodeId = backendNodeId;
+  }
+
+  /** Frame this node belongs to. */
+  public String getFrameId() {
+    return frameId;
+  }
+
+  /** Frame this node belongs to. */
+  public void setFrameId(String frameId) {
+    this.frameId = frameId;
   }
 
   /** Id of the node at given coordinates, only when enabled and requested document. */

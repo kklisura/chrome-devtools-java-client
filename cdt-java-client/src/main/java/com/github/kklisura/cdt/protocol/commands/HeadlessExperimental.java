@@ -72,7 +72,12 @@ public interface HeadlessExperimental {
   /** Enables headless events for the target. */
   void enable();
 
-  /** Issued when the target starts or stops needing BeginFrames. */
+  /**
+   * Issued when the target starts or stops needing BeginFrames. Deprecated. Issue beginFrame
+   * unconditionally instead and use result from beginFrame to detect whether the frames were
+   * suppressed.
+   */
   @EventName("needsBeginFramesChanged")
+  @Deprecated
   EventListener onNeedsBeginFramesChanged(EventHandler<NeedsBeginFramesChanged> eventListener);
 }

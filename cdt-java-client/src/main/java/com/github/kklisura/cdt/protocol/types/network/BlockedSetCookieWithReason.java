@@ -22,25 +22,26 @@ package com.github.kklisura.cdt.protocol.types.network;
 
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
+import java.util.List;
 
 /** A cookie which was not stored from a response with the corresponding reason. */
 @Experimental
 public class BlockedSetCookieWithReason {
 
-  private SetCookieBlockedReason blockedReason;
+  private List<SetCookieBlockedReason> blockedReasons;
 
   private String cookieLine;
 
   @Optional private Cookie cookie;
 
-  /** The reason this cookie was blocked. */
-  public SetCookieBlockedReason getBlockedReason() {
-    return blockedReason;
+  /** The reason(s) this cookie was blocked. */
+  public List<SetCookieBlockedReason> getBlockedReasons() {
+    return blockedReasons;
   }
 
-  /** The reason this cookie was blocked. */
-  public void setBlockedReason(SetCookieBlockedReason blockedReason) {
-    this.blockedReason = blockedReason;
+  /** The reason(s) this cookie was blocked. */
+  public void setBlockedReasons(List<SetCookieBlockedReason> blockedReasons) {
+    this.blockedReasons = blockedReasons;
   }
 
   /**

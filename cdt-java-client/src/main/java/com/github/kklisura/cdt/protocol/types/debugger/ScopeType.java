@@ -41,5 +41,7 @@ public enum ScopeType {
   @JsonProperty("eval")
   EVAL,
   @JsonProperty("module")
-  MODULE
+  MODULE,
+  @JsonProperty("wasm-expression-stack")
+  WASM_EXPRESSION_STACK
 }

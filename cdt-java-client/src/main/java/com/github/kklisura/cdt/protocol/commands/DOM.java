@@ -47,6 +47,7 @@ import com.github.kklisura.cdt.protocol.types.dom.FrameOwner;
 import com.github.kklisura.cdt.protocol.types.dom.Node;
 import com.github.kklisura.cdt.protocol.types.dom.NodeForLocation;
 import com.github.kklisura.cdt.protocol.types.dom.PerformSearch;
+import com.github.kklisura.cdt.protocol.types.dom.Rect;
 import com.github.kklisura.cdt.protocol.types.runtime.RemoteObject;
 import com.github.kklisura.cdt.protocol.types.runtime.StackTrace;
 import java.util.List;
@@ -128,6 +129,30 @@ public interface DOM {
       @Optional @ParamName("objectId") String objectId,
       @Optional @ParamName("depth") Integer depth,
       @Optional @ParamName("pierce") Boolean pierce);
+
+  /**
+   * Scrolls the specified rect of the given node into view if not already visible. Note: exactly
+   * one between nodeId, backendNodeId and objectId should be passed to identify the node.
+   */
+  @Experimental
+  void scrollIntoViewIfNeeded();
+
+  /**
+   * Scrolls the specified rect of the given node into view if not already visible. Note: exactly
+   * one between nodeId, backendNodeId and objectId should be passed to identify the node.
+   *
+   * @param nodeId Identifier of the node.
+   * @param backendNodeId Identifier of the backend node.
+   * @param objectId JavaScript object id of the node wrapper.
+   * @param rect The rect to be scrolled into view, relative to the node's border box, in CSS
+   *     pixels. When omitted, center of the node will be used, similar to Element.scrollIntoView.
+   */
+  @Experimental
+  void scrollIntoViewIfNeeded(
+      @Optional @ParamName("nodeId") Integer nodeId,
+      @Optional @ParamName("backendNodeId") Integer backendNodeId,
+      @Optional @ParamName("objectId") String objectId,
+      @Optional @ParamName("rect") Rect rect);
 
   /** Disables DOM agent for the given page. */
   void disable();
@@ -251,7 +276,6 @@ public interface DOM {
    * @param x X coordinate.
    * @param y Y coordinate.
    */
-  @Experimental
   NodeForLocation getNodeForLocation(@ParamName("x") Integer x, @ParamName("y") Integer y);
 
   /**
@@ -262,12 +286,14 @@ public interface DOM {
    * @param y Y coordinate.
    * @param includeUserAgentShadowDOM False to skip to the nearest non-UA shadow root ancestor
    *     (default: false).
+   * @param ignorePointerEventsNone Whether to ignore pointer-events: none on elements and hit test
+   *     them.
    */
-  @Experimental
   NodeForLocation getNodeForLocation(
       @ParamName("x") Integer x,
       @ParamName("y") Integer y,
-      @Optional @ParamName("includeUserAgentShadowDOM") Boolean includeUserAgentShadowDOM);
+      @Optional @ParamName("includeUserAgentShadowDOM") Boolean includeUserAgentShadowDOM,
+      @Optional @ParamName("ignorePointerEventsNone") Boolean ignorePointerEventsNone);
 
   /** Returns node's HTML markup. */
   @Returns("outerHTML")

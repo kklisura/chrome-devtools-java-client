@@ -24,13 +24,12 @@ import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
 import com.github.kklisura.cdt.protocol.types.input.DispatchKeyEventType;
-import com.github.kklisura.cdt.protocol.types.input.DispatchMouseEventButton;
 import com.github.kklisura.cdt.protocol.types.input.DispatchMouseEventPointerType;
 import com.github.kklisura.cdt.protocol.types.input.DispatchMouseEventType;
 import com.github.kklisura.cdt.protocol.types.input.DispatchTouchEventType;
-import com.github.kklisura.cdt.protocol.types.input.EmulateTouchFromMouseEventButton;
 import com.github.kklisura.cdt.protocol.types.input.EmulateTouchFromMouseEventType;
 import com.github.kklisura.cdt.protocol.types.input.GestureSourceType;
+import com.github.kklisura.cdt.protocol.types.input.MouseButton;
 import com.github.kklisura.cdt.protocol.types.input.TouchPoint;
 import java.util.List;
 
@@ -130,7 +129,7 @@ public interface Input {
       @ParamName("y") Double y,
       @Optional @ParamName("modifiers") Integer modifiers,
       @Optional @ParamName("timestamp") Double timestamp,
-      @Optional @ParamName("button") DispatchMouseEventButton button,
+      @Optional @ParamName("button") MouseButton button,
       @Optional @ParamName("buttons") Integer buttons,
       @Optional @ParamName("clickCount") Integer clickCount,
       @Optional @ParamName("deltaX") Double deltaX,
@@ -174,14 +173,14 @@ public interface Input {
    * @param type Type of the mouse event.
    * @param x X coordinate of the mouse pointer in DIP.
    * @param y Y coordinate of the mouse pointer in DIP.
-   * @param button Mouse button.
+   * @param button Mouse button. Only "none", "left", "right" are supported.
    */
   @Experimental
   void emulateTouchFromMouseEvent(
       @ParamName("type") EmulateTouchFromMouseEventType type,
       @ParamName("x") Integer x,
       @ParamName("y") Integer y,
-      @ParamName("button") EmulateTouchFromMouseEventButton button);
+      @ParamName("button") MouseButton button);
 
   /**
    * Emulates touch event from the mouse event parameters.
@@ -189,7 +188,7 @@ public interface Input {
    * @param type Type of the mouse event.
    * @param x X coordinate of the mouse pointer in DIP.
    * @param y Y coordinate of the mouse pointer in DIP.
-   * @param button Mouse button.
+   * @param button Mouse button. Only "none", "left", "right" are supported.
    * @param timestamp Time at which the event occurred (default: current time).
    * @param deltaX X delta in DIP for mouse wheel event (default: 0).
    * @param deltaY Y delta in DIP for mouse wheel event (default: 0).
@@ -202,7 +201,7 @@ public interface Input {
       @ParamName("type") EmulateTouchFromMouseEventType type,
       @ParamName("x") Integer x,
       @ParamName("y") Integer y,
-      @ParamName("button") EmulateTouchFromMouseEventButton button,
+      @ParamName("button") MouseButton button,
       @Optional @ParamName("timestamp") Double timestamp,
       @Optional @ParamName("deltaX") Double deltaX,
       @Optional @ParamName("deltaY") Double deltaY,

@@ -22,6 +22,7 @@ package com.github.kklisura.cdt.protocol.commands;
 
 import com.github.kklisura.cdt.protocol.events.profiler.ConsoleProfileFinished;
 import com.github.kklisura.cdt.protocol.events.profiler.ConsoleProfileStarted;
+import com.github.kklisura.cdt.protocol.events.profiler.PreciseCoverageDeltaUpdate;
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
@@ -30,9 +31,11 @@ import com.github.kklisura.cdt.protocol.support.annotations.ReturnTypeParameter;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
+import com.github.kklisura.cdt.protocol.types.profiler.CounterInfo;
 import com.github.kklisura.cdt.protocol.types.profiler.Profile;
 import com.github.kklisura.cdt.protocol.types.profiler.ScriptCoverage;
 import com.github.kklisura.cdt.protocol.types.profiler.ScriptTypeProfile;
+import com.github.kklisura.cdt.protocol.types.profiler.TakePreciseCoverage;
 import java.util.List;
 
 public interface Profiler {
@@ -63,7 +66,8 @@ public interface Profiler {
    * code coverage may be incomplete. Enabling prevents running optimized code and resets execution
    * counters.
    */
-  void startPreciseCoverage();
+  @Returns("timestamp")
+  Double startPreciseCoverage();
 
   /**
    * Enable precise code coverage. Coverage data for JavaScript executed before enabling precise
@@ -72,10 +76,13 @@ public interface Profiler {
    *
    * @param callCount Collect accurate call counts beyond simple 'covered' or 'not covered'.
    * @param detailed Collect block-based coverage.
+   * @param allowTriggeredUpdates Allow the backend to send updates on its own initiative
    */
-  void startPreciseCoverage(
+  @Returns("timestamp")
+  Double startPreciseCoverage(
       @Optional @ParamName("callCount") Boolean callCount,
-      @Optional @ParamName("detailed") Boolean detailed);
+      @Optional @ParamName("detailed") Boolean detailed,
+      @Optional @ParamName("allowTriggeredUpdates") Boolean allowTriggeredUpdates);
 
   /** Enable type profile. */
   @Experimental
@@ -98,9 +105,7 @@ public interface Profiler {
    * Collect coverage data for the current isolate, and resets execution counters. Precise code
    * coverage needs to have started.
    */
-  @Returns("result")
-  @ReturnTypeParameter(ScriptCoverage.class)
-  List<ScriptCoverage> takePreciseCoverage();
+  TakePreciseCoverage takePreciseCoverage();
 
   /** Collect type profile. */
   @Experimental
@@ -108,10 +113,35 @@ public interface Profiler {
   @ReturnTypeParameter(ScriptTypeProfile.class)
   List<ScriptTypeProfile> takeTypeProfile();
 
+  /** Enable run time call stats collection. */
+  @Experimental
+  void enableRuntimeCallStats();
+
+  /** Disable run time call stats collection. */
+  @Experimental
+  void disableRuntimeCallStats();
+
+  /** Retrieve run time call stats. */
+  @Experimental
+  @Returns("result")
+  @ReturnTypeParameter(CounterInfo.class)
+  List<CounterInfo> getRuntimeCallStats();
+
   @EventName("consoleProfileFinished")
   EventListener onConsoleProfileFinished(EventHandler<ConsoleProfileFinished> eventListener);
 
   /** Sent when new profile recording is started using console.profile() call. */
   @EventName("consoleProfileStarted")
   EventListener onConsoleProfileStarted(EventHandler<ConsoleProfileStarted> eventListener);
+
+  /**
+   * Reports coverage delta since the last poll (either from an event like this, or from
+   * `takePreciseCoverage` for the current isolate. May only be sent if precise code coverage has
+   * been started. This event can be trigged by the embedder to, for example, trigger collection of
+   * coverage data immediatelly at a certain point in time.
+   */
+  @EventName("preciseCoverageDeltaUpdate")
+  @Experimental
+  EventListener onPreciseCoverageDeltaUpdate(
+      EventHandler<PreciseCoverageDeltaUpdate> eventListener);
 }

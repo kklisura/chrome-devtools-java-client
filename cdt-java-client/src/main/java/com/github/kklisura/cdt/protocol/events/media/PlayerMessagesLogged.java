@@ -1,4 +1,4 @@
-package com.github.kklisura.cdt.protocol.types.media;
+package com.github.kklisura.cdt.protocol.events.media;
 
 /*-
  * #%L
@@ -20,14 +20,29 @@ package com.github.kklisura.cdt.protocol.types.media;
  * #L%
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.kklisura.cdt.protocol.types.media.PlayerMessage;
+import java.util.List;
 
-/** Break out events into different types */
-public enum PlayerEventType {
-  @JsonProperty("playbackEvent")
-  PLAYBACK_EVENT,
-  @JsonProperty("systemEvent")
-  SYSTEM_EVENT,
-  @JsonProperty("messageEvent")
-  MESSAGE_EVENT
+/** Send a list of any messages that need to be delivered. */
+public class PlayerMessagesLogged {
+
+  private String playerId;
+
+  private List<PlayerMessage> messages;
+
+  public String getPlayerId() {
+    return playerId;
+  }
+
+  public void setPlayerId(String playerId) {
+    this.playerId = playerId;
+  }
+
+  public List<PlayerMessage> getMessages() {
+    return messages;
+  }
+
+  public void setMessages(List<PlayerMessage> messages) {
+    this.messages = messages;
+  }
 }

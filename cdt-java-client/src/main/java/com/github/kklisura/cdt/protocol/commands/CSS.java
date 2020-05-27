@@ -44,6 +44,7 @@ import com.github.kklisura.cdt.protocol.types.css.RuleUsage;
 import com.github.kklisura.cdt.protocol.types.css.SelectorList;
 import com.github.kklisura.cdt.protocol.types.css.SourceRange;
 import com.github.kklisura.cdt.protocol.types.css.StyleDeclarationEdit;
+import com.github.kklisura.cdt.protocol.types.css.TakeCoverageDelta;
 import com.github.kklisura.cdt.protocol.types.css.Value;
 import java.util.List;
 
@@ -245,9 +246,7 @@ public interface CSS {
    * Obtain list of rules that became used since last call to this method (or since start of
    * coverage instrumentation)
    */
-  @Returns("coverage")
-  @ReturnTypeParameter(RuleUsage.class)
-  List<RuleUsage> takeCoverageDelta();
+  TakeCoverageDelta takeCoverageDelta();
 
   /**
    * Fires whenever a web font is updated. A non-empty font parameter indicates a successfully

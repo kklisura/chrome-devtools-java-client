@@ -183,8 +183,12 @@ public interface Runtime {
    * @param awaitPromise Whether execution should `await` for resulting value and return once
    *     awaited promise is resolved.
    * @param throwOnSideEffect Whether to throw an exception if side effect cannot be ruled out
-   *     during evaluation.
+   *     during evaluation. This implies `disableBreaks` below.
    * @param timeout Terminate execution after timing out (number of milliseconds).
+   * @param disableBreaks Disable breakpoints during execution.
+   * @param replMode Setting this flag to true enables `let` re-declaration and top-level `await`.
+   *     Note that `let` variables can only be re-declared if they originate from `replMode`
+   *     themselves.
    */
   Evaluate evaluate(
       @ParamName("expression") String expression,
@@ -197,7 +201,9 @@ public interface Runtime {
       @Optional @ParamName("userGesture") Boolean userGesture,
       @Optional @ParamName("awaitPromise") Boolean awaitPromise,
       @Experimental @Optional @ParamName("throwOnSideEffect") Boolean throwOnSideEffect,
-      @Experimental @Optional @ParamName("timeout") Double timeout);
+      @Experimental @Optional @ParamName("timeout") Double timeout,
+      @Experimental @Optional @ParamName("disableBreaks") Boolean disableBreaks,
+      @Experimental @Optional @ParamName("replMode") Boolean replMode);
 
   /** Returns the isolate id. */
   @Experimental

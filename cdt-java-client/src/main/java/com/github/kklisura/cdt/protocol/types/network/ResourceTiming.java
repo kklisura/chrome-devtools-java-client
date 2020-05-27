@@ -47,6 +47,10 @@ public class ResourceTiming {
 
   @Experimental private Double workerReady;
 
+  @Experimental private Double workerFetchStart;
+
+  @Experimental private Double workerRespondWithSettled;
+
   private Double sendStart;
 
   private Double sendEnd;
@@ -171,6 +175,26 @@ public class ResourceTiming {
   /** Finished Starting ServiceWorker. */
   public void setWorkerReady(Double workerReady) {
     this.workerReady = workerReady;
+  }
+
+  /** Started fetch event. */
+  public Double getWorkerFetchStart() {
+    return workerFetchStart;
+  }
+
+  /** Started fetch event. */
+  public void setWorkerFetchStart(Double workerFetchStart) {
+    this.workerFetchStart = workerFetchStart;
+  }
+
+  /** Settled fetch event respondWith promise. */
+  public Double getWorkerRespondWithSettled() {
+    return workerRespondWithSettled;
+  }
+
+  /** Settled fetch event respondWith promise. */
+  public void setWorkerRespondWithSettled(Double workerRespondWithSettled) {
+    this.workerRespondWithSettled = workerRespondWithSettled;
   }
 
   /** Started sending request. */
