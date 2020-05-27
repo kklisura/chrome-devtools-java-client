@@ -68,7 +68,7 @@ Lists of 74 third-party dependencies.
      (BSD 3-Clause License) ASM Commons (org.ow2.asm:asm-commons:6.0 - http://asm.objectweb.org/asm-commons/)
      (BSD 3-Clause License) ASM Tree (org.ow2.asm:asm-tree:6.0 - http://asm.objectweb.org/asm-tree/)
      (BSD 3-Clause License) ASM Util (org.ow2.asm:asm-util:6.0 - http://asm.objectweb.org/asm-util/)
-     (The MIT License) Project Lombok (org.projectlombok:lombok:1.16.18 - https://projectlombok.org)
+     (The MIT License) Project Lombok (org.projectlombok:lombok:1.18.2 - https://projectlombok.org)
      (The Apache Software License, Version 2.0) JSONassert (org.skyscreamer:jsonassert:1.5.0 - https://github.com/skyscreamer/JSONassert)
      (MIT License) SLF4J API Module (org.slf4j:slf4j-api:1.7.25 - http://www.slf4j.org)
      (The Apache Software License, Version 2.0) oro (oro:oro:2.0.8 - no url defined)
