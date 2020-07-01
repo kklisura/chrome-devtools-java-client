@@ -73,6 +73,7 @@ public class ChromeLauncher implements AutoCloseable {
         "/usr/bin/chromium-browser",
         "/usr/bin/google-chrome-stable",
         "/usr/bin/google-chrome",
+        "/snap/bin/chromium",
         "/Applications/Chromium.app/Contents/MacOS/Chromium",
         "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
         "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary",
