@@ -37,6 +37,10 @@ public class TargetInfo {
 
   @Optional private String openerId;
 
+  @Experimental private Boolean canAccessOpener;
+
+  @Experimental @Optional private String openerFrameId;
+
   @Experimental @Optional private String browserContextId;
 
   public String getTargetId() {
@@ -89,6 +93,26 @@ public class TargetInfo {
   /** Opener target Id */
   public void setOpenerId(String openerId) {
     this.openerId = openerId;
+  }
+
+  /** Whether the target has access to the originating window. */
+  public Boolean getCanAccessOpener() {
+    return canAccessOpener;
+  }
+
+  /** Whether the target has access to the originating window. */
+  public void setCanAccessOpener(Boolean canAccessOpener) {
+    this.canAccessOpener = canAccessOpener;
+  }
+
+  /** Frame id of originating window (is only set if target has an opener). */
+  public String getOpenerFrameId() {
+    return openerFrameId;
+  }
+
+  /** Frame id of originating window (is only set if target has an opener). */
+  public void setOpenerFrameId(String openerFrameId) {
+    this.openerFrameId = openerFrameId;
   }
 
   public String getBrowserContextId() {

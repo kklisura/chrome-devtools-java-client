@@ -69,6 +69,8 @@ public class ScriptParsed {
 
   @Experimental @Optional private DebugSymbols debugSymbols;
 
+  @Experimental @Optional private String embedderName;
+
   /** Identifier of the script parsed. */
   public String getScriptId() {
     return scriptId;
@@ -247,5 +249,15 @@ public class ScriptParsed {
   /** If the scriptLanguage is WebASsembly, the source of debug symbols for the module. */
   public void setDebugSymbols(DebugSymbols debugSymbols) {
     this.debugSymbols = debugSymbols;
+  }
+
+  /** The name the embedder supplied for this script. */
+  public String getEmbedderName() {
+    return embedderName;
+  }
+
+  /** The name the embedder supplied for this script. */
+  public void setEmbedderName(String embedderName) {
+    this.embedderName = embedderName;
   }
 }

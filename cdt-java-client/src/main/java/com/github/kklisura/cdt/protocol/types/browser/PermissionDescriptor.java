@@ -36,9 +36,9 @@ public class PermissionDescriptor {
 
   @Optional private Boolean userVisibleOnly;
 
-  @Optional private String type;
-
   @Optional private Boolean allowWithoutSanitization;
+
+  @Optional private Boolean panTiltZoom;
 
   /**
    * Name of permission. See
@@ -84,16 +84,6 @@ public class PermissionDescriptor {
     this.userVisibleOnly = userVisibleOnly;
   }
 
-  /** For "wake-lock" permission, must specify type as either "screen" or "system". */
-  public String getType() {
-    return type;
-  }
-
-  /** For "wake-lock" permission, must specify type as either "screen" or "system". */
-  public void setType(String type) {
-    this.type = type;
-  }
-
   /** For "clipboard" permission, may specify allowWithoutSanitization. */
   public Boolean getAllowWithoutSanitization() {
     return allowWithoutSanitization;
@@ -102,5 +92,15 @@ public class PermissionDescriptor {
   /** For "clipboard" permission, may specify allowWithoutSanitization. */
   public void setAllowWithoutSanitization(Boolean allowWithoutSanitization) {
     this.allowWithoutSanitization = allowWithoutSanitization;
+  }
+
+  /** For "camera" permission, may specify panTiltZoom. */
+  public Boolean getPanTiltZoom() {
+    return panTiltZoom;
+  }
+
+  /** For "camera" permission, may specify panTiltZoom. */
+  public void setPanTiltZoom(Boolean panTiltZoom) {
+    this.panTiltZoom = panTiltZoom;
   }
 }

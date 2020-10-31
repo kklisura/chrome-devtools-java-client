@@ -32,5 +32,9 @@ public enum InspectorIssueCode {
   @JsonProperty("MixedContentIssue")
   MIXED_CONTENT_ISSUE,
   @JsonProperty("BlockedByResponseIssue")
-  BLOCKED_BY_RESPONSE_ISSUE
+  BLOCKED_BY_RESPONSE_ISSUE,
+  @JsonProperty("HeavyAdIssue")
+  HEAVY_AD_ISSUE,
+  @JsonProperty("ContentSecurityPolicyIssue")
+  CONTENT_SECURITY_POLICY_ISSUE
 }

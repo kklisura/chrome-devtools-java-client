@@ -34,6 +34,8 @@ public class Initiator {
 
   @Optional private Double lineNumber;
 
+  @Optional private Double columnNumber;
+
   /** Type of this initiator. */
   public InitiatorType getType() {
     return type;
@@ -84,5 +86,21 @@ public class Initiator {
    */
   public void setLineNumber(Double lineNumber) {
     this.lineNumber = lineNumber;
+  }
+
+  /**
+   * Initiator column number, set for Parser type or for Script type (when script is importing
+   * module) (0-based).
+   */
+  public Double getColumnNumber() {
+    return columnNumber;
+  }
+
+  /**
+   * Initiator column number, set for Parser type or for Script type (when script is importing
+   * module) (0-based).
+   */
+  public void setColumnNumber(Double columnNumber) {
+    this.columnNumber = columnNumber;
   }
 }

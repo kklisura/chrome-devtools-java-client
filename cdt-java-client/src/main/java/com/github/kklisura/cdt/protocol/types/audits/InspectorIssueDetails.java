@@ -34,6 +34,10 @@ public class InspectorIssueDetails {
 
   @Optional private BlockedByResponseIssueDetails blockedByResponseIssueDetails;
 
+  @Optional private HeavyAdIssueDetails heavyAdIssueDetails;
+
+  @Optional private ContentSecurityPolicyIssueDetails contentSecurityPolicyIssueDetails;
+
   public SameSiteCookieIssueDetails getSameSiteCookieIssueDetails() {
     return sameSiteCookieIssueDetails;
   }
@@ -57,5 +61,22 @@ public class InspectorIssueDetails {
   public void setBlockedByResponseIssueDetails(
       BlockedByResponseIssueDetails blockedByResponseIssueDetails) {
     this.blockedByResponseIssueDetails = blockedByResponseIssueDetails;
+  }
+
+  public HeavyAdIssueDetails getHeavyAdIssueDetails() {
+    return heavyAdIssueDetails;
+  }
+
+  public void setHeavyAdIssueDetails(HeavyAdIssueDetails heavyAdIssueDetails) {
+    this.heavyAdIssueDetails = heavyAdIssueDetails;
+  }
+
+  public ContentSecurityPolicyIssueDetails getContentSecurityPolicyIssueDetails() {
+    return contentSecurityPolicyIssueDetails;
+  }
+
+  public void setContentSecurityPolicyIssueDetails(
+      ContentSecurityPolicyIssueDetails contentSecurityPolicyIssueDetails) {
+    this.contentSecurityPolicyIssueDetails = contentSecurityPolicyIssueDetails;
   }
 }

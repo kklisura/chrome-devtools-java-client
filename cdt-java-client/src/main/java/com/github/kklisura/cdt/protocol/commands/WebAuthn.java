@@ -113,4 +113,14 @@ public interface WebAuthn {
   void setUserVerified(
       @ParamName("authenticatorId") String authenticatorId,
       @ParamName("isUserVerified") Boolean isUserVerified);
+
+  /**
+   * Sets whether tests of user presence will succeed immediately (if true) or fail to resolve (if
+   * false) for an authenticator. The default is true.
+   *
+   * @param authenticatorId
+   * @param enabled
+   */
+  void setAutomaticPresenceSimulation(
+      @ParamName("authenticatorId") String authenticatorId, @ParamName("enabled") Boolean enabled);
 }

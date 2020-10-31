@@ -32,6 +32,8 @@ public class HighlightConfig {
 
   @Optional private Boolean showRulers;
 
+  @Optional private Boolean showAccessibilityInfo;
+
   @Optional private Boolean showExtensionLines;
 
   @Optional private RGBA contentColor;
@@ -82,6 +84,16 @@ public class HighlightConfig {
   /** Whether the rulers should be shown (default: false). */
   public void setShowRulers(Boolean showRulers) {
     this.showRulers = showRulers;
+  }
+
+  /** Whether the a11y info should be shown (default: true). */
+  public Boolean getShowAccessibilityInfo() {
+    return showAccessibilityInfo;
+  }
+
+  /** Whether the a11y info should be shown (default: true). */
+  public void setShowAccessibilityInfo(Boolean showAccessibilityInfo) {
+    this.showAccessibilityInfo = showAccessibilityInfo;
   }
 
   /** Whether the extension lines from node to the rulers should be shown (default: false). */

@@ -29,6 +29,8 @@ import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.dom.RGBA;
+import com.github.kklisura.cdt.protocol.types.emulation.DisabledImageType;
+import com.github.kklisura.cdt.protocol.types.emulation.DisplayFeature;
 import com.github.kklisura.cdt.protocol.types.emulation.MediaFeature;
 import com.github.kklisura.cdt.protocol.types.emulation.ScreenOrientation;
 import com.github.kklisura.cdt.protocol.types.emulation.SetEmitTouchEventsForMouseConfiguration;
@@ -127,6 +129,8 @@ public interface Emulation {
    * @param viewport If set, the visible area of the page will be overridden to this viewport. This
    *     viewport change is not observed by the page, e.g. viewport-relative elements do not change
    *     positions.
+   * @param displayFeature If set, the display feature of a multi-segment screen. If not set,
+   *     multi-segment support is turned-off.
    */
   void setDeviceMetricsOverride(
       @ParamName("width") Integer width,
@@ -140,7 +144,8 @@ public interface Emulation {
       @Experimental @Optional @ParamName("positionY") Integer positionY,
       @Experimental @Optional @ParamName("dontSetVisibleSize") Boolean dontSetVisibleSize,
       @Optional @ParamName("screenOrientation") ScreenOrientation screenOrientation,
-      @Experimental @Optional @ParamName("viewport") Viewport viewport);
+      @Experimental @Optional @ParamName("viewport") Viewport viewport,
+      @Experimental @Optional @ParamName("displayFeature") DisplayFeature displayFeature);
 
   /** @param hidden Whether scrollbars should be always hidden. */
   @Experimental
@@ -202,6 +207,21 @@ public interface Emulation {
       @Optional @ParamName("latitude") Double latitude,
       @Optional @ParamName("longitude") Double longitude,
       @Optional @ParamName("accuracy") Double accuracy);
+
+  /**
+   * Overrides the Idle state.
+   *
+   * @param isUserActive Mock isUserActive
+   * @param isScreenUnlocked Mock isScreenUnlocked
+   */
+  @Experimental
+  void setIdleOverride(
+      @ParamName("isUserActive") Boolean isUserActive,
+      @ParamName("isScreenUnlocked") Boolean isScreenUnlocked);
+
+  /** Clears Idle state overrides. */
+  @Experimental
+  void clearIdleOverride();
 
   /**
    * Overrides value returned by the javascript navigator object.
@@ -311,6 +331,10 @@ public interface Emulation {
   @Deprecated
   @Experimental
   void setVisibleSize(@ParamName("width") Integer width, @ParamName("height") Integer height);
+
+  /** @param imageTypes Image types to disable. */
+  @Experimental
+  void setDisabledImageTypes(@ParamName("imageTypes") List<DisabledImageType> imageTypes);
 
   /**
    * Allows overriding user agent with the given string.

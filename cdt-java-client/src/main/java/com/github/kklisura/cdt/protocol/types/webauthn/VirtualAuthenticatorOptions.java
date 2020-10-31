@@ -26,11 +26,15 @@ public class VirtualAuthenticatorOptions {
 
   private AuthenticatorProtocol protocol;
 
+  @Optional private Ctap2Version ctap2Version;
+
   private AuthenticatorTransport transport;
 
   @Optional private Boolean hasResidentKey;
 
   @Optional private Boolean hasUserVerification;
+
+  @Optional private Boolean hasLargeBlob;
 
   @Optional private Boolean automaticPresenceSimulation;
 
@@ -42,6 +46,16 @@ public class VirtualAuthenticatorOptions {
 
   public void setProtocol(AuthenticatorProtocol protocol) {
     this.protocol = protocol;
+  }
+
+  /** Defaults to ctap2_0. Ignored if |protocol| == u2f. */
+  public Ctap2Version getCtap2Version() {
+    return ctap2Version;
+  }
+
+  /** Defaults to ctap2_0. Ignored if |protocol| == u2f. */
+  public void setCtap2Version(Ctap2Version ctap2Version) {
+    this.ctap2Version = ctap2Version;
   }
 
   public AuthenticatorTransport getTransport() {
@@ -70,6 +84,22 @@ public class VirtualAuthenticatorOptions {
   /** Defaults to false. */
   public void setHasUserVerification(Boolean hasUserVerification) {
     this.hasUserVerification = hasUserVerification;
+  }
+
+  /**
+   * If set to true, the authenticator will support the largeBlob extension.
+   * https://w3c.github.io/webauthn#largeBlob Defaults to false.
+   */
+  public Boolean getHasLargeBlob() {
+    return hasLargeBlob;
+  }
+
+  /**
+   * If set to true, the authenticator will support the largeBlob extension.
+   * https://w3c.github.io/webauthn#largeBlob Defaults to false.
+   */
+  public void setHasLargeBlob(Boolean hasLargeBlob) {
+    this.hasLargeBlob = hasLargeBlob;
   }
 
   /**

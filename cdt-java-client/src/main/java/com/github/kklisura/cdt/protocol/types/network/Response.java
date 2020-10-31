@@ -61,6 +61,12 @@ public class Response {
 
   @Optional private ResourceTiming timing;
 
+  @Optional private ServiceWorkerResponseSource serviceWorkerResponseSource;
+
+  @Optional private Double responseTime;
+
+  @Optional private String cacheStorageCacheName;
+
   @Optional private String protocol;
 
   private SecurityState securityState;
@@ -235,6 +241,37 @@ public class Response {
   /** Timing information for the given request. */
   public void setTiming(ResourceTiming timing) {
     this.timing = timing;
+  }
+
+  /** Response source of response from ServiceWorker. */
+  public ServiceWorkerResponseSource getServiceWorkerResponseSource() {
+    return serviceWorkerResponseSource;
+  }
+
+  /** Response source of response from ServiceWorker. */
+  public void setServiceWorkerResponseSource(
+      ServiceWorkerResponseSource serviceWorkerResponseSource) {
+    this.serviceWorkerResponseSource = serviceWorkerResponseSource;
+  }
+
+  /** The time at which the returned response was generated. */
+  public Double getResponseTime() {
+    return responseTime;
+  }
+
+  /** The time at which the returned response was generated. */
+  public void setResponseTime(Double responseTime) {
+    this.responseTime = responseTime;
+  }
+
+  /** Cache Storage Cache Name. */
+  public String getCacheStorageCacheName() {
+    return cacheStorageCacheName;
+  }
+
+  /** Cache Storage Cache Name. */
+  public void setCacheStorageCacheName(String cacheStorageCacheName) {
+    this.cacheStorageCacheName = cacheStorageCacheName;
   }
 
   /** Protocol used to fetch this request. */

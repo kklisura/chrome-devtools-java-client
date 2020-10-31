@@ -8,7 +8,9 @@ For more information on DevTools, see https://chromedevtools.github.io/devtools-
 
 [v1.3.6](https://github.com/kklisura/chrome-devtools-java-client/tree/v1.3.6) tested on Google Chrome Version 67.0.3396.87. Protocol files from [dev-tools-protocol#1aa7b31ca7](https://github.com/ChromeDevTools/devtools-protocol/tree/1aa7b31ca7bba982eceea8d4bd494b27850fb0df/json)
 
-[v2.0.0](https://github.com/kklisura/chrome-devtools-java-client/tree/v2.0.0) tested on Google Chrome Version 76.0.3809.100. Protocol files from [dev-tools-protocol#e1fb93bd76](https://github.com/ChromeDevTools/devtools-protocol/tree/e1fb93bd76f99cdf401b949757c874c579e15434/json)
+[v2.1.0](https://github.com/kklisura/chrome-devtools-java-client/tree/v2.1.0) tested on Google Chrome Version 76.0.3809.100. Protocol files from [dev-tools-protocol#e1fb93bd76](https://github.com/ChromeDevTools/devtools-protocol/tree/e1fb93bd76f99cdf401b949757c874c579e15434/json)
+
+[vx.x.x](https://github.com/kklisura/chrome-devtools-java-client/tree/vx.x.x) tested on Google Chrome Version 86.0.4240.111. Protocol files from [dev-tools-protocol#fcb68d10bc](https://github.com/ChromeDevTools/devtools-protocol/tree/fcb68d10bc5258ebf96121caf57200069f6e6731/json)
 
 [1] https://chromedevtools.github.io/devtools-protocol/.
 

@@ -30,7 +30,9 @@ public class BlockedByResponseIssueDetails {
 
   private AffectedRequest request;
 
-  @Optional private AffectedFrame frame;
+  @Optional private AffectedFrame parentFrame;
+
+  @Optional private AffectedFrame blockedFrame;
 
   private BlockedByResponseReason reason;
 
@@ -42,12 +44,20 @@ public class BlockedByResponseIssueDetails {
     this.request = request;
   }
 
-  public AffectedFrame getFrame() {
-    return frame;
+  public AffectedFrame getParentFrame() {
+    return parentFrame;
   }
 
-  public void setFrame(AffectedFrame frame) {
-    this.frame = frame;
+  public void setParentFrame(AffectedFrame parentFrame) {
+    this.parentFrame = parentFrame;
+  }
+
+  public AffectedFrame getBlockedFrame() {
+    return blockedFrame;
+  }
+
+  public void setBlockedFrame(AffectedFrame blockedFrame) {
+    this.blockedFrame = blockedFrame;
   }
 
   public BlockedByResponseReason getReason() {

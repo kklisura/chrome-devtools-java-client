@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.protocol.types.input;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
 public class TouchPoint {
@@ -35,6 +36,14 @@ public class TouchPoint {
   @Optional private Double rotationAngle;
 
   @Optional private Double force;
+
+  @Experimental @Optional private Double tangentialPressure;
+
+  @Experimental @Optional private Integer tiltX;
+
+  @Experimental @Optional private Integer tiltY;
+
+  @Experimental @Optional private Integer twist;
 
   @Optional private Double id;
 
@@ -102,6 +111,64 @@ public class TouchPoint {
   /** Force (default: 1.0). */
   public void setForce(Double force) {
     this.force = force;
+  }
+
+  /** The normalized tangential pressure, which has a range of [-1,1] (default: 0). */
+  public Double getTangentialPressure() {
+    return tangentialPressure;
+  }
+
+  /** The normalized tangential pressure, which has a range of [-1,1] (default: 0). */
+  public void setTangentialPressure(Double tangentialPressure) {
+    this.tangentialPressure = tangentialPressure;
+  }
+
+  /**
+   * The plane angle between the Y-Z plane and the plane containing both the stylus axis and the Y
+   * axis, in degrees of the range [-90,90], a positive tiltX is to the right (default: 0)
+   */
+  public Integer getTiltX() {
+    return tiltX;
+  }
+
+  /**
+   * The plane angle between the Y-Z plane and the plane containing both the stylus axis and the Y
+   * axis, in degrees of the range [-90,90], a positive tiltX is to the right (default: 0)
+   */
+  public void setTiltX(Integer tiltX) {
+    this.tiltX = tiltX;
+  }
+
+  /**
+   * The plane angle between the X-Z plane and the plane containing both the stylus axis and the X
+   * axis, in degrees of the range [-90,90], a positive tiltY is towards the user (default: 0).
+   */
+  public Integer getTiltY() {
+    return tiltY;
+  }
+
+  /**
+   * The plane angle between the X-Z plane and the plane containing both the stylus axis and the X
+   * axis, in degrees of the range [-90,90], a positive tiltY is towards the user (default: 0).
+   */
+  public void setTiltY(Integer tiltY) {
+    this.tiltY = tiltY;
+  }
+
+  /**
+   * The clockwise rotation of a pen stylus around its own major axis, in degrees in the range
+   * [0,359] (default: 0).
+   */
+  public Integer getTwist() {
+    return twist;
+  }
+
+  /**
+   * The clockwise rotation of a pen stylus around its own major axis, in degrees in the range
+   * [0,359] (default: 0).
+   */
+  public void setTwist(Integer twist) {
+    this.twist = twist;
   }
 
   /** Identifier used to track touch sources between events, must be unique within an event. */

@@ -128,10 +128,15 @@ public interface Target {
    * one.
    *
    * @param disposeOnDetach If specified, disposes this context when debugging session disconnects.
+   * @param proxyServer Proxy server, similar to the one passed to --proxy-server
+   * @param proxyBypassList Proxy bypass list, similar to the one passed to --proxy-bypass-list
    */
   @Experimental
   @Returns("browserContextId")
-  String createBrowserContext(@Optional @ParamName("disposeOnDetach") Boolean disposeOnDetach);
+  String createBrowserContext(
+      @Optional @ParamName("disposeOnDetach") Boolean disposeOnDetach,
+      @Optional @ParamName("proxyServer") String proxyServer,
+      @Optional @ParamName("proxyBypassList") String proxyBypassList);
 
   /** Returns all browser contexts created with `Target.createBrowserContext` method. */
   @Experimental

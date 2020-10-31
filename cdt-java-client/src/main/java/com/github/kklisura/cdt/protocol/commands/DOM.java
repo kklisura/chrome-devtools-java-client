@@ -43,6 +43,7 @@ import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.dom.BoxModel;
+import com.github.kklisura.cdt.protocol.types.dom.CSSComputedStyleProperty;
 import com.github.kklisura.cdt.protocol.types.dom.FrameOwner;
 import com.github.kklisura.cdt.protocol.types.dom.Node;
 import com.github.kklisura.cdt.protocol.types.dom.NodeForLocation;
@@ -251,23 +252,60 @@ public interface DOM {
   Node getDocument(
       @Optional @ParamName("depth") Integer depth, @Optional @ParamName("pierce") Boolean pierce);
 
-  /** Returns the root DOM node (and optionally the subtree) to the caller. */
+  /**
+   * Returns the root DOM node (and optionally the subtree) to the caller. Deprecated, as it is not
+   * designed to work well with the rest of the DOM agent. Use DOMSnapshot.captureSnapshot instead.
+   */
+  @Deprecated
   @Returns("nodes")
   @ReturnTypeParameter(Node.class)
   List<Node> getFlattenedDocument();
 
   /**
-   * Returns the root DOM node (and optionally the subtree) to the caller.
+   * Returns the root DOM node (and optionally the subtree) to the caller. Deprecated, as it is not
+   * designed to work well with the rest of the DOM agent. Use DOMSnapshot.captureSnapshot instead.
    *
    * @param depth The maximum depth at which children should be retrieved, defaults to 1. Use -1 for
    *     the entire subtree or provide an integer larger than 0.
    * @param pierce Whether or not iframes and shadow roots should be traversed when returning the
    *     subtree (default is false).
    */
+  @Deprecated
   @Returns("nodes")
   @ReturnTypeParameter(Node.class)
   List<Node> getFlattenedDocument(
       @Optional @ParamName("depth") Integer depth, @Optional @ParamName("pierce") Boolean pierce);
+
+  /**
+   * Finds nodes with a given computed style in a subtree.
+   *
+   * @param nodeId Node ID pointing to the root of a subtree.
+   * @param computedStyles The style to filter nodes by (includes nodes if any of properties
+   *     matches).
+   */
+  @Experimental
+  @Returns("nodeIds")
+  @ReturnTypeParameter(Integer.class)
+  List<Integer> getNodesForSubtreeByStyle(
+      @ParamName("nodeId") Integer nodeId,
+      @ParamName("computedStyles") List<CSSComputedStyleProperty> computedStyles);
+
+  /**
+   * Finds nodes with a given computed style in a subtree.
+   *
+   * @param nodeId Node ID pointing to the root of a subtree.
+   * @param computedStyles The style to filter nodes by (includes nodes if any of properties
+   *     matches).
+   * @param pierce Whether or not iframes and shadow roots in the same target should be traversed
+   *     when returning the results (default is false).
+   */
+  @Experimental
+  @Returns("nodeIds")
+  @ReturnTypeParameter(Integer.class)
+  List<Integer> getNodesForSubtreeByStyle(
+      @ParamName("nodeId") Integer nodeId,
+      @ParamName("computedStyles") List<CSSComputedStyleProperty> computedStyles,
+      @Optional @ParamName("pierce") Boolean pierce);
 
   /**
    * Returns node id at given location. Depending on whether DOM domain is enabled, nodeId is either

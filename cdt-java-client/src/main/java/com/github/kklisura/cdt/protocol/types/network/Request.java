@@ -20,8 +20,10 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.security.MixedContentType;
+import java.util.List;
 import java.util.Map;
 
 /** HTTP request data. */
@@ -39,6 +41,8 @@ public class Request {
 
   @Optional private Boolean hasPostData;
 
+  @Experimental @Optional private List<PostDataEntry> postDataEntries;
+
   @Optional private MixedContentType mixedContentType;
 
   private ResourcePriority initialPriority;
@@ -46,6 +50,8 @@ public class Request {
   private RequestReferrerPolicy referrerPolicy;
 
   @Optional private Boolean isLinkPreload;
+
+  @Experimental @Optional private TrustTokenParams trustTokenParams;
 
   /** Request URL (without fragment). */
   public String getUrl() {
@@ -113,6 +119,16 @@ public class Request {
     this.hasPostData = hasPostData;
   }
 
+  /** Request body elements. This will be converted from base64 to binary */
+  public List<PostDataEntry> getPostDataEntries() {
+    return postDataEntries;
+  }
+
+  /** Request body elements. This will be converted from base64 to binary */
+  public void setPostDataEntries(List<PostDataEntry> postDataEntries) {
+    this.postDataEntries = postDataEntries;
+  }
+
   /** The mixed content type of the request. */
   public MixedContentType getMixedContentType() {
     return mixedContentType;
@@ -151,5 +167,21 @@ public class Request {
   /** Whether is loaded via link preload. */
   public void setIsLinkPreload(Boolean isLinkPreload) {
     this.isLinkPreload = isLinkPreload;
+  }
+
+  /**
+   * Set for requests when the TrustToken API is used. Contains the parameters passed by the
+   * developer (e.g. via "fetch") as understood by the backend.
+   */
+  public TrustTokenParams getTrustTokenParams() {
+    return trustTokenParams;
+  }
+
+  /**
+   * Set for requests when the TrustToken API is used. Contains the parameters passed by the
+   * developer (e.g. via "fetch") as understood by the backend.
+   */
+  public void setTrustTokenParams(TrustTokenParams trustTokenParams) {
+    this.trustTokenParams = trustTokenParams;
   }
 }

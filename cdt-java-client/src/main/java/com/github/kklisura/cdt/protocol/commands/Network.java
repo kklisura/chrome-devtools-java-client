@@ -55,9 +55,12 @@ import com.github.kklisura.cdt.protocol.types.network.CookieParam;
 import com.github.kklisura.cdt.protocol.types.network.CookiePriority;
 import com.github.kklisura.cdt.protocol.types.network.CookieSameSite;
 import com.github.kklisura.cdt.protocol.types.network.ErrorReason;
+import com.github.kklisura.cdt.protocol.types.network.LoadNetworkResourceOptions;
+import com.github.kklisura.cdt.protocol.types.network.LoadNetworkResourcePageResult;
 import com.github.kklisura.cdt.protocol.types.network.RequestPattern;
 import com.github.kklisura.cdt.protocol.types.network.ResponseBody;
 import com.github.kklisura.cdt.protocol.types.network.ResponseBodyForInterception;
+import com.github.kklisura.cdt.protocol.types.network.SecurityIsolationStatus;
 import java.util.List;
 import java.util.Map;
 
@@ -245,7 +248,9 @@ public interface Network {
    * Returns all browser cookies for the current URL. Depending on the backend support, will return
    * detailed cookie information in the `cookies` field.
    *
-   * @param urls The list of URLs for which applicable cookies will be fetched
+   * @param urls The list of URLs for which applicable cookies will be fetched. If not specified,
+   *     it's assumed to be set to the list containing the URLs of the page and all of its
+   *     subframes.
    */
   @Returns("cookies")
   @ReturnTypeParameter(Cookie.class)
@@ -414,6 +419,14 @@ public interface Network {
   void setExtraHTTPHeaders(@ParamName("headers") Map<String, Object> headers);
 
   /**
+   * Specifies whether to attach a page script stack id in requests
+   *
+   * @param enabled Whether to attach a page script stack for debugging purpose.
+   */
+  @Experimental
+  void setAttachDebugStack(@ParamName("enabled") Boolean enabled);
+
+  /**
    * Sets the requests to intercept that match the provided patterns and optionally resource types.
    * Deprecated, please use Fetch.enable instead.
    *
@@ -423,6 +436,35 @@ public interface Network {
   @Deprecated
   @Experimental
   void setRequestInterception(@ParamName("patterns") List<RequestPattern> patterns);
+
+  /** Returns information about the COEP/COOP isolation status. */
+  @Experimental
+  @Returns("status")
+  SecurityIsolationStatus getSecurityIsolationStatus();
+
+  /**
+   * Returns information about the COEP/COOP isolation status.
+   *
+   * @param frameId If no frameId is provided, the status of the target is provided.
+   */
+  @Experimental
+  @Returns("status")
+  SecurityIsolationStatus getSecurityIsolationStatus(
+      @Optional @ParamName("frameId") String frameId);
+
+  /**
+   * Fetches the resource and returns the content.
+   *
+   * @param frameId Frame id to get the resource for.
+   * @param url URL of the resource to get content for.
+   * @param options Options for the request.
+   */
+  @Experimental
+  @Returns("resource")
+  LoadNetworkResourcePageResult loadNetworkResource(
+      @ParamName("frameId") String frameId,
+      @ParamName("url") String url,
+      @ParamName("options") LoadNetworkResourceOptions options);
 
   /** Fired when data chunk was received over the network. */
   @EventName("dataReceived")

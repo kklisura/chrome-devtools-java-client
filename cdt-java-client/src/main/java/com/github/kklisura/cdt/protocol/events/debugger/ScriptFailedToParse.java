@@ -61,6 +61,8 @@ public class ScriptFailedToParse {
 
   @Experimental @Optional private ScriptLanguage scriptLanguage;
 
+  @Experimental @Optional private String embedderName;
+
   /** Identifier of the script parsed. */
   public String getScriptId() {
     return scriptId;
@@ -219,5 +221,15 @@ public class ScriptFailedToParse {
   /** The language of the script. */
   public void setScriptLanguage(ScriptLanguage scriptLanguage) {
     this.scriptLanguage = scriptLanguage;
+  }
+
+  /** The name the embedder supplied for this script. */
+  public String getEmbedderName() {
+    return embedderName;
+  }
+
+  /** The name the embedder supplied for this script. */
+  public void setEmbedderName(String embedderName) {
+    this.embedderName = embedderName;
   }
 }

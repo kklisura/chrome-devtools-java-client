@@ -26,6 +26,7 @@ import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
 import com.github.kklisura.cdt.protocol.support.annotations.ReturnTypeParameter;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.types.browser.Bounds;
+import com.github.kklisura.cdt.protocol.types.browser.BrowserCommandId;
 import com.github.kklisura.cdt.protocol.types.browser.Histogram;
 import com.github.kklisura.cdt.protocol.types.browser.PermissionDescriptor;
 import com.github.kklisura.cdt.protocol.types.browser.PermissionSetting;
@@ -234,4 +235,12 @@ public interface Browser {
   void setDockTile(
       @Optional @ParamName("badgeLabel") String badgeLabel,
       @Optional @ParamName("image") String image);
+
+  /**
+   * Invoke custom browser commands used by telemetry.
+   *
+   * @param commandId
+   */
+  @Experimental
+  void executeBrowserCommand(@ParamName("commandId") BrowserCommandId commandId);
 }

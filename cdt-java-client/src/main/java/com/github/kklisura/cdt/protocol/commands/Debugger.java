@@ -38,6 +38,7 @@ import com.github.kklisura.cdt.protocol.types.debugger.ContinueToLocationTargetC
 import com.github.kklisura.cdt.protocol.types.debugger.EvaluateOnCallFrame;
 import com.github.kklisura.cdt.protocol.types.debugger.ExecuteWasmEvaluator;
 import com.github.kklisura.cdt.protocol.types.debugger.Location;
+import com.github.kklisura.cdt.protocol.types.debugger.LocationRange;
 import com.github.kklisura.cdt.protocol.types.debugger.RestartFrame;
 import com.github.kklisura.cdt.protocol.types.debugger.ScriptPosition;
 import com.github.kklisura.cdt.protocol.types.debugger.ScriptSource;
@@ -465,14 +466,24 @@ public interface Debugger {
    *
    * @param breakOnAsyncCall Debugger will pause on the execution of the first async task which was
    *     scheduled before next pause.
+   * @param skipList The skipList specifies location ranges that should be skipped on step into.
    */
-  void stepInto(@Experimental @Optional @ParamName("breakOnAsyncCall") Boolean breakOnAsyncCall);
+  void stepInto(
+      @Experimental @Optional @ParamName("breakOnAsyncCall") Boolean breakOnAsyncCall,
+      @Experimental @Optional @ParamName("skipList") List<LocationRange> skipList);
 
   /** Steps out of the function call. */
   void stepOut();
 
   /** Steps over the statement. */
   void stepOver();
+
+  /**
+   * Steps over the statement.
+   *
+   * @param skipList The skipList specifies location ranges that should be skipped on step over.
+   */
+  void stepOver(@Experimental @Optional @ParamName("skipList") List<LocationRange> skipList);
 
   /** Fired when breakpoint is resolved to an actual script and location. */
   @EventName("breakpointResolved")

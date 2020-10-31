@@ -33,9 +33,11 @@ import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.dom.RGBA;
 import com.github.kklisura.cdt.protocol.types.overlay.ColorFormat;
+import com.github.kklisura.cdt.protocol.types.overlay.GridNodeHighlightConfig;
 import com.github.kklisura.cdt.protocol.types.overlay.HighlightConfig;
 import com.github.kklisura.cdt.protocol.types.overlay.HingeConfig;
 import com.github.kklisura.cdt.protocol.types.overlay.InspectMode;
+import com.github.kklisura.cdt.protocol.types.overlay.SourceOrderConfig;
 import java.util.List;
 import java.util.Map;
 
@@ -63,14 +65,32 @@ public interface Overlay {
    * @param nodeId Id of the node to get highlight object for.
    * @param includeDistance Whether to include distance info.
    * @param includeStyle Whether to include style info.
-   * @param colorFormat The color format to get config with (default: hex)
+   * @param colorFormat The color format to get config with (default: hex).
+   * @param showAccessibilityInfo Whether to show accessibility info (default: true).
    */
   @Returns("highlight")
   Map<String, Object> getHighlightObjectForTest(
       @ParamName("nodeId") Integer nodeId,
       @Optional @ParamName("includeDistance") Boolean includeDistance,
       @Optional @ParamName("includeStyle") Boolean includeStyle,
-      @Optional @ParamName("colorFormat") ColorFormat colorFormat);
+      @Optional @ParamName("colorFormat") ColorFormat colorFormat,
+      @Optional @ParamName("showAccessibilityInfo") Boolean showAccessibilityInfo);
+
+  /**
+   * For Persistent Grid testing.
+   *
+   * @param nodeIds Ids of the node to get highlight object for.
+   */
+  @Returns("highlights")
+  Map<String, Object> getGridHighlightObjectsForTest(@ParamName("nodeIds") List<Integer> nodeIds);
+
+  /**
+   * For Source Order Viewer testing.
+   *
+   * @param nodeId Id of the node to highlight.
+   */
+  @Returns("highlight")
+  Map<String, Object> getSourceOrderHighlightObjectForTest(@ParamName("nodeId") Integer nodeId);
 
   /** Hides any highlight. */
   void hideHighlight();
@@ -171,6 +191,29 @@ public interface Overlay {
       @Optional @ParamName("outlineColor") RGBA outlineColor);
 
   /**
+   * Highlights the source order of the children of the DOM node with given id or with the given
+   * JavaScript object wrapper. Either nodeId or objectId must be specified.
+   *
+   * @param sourceOrderConfig A descriptor for the appearance of the overlay drawing.
+   */
+  void highlightSourceOrder(@ParamName("sourceOrderConfig") SourceOrderConfig sourceOrderConfig);
+
+  /**
+   * Highlights the source order of the children of the DOM node with given id or with the given
+   * JavaScript object wrapper. Either nodeId or objectId must be specified.
+   *
+   * @param sourceOrderConfig A descriptor for the appearance of the overlay drawing.
+   * @param nodeId Identifier of the node to highlight.
+   * @param backendNodeId Identifier of the backend node to highlight.
+   * @param objectId JavaScript object id of the node to be highlighted.
+   */
+  void highlightSourceOrder(
+      @ParamName("sourceOrderConfig") SourceOrderConfig sourceOrderConfig,
+      @Optional @ParamName("nodeId") Integer nodeId,
+      @Optional @ParamName("backendNodeId") Integer backendNodeId,
+      @Optional @ParamName("objectId") String objectId);
+
+  /**
    * Enters the 'inspect' mode. In this mode, elements that user is hovering over are highlighted.
    * Backend then generates 'inspectNodeRequested' event upon element selection.
    *
@@ -215,6 +258,16 @@ public interface Overlay {
    * @param show True for showing the FPS counter
    */
   void setShowFPSCounter(@ParamName("show") Boolean show);
+
+  /**
+   * Highlight multiple elements with the CSS Grid overlay.
+   *
+   * @param gridNodeHighlightConfigs An array of node identifiers and descriptors for the highlight
+   *     appearance.
+   */
+  void setShowGridOverlays(
+      @ParamName("gridNodeHighlightConfigs")
+          List<GridNodeHighlightConfig> gridNodeHighlightConfigs);
 
   /**
    * Requests that backend shows paint rectangles

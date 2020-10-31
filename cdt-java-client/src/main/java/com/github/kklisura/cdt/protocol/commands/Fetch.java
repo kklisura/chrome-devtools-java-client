@@ -23,7 +23,6 @@ package com.github.kklisura.cdt.protocol.commands;
 import com.github.kklisura.cdt.protocol.events.fetch.AuthRequired;
 import com.github.kklisura.cdt.protocol.events.fetch.RequestPaused;
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
@@ -37,7 +36,6 @@ import com.github.kklisura.cdt.protocol.types.network.ErrorReason;
 import java.util.List;
 
 /** A domain for letting clients substitute browser's network layer with client code. */
-@Experimental
 public interface Fetch {
 
   /** Disables the fetch domain. */

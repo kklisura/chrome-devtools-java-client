@@ -47,5 +47,11 @@ public enum SetCookieBlockedReason {
   @JsonProperty("InvalidPrefix")
   INVALID_PREFIX,
   @JsonProperty("UnknownError")
-  UNKNOWN_ERROR
+  UNKNOWN_ERROR,
+  @JsonProperty("SchemefulSameSiteStrict")
+  SCHEMEFUL_SAME_SITE_STRICT,
+  @JsonProperty("SchemefulSameSiteLax")
+  SCHEMEFUL_SAME_SITE_LAX,
+  @JsonProperty("SchemefulSameSiteUnspecifiedTreatedAsLax")
+  SCHEMEFUL_SAME_SITE_UNSPECIFIED_TREATED_AS_LAX
 }

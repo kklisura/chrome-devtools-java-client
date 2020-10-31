@@ -20,11 +20,9 @@ package com.github.kklisura.cdt.protocol.types.fetch;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
 /** Authorization challenge for HTTP status code 401 or 407. */
-@Experimental
 public class AuthChallenge {
 
   @Optional private AuthChallengeSource source;

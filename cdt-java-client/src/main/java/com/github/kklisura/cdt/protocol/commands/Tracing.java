@@ -31,6 +31,7 @@ import com.github.kklisura.cdt.protocol.support.annotations.ReturnTypeParameter;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
+import com.github.kklisura.cdt.protocol.types.tracing.MemoryDumpLevelOfDetail;
 import com.github.kklisura.cdt.protocol.types.tracing.RequestMemoryDump;
 import com.github.kklisura.cdt.protocol.types.tracing.StartTransferMode;
 import com.github.kklisura.cdt.protocol.types.tracing.StreamCompression;
@@ -63,8 +64,11 @@ public interface Tracing {
    * Request a global memory dump.
    *
    * @param deterministic Enables more deterministic results by forcing garbage collection
+   * @param levelOfDetail Specifies level of details in memory dump. Defaults to "detailed".
    */
-  RequestMemoryDump requestMemoryDump(@Optional @ParamName("deterministic") Boolean deterministic);
+  RequestMemoryDump requestMemoryDump(
+      @Optional @ParamName("deterministic") Boolean deterministic,
+      @Optional @ParamName("levelOfDetail") MemoryDumpLevelOfDetail levelOfDetail);
 
   /** Start trace events collection. */
   void start();

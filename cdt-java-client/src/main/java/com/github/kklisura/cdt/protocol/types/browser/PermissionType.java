@@ -59,6 +59,8 @@ public enum PermissionType {
   SENSORS,
   @JsonProperty("videoCapture")
   VIDEO_CAPTURE,
+  @JsonProperty("videoCapturePanTiltZoom")
+  VIDEO_CAPTURE_PAN_TILT_ZOOM,
   @JsonProperty("idleDetection")
   IDLE_DETECTION,
   @JsonProperty("wakeLockScreen")

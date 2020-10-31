@@ -98,6 +98,29 @@ public interface Storage {
   UsageAndQuota getUsageAndQuota(@ParamName("origin") String origin);
 
   /**
+   * Override quota for the specified origin
+   *
+   * @param origin Security origin.
+   */
+  @Experimental
+  void overrideQuotaForOrigin(@ParamName("origin") String origin);
+
+  /**
+   * Override quota for the specified origin
+   *
+   * @param origin Security origin.
+   * @param quotaSize The quota size (in bytes) to override the original quota with. If this is
+   *     called multiple times, the overriden quota will be equal to the quotaSize provided in the
+   *     final call. If this is called without specifying a quotaSize, the quota will be reset to
+   *     the default value for the specified origin. If this is called multiple times with different
+   *     origins, the override will be maintained for each origin until it is disabled (called
+   *     without a quotaSize).
+   */
+  @Experimental
+  void overrideQuotaForOrigin(
+      @ParamName("origin") String origin, @Optional @ParamName("quotaSize") Double quotaSize);
+
+  /**
    * Registers origin to be notified when an update occurs to its cache storage list.
    *
    * @param origin Security origin.

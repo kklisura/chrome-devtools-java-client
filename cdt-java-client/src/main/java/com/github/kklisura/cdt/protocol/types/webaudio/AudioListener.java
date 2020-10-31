@@ -20,7 +20,7 @@ package com.github.kklisura.cdt.protocol.types.webaudio;
  * #L%
  */
 
-/** Protocol object for AudioListner */
+/** Protocol object for AudioListener */
 public class AudioListener {
 
   private String listenerId;

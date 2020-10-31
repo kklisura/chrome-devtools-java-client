@@ -189,6 +189,10 @@ public interface Runtime {
    * @param replMode Setting this flag to true enables `let` re-declaration and top-level `await`.
    *     Note that `let` variables can only be re-declared if they originate from `replMode`
    *     themselves.
+   * @param allowUnsafeEvalBlockedByCSP The Content Security Policy (CSP) for the target might block
+   *     'unsafe-eval' which includes eval(), Function(), setTimeout() and setInterval() when called
+   *     with non-callable arguments. This flag bypasses CSP for this evaluation and allows
+   *     unsafe-eval. Defaults to true.
    */
   Evaluate evaluate(
       @ParamName("expression") String expression,
@@ -203,7 +207,9 @@ public interface Runtime {
       @Experimental @Optional @ParamName("throwOnSideEffect") Boolean throwOnSideEffect,
       @Experimental @Optional @ParamName("timeout") Double timeout,
       @Experimental @Optional @ParamName("disableBreaks") Boolean disableBreaks,
-      @Experimental @Optional @ParamName("replMode") Boolean replMode);
+      @Experimental @Optional @ParamName("replMode") Boolean replMode,
+      @Experimental @Optional @ParamName("allowUnsafeEvalBlockedByCSP")
+          Boolean allowUnsafeEvalBlockedByCSP);
 
   /** Returns the isolate id. */
   @Experimental

@@ -45,6 +45,10 @@ public class CSSStyleSheetHeader {
 
   private Boolean isInline;
 
+  private Boolean isMutable;
+
+  private Boolean isConstructed;
+
   private Double startLine;
 
   private Double startColumn;
@@ -159,6 +163,34 @@ public class CSSStyleSheetHeader {
    */
   public void setIsInline(Boolean isInline) {
     this.isInline = isInline;
+  }
+
+  /**
+   * Whether this stylesheet is mutable. Inline stylesheets become mutable after they have been
+   * modified via CSSOM API. <link> element's stylesheets become mutable only if DevTools modifies
+   * them. Constructed stylesheets (new CSSStyleSheet()) are mutable immediately after creation.
+   */
+  public Boolean getIsMutable() {
+    return isMutable;
+  }
+
+  /**
+   * Whether this stylesheet is mutable. Inline stylesheets become mutable after they have been
+   * modified via CSSOM API. <link> element's stylesheets become mutable only if DevTools modifies
+   * them. Constructed stylesheets (new CSSStyleSheet()) are mutable immediately after creation.
+   */
+  public void setIsMutable(Boolean isMutable) {
+    this.isMutable = isMutable;
+  }
+
+  /** Whether this stylesheet is a constructed stylesheet (created using new CSSStyleSheet()). */
+  public Boolean getIsConstructed() {
+    return isConstructed;
+  }
+
+  /** Whether this stylesheet is a constructed stylesheet (created using new CSSStyleSheet()). */
+  public void setIsConstructed(Boolean isConstructed) {
+    this.isConstructed = isConstructed;
   }
 
   /** Line offset of the stylesheet within the resource (zero based). */

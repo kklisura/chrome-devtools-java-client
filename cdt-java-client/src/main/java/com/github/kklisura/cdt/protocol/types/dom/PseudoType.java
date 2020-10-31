@@ -38,6 +38,8 @@ public enum PseudoType {
   BACKDROP,
   @JsonProperty("selection")
   SELECTION,
+  @JsonProperty("target-text")
+  TARGET_TEXT,
   @JsonProperty("first-line-inherited")
   FIRST_LINE_INHERITED,
   @JsonProperty("scrollbar")

@@ -36,6 +36,8 @@ public class Credential {
 
   private Integer signCount;
 
+  @Optional private String largeBlob;
+
   public String getCredentialId() {
     return credentialId;
   }
@@ -102,5 +104,21 @@ public class Credential {
    */
   public void setSignCount(Integer signCount) {
     this.signCount = signCount;
+  }
+
+  /**
+   * The large blob associated with the credential. See
+   * https://w3c.github.io/webauthn/#sctn-large-blob-extension
+   */
+  public String getLargeBlob() {
+    return largeBlob;
+  }
+
+  /**
+   * The large blob associated with the credential. See
+   * https://w3c.github.io/webauthn/#sctn-large-blob-extension
+   */
+  public void setLargeBlob(String largeBlob) {
+    this.largeBlob = largeBlob;
   }
 }

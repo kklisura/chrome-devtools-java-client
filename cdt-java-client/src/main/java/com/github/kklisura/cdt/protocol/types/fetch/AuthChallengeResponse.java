@@ -20,11 +20,9 @@ package com.github.kklisura.cdt.protocol.types.fetch;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
 /** Response to an AuthChallenge. */
-@Experimental
 public class AuthChallengeResponse {
 
   private AuthChallengeResponseResponse response;

@@ -68,6 +68,6 @@ public enum RemoteObjectSubtype {
   F_64,
   @JsonProperty("v128")
   V_128,
-  @JsonProperty("anyref")
-  ANYREF
+  @JsonProperty("externref")
+  EXTERNREF
 }

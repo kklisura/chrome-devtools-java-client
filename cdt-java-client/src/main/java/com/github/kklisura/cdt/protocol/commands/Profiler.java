@@ -33,6 +33,7 @@ import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.profiler.CounterInfo;
 import com.github.kklisura.cdt.protocol.types.profiler.Profile;
+import com.github.kklisura.cdt.protocol.types.profiler.RuntimeCallCounterInfo;
 import com.github.kklisura.cdt.protocol.types.profiler.ScriptCoverage;
 import com.github.kklisura.cdt.protocol.types.profiler.ScriptTypeProfile;
 import com.github.kklisura.cdt.protocol.types.profiler.TakePreciseCoverage;
@@ -113,6 +114,20 @@ public interface Profiler {
   @ReturnTypeParameter(ScriptTypeProfile.class)
   List<ScriptTypeProfile> takeTypeProfile();
 
+  /** Enable counters collection. */
+  @Experimental
+  void enableCounters();
+
+  /** Disable counters collection. */
+  @Experimental
+  void disableCounters();
+
+  /** Retrieve counters. */
+  @Experimental
+  @Returns("result")
+  @ReturnTypeParameter(CounterInfo.class)
+  List<CounterInfo> getCounters();
+
   /** Enable run time call stats collection. */
   @Experimental
   void enableRuntimeCallStats();
@@ -124,8 +139,8 @@ public interface Profiler {
   /** Retrieve run time call stats. */
   @Experimental
   @Returns("result")
-  @ReturnTypeParameter(CounterInfo.class)
-  List<CounterInfo> getRuntimeCallStats();
+  @ReturnTypeParameter(RuntimeCallCounterInfo.class)
+  List<RuntimeCallCounterInfo> getRuntimeCallStats();
 
   @EventName("consoleProfileFinished")
   EventListener onConsoleProfileFinished(EventHandler<ConsoleProfileFinished> eventListener);

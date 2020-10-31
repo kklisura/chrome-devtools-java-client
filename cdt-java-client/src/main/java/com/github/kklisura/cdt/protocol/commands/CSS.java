@@ -161,6 +161,26 @@ public interface CSS {
   String getStyleSheetText(@ParamName("styleSheetId") String styleSheetId);
 
   /**
+   * Starts tracking the given computed styles for updates. The specified array of properties
+   * replaces the one previously specified. Pass empty array to disable tracking. Use
+   * takeComputedStyleUpdates to retrieve the list of nodes that had properties modified. The
+   * changes to computed style properties are only tracked for nodes pushed to the front-end by the
+   * DOM agent. If no changes to the tracked properties occur after the node has been pushed to the
+   * front-end, no updates will be issued for the node.
+   *
+   * @param propertiesToTrack
+   */
+  @Experimental
+  void trackComputedStyleUpdates(
+      @ParamName("propertiesToTrack") List<CSSComputedStyleProperty> propertiesToTrack);
+
+  /** Polls the next batch of computed style updates. */
+  @Experimental
+  @Returns("nodeIds")
+  @ReturnTypeParameter(Integer.class)
+  List<Integer> takeComputedStyleUpdates();
+
+  /**
    * Find a rule with the given active property for the given node and set the new value for this
    * property
    *
@@ -247,6 +267,14 @@ public interface CSS {
    * coverage instrumentation)
    */
   TakeCoverageDelta takeCoverageDelta();
+
+  /**
+   * Enables/disables rendering of local CSS fonts (enabled by default).
+   *
+   * @param enabled Whether rendering of local fonts is enabled.
+   */
+  @Experimental
+  void setLocalFontsEnabled(@ParamName("enabled") Boolean enabled);
 
   /**
    * Fires whenever a web font is updated. A non-empty font parameter indicates a successfully
