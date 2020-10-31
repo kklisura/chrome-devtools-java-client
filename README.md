@@ -129,6 +129,14 @@ make update-protocol
 
 This will build the tools for parsing and generating Java files, [cdt-java-protocol-builder](cdt-java-protocol-builder/) project. The input for this tool are protocol definitions files: `browser_protocol.json` and `js_protocol.json`. The generated Java files will be present in [cdt-java-client](cdt-java-client/) project. After building Java files, the [cdt-java-client](cdt-java-client/) will be compiled. If everything goes successfully, consider the protocol updated. :)
 
+## Updating copyright license header
+
+To go over each module and each source java file to update copyright license header, run:
+
+```
+make update-copyright-license-header
+```
+
 ## License
 
 Chrome DevTools Java Client is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE.txt) for the full license text.

@@ -1,24 +1,96 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.github.kklisura.cdt</groupId>
-  <artifactId>ctd-java-client-root</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
+    <groupId>com.github.kklisura.cdt</groupId>
+    <artifactId>ctd-java-client-root</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-  <name>ctd-java-client-root</name>
-  <description>Chrome DevTools java client</description>
-  <url>https://github.com/kklisura/chrome-devtools-java-client</url>
+    <name>ctd-java-client-root</name>
+    <description>Chrome DevTools java client</description>
+    <url>https://github.com/kklisura/chrome-devtools-java-client</url>
 
-  <modules>
-    <module>cdt-protocol-parser</module>
-    <module>cdt-java-protocol-builder</module>
-    <module>cdt-java-client</module>
-    <module>cdt-examples</module>
-  </modules>
+    <modules>
+        <module>cdt-protocol-parser</module>
+        <module>cdt-java-protocol-builder</module>
+        <module>cdt-java-client</module>
+        <module>cdt-examples</module>
+    </modules>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Kenan Klisura</name>
+            <email>kklisura@hotmail.com</email>
+        </developer>
+    </developers>
+
+    <organization>
+        <name>Kenan Klisura</name>
+        <url>https://kklisura.com</url>
+    </organization>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.inceptionYear>2018</project.inceptionYear>
+    </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>2.0.0</version>
+                    <executions>
+                        <execution>
+                            <id>update-file-header</id>
+                            <goals>
+                                <goal>update-file-header</goal>
+                            </goals>
+                            <phase>process-sources</phase>
+                        </execution>
+                        <execution>
+                            <id>attach-licenses</id>
+                            <goals>
+                                <goal>update-project-license</goal>
+                                <goal>add-third-party</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <outputDirectory>${project.basedir}</outputDirectory>
+                        <canUpdateCopyright>true</canUpdateCopyright>
+                        <failOnMissing>true</failOnMissing>
+                        <licenseName>apache_v2</licenseName>
+                        <useMissingFile>true</useMissingFile>
+                        <excludes>
+                            <exclude>**/*.json</exclude>
+                        </excludes>
+                        <roots>
+                            <root>src/main/java</root>
+                            <root>src/test</root>
+                        </roots>
+                        <licenseMerges>
+                            <licenseMerge>The Apache Software License, Version 2.0|Apache License, Version 2.0|Apache
+                                Public License 2.0|Apache 2|Apache 2.0|Apache License 2.0|Apache License
+                            </licenseMerge>
+                            <licenseMerge>Eclipse Public License v1.0|Eclipse Public License 1.0|Eclipse Public License
+                                - v 1.0
+                            </licenseMerge>
+                            <licenseMerge>BSD 3-Clause License|BSD|New BSD License</licenseMerge>
+                            <licenseMerge>Dual license consisting of the CDDL v1.1 and GPL v2|CDDL+GPL</licenseMerge>
+                        </licenseMerges>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

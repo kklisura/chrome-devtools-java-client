@@ -55,6 +55,9 @@ upgrade-protocol: build-cdt-java-protocol-builder clean-previous-protocol
 update-protocol: upgrade-protocol compile-cdt-java-client
 	# Updated protocol on cdt-java-client
 
+update-copyright-license-header:
+	$(MVN) clean license:update-file-header
+
 sonar-analysis:
 	# Running sonar analysis
 	cd $(JAVA_PROTOCOL_BUILDER_DIR)/ && make sonar-analysis
@@ -62,10 +65,7 @@ sonar-analysis:
 
 verify:
 	# Running unit tests
-	cd $(JAVA_PROTOCOL_BUILDER_DIR)/ && make verify
-	cd $(JAVA_CLIENT_DIR)/ && make verify
-	$(MVN) --file "$(JAVA_CLIENT_DIR)/" clean install && \
-	  $(MVN) --file "$(EXAMPLES_DIR)/" clean compile
+	$(MVN) verify
 
 download-latest-protocol:
 	curl -o browser_protocol.json https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/json/browser_protocol.json

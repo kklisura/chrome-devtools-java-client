@@ -2,7 +2,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.kklisura.cdt</groupId>
+    <parent>
+        <groupId>com.github.kklisura.cdt</groupId>
+        <artifactId>ctd-java-client-root</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
     <artifactId>cdt-java-client</artifactId>
     <version>2.1.0</version>
     <packaging>jar</packaging>
@@ -10,20 +15,6 @@
     <name>cdt-java-client</name>
     <description>Chrome DevTools java client</description>
     <url>https://github.com/kklisura/chrome-devtools-java-client</url>
-
-    <licenses>
-        <license>
-            <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <name>Kenan Klisura</name>
-            <email>kklisura@hotmail.com</email>
-        </developer>
-    </developers>
 
     <scm>
         <connection>scm:git:git://github.com/kklisura/chrome-devtools-java-client.git</connection>
@@ -275,45 +266,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
-                <version>1.14</version>
-                <executions>
-                    <execution>
-                        <id>update-file-header</id>
-                        <goals>
-                            <goal>update-file-header</goal>
-                        </goals>
-                        <phase>process-sources</phase>
-                    </execution>
-                    <execution>
-                        <id>attach-licenses</id>
-                        <goals>
-                            <goal>update-project-license</goal>
-                            <goal>add-third-party</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <inceptionYear>2018</inceptionYear>
-                    <projectName>cdt-java-client</projectName>
-                    <outputDirectory>${project.basedir}</outputDirectory>
-                    <organizationName>Kenan Klisura</organizationName>
-                    <failOnMissing>true</failOnMissing>
-                    <licenseName>apache_v2</licenseName>
-                    <useMissingFile>true</useMissingFile>
-                    <excludes>
-                        <exclude>**/*.json</exclude>
-                    </excludes>
-                    <roots>
-                        <root>src/main/java</root>
-                        <root>src/test</root>
-                    </roots>
-                    <licenseMerges>
-                        <licenseMerge>The Apache Software License, Version 2.0|Apache License, Version 2.0|Apache Public License 2.0|Apache 2|Apache 2.0|Apache License 2.0|Apache License</licenseMerge>
-                        <licenseMerge>Eclipse Public License v1.0|Eclipse Public License 1.0|Eclipse Public License - v 1.0</licenseMerge>
-                        <licenseMerge>BSD 3-Clause License|BSD|New BSD License</licenseMerge>
-                        <licenseMerge>Dual license consisting of the CDDL v1.1 and GPL v2|CDDL+GPL</licenseMerge>
-                    </licenseMerges>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.coveo</groupId>
