@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.definition.types.type.object;
  * #%L
  * cdt-java-protocol-builder
  * %%
- * Copyright (C) 2018 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ package com.github.kklisura.cdt.protocol.definition.types.type.object;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.github.kklisura.cdt.protocol.definition.deserializers.impl.properties.PropertySubTypeJsonDeserializer;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.AnyProperty;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.ArrayProperty;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.BooleanProperty;
@@ -31,7 +32,6 @@ import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.
 import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.ObjectProperty;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.RefProperty;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.StringProperty;
-import com.github.kklisura.cdt.protocol.definition.deserializers.impl.properties.PropertySubTypeJsonDeserializer;
 import lombok.Getter;
 import lombok.Setter;
 

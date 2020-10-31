@@ -57,6 +57,8 @@ update-protocol: upgrade-protocol compile-cdt-java-client
 
 update-copyright-license-header:
 	$(MVN) clean license:update-file-header
+	# Apply the formatting on the codebase
+	$(MVN) com.coveo:fmt-maven-plugin:format
 
 sonar-analysis:
 	# Running sonar analysis

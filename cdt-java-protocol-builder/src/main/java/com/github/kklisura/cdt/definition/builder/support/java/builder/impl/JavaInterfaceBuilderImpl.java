@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.definition.builder.support.java.builder.impl;
  * #%L
  * cdt-java-protocol-builder
  * %%
- * Copyright (C) 2018 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -137,8 +137,7 @@ public class JavaInterfaceBuilderImpl extends BaseBuilder implements JavaInterfa
                 new ClassExpr(new ClassOrInterfaceType(getClassName(classList.get(0)))));
           } else {
             final List<Expression> nodes =
-                classList
-                    .stream()
+                classList.stream()
                     .map(clazz -> new ClassExpr(new ClassOrInterfaceType(getClassName(clazz))))
                     .collect(Collectors.toList());
 

@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.definition.utils;
  * #%L
  * cdt-java-protocol-builder
  * %%
- * Copyright (C) 2018 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,8 @@ public class DevToolsProtocolUtilsTest {
   public void testBrowserSerializationDeserialization() throws IOException, JSONException {
     String json = readString(getFixture(BROWSER_PROTOCOL_FIXTURE));
 
-    DevToolsProtocol protocol = DevToolsProtocolUtils.readJson(getFixture(BROWSER_PROTOCOL_FIXTURE));
+    DevToolsProtocol protocol =
+        DevToolsProtocolUtils.readJson(getFixture(BROWSER_PROTOCOL_FIXTURE));
     String output = DevToolsProtocolUtils.writeJson(protocol);
 
     JSONAssert.assertEquals(json, output, true);
