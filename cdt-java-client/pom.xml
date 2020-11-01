@@ -2,12 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.github.kklisura.cdt</groupId>
-        <artifactId>ctd-java-client-root</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
+    <!-- NOTE(kklisura): Do not add parent tag here, since it gets deployed (via mvn deploy)[at least on snapshot repo],
+         so clients won't be able to pull it unless parent is also deployed -->
 
+    <groupId>com.github.kklisura.cdt</groupId>
     <artifactId>cdt-java-client</artifactId>
     <version>3.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -15,6 +13,18 @@
     <name>cdt-java-client</name>
     <description>Chrome DevTools java client</description>
     <url>https://github.com/kklisura/chrome-devtools-java-client</url>
+
+    <developers>
+        <developer>
+            <name>Kenan Klisura</name>
+            <email>kklisura@hotmail.com</email>
+        </developer>
+    </developers>
+
+    <organization>
+        <name>Kenan Klisura</name>
+        <url>https://kklisura.com</url>
+    </organization>
 
     <scm>
         <connection>scm:git:git://github.com/kklisura/chrome-devtools-java-client.git</connection>
@@ -37,6 +47,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+
+        <project.inceptionYear>2018</project.inceptionYear>
 
         <jackson.version>2.11.3</jackson.version>
         <websocket.api.version>1.1</websocket.api.version>
@@ -264,12 +276,63 @@
         </resources>
         <plugins>
             <plugin>
+                <!-- This plugin is also present in cdt-java-client, so be sure to copy any changes here to that module as well -->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
+                <version>2.0.0</version>
+                <executions>
+                    <execution>
+                        <id>update-file-header</id>
+                        <goals>
+                            <goal>update-file-header</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                    </execution>
+                    <execution>
+                        <id>attach-licenses</id>
+                        <goals>
+                            <goal>update-project-license</goal>
+                            <goal>add-third-party</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <outputDirectory>${project.basedir}</outputDirectory>
+                    <canUpdateCopyright>true</canUpdateCopyright>
+                    <failOnMissing>true</failOnMissing>
+                    <licenseName>apache_v2</licenseName>
+                    <useMissingFile>true</useMissingFile>
+                    <excludes>
+                        <exclude>**/*.json</exclude>
+                    </excludes>
+                    <roots>
+                        <root>src/main/java</root>
+                        <root>src/test</root>
+                    </roots>
+                    <licenseMerges>
+                        <licenseMerge>The Apache Software License, Version 2.0|Apache License, Version 2.0|Apache
+                            Public License 2.0|Apache 2|Apache 2.0|Apache License 2.0|Apache License
+                        </licenseMerge>
+                        <licenseMerge>Eclipse Public License v1.0|Eclipse Public License 1.0|Eclipse Public License
+                            - v 1.0
+                        </licenseMerge>
+                        <licenseMerge>BSD 3-Clause License|BSD|New BSD License</licenseMerge>
+                        <licenseMerge>Dual license consisting of the CDDL v1.1 and GPL v2|CDDL+GPL</licenseMerge>
+                    </licenseMerges>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.coveo</groupId>
                 <artifactId>fmt-maven-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

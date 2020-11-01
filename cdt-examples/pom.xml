@@ -65,6 +65,9 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
+                <configuration>
+                    <skipAddThirdParty>true</skipAddThirdParty>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.coveo</groupId>
