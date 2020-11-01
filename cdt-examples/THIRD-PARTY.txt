@@ -3,7 +3,7 @@ Lists of 15 third-party dependencies.
      (The Apache Software License, Version 2.0) Jackson-annotations (com.fasterxml.jackson.core:jackson-annotations:2.11.3 - http://github.com/FasterXML/jackson)
      (The Apache Software License, Version 2.0) Jackson-core (com.fasterxml.jackson.core:jackson-core:2.11.3 - https://github.com/FasterXML/jackson-core)
      (The Apache Software License, Version 2.0) jackson-databind (com.fasterxml.jackson.core:jackson-databind:2.11.3 - http://github.com/FasterXML/jackson)
-     (The Apache License, Version 2.0) cdt-java-client (com.github.kklisura.cdt:cdt-java-client:2.1.0 - https://github.com/kklisura/chrome-devtools-java-client)
+     (The Apache License, Version 2.0) cdt-java-client (com.github.kklisura.cdt:cdt-java-client:3.0.0-SNAPSHOT - https://github.com/kklisura/chrome-devtools-java-client)
      (The Apache Software License, Version 2.0) Apache Commons Codec (commons-codec:commons-codec:1.11 - http://commons.apache.org/proper/commons-codec/)
      (Dual license consisting of the CDDL v1.1 and GPL v2) WebSocket server API (javax.websocket:javax.websocket-api:1.1 - http://websocket-spec.java.net)
      (Dual license consisting of the CDDL v1.1 and GPL v2) grizzly-framework (org.glassfish.grizzly:grizzly-framework:2.3.25 - http://grizzly.java.net/grizzly-framework)
