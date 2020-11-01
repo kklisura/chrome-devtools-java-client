@@ -12,7 +12,7 @@ Lists of 37 third-party dependencies.
      (The Apache Software License, Version 2.0) Okio (com.squareup.okio:okio:1.6.0 - https://github.com/square/okio/okio)
      (The Apache Software License, Version 2.0) JSON library from Android SDK (com.vaadin.external.google:android-json:0.0.20131108.vaadin1 - http://developer.android.com/sdk)
      (Dual license consisting of the CDDL v1.1 and GPL v2) WebSocket server API (javax.websocket:javax.websocket-api:1.1 - http://websocket-spec.java.net)
-     (Eclipse Public License v1.0) JUnit (junit:junit:4.12 - http://junit.org)
+     (Eclipse Public License v1.0) JUnit (junit:junit:4.13.1 - http://junit.org)
      (Bouncy Castle Licence) Bouncy Castle Provider (org.bouncycastle:bcprov-jdk15on:1.50 - http://www.bouncycastle.org/java.html)
      (The Apache Software License, Version 2.0) EasyMock (org.easymock:easymock:3.4 - http://easymock.org/easymock)
      (Dual license consisting of the CDDL v1.1 and GPL v2) grizzly-framework (org.glassfish.grizzly:grizzly-framework:2.3.25 - http://grizzly.java.net/grizzly-framework)

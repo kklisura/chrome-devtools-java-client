@@ -4,7 +4,7 @@ Lists of 8 third-party dependencies.
      (The Apache Software License, Version 2.0) Jackson-core (com.fasterxml.jackson.core:jackson-core:2.11.3 - https://github.com/FasterXML/jackson-core)
      (The Apache Software License, Version 2.0) jackson-databind (com.fasterxml.jackson.core:jackson-databind:2.11.3 - http://github.com/FasterXML/jackson)
      (The Apache Software License, Version 2.0) JSON library from Android SDK (com.vaadin.external.google:android-json:0.0.20131108.vaadin1 - http://developer.android.com/sdk)
-     (Eclipse Public License v1.0) JUnit (junit:junit:4.12 - http://junit.org)
+     (Eclipse Public License v1.0) JUnit (junit:junit:4.13.1 - http://junit.org)
      (BSD 3-Clause License) Hamcrest Core (org.hamcrest:hamcrest-core:1.3 - https://github.com/hamcrest/JavaHamcrest/hamcrest-core)
      (The MIT License) Project Lombok (org.projectlombok:lombok:1.18.2 - https://projectlombok.org)
      (The Apache Software License, Version 2.0) JSONassert (org.skyscreamer:jsonassert:1.5.0 - https://github.com/skyscreamer/JSONassert)
