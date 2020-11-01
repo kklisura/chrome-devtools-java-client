@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.definition.builder;
  * #%L
  * cdt-java-protocol-builder
  * %%
- * Copyright (C) 2018 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,27 +34,24 @@ import org.kohsuke.args4j.Option;
 @Setter
 public class Configuration {
   @Option(
-    name = "--base-package",
-    usage = "Base package name (com.github.kklisura.cdt.protocol)",
-    metaVar = "PACKAGE",
-    required = true
-  )
+      name = "--base-package",
+      usage = "Base package name (com.github.kklisura.cdt.protocol)",
+      metaVar = "PACKAGE",
+      required = true)
   private String basePackage;
 
   @Option(
-    name = "--js-protocol",
-    usage = "JS JSON protocol file (js_protocol.json)",
-    metaVar = "JS_PROTOCOL_JSON",
-    required = true
-  )
+      name = "--js-protocol",
+      usage = "JS JSON protocol file (js_protocol.json)",
+      metaVar = "JS_PROTOCOL_JSON",
+      required = true)
   private File jsProtocolFile;
 
   @Option(
-    name = "--browser-protocol",
-    usage = "Browser JSON protocol file (browser_protocol.json)",
-    metaVar = "BROWSER_PROTOCOL_JSON",
-    required = true
-  )
+      name = "--browser-protocol",
+      usage = "Browser JSON protocol file (browser_protocol.json)",
+      metaVar = "BROWSER_PROTOCOL_JSON",
+      required = true)
   private File browserProtocolFile;
 
   @Option(name = "--output", usage = "Output project location.", metaVar = "DIR", required = true)

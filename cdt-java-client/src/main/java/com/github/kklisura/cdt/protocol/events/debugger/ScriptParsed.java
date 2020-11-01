@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.events.debugger;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ package com.github.kklisura.cdt.protocol.events.debugger;
 
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
+import com.github.kklisura.cdt.protocol.types.debugger.DebugSymbols;
+import com.github.kklisura.cdt.protocol.types.debugger.ScriptLanguage;
 import com.github.kklisura.cdt.protocol.types.runtime.StackTrace;
 import java.util.Map;
 
@@ -60,6 +62,14 @@ public class ScriptParsed {
   @Optional private Integer length;
 
   @Experimental @Optional private StackTrace stackTrace;
+
+  @Experimental @Optional private Integer codeOffset;
+
+  @Experimental @Optional private ScriptLanguage scriptLanguage;
+
+  @Experimental @Optional private DebugSymbols debugSymbols;
+
+  @Experimental @Optional private String embedderName;
 
   /** Identifier of the script parsed. */
   public String getScriptId() {
@@ -209,5 +219,45 @@ public class ScriptParsed {
   /** JavaScript top stack frame of where the script parsed event was triggered if available. */
   public void setStackTrace(StackTrace stackTrace) {
     this.stackTrace = stackTrace;
+  }
+
+  /** If the scriptLanguage is WebAssembly, the code section offset in the module. */
+  public Integer getCodeOffset() {
+    return codeOffset;
+  }
+
+  /** If the scriptLanguage is WebAssembly, the code section offset in the module. */
+  public void setCodeOffset(Integer codeOffset) {
+    this.codeOffset = codeOffset;
+  }
+
+  /** The language of the script. */
+  public ScriptLanguage getScriptLanguage() {
+    return scriptLanguage;
+  }
+
+  /** The language of the script. */
+  public void setScriptLanguage(ScriptLanguage scriptLanguage) {
+    this.scriptLanguage = scriptLanguage;
+  }
+
+  /** If the scriptLanguage is WebASsembly, the source of debug symbols for the module. */
+  public DebugSymbols getDebugSymbols() {
+    return debugSymbols;
+  }
+
+  /** If the scriptLanguage is WebASsembly, the source of debug symbols for the module. */
+  public void setDebugSymbols(DebugSymbols debugSymbols) {
+    this.debugSymbols = debugSymbols;
+  }
+
+  /** The name the embedder supplied for this script. */
+  public String getEmbedderName() {
+    return embedderName;
+  }
+
+  /** The name the embedder supplied for this script. */
+  public void setEmbedderName(String embedderName) {
+    this.embedderName = embedderName;
   }
 }

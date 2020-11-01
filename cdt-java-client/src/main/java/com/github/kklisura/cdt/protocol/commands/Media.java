@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,9 @@ package com.github.kklisura.cdt.protocol.commands;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.events.media.PlayerErrorsRaised;
 import com.github.kklisura.cdt.protocol.events.media.PlayerEventsAdded;
+import com.github.kklisura.cdt.protocol.events.media.PlayerMessagesLogged;
 import com.github.kklisura.cdt.protocol.events.media.PlayerPropertiesChanged;
 import com.github.kklisura.cdt.protocol.events.media.PlayersCreated;
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
@@ -51,6 +53,14 @@ public interface Media {
    */
   @EventName("playerEventsAdded")
   EventListener onPlayerEventsAdded(EventHandler<PlayerEventsAdded> eventListener);
+
+  /** Send a list of any messages that need to be delivered. */
+  @EventName("playerMessagesLogged")
+  EventListener onPlayerMessagesLogged(EventHandler<PlayerMessagesLogged> eventListener);
+
+  /** Send a list of any errors that need to be delivered. */
+  @EventName("playerErrorsRaised")
+  EventListener onPlayerErrorsRaised(EventHandler<PlayerErrorsRaised> eventListener);
 
   /**
    * Called whenever a player is created, or when a new agent joins and recieves a list of active

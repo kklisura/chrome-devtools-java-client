@@ -1,10 +1,10 @@
-package com.github.kklisura.cdt.protocol.types.input;
+package com.github.kklisura.cdt.protocol.types.dom;
 
 /*-
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,20 +20,29 @@ package com.github.kklisura.cdt.protocol.types.input;
  * #L%
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+public class CSSComputedStyleProperty {
 
-/** Mouse button (default: "none"). */
-public enum DispatchMouseEventButton {
-  @JsonProperty("none")
-  NONE,
-  @JsonProperty("left")
-  LEFT,
-  @JsonProperty("middle")
-  MIDDLE,
-  @JsonProperty("right")
-  RIGHT,
-  @JsonProperty("back")
-  BACK,
-  @JsonProperty("forward")
-  FORWARD
+  private String name;
+
+  private String value;
+
+  /** Computed style property name. */
+  public String getName() {
+    return name;
+  }
+
+  /** Computed style property name. */
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  /** Computed style property value. */
+  public String getValue() {
+    return value;
+  }
+
+  /** Computed style property value. */
+  public void setValue(String value) {
+    this.value = value;
+  }
 }

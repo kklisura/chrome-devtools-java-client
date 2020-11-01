@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.fetch;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,9 @@ package com.github.kklisura.cdt.protocol.types.fetch;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
 /** Authorization challenge for HTTP status code 401 or 407. */
-@Experimental
 public class AuthChallenge {
 
   @Optional private AuthChallengeSource source;

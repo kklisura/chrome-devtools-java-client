@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,23 +21,24 @@ package com.github.kklisura.cdt.protocol.types.network;
  */
 
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
+import java.util.List;
 
 /** A cookie with was not sent with a request with the corresponding reason. */
 @Experimental
 public class BlockedCookieWithReason {
 
-  private CookieBlockedReason blockedReason;
+  private List<CookieBlockedReason> blockedReasons;
 
   private Cookie cookie;
 
-  /** The reason the cookie was blocked. */
-  public CookieBlockedReason getBlockedReason() {
-    return blockedReason;
+  /** The reason(s) the cookie was blocked. */
+  public List<CookieBlockedReason> getBlockedReasons() {
+    return blockedReasons;
   }
 
-  /** The reason the cookie was blocked. */
-  public void setBlockedReason(CookieBlockedReason blockedReason) {
-    this.blockedReason = blockedReason;
+  /** The reason(s) the cookie was blocked. */
+  public void setBlockedReasons(List<CookieBlockedReason> blockedReasons) {
+    this.blockedReasons = blockedReasons;
   }
 
   /** The cookie object representing the cookie which was not sent. */

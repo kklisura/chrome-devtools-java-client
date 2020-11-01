@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,10 +43,12 @@ import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.dom.BoxModel;
+import com.github.kklisura.cdt.protocol.types.dom.CSSComputedStyleProperty;
 import com.github.kklisura.cdt.protocol.types.dom.FrameOwner;
 import com.github.kklisura.cdt.protocol.types.dom.Node;
 import com.github.kklisura.cdt.protocol.types.dom.NodeForLocation;
 import com.github.kklisura.cdt.protocol.types.dom.PerformSearch;
+import com.github.kklisura.cdt.protocol.types.dom.Rect;
 import com.github.kklisura.cdt.protocol.types.runtime.RemoteObject;
 import com.github.kklisura.cdt.protocol.types.runtime.StackTrace;
 import java.util.List;
@@ -128,6 +130,30 @@ public interface DOM {
       @Optional @ParamName("objectId") String objectId,
       @Optional @ParamName("depth") Integer depth,
       @Optional @ParamName("pierce") Boolean pierce);
+
+  /**
+   * Scrolls the specified rect of the given node into view if not already visible. Note: exactly
+   * one between nodeId, backendNodeId and objectId should be passed to identify the node.
+   */
+  @Experimental
+  void scrollIntoViewIfNeeded();
+
+  /**
+   * Scrolls the specified rect of the given node into view if not already visible. Note: exactly
+   * one between nodeId, backendNodeId and objectId should be passed to identify the node.
+   *
+   * @param nodeId Identifier of the node.
+   * @param backendNodeId Identifier of the backend node.
+   * @param objectId JavaScript object id of the node wrapper.
+   * @param rect The rect to be scrolled into view, relative to the node's border box, in CSS
+   *     pixels. When omitted, center of the node will be used, similar to Element.scrollIntoView.
+   */
+  @Experimental
+  void scrollIntoViewIfNeeded(
+      @Optional @ParamName("nodeId") Integer nodeId,
+      @Optional @ParamName("backendNodeId") Integer backendNodeId,
+      @Optional @ParamName("objectId") String objectId,
+      @Optional @ParamName("rect") Rect rect);
 
   /** Disables DOM agent for the given page. */
   void disable();
@@ -226,23 +252,60 @@ public interface DOM {
   Node getDocument(
       @Optional @ParamName("depth") Integer depth, @Optional @ParamName("pierce") Boolean pierce);
 
-  /** Returns the root DOM node (and optionally the subtree) to the caller. */
+  /**
+   * Returns the root DOM node (and optionally the subtree) to the caller. Deprecated, as it is not
+   * designed to work well with the rest of the DOM agent. Use DOMSnapshot.captureSnapshot instead.
+   */
+  @Deprecated
   @Returns("nodes")
   @ReturnTypeParameter(Node.class)
   List<Node> getFlattenedDocument();
 
   /**
-   * Returns the root DOM node (and optionally the subtree) to the caller.
+   * Returns the root DOM node (and optionally the subtree) to the caller. Deprecated, as it is not
+   * designed to work well with the rest of the DOM agent. Use DOMSnapshot.captureSnapshot instead.
    *
    * @param depth The maximum depth at which children should be retrieved, defaults to 1. Use -1 for
    *     the entire subtree or provide an integer larger than 0.
    * @param pierce Whether or not iframes and shadow roots should be traversed when returning the
    *     subtree (default is false).
    */
+  @Deprecated
   @Returns("nodes")
   @ReturnTypeParameter(Node.class)
   List<Node> getFlattenedDocument(
       @Optional @ParamName("depth") Integer depth, @Optional @ParamName("pierce") Boolean pierce);
+
+  /**
+   * Finds nodes with a given computed style in a subtree.
+   *
+   * @param nodeId Node ID pointing to the root of a subtree.
+   * @param computedStyles The style to filter nodes by (includes nodes if any of properties
+   *     matches).
+   */
+  @Experimental
+  @Returns("nodeIds")
+  @ReturnTypeParameter(Integer.class)
+  List<Integer> getNodesForSubtreeByStyle(
+      @ParamName("nodeId") Integer nodeId,
+      @ParamName("computedStyles") List<CSSComputedStyleProperty> computedStyles);
+
+  /**
+   * Finds nodes with a given computed style in a subtree.
+   *
+   * @param nodeId Node ID pointing to the root of a subtree.
+   * @param computedStyles The style to filter nodes by (includes nodes if any of properties
+   *     matches).
+   * @param pierce Whether or not iframes and shadow roots in the same target should be traversed
+   *     when returning the results (default is false).
+   */
+  @Experimental
+  @Returns("nodeIds")
+  @ReturnTypeParameter(Integer.class)
+  List<Integer> getNodesForSubtreeByStyle(
+      @ParamName("nodeId") Integer nodeId,
+      @ParamName("computedStyles") List<CSSComputedStyleProperty> computedStyles,
+      @Optional @ParamName("pierce") Boolean pierce);
 
   /**
    * Returns node id at given location. Depending on whether DOM domain is enabled, nodeId is either
@@ -251,7 +314,6 @@ public interface DOM {
    * @param x X coordinate.
    * @param y Y coordinate.
    */
-  @Experimental
   NodeForLocation getNodeForLocation(@ParamName("x") Integer x, @ParamName("y") Integer y);
 
   /**
@@ -262,12 +324,14 @@ public interface DOM {
    * @param y Y coordinate.
    * @param includeUserAgentShadowDOM False to skip to the nearest non-UA shadow root ancestor
    *     (default: false).
+   * @param ignorePointerEventsNone Whether to ignore pointer-events: none on elements and hit test
+   *     them.
    */
-  @Experimental
   NodeForLocation getNodeForLocation(
       @ParamName("x") Integer x,
       @ParamName("y") Integer y,
-      @Optional @ParamName("includeUserAgentShadowDOM") Boolean includeUserAgentShadowDOM);
+      @Optional @ParamName("includeUserAgentShadowDOM") Boolean includeUserAgentShadowDOM,
+      @Optional @ParamName("ignorePointerEventsNone") Boolean ignorePointerEventsNone);
 
   /** Returns node's HTML markup. */
   @Returns("outerHTML")

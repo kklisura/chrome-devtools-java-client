@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.events.network;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ public class RequestWillBeSentExtraInfo {
 
   private String requestId;
 
-  private List<BlockedCookieWithReason> blockedCookies;
+  private List<BlockedCookieWithReason> associatedCookies;
 
   private Map<String, Object> headers;
 
@@ -51,19 +51,21 @@ public class RequestWillBeSentExtraInfo {
   }
 
   /**
-   * A list of cookies which will not be sent with this request along with corresponding reasons for
-   * blocking.
+   * A list of cookies potentially associated to the requested URL. This includes both cookies sent
+   * with the request and the ones not sent; the latter are distinguished by having blockedReason
+   * field set.
    */
-  public List<BlockedCookieWithReason> getBlockedCookies() {
-    return blockedCookies;
+  public List<BlockedCookieWithReason> getAssociatedCookies() {
+    return associatedCookies;
   }
 
   /**
-   * A list of cookies which will not be sent with this request along with corresponding reasons for
-   * blocking.
+   * A list of cookies potentially associated to the requested URL. This includes both cookies sent
+   * with the request and the ones not sent; the latter are distinguished by having blockedReason
+   * field set.
    */
-  public void setBlockedCookies(List<BlockedCookieWithReason> blockedCookies) {
-    this.blockedCookies = blockedCookies;
+  public void setAssociatedCookies(List<BlockedCookieWithReason> associatedCookies) {
+    this.associatedCookies = associatedCookies;
   }
 
   /** Raw request headers as they will be sent over the wire. */

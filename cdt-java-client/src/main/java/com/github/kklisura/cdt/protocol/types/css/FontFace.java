@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.css;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,13 @@ package com.github.kklisura.cdt.protocol.types.css;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
+import java.util.List;
+
 /**
  * Properties of a web font:
- * https://www.w3.org/TR/2008/REC-CSS2-20080411/fonts.html#font-descriptions
+ * https://www.w3.org/TR/2008/REC-CSS2-20080411/fonts.html#font-descriptions and additional
+ * information such as platformFontFamily and fontVariationAxes.
  */
 public class FontFace {
 
@@ -41,6 +45,8 @@ public class FontFace {
   private String src;
 
   private String platformFontFamily;
+
+  @Optional private List<FontVariationAxis> fontVariationAxes;
 
   /** The font-family. */
   public String getFontFamily() {
@@ -120,5 +126,15 @@ public class FontFace {
   /** The resolved platform font family */
   public void setPlatformFontFamily(String platformFontFamily) {
     this.platformFontFamily = platformFontFamily;
+  }
+
+  /** Available variation settings (a.k.a. "axes"). */
+  public List<FontVariationAxis> getFontVariationAxes() {
+    return fontVariationAxes;
+  }
+
+  /** Available variation settings (a.k.a. "axes"). */
+  public void setFontVariationAxes(List<FontVariationAxis> fontVariationAxes) {
+    this.fontVariationAxes = fontVariationAxes;
   }
 }

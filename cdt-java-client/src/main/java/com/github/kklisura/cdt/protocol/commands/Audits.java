@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,13 @@ package com.github.kklisura.cdt.protocol.commands;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.events.audits.IssueAdded;
+import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdt.protocol.support.types.EventHandler;
+import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.audits.EncodedResponse;
 import com.github.kklisura.cdt.protocol.types.audits.GetEncodedResponseEncoding;
 
@@ -55,4 +59,16 @@ public interface Audits {
       @ParamName("encoding") GetEncodedResponseEncoding encoding,
       @Optional @ParamName("quality") Double quality,
       @Optional @ParamName("sizeOnly") Boolean sizeOnly);
+
+  /** Disables issues domain, prevents further issues from being reported to the client. */
+  void disable();
+
+  /**
+   * Enables issues domain, sends the issues collected so far to the client by means of the
+   * `issueAdded` event.
+   */
+  void enable();
+
+  @EventName("issueAdded")
+  EventListener onIssueAdded(EventHandler<IssueAdded> eventListener);
 }

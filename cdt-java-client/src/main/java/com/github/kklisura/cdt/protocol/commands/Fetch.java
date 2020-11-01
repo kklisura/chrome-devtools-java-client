@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ package com.github.kklisura.cdt.protocol.commands;
 import com.github.kklisura.cdt.protocol.events.fetch.AuthRequired;
 import com.github.kklisura.cdt.protocol.events.fetch.RequestPaused;
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
-import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
@@ -37,7 +36,6 @@ import com.github.kklisura.cdt.protocol.types.network.ErrorReason;
 import java.util.List;
 
 /** A domain for letting clients substitute browser's network layer with client code. */
-@Experimental
 public interface Fetch {
 
   /** Disables the fetch domain. */
@@ -77,12 +75,9 @@ public interface Fetch {
    *
    * @param requestId An id the client received in requestPaused event.
    * @param responseCode An HTTP response code.
-   * @param responseHeaders Response headers.
    */
   void fulfillRequest(
-      @ParamName("requestId") String requestId,
-      @ParamName("responseCode") Integer responseCode,
-      @ParamName("responseHeaders") List<HeaderEntry> responseHeaders);
+      @ParamName("requestId") String requestId, @ParamName("responseCode") Integer responseCode);
 
   /**
    * Provides response to the request.
@@ -90,14 +85,18 @@ public interface Fetch {
    * @param requestId An id the client received in requestPaused event.
    * @param responseCode An HTTP response code.
    * @param responseHeaders Response headers.
+   * @param binaryResponseHeaders Alternative way of specifying response headers as a \0-separated
+   *     series of name: value pairs. Prefer the above method unless you need to represent some
+   *     non-UTF8 values that can't be transmitted over the protocol as text.
    * @param body A response body.
    * @param responsePhrase A textual representation of responseCode. If absent, a standard phrase
-   *     mathcing responseCode is used.
+   *     matching responseCode is used.
    */
   void fulfillRequest(
       @ParamName("requestId") String requestId,
       @ParamName("responseCode") Integer responseCode,
-      @ParamName("responseHeaders") List<HeaderEntry> responseHeaders,
+      @Optional @ParamName("responseHeaders") List<HeaderEntry> responseHeaders,
+      @Optional @ParamName("binaryResponseHeaders") String binaryResponseHeaders,
       @Optional @ParamName("body") String body,
       @Optional @ParamName("responsePhrase") String responsePhrase);
 
@@ -115,7 +114,7 @@ public interface Fetch {
    * @param url If set, the request url will be modified in a way that's not observable by page.
    * @param method If set, the request method is overridden.
    * @param postData If set, overrides the post data in the request.
-   * @param headers If set, overrides the request headrts.
+   * @param headers If set, overrides the request headers.
    */
   void continueRequest(
       @ParamName("requestId") String requestId,

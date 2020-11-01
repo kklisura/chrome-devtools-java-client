@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.domsnapshot;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,8 @@ import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 public class DocumentSnapshot {
 
   private Integer documentURL;
+
+  private Integer title;
 
   private Integer baseURL;
 
@@ -49,6 +51,10 @@ public class DocumentSnapshot {
 
   @Optional private Double scrollOffsetY;
 
+  @Optional private Double contentWidth;
+
+  @Optional private Double contentHeight;
+
   /** Document URL that `Document` or `FrameOwner` node points to. */
   public Integer getDocumentURL() {
     return documentURL;
@@ -57,6 +63,16 @@ public class DocumentSnapshot {
   /** Document URL that `Document` or `FrameOwner` node points to. */
   public void setDocumentURL(Integer documentURL) {
     this.documentURL = documentURL;
+  }
+
+  /** Document title. */
+  public Integer getTitle() {
+    return title;
+  }
+
+  /** Document title. */
+  public void setTitle(Integer title) {
+    this.title = title;
   }
 
   /** Base URL that `Document` or `FrameOwner` node uses for URL completion. */
@@ -167,5 +183,25 @@ public class DocumentSnapshot {
   /** Vertical scroll offset. */
   public void setScrollOffsetY(Double scrollOffsetY) {
     this.scrollOffsetY = scrollOffsetY;
+  }
+
+  /** Document content width. */
+  public Double getContentWidth() {
+    return contentWidth;
+  }
+
+  /** Document content width. */
+  public void setContentWidth(Double contentWidth) {
+    this.contentWidth = contentWidth;
+  }
+
+  /** Document content height. */
+  public Double getContentHeight() {
+    return contentHeight;
+  }
+
+  /** Document content height. */
+  public void setContentHeight(Double contentHeight) {
+    this.contentHeight = contentHeight;
   }
 }

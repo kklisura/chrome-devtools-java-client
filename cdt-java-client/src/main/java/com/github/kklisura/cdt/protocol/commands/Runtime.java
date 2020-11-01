@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -183,8 +183,16 @@ public interface Runtime {
    * @param awaitPromise Whether execution should `await` for resulting value and return once
    *     awaited promise is resolved.
    * @param throwOnSideEffect Whether to throw an exception if side effect cannot be ruled out
-   *     during evaluation.
+   *     during evaluation. This implies `disableBreaks` below.
    * @param timeout Terminate execution after timing out (number of milliseconds).
+   * @param disableBreaks Disable breakpoints during execution.
+   * @param replMode Setting this flag to true enables `let` re-declaration and top-level `await`.
+   *     Note that `let` variables can only be re-declared if they originate from `replMode`
+   *     themselves.
+   * @param allowUnsafeEvalBlockedByCSP The Content Security Policy (CSP) for the target might block
+   *     'unsafe-eval' which includes eval(), Function(), setTimeout() and setInterval() when called
+   *     with non-callable arguments. This flag bypasses CSP for this evaluation and allows
+   *     unsafe-eval. Defaults to true.
    */
   Evaluate evaluate(
       @ParamName("expression") String expression,
@@ -197,7 +205,11 @@ public interface Runtime {
       @Optional @ParamName("userGesture") Boolean userGesture,
       @Optional @ParamName("awaitPromise") Boolean awaitPromise,
       @Experimental @Optional @ParamName("throwOnSideEffect") Boolean throwOnSideEffect,
-      @Experimental @Optional @ParamName("timeout") Double timeout);
+      @Experimental @Optional @ParamName("timeout") Double timeout,
+      @Experimental @Optional @ParamName("disableBreaks") Boolean disableBreaks,
+      @Experimental @Optional @ParamName("replMode") Boolean replMode,
+      @Experimental @Optional @ParamName("allowUnsafeEvalBlockedByCSP")
+          Boolean allowUnsafeEvalBlockedByCSP);
 
   /** Returns the isolate id. */
   @Experimental

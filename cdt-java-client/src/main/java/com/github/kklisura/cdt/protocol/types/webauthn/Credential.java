@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.webauthn;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,8 @@ public class Credential {
   @Optional private String userHandle;
 
   private Integer signCount;
+
+  @Optional private String largeBlob;
 
   public String getCredentialId() {
     return credentialId;
@@ -102,5 +104,21 @@ public class Credential {
    */
   public void setSignCount(Integer signCount) {
     this.signCount = signCount;
+  }
+
+  /**
+   * The large blob associated with the credential. See
+   * https://w3c.github.io/webauthn/#sctn-large-blob-extension
+   */
+  public String getLargeBlob() {
+    return largeBlob;
+  }
+
+  /**
+   * The large blob associated with the credential. See
+   * https://w3c.github.io/webauthn/#sctn-large-blob-extension
+   */
+  public void setLargeBlob(String largeBlob) {
+    this.largeBlob = largeBlob;
   }
 }

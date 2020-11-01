@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.runtime;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,12 +54,12 @@ public class RemoteObject {
     this.type = type;
   }
 
-  /** Object subtype hint. Specified for `object` type values only. */
+  /** Object subtype hint. Specified for `object` or `wasm` type values only. */
   public RemoteObjectSubtype getSubtype() {
     return subtype;
   }
 
-  /** Object subtype hint. Specified for `object` type values only. */
+  /** Object subtype hint. Specified for `object` or `wasm` type values only. */
   public void setSubtype(RemoteObjectSubtype subtype) {
     this.subtype = subtype;
   }

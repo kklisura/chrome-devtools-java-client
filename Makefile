@@ -18,15 +18,15 @@ BROWSER_PROTOCOL_JSON_FILE=./browser_protocol.json
 
 EXAMPLES_DIR=cdt-examples
 
-install-cdt-java-protocol-parser:
-	# Building and install cdt-protocol-parser project...
+copy-protocol-files-to-test-resources:
+	# Copy protocol files to cdt-protocol-parser test resources dir.
 	$(CP) $(JS_PROTOCOL_JSON_FILE) "./$(PROTOCOL_PARSER)/src/test/resources/js_protocol.json"
 	$(CP) $(BROWSER_PROTOCOL_JSON_FILE) "./$(PROTOCOL_PARSER)/src/test/resources/browser_protocol.json"
 	$(MVN) --file "$(PROTOCOL_PARSER_DIR)/" clean install
 
-build-cdt-java-protocol-builder: install-cdt-java-protocol-parser
-	# Building cdt-java-protocol-builder project...
-	$(MVN) --file "$(JAVA_PROTOCOL_BUILDER_DIR)/" clean package
+build-all-modules:
+	# Building all modules
+	$(MVN) clean package
 
 compile-cdt-java-client:
 	# Compiling cdt-java-client project...
@@ -46,14 +46,22 @@ clean-previous-protocol:
 	$(RM) -rf $(JAVA_CLIENT_DIR)/src/main/java/$(JAVA_CLIENT_PACKAGE)/events
 	$(RM) -rf $(JAVA_CLIENT_DIR)/src/main/java/$(JAVA_CLIENT_PACKAGE)/commands
 
-upgrade-protocol: build-cdt-java-protocol-builder clean-previous-protocol
+upgrade-protocol: copy-protocol-files-to-test-resources build-all-modules clean-previous-protocol
 	$(RUN_JAR) $(JAVA_PROTOCOL_BUILDER_JAR) --base-package="$(PACKAGE_NAME)" \
 		--output=./$(JAVA_CLIENT_DIR)/ \
 		--js-protocol=$(JS_PROTOCOL_JSON_FILE) \
-		--browser-protocol=$(BROWSER_PROTOCOL_JSON_FILE) \
+		--browser-protocol=$(BROWSER_PROTOCOL_JSON_FILE)
+	# Apply the formatting on the codebase
+	$(MVN) com.coveo:fmt-maven-plugin:format
 
-update-protocol: upgrade-protocol compile-cdt-java-client
+update-protocol: upgrade-protocol
 	# Updated protocol on cdt-java-client
+	$(MVN) verify
+
+update-copyright-license-header:
+	$(MVN) clean license:update-file-header
+	# Apply the formatting on the codebase
+	$(MVN) com.coveo:fmt-maven-plugin:format
 
 sonar-analysis:
 	# Running sonar analysis
@@ -62,11 +70,9 @@ sonar-analysis:
 
 verify:
 	# Running unit tests
-	cd $(JAVA_PROTOCOL_BUILDER_DIR)/ && make verify
-	cd $(JAVA_CLIENT_DIR)/ && make verify
-	$(MVN) --file "$(JAVA_CLIENT_DIR)/" clean install && \
-	  $(MVN) --file "$(EXAMPLES_DIR)/" clean compile
+	$(MVN) verify
 
 download-latest-protocol:
+	# Downloads the latest protocol json files
 	curl -o browser_protocol.json https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/json/browser_protocol.json
 	curl -o js_protocol.json https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/json/js_protocol.json

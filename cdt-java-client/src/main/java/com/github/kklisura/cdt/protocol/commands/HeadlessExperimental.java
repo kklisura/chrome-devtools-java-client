@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,7 +72,12 @@ public interface HeadlessExperimental {
   /** Enables headless events for the target. */
   void enable();
 
-  /** Issued when the target starts or stops needing BeginFrames. */
+  /**
+   * Issued when the target starts or stops needing BeginFrames. Deprecated. Issue beginFrame
+   * unconditionally instead and use result from beginFrame to detect whether the frames were
+   * suppressed.
+   */
   @EventName("needsBeginFramesChanged")
+  @Deprecated
   EventListener onNeedsBeginFramesChanged(EventHandler<NeedsBeginFramesChanged> eventListener);
 }

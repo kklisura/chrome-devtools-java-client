@@ -1,10 +1,10 @@
-package com.github.kklisura.cdt.protocol.types.page;
+package com.github.kklisura.cdt.protocol.types.performance;
 
 /*-
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,10 @@ package com.github.kklisura.cdt.protocol.types.page;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public enum HandleFileChooserAction {
-  @JsonProperty("accept")
-  ACCEPT,
-  @JsonProperty("cancel")
-  CANCEL,
-  @JsonProperty("fallback")
-  FALLBACK
+/** Time domain to use for collecting and reporting duration metrics. */
+public enum EnableTimeDomain {
+  @JsonProperty("timeTicks")
+  TIME_TICKS,
+  @JsonProperty("threadTicks")
+  THREAD_TICKS
 }

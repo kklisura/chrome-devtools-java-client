@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.overlay;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,8 @@ public class HighlightConfig {
 
   @Optional private Boolean showRulers;
 
+  @Optional private Boolean showAccessibilityInfo;
+
   @Optional private Boolean showExtensionLines;
 
   @Optional private RGBA contentColor;
@@ -49,6 +51,10 @@ public class HighlightConfig {
   @Optional private RGBA shapeMarginColor;
 
   @Optional private RGBA cssGridColor;
+
+  @Optional private ColorFormat colorFormat;
+
+  @Optional private GridHighlightConfig gridHighlightConfig;
 
   /** Whether the node info tooltip should be shown (default: false). */
   public Boolean getShowInfo() {
@@ -78,6 +84,16 @@ public class HighlightConfig {
   /** Whether the rulers should be shown (default: false). */
   public void setShowRulers(Boolean showRulers) {
     this.showRulers = showRulers;
+  }
+
+  /** Whether the a11y info should be shown (default: true). */
+  public Boolean getShowAccessibilityInfo() {
+    return showAccessibilityInfo;
+  }
+
+  /** Whether the a11y info should be shown (default: true). */
+  public void setShowAccessibilityInfo(Boolean showAccessibilityInfo) {
+    this.showAccessibilityInfo = showAccessibilityInfo;
   }
 
   /** Whether the extension lines from node to the rulers should be shown (default: false). */
@@ -168,5 +184,25 @@ public class HighlightConfig {
   /** The grid layout color (default: transparent). */
   public void setCssGridColor(RGBA cssGridColor) {
     this.cssGridColor = cssGridColor;
+  }
+
+  /** The color format used to format color styles (default: hex). */
+  public ColorFormat getColorFormat() {
+    return colorFormat;
+  }
+
+  /** The color format used to format color styles (default: hex). */
+  public void setColorFormat(ColorFormat colorFormat) {
+    this.colorFormat = colorFormat;
+  }
+
+  /** The grid layout highlight configuration (default: all transparent). */
+  public GridHighlightConfig getGridHighlightConfig() {
+    return gridHighlightConfig;
+  }
+
+  /** The grid layout highlight configuration (default: all transparent). */
+  public void setGridHighlightConfig(GridHighlightConfig gridHighlightConfig) {
+    this.gridHighlightConfig = gridHighlightConfig;
   }
 }

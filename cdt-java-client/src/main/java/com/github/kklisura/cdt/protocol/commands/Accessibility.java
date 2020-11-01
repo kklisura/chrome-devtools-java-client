@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,4 +73,39 @@ public interface Accessibility {
   @Returns("nodes")
   @ReturnTypeParameter(AXNode.class)
   List<AXNode> getFullAXTree();
+
+  /**
+   * Query a DOM node's accessibility subtree for accessible name and role. This command computes
+   * the name and role for all nodes in the subtree, including those that are ignored for
+   * accessibility, and returns those that mactch the specified name and role. If no DOM node is
+   * specified, or the DOM node does not exist, the command returns an error. If neither
+   * `accessibleName` or `role` is specified, it returns all the accessibility nodes in the subtree.
+   */
+  @Experimental
+  @Returns("nodes")
+  @ReturnTypeParameter(AXNode.class)
+  List<AXNode> queryAXTree();
+
+  /**
+   * Query a DOM node's accessibility subtree for accessible name and role. This command computes
+   * the name and role for all nodes in the subtree, including those that are ignored for
+   * accessibility, and returns those that mactch the specified name and role. If no DOM node is
+   * specified, or the DOM node does not exist, the command returns an error. If neither
+   * `accessibleName` or `role` is specified, it returns all the accessibility nodes in the subtree.
+   *
+   * @param nodeId Identifier of the node for the root to query.
+   * @param backendNodeId Identifier of the backend node for the root to query.
+   * @param objectId JavaScript object id of the node wrapper for the root to query.
+   * @param accessibleName Find nodes with this computed name.
+   * @param role Find nodes with this computed role.
+   */
+  @Experimental
+  @Returns("nodes")
+  @ReturnTypeParameter(AXNode.class)
+  List<AXNode> queryAXTree(
+      @Optional @ParamName("nodeId") Integer nodeId,
+      @Optional @ParamName("backendNodeId") Integer backendNodeId,
+      @Optional @ParamName("objectId") String objectId,
+      @Optional @ParamName("accessibleName") String accessibleName,
+      @Optional @ParamName("role") String role);
 }

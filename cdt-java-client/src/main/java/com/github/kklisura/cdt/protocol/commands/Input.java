@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,12 @@ import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
 import com.github.kklisura.cdt.protocol.types.input.DispatchKeyEventType;
-import com.github.kklisura.cdt.protocol.types.input.DispatchMouseEventButton;
 import com.github.kklisura.cdt.protocol.types.input.DispatchMouseEventPointerType;
 import com.github.kklisura.cdt.protocol.types.input.DispatchMouseEventType;
 import com.github.kklisura.cdt.protocol.types.input.DispatchTouchEventType;
-import com.github.kklisura.cdt.protocol.types.input.EmulateTouchFromMouseEventButton;
 import com.github.kklisura.cdt.protocol.types.input.EmulateTouchFromMouseEventType;
 import com.github.kklisura.cdt.protocol.types.input.GestureSourceType;
+import com.github.kklisura.cdt.protocol.types.input.MouseButton;
 import com.github.kklisura.cdt.protocol.types.input.TouchPoint;
 import java.util.List;
 
@@ -65,6 +64,11 @@ public interface Input {
    * @param isSystemKey Whether the event was a system key event (default: false).
    * @param location Whether the event was from the left or right side of the keyboard. 1=Left,
    *     2=Right (default: 0).
+   * @param commands Editing commands to send with the key event (e.g., 'selectAll') (default: []).
+   *     These are related to but not equal the command names used in `document.execCommand` and
+   *     NSStandardKeyBindingResponding. See
+   *     https://source.chromium.org/chromium/chromium/src/+/master:third_party/blink/renderer/core/editing/commands/editor_command_names.h
+   *     for valid command names.
    */
   void dispatchKeyEvent(
       @ParamName("type") DispatchKeyEventType type,
@@ -80,7 +84,8 @@ public interface Input {
       @Optional @ParamName("autoRepeat") Boolean autoRepeat,
       @Optional @ParamName("isKeypad") Boolean isKeypad,
       @Optional @ParamName("isSystemKey") Boolean isSystemKey,
-      @Optional @ParamName("location") Integer location);
+      @Optional @ParamName("location") Integer location,
+      @Experimental @Optional @ParamName("commands") List<String> commands);
 
   /**
    * This method emulates inserting text that doesn't come from a key press, for example an emoji
@@ -120,6 +125,17 @@ public interface Input {
    * @param buttons A number indicating which buttons are pressed on the mouse when a mouse event is
    *     triggered. Left=1, Right=2, Middle=4, Back=8, Forward=16, None=0.
    * @param clickCount Number of times the mouse button was clicked (default: 0).
+   * @param force The normalized pressure, which has a range of [0,1] (default: 0).
+   * @param tangentialPressure The normalized tangential pressure, which has a range of [-1,1]
+   *     (default: 0).
+   * @param tiltX The plane angle between the Y-Z plane and the plane containing both the stylus
+   *     axis and the Y axis, in degrees of the range [-90,90], a positive tiltX is to the right
+   *     (default: 0).
+   * @param tiltY The plane angle between the X-Z plane and the plane containing both the stylus
+   *     axis and the X axis, in degrees of the range [-90,90], a positive tiltY is towards the user
+   *     (default: 0).
+   * @param twist The clockwise rotation of a pen stylus around its own major axis, in degrees in
+   *     the range [0,359] (default: 0).
    * @param deltaX X delta in CSS pixels for mouse wheel event (default: 0).
    * @param deltaY Y delta in CSS pixels for mouse wheel event (default: 0).
    * @param pointerType Pointer type (default: "mouse").
@@ -130,9 +146,14 @@ public interface Input {
       @ParamName("y") Double y,
       @Optional @ParamName("modifiers") Integer modifiers,
       @Optional @ParamName("timestamp") Double timestamp,
-      @Optional @ParamName("button") DispatchMouseEventButton button,
+      @Optional @ParamName("button") MouseButton button,
       @Optional @ParamName("buttons") Integer buttons,
       @Optional @ParamName("clickCount") Integer clickCount,
+      @Experimental @Optional @ParamName("force") Double force,
+      @Experimental @Optional @ParamName("tangentialPressure") Double tangentialPressure,
+      @Experimental @Optional @ParamName("tiltX") Integer tiltX,
+      @Experimental @Optional @ParamName("tiltY") Integer tiltY,
+      @Experimental @Optional @ParamName("twist") Integer twist,
       @Optional @ParamName("deltaX") Double deltaX,
       @Optional @ParamName("deltaY") Double deltaY,
       @Optional @ParamName("pointerType") DispatchMouseEventPointerType pointerType);
@@ -174,14 +195,14 @@ public interface Input {
    * @param type Type of the mouse event.
    * @param x X coordinate of the mouse pointer in DIP.
    * @param y Y coordinate of the mouse pointer in DIP.
-   * @param button Mouse button.
+   * @param button Mouse button. Only "none", "left", "right" are supported.
    */
   @Experimental
   void emulateTouchFromMouseEvent(
       @ParamName("type") EmulateTouchFromMouseEventType type,
       @ParamName("x") Integer x,
       @ParamName("y") Integer y,
-      @ParamName("button") EmulateTouchFromMouseEventButton button);
+      @ParamName("button") MouseButton button);
 
   /**
    * Emulates touch event from the mouse event parameters.
@@ -189,7 +210,7 @@ public interface Input {
    * @param type Type of the mouse event.
    * @param x X coordinate of the mouse pointer in DIP.
    * @param y Y coordinate of the mouse pointer in DIP.
-   * @param button Mouse button.
+   * @param button Mouse button. Only "none", "left", "right" are supported.
    * @param timestamp Time at which the event occurred (default: current time).
    * @param deltaX X delta in DIP for mouse wheel event (default: 0).
    * @param deltaY Y delta in DIP for mouse wheel event (default: 0).
@@ -202,7 +223,7 @@ public interface Input {
       @ParamName("type") EmulateTouchFromMouseEventType type,
       @ParamName("x") Integer x,
       @ParamName("y") Integer y,
-      @ParamName("button") EmulateTouchFromMouseEventButton button,
+      @ParamName("button") MouseButton button,
       @Optional @ParamName("timestamp") Double timestamp,
       @Optional @ParamName("deltaX") Double deltaX,
       @Optional @ParamName("deltaY") Double deltaY,

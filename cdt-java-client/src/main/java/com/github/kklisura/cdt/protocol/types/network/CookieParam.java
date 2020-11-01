@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
 /** Cookie parameter object */
@@ -42,6 +43,8 @@ public class CookieParam {
   @Optional private CookieSameSite sameSite;
 
   @Optional private Double expires;
+
+  @Experimental @Optional private CookiePriority priority;
 
   /** Cookie name. */
   public String getName() {
@@ -137,5 +140,15 @@ public class CookieParam {
   /** Cookie expiration date, session cookie if not set */
   public void setExpires(Double expires) {
     this.expires = expires;
+  }
+
+  /** Cookie Priority. */
+  public CookiePriority getPriority() {
+    return priority;
+  }
+
+  /** Cookie Priority. */
+  public void setPriority(CookiePriority priority) {
+    this.priority = priority;
   }
 }

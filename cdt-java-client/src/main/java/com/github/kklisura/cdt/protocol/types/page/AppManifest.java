@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.page;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.protocol.types.page;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import java.util.List;
 
@@ -30,6 +31,8 @@ public class AppManifest {
   private List<AppManifestError> errors;
 
   @Optional private String data;
+
+  @Experimental @Optional private AppManifestParsedProperties parsed;
 
   /** Manifest location. */
   public String getUrl() {
@@ -57,5 +60,15 @@ public class AppManifest {
   /** Manifest content. */
   public void setData(String data) {
     this.data = data;
+  }
+
+  /** Parsed manifest properties */
+  public AppManifestParsedProperties getParsed() {
+    return parsed;
+  }
+
+  /** Parsed manifest properties */
+  public void setParsed(AppManifestParsedProperties parsed) {
+    this.parsed = parsed;
   }
 }

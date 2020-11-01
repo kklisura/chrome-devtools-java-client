@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,13 +75,8 @@ public interface CacheStorage {
    * Requests data from cache.
    *
    * @param cacheId ID of cache to get entries from.
-   * @param skipCount Number of records to skip.
-   * @param pageSize Number of records to fetch.
    */
-  RequestEntries requestEntries(
-      @ParamName("cacheId") String cacheId,
-      @ParamName("skipCount") Integer skipCount,
-      @ParamName("pageSize") Integer pageSize);
+  RequestEntries requestEntries(@ParamName("cacheId") String cacheId);
 
   /**
    * Requests data from cache.
@@ -93,7 +88,7 @@ public interface CacheStorage {
    */
   RequestEntries requestEntries(
       @ParamName("cacheId") String cacheId,
-      @ParamName("skipCount") Integer skipCount,
-      @ParamName("pageSize") Integer pageSize,
+      @Optional @ParamName("skipCount") Integer skipCount,
+      @Optional @ParamName("pageSize") Integer pageSize,
       @Optional @ParamName("pathFilter") String pathFilter);
 }

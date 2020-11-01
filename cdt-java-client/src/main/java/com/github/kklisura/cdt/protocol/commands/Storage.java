@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,16 @@ import com.github.kklisura.cdt.protocol.events.storage.IndexedDBContentUpdated;
 import com.github.kklisura.cdt.protocol.events.storage.IndexedDBListUpdated;
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdt.protocol.support.annotations.ReturnTypeParameter;
+import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
+import com.github.kklisura.cdt.protocol.types.network.Cookie;
+import com.github.kklisura.cdt.protocol.types.network.CookieParam;
 import com.github.kklisura.cdt.protocol.types.storage.UsageAndQuota;
+import java.util.List;
 
 @Experimental
 public interface Storage {
@@ -43,12 +49,76 @@ public interface Storage {
   void clearDataForOrigin(
       @ParamName("origin") String origin, @ParamName("storageTypes") String storageTypes);
 
+  /** Returns all browser cookies. */
+  @Returns("cookies")
+  @ReturnTypeParameter(Cookie.class)
+  List<Cookie> getCookies();
+
+  /**
+   * Returns all browser cookies.
+   *
+   * @param browserContextId Browser context to use when called on the browser endpoint.
+   */
+  @Returns("cookies")
+  @ReturnTypeParameter(Cookie.class)
+  List<Cookie> getCookies(@Optional @ParamName("browserContextId") String browserContextId);
+
+  /**
+   * Sets given cookies.
+   *
+   * @param cookies Cookies to be set.
+   */
+  void setCookies(@ParamName("cookies") List<CookieParam> cookies);
+
+  /**
+   * Sets given cookies.
+   *
+   * @param cookies Cookies to be set.
+   * @param browserContextId Browser context to use when called on the browser endpoint.
+   */
+  void setCookies(
+      @ParamName("cookies") List<CookieParam> cookies,
+      @Optional @ParamName("browserContextId") String browserContextId);
+
+  /** Clears cookies. */
+  void clearCookies();
+
+  /**
+   * Clears cookies.
+   *
+   * @param browserContextId Browser context to use when called on the browser endpoint.
+   */
+  void clearCookies(@Optional @ParamName("browserContextId") String browserContextId);
+
   /**
    * Returns usage and quota in bytes.
    *
    * @param origin Security origin.
    */
   UsageAndQuota getUsageAndQuota(@ParamName("origin") String origin);
+
+  /**
+   * Override quota for the specified origin
+   *
+   * @param origin Security origin.
+   */
+  @Experimental
+  void overrideQuotaForOrigin(@ParamName("origin") String origin);
+
+  /**
+   * Override quota for the specified origin
+   *
+   * @param origin Security origin.
+   * @param quotaSize The quota size (in bytes) to override the original quota with. If this is
+   *     called multiple times, the overriden quota will be equal to the quotaSize provided in the
+   *     final call. If this is called without specifying a quotaSize, the quota will be reset to
+   *     the default value for the specified origin. If this is called multiple times with different
+   *     origins, the override will be maintained for each origin until it is disabled (called
+   *     without a quotaSize).
+   */
+  @Experimental
+  void overrideQuotaForOrigin(
+      @ParamName("origin") String origin, @Optional @ParamName("quotaSize") Double quotaSize);
 
   /**
    * Registers origin to be notified when an update occurs to its cache storage list.

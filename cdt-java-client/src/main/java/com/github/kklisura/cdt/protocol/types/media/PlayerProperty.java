@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.media;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,12 @@ package com.github.kklisura.cdt.protocol.types.media;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.support.annotations.Optional;
-
-/** Player Property type */
+/** Corresponds to kMediaPropertyChange */
 public class PlayerProperty {
 
   private String name;
 
-  @Optional private String value;
+  private String value;
 
   public String getName() {
     return name;

@@ -1,10 +1,10 @@
 {
   "description": "",
-  "devtoolsFrontendUrl": "/devtools/inspector.html?ws=localhost:9222/devtools/page/(2C5C79DD1137419CC8839D61D91CEB2A)",
-  "faviconUrl": "https://www.google.ba/images/branding/product/ico/googleg_lodp.ico",
-  "id": "(2C5C79DD1137419CC8839D61D91CEB2A)",
-  "title": "Google",
+  "devtoolsFrontendUrl": "/devtools/inspector.html?ws=localhost:54011/devtools/page/D4CEC22C995F1A9C8526737014CD436D",
+  "id": "D4CEC22C995F1A9C8526737014CD436D",
+  "title": "",
   "type": "page",
-  "url": "https://www.google.ba/?gws_rd=cr&dcr=0&ei=93piWq2oKqqJmgWIzbdg",
-  "webSocketDebuggerUrl": "ws://localhost:9222/devtools/page/(2C5C79DD1137419CC8839D61D91CEB2A)"
+  "url": "about:blank",
+  "webSocketDebuggerUrl": "ws://localhost:54011/devtools/page/D4CEC22C995F1A9C8526737014CD436D",
+  "faviconUrl": "https://www.google.ba/images/branding/product/ico/googleg_lodp.ico"
 }

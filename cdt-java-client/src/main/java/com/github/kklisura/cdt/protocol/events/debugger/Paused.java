@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.events.debugger;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class Paused {
 
   @Experimental @Optional private StackTraceId asyncStackTraceId;
 
-  @Experimental @Optional private StackTraceId asyncCallStackTraceId;
+  @Deprecated @Experimental @Optional private StackTraceId asyncCallStackTraceId;
 
   /** Call stack the virtual machine stopped on. */
   public List<CallFrame> getCallFrames() {
@@ -105,18 +105,12 @@ public class Paused {
     this.asyncStackTraceId = asyncStackTraceId;
   }
 
-  /**
-   * Just scheduled async call will have this stack trace as parent stack during async execution.
-   * This field is available only after `Debugger.stepInto` call with `breakOnAsynCall` flag.
-   */
+  /** Never present, will be removed. */
   public StackTraceId getAsyncCallStackTraceId() {
     return asyncCallStackTraceId;
   }
 
-  /**
-   * Just scheduled async call will have this stack trace as parent stack during async execution.
-   * This field is available only after `Debugger.stepInto` call with `breakOnAsynCall` flag.
-   */
+  /** Never present, will be removed. */
   public void setAsyncCallStackTraceId(StackTraceId asyncCallStackTraceId) {
     this.asyncCallStackTraceId = asyncCallStackTraceId;
   }

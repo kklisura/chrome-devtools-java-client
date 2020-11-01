@@ -1,10 +1,10 @@
-package com.github.kklisura.cdt.protocol.types.media;
+package com.github.kklisura.cdt.protocol.types.audits;
 
 /*-
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,13 @@ package com.github.kklisura.cdt.protocol.types.media;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Break out events into different types */
-public enum PlayerEventType {
-  @JsonProperty("playbackEvent")
-  PLAYBACK_EVENT,
-  @JsonProperty("systemEvent")
-  SYSTEM_EVENT,
-  @JsonProperty("messageEvent")
-  MESSAGE_EVENT
+public enum SameSiteCookieExclusionReason {
+  @JsonProperty("ExcludeSameSiteUnspecifiedTreatedAsLax")
+  EXCLUDE_SAME_SITE_UNSPECIFIED_TREATED_AS_LAX,
+  @JsonProperty("ExcludeSameSiteNoneInsecure")
+  EXCLUDE_SAME_SITE_NONE_INSECURE,
+  @JsonProperty("ExcludeSameSiteLax")
+  EXCLUDE_SAME_SITE_LAX,
+  @JsonProperty("ExcludeSameSiteStrict")
+  EXCLUDE_SAME_SITE_STRICT
 }

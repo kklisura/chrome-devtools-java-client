@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.page;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,11 +38,19 @@ public class Frame {
 
   @Experimental @Optional private String urlFragment;
 
+  @Experimental private String domainAndRegistry;
+
   private String securityOrigin;
 
   private String mimeType;
 
   @Experimental @Optional private String unreachableUrl;
+
+  @Experimental @Optional private AdFrameType adFrameType;
+
+  @Experimental private SecureContextType secureContextType;
+
+  @Experimental private CrossOriginIsolatedContextType crossOriginIsolatedContextType;
 
   /** Frame unique identifier. */
   public String getId() {
@@ -104,6 +112,24 @@ public class Frame {
     this.urlFragment = urlFragment;
   }
 
+  /**
+   * Frame document's registered domain, taking the public suffixes list into account. Extracted
+   * from the Frame's url. Example URLs: http://www.google.com/file.html -> "google.com"
+   * http://a.b.co.uk/file.html -> "b.co.uk"
+   */
+  public String getDomainAndRegistry() {
+    return domainAndRegistry;
+  }
+
+  /**
+   * Frame document's registered domain, taking the public suffixes list into account. Extracted
+   * from the Frame's url. Example URLs: http://www.google.com/file.html -> "google.com"
+   * http://a.b.co.uk/file.html -> "b.co.uk"
+   */
+  public void setDomainAndRegistry(String domainAndRegistry) {
+    this.domainAndRegistry = domainAndRegistry;
+  }
+
   /** Frame document's security origin. */
   public String getSecurityOrigin() {
     return securityOrigin;
@@ -138,5 +164,36 @@ public class Frame {
    */
   public void setUnreachableUrl(String unreachableUrl) {
     this.unreachableUrl = unreachableUrl;
+  }
+
+  /** Indicates whether this frame was tagged as an ad. */
+  public AdFrameType getAdFrameType() {
+    return adFrameType;
+  }
+
+  /** Indicates whether this frame was tagged as an ad. */
+  public void setAdFrameType(AdFrameType adFrameType) {
+    this.adFrameType = adFrameType;
+  }
+
+  /** Indicates whether the main document is a secure context and explains why that is the case. */
+  public SecureContextType getSecureContextType() {
+    return secureContextType;
+  }
+
+  /** Indicates whether the main document is a secure context and explains why that is the case. */
+  public void setSecureContextType(SecureContextType secureContextType) {
+    this.secureContextType = secureContextType;
+  }
+
+  /** Indicates whether this is a cross origin isolated context. */
+  public CrossOriginIsolatedContextType getCrossOriginIsolatedContextType() {
+    return crossOriginIsolatedContextType;
+  }
+
+  /** Indicates whether this is a cross origin isolated context. */
+  public void setCrossOriginIsolatedContextType(
+      CrossOriginIsolatedContextType crossOriginIsolatedContextType) {
+    this.crossOriginIsolatedContextType = crossOriginIsolatedContextType;
   }
 }

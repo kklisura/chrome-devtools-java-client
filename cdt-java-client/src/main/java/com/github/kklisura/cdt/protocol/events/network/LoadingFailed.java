@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.events.network;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ package com.github.kklisura.cdt.protocol.events.network;
 
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.network.BlockedReason;
+import com.github.kklisura.cdt.protocol.types.network.CorsErrorStatus;
 import com.github.kklisura.cdt.protocol.types.network.ResourceType;
 
 /** Fired when HTTP request has failed to load. */
@@ -38,6 +39,8 @@ public class LoadingFailed {
   @Optional private Boolean canceled;
 
   @Optional private BlockedReason blockedReason;
+
+  @Optional private CorsErrorStatus corsErrorStatus;
 
   /** Request identifier. */
   public String getRequestId() {
@@ -97,5 +100,15 @@ public class LoadingFailed {
   /** The reason why loading was blocked, if any. */
   public void setBlockedReason(BlockedReason blockedReason) {
     this.blockedReason = blockedReason;
+  }
+
+  /** The reason why loading was blocked by CORS, if any. */
+  public CorsErrorStatus getCorsErrorStatus() {
+    return corsErrorStatus;
+  }
+
+  /** The reason why loading was blocked by CORS, if any. */
+  public void setCorsErrorStatus(CorsErrorStatus corsErrorStatus) {
+    this.corsErrorStatus = corsErrorStatus;
   }
 }

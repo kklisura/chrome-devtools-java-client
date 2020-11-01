@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.events.headlessexperimental;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,12 @@ package com.github.kklisura.cdt.protocol.events.headlessexperimental;
  * #L%
  */
 
-/** Issued when the target starts or stops needing BeginFrames. */
+/**
+ * Issued when the target starts or stops needing BeginFrames. Deprecated. Issue beginFrame
+ * unconditionally instead and use result from beginFrame to detect whether the frames were
+ * suppressed.
+ */
+@Deprecated
 public class NeedsBeginFramesChanged {
 
   private Boolean needsBeginFrames;

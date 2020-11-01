@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.services.impl;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -142,17 +142,17 @@ public class ChromeServiceImplTest extends EasyMockSupport {
 
     assertEquals("", tab.getDescription());
     assertEquals(
-        "/devtools/inspector.html?ws=localhost:9222/devtools/page/(2C5C79DD1137419CC8839D61D91CEB2A)",
+        "/devtools/inspector.html?ws=localhost:54011/devtools/page/D4CEC22C995F1A9C8526737014CD436D",
         tab.getDevtoolsFrontendUrl());
     assertEquals(
         "https://www.google.ba/images/branding/product/ico/googleg_lodp.ico", tab.getFaviconUrl());
-    assertEquals("(2C5C79DD1137419CC8839D61D91CEB2A)", tab.getId());
-    assertEquals("Google", tab.getTitle());
+    assertEquals("D4CEC22C995F1A9C8526737014CD436D", tab.getId());
+    assertEquals("", tab.getTitle());
     assertEquals("page", tab.getType());
     assertTrue(tab.isPageType());
-    assertEquals("https://www.google.ba/?gws_rd=cr&dcr=0&ei=93piWq2oKqqJmgWIzbdg", tab.getUrl());
+    assertEquals("about:blank", tab.getUrl());
     assertEquals(
-        "ws://localhost:9222/devtools/page/(2C5C79DD1137419CC8839D61D91CEB2A)",
+        "ws://localhost:54011/devtools/page/D4CEC22C995F1A9C8526737014CD436D",
         tab.getWebSocketDebuggerUrl());
 
     server.shutdown();
@@ -178,17 +178,17 @@ public class ChromeServiceImplTest extends EasyMockSupport {
 
     assertEquals("", tab.getDescription());
     assertEquals(
-        "/devtools/inspector.html?ws=localhost:9222/devtools/page/(2C5C79DD1137419CC8839D61D91CEB2A)",
+        "/devtools/inspector.html?ws=localhost:54011/devtools/page/D4CEC22C995F1A9C8526737014CD436D",
         tab.getDevtoolsFrontendUrl());
     assertEquals(
         "https://www.google.ba/images/branding/product/ico/googleg_lodp.ico", tab.getFaviconUrl());
-    assertEquals("(2C5C79DD1137419CC8839D61D91CEB2A)", tab.getId());
-    assertEquals("Google", tab.getTitle());
+    assertEquals("D4CEC22C995F1A9C8526737014CD436D", tab.getId());
+    assertEquals("", tab.getTitle());
     assertEquals("page", tab.getType());
     assertTrue(tab.isPageType());
-    assertEquals("https://www.google.ba/?gws_rd=cr&dcr=0&ei=93piWq2oKqqJmgWIzbdg", tab.getUrl());
+    assertEquals("about:blank", tab.getUrl());
     assertEquals(
-        "ws://localhost:9222/devtools/page/(2C5C79DD1137419CC8839D61D91CEB2A)",
+        "ws://localhost:54011/devtools/page/D4CEC22C995F1A9C8526737014CD436D",
         tab.getWebSocketDebuggerUrl());
 
     server.shutdown();
@@ -212,7 +212,7 @@ public class ChromeServiceImplTest extends EasyMockSupport {
     RecordedRequest request = server.takeRequest();
     assertEquals(1, server.getRequestCount());
     assertEquals(
-        "GET /json/activate/(2C5C79DD1137419CC8839D61D91CEB2A) HTTP/1.1", request.getRequestLine());
+        "GET /json/activate/D4CEC22C995F1A9C8526737014CD436D HTTP/1.1", request.getRequestLine());
 
     server.shutdown();
   }
@@ -267,7 +267,7 @@ public class ChromeServiceImplTest extends EasyMockSupport {
     RecordedRequest request = server.takeRequest();
     assertEquals(1, server.getRequestCount());
     assertEquals(
-        "GET /json/close/(2C5C79DD1137419CC8839D61D91CEB2A) HTTP/1.1", request.getRequestLine());
+        "GET /json/close/D4CEC22C995F1A9C8526737014CD436D HTTP/1.1", request.getRequestLine());
 
     server.shutdown();
 
@@ -292,7 +292,7 @@ public class ChromeServiceImplTest extends EasyMockSupport {
     RecordedRequest request = server.takeRequest();
     assertEquals(1, server.getRequestCount());
     assertEquals(
-        "GET /json/close/(2C5C79DD1137419CC8839D61D91CEB2A) HTTP/1.1", request.getRequestLine());
+        "GET /json/close/D4CEC22C995F1A9C8526737014CD436D HTTP/1.1", request.getRequestLine());
 
     server.shutdown();
   }

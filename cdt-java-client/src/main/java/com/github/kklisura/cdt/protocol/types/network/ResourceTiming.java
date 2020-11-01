@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,10 @@ public class ResourceTiming {
   @Experimental private Double workerStart;
 
   @Experimental private Double workerReady;
+
+  @Experimental private Double workerFetchStart;
+
+  @Experimental private Double workerRespondWithSettled;
 
   private Double sendStart;
 
@@ -171,6 +175,26 @@ public class ResourceTiming {
   /** Finished Starting ServiceWorker. */
   public void setWorkerReady(Double workerReady) {
     this.workerReady = workerReady;
+  }
+
+  /** Started fetch event. */
+  public Double getWorkerFetchStart() {
+    return workerFetchStart;
+  }
+
+  /** Started fetch event. */
+  public void setWorkerFetchStart(Double workerFetchStart) {
+    this.workerFetchStart = workerFetchStart;
+  }
+
+  /** Settled fetch event respondWith promise. */
+  public Double getWorkerRespondWithSettled() {
+    return workerRespondWithSettled;
+  }
+
+  /** Settled fetch event respondWith promise. */
+  public void setWorkerRespondWithSettled(Double workerRespondWithSettled) {
+    this.workerRespondWithSettled = workerRespondWithSettled;
   }
 
   /** Started sending request. */

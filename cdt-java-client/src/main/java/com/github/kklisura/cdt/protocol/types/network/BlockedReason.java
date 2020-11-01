@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,5 +39,15 @@ public enum BlockedReason {
   @JsonProperty("content-type")
   CONTENT_TYPE,
   @JsonProperty("collapsed-by-client")
-  COLLAPSED_BY_CLIENT
+  COLLAPSED_BY_CLIENT,
+  @JsonProperty("coep-frame-resource-needs-coep-header")
+  COEP_FRAME_RESOURCE_NEEDS_COEP_HEADER,
+  @JsonProperty("coop-sandboxed-iframe-cannot-navigate-to-coop-page")
+  COOP_SANDBOXED_IFRAME_CANNOT_NAVIGATE_TO_COOP_PAGE,
+  @JsonProperty("corp-not-same-origin")
+  CORP_NOT_SAME_ORIGIN,
+  @JsonProperty("corp-not-same-origin-after-defaulted-to-same-origin-by-coep")
+  CORP_NOT_SAME_ORIGIN_AFTER_DEFAULTED_TO_SAME_ORIGIN_BY_COEP,
+  @JsonProperty("corp-not-same-site")
+  CORP_NOT_SAME_SITE
 }

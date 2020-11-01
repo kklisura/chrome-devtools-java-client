@@ -387,6 +387,53 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "queryAXTree",
+                    "description": "Query a DOM node's accessibility subtree for accessible name and role.\nThis command computes the name and role for all nodes in the subtree, including those that are\nignored for accessibility, and returns those that mactch the specified name and role. If no DOM\nnode is specified, or the DOM node does not exist, the command returns an error. If neither\n`accessibleName` or `role` is specified, it returns all the accessibility nodes in the subtree.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "nodeId",
+                            "description": "Identifier of the node for the root to query.",
+                            "optional": true,
+                            "$ref": "DOM.NodeId"
+                        },
+                        {
+                            "name": "backendNodeId",
+                            "description": "Identifier of the backend node for the root to query.",
+                            "optional": true,
+                            "$ref": "DOM.BackendNodeId"
+                        },
+                        {
+                            "name": "objectId",
+                            "description": "JavaScript object id of the node wrapper for the root to query.",
+                            "optional": true,
+                            "$ref": "Runtime.RemoteObjectId"
+                        },
+                        {
+                            "name": "accessibleName",
+                            "description": "Find nodes with this computed name.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "role",
+                            "description": "Find nodes with this computed role.",
+                            "optional": true,
+                            "type": "string"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "nodes",
+                            "description": "A list of `Accessibility.AXNode` matching the specified attributes,\nincluding nodes that are ignored for accessibility.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "AXNode"
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -740,6 +787,9 @@
         {
             "domain": "ApplicationCache",
             "experimental": true,
+            "dependencies": [
+                "Page"
+            ],
             "types": [
                 {
                     "id": "ApplicationCacheResource",
@@ -916,6 +966,416 @@
             "dependencies": [
                 "Network"
             ],
+            "types": [
+                {
+                    "id": "AffectedCookie",
+                    "description": "Information about a cookie that is affected by an inspector issue.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "name",
+                            "description": "The following three properties uniquely identify a cookie",
+                            "type": "string"
+                        },
+                        {
+                            "name": "path",
+                            "type": "string"
+                        },
+                        {
+                            "name": "domain",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "id": "AffectedRequest",
+                    "description": "Information about a request that is affected by an inspector issue.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "requestId",
+                            "description": "The unique request id.",
+                            "$ref": "Network.RequestId"
+                        },
+                        {
+                            "name": "url",
+                            "optional": true,
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "id": "AffectedFrame",
+                    "description": "Information about the frame affected by an inspector issue.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "frameId",
+                            "$ref": "Page.FrameId"
+                        }
+                    ]
+                },
+                {
+                    "id": "SameSiteCookieExclusionReason",
+                    "type": "string",
+                    "enum": [
+                        "ExcludeSameSiteUnspecifiedTreatedAsLax",
+                        "ExcludeSameSiteNoneInsecure",
+                        "ExcludeSameSiteLax",
+                        "ExcludeSameSiteStrict"
+                    ]
+                },
+                {
+                    "id": "SameSiteCookieWarningReason",
+                    "type": "string",
+                    "enum": [
+                        "WarnSameSiteUnspecifiedCrossSiteContext",
+                        "WarnSameSiteNoneInsecure",
+                        "WarnSameSiteUnspecifiedLaxAllowUnsafe",
+                        "WarnSameSiteStrictLaxDowngradeStrict",
+                        "WarnSameSiteStrictCrossDowngradeStrict",
+                        "WarnSameSiteStrictCrossDowngradeLax",
+                        "WarnSameSiteLaxCrossDowngradeStrict",
+                        "WarnSameSiteLaxCrossDowngradeLax"
+                    ]
+                },
+                {
+                    "id": "SameSiteCookieOperation",
+                    "type": "string",
+                    "enum": [
+                        "SetCookie",
+                        "ReadCookie"
+                    ]
+                },
+                {
+                    "id": "SameSiteCookieIssueDetails",
+                    "description": "This information is currently necessary, as the front-end has a difficult\ntime finding a specific cookie. With this, we can convey specific error\ninformation without the cookie.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "cookie",
+                            "$ref": "AffectedCookie"
+                        },
+                        {
+                            "name": "cookieWarningReasons",
+                            "type": "array",
+                            "items": {
+                                "$ref": "SameSiteCookieWarningReason"
+                            }
+                        },
+                        {
+                            "name": "cookieExclusionReasons",
+                            "type": "array",
+                            "items": {
+                                "$ref": "SameSiteCookieExclusionReason"
+                            }
+                        },
+                        {
+                            "name": "operation",
+                            "description": "Optionally identifies the site-for-cookies and the cookie url, which\nmay be used by the front-end as additional context.",
+                            "$ref": "SameSiteCookieOperation"
+                        },
+                        {
+                            "name": "siteForCookies",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "cookieUrl",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "request",
+                            "optional": true,
+                            "$ref": "AffectedRequest"
+                        }
+                    ]
+                },
+                {
+                    "id": "MixedContentResolutionStatus",
+                    "type": "string",
+                    "enum": [
+                        "MixedContentBlocked",
+                        "MixedContentAutomaticallyUpgraded",
+                        "MixedContentWarning"
+                    ]
+                },
+                {
+                    "id": "MixedContentResourceType",
+                    "type": "string",
+                    "enum": [
+                        "Audio",
+                        "Beacon",
+                        "CSPReport",
+                        "Download",
+                        "EventSource",
+                        "Favicon",
+                        "Font",
+                        "Form",
+                        "Frame",
+                        "Image",
+                        "Import",
+                        "Manifest",
+                        "Ping",
+                        "PluginData",
+                        "PluginResource",
+                        "Prefetch",
+                        "Resource",
+                        "Script",
+                        "ServiceWorker",
+                        "SharedWorker",
+                        "Stylesheet",
+                        "Track",
+                        "Video",
+                        "Worker",
+                        "XMLHttpRequest",
+                        "XSLT"
+                    ]
+                },
+                {
+                    "id": "MixedContentIssueDetails",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "resourceType",
+                            "description": "The type of resource causing the mixed content issue (css, js, iframe,\nform,...). Marked as optional because it is mapped to from\nblink::mojom::RequestContextType, which will be replaced\nby network::mojom::RequestDestination",
+                            "optional": true,
+                            "$ref": "MixedContentResourceType"
+                        },
+                        {
+                            "name": "resolutionStatus",
+                            "description": "The way the mixed content issue is being resolved.",
+                            "$ref": "MixedContentResolutionStatus"
+                        },
+                        {
+                            "name": "insecureURL",
+                            "description": "The unsafe http url causing the mixed content issue.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "mainResourceURL",
+                            "description": "The url responsible for the call to an unsafe url.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "request",
+                            "description": "The mixed content request.\nDoes not always exist (e.g. for unsafe form submission urls).",
+                            "optional": true,
+                            "$ref": "AffectedRequest"
+                        },
+                        {
+                            "name": "frame",
+                            "description": "Optional because not every mixed content issue is necessarily linked to a frame.",
+                            "optional": true,
+                            "$ref": "AffectedFrame"
+                        }
+                    ]
+                },
+                {
+                    "id": "BlockedByResponseReason",
+                    "description": "Enum indicating the reason a response has been blocked. These reasons are\nrefinements of the net error BLOCKED_BY_RESPONSE.",
+                    "type": "string",
+                    "enum": [
+                        "CoepFrameResourceNeedsCoepHeader",
+                        "CoopSandboxedIFrameCannotNavigateToCoopPage",
+                        "CorpNotSameOrigin",
+                        "CorpNotSameOriginAfterDefaultedToSameOriginByCoep",
+                        "CorpNotSameSite"
+                    ]
+                },
+                {
+                    "id": "BlockedByResponseIssueDetails",
+                    "description": "Details for a request that has been blocked with the BLOCKED_BY_RESPONSE\ncode. Currently only used for COEP/COOP, but may be extended to include\nsome CSP errors in the future.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "request",
+                            "$ref": "AffectedRequest"
+                        },
+                        {
+                            "name": "parentFrame",
+                            "optional": true,
+                            "$ref": "AffectedFrame"
+                        },
+                        {
+                            "name": "blockedFrame",
+                            "optional": true,
+                            "$ref": "AffectedFrame"
+                        },
+                        {
+                            "name": "reason",
+                            "$ref": "BlockedByResponseReason"
+                        }
+                    ]
+                },
+                {
+                    "id": "HeavyAdResolutionStatus",
+                    "type": "string",
+                    "enum": [
+                        "HeavyAdBlocked",
+                        "HeavyAdWarning"
+                    ]
+                },
+                {
+                    "id": "HeavyAdReason",
+                    "type": "string",
+                    "enum": [
+                        "NetworkTotalLimit",
+                        "CpuTotalLimit",
+                        "CpuPeakLimit"
+                    ]
+                },
+                {
+                    "id": "HeavyAdIssueDetails",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "resolution",
+                            "description": "The resolution status, either blocking the content or warning.",
+                            "$ref": "HeavyAdResolutionStatus"
+                        },
+                        {
+                            "name": "reason",
+                            "description": "The reason the ad was blocked, total network or cpu or peak cpu.",
+                            "$ref": "HeavyAdReason"
+                        },
+                        {
+                            "name": "frame",
+                            "description": "The frame that was blocked.",
+                            "$ref": "AffectedFrame"
+                        }
+                    ]
+                },
+                {
+                    "id": "ContentSecurityPolicyViolationType",
+                    "type": "string",
+                    "enum": [
+                        "kInlineViolation",
+                        "kEvalViolation",
+                        "kURLViolation",
+                        "kTrustedTypesSinkViolation",
+                        "kTrustedTypesPolicyViolation"
+                    ]
+                },
+                {
+                    "id": "SourceCodeLocation",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "url",
+                            "type": "string"
+                        },
+                        {
+                            "name": "lineNumber",
+                            "type": "integer"
+                        },
+                        {
+                            "name": "columnNumber",
+                            "type": "integer"
+                        }
+                    ]
+                },
+                {
+                    "id": "ContentSecurityPolicyIssueDetails",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "blockedURL",
+                            "description": "The url not included in allowed sources.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "violatedDirective",
+                            "description": "Specific directive that is violated, causing the CSP issue.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "isReportOnly",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "contentSecurityPolicyViolationType",
+                            "$ref": "ContentSecurityPolicyViolationType"
+                        },
+                        {
+                            "name": "frameAncestor",
+                            "optional": true,
+                            "$ref": "AffectedFrame"
+                        },
+                        {
+                            "name": "sourceCodeLocation",
+                            "optional": true,
+                            "$ref": "SourceCodeLocation"
+                        },
+                        {
+                            "name": "violatingNodeId",
+                            "optional": true,
+                            "$ref": "DOM.BackendNodeId"
+                        }
+                    ]
+                },
+                {
+                    "id": "InspectorIssueCode",
+                    "description": "A unique identifier for the type of issue. Each type may use one of the\noptional fields in InspectorIssueDetails to convey more specific\ninformation about the kind of issue.",
+                    "type": "string",
+                    "enum": [
+                        "SameSiteCookieIssue",
+                        "MixedContentIssue",
+                        "BlockedByResponseIssue",
+                        "HeavyAdIssue",
+                        "ContentSecurityPolicyIssue"
+                    ]
+                },
+                {
+                    "id": "InspectorIssueDetails",
+                    "description": "This struct holds a list of optional fields with additional information\nspecific to the kind of issue. When adding a new issue code, please also\nadd a new optional field to this type.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "sameSiteCookieIssueDetails",
+                            "optional": true,
+                            "$ref": "SameSiteCookieIssueDetails"
+                        },
+                        {
+                            "name": "mixedContentIssueDetails",
+                            "optional": true,
+                            "$ref": "MixedContentIssueDetails"
+                        },
+                        {
+                            "name": "blockedByResponseIssueDetails",
+                            "optional": true,
+                            "$ref": "BlockedByResponseIssueDetails"
+                        },
+                        {
+                            "name": "heavyAdIssueDetails",
+                            "optional": true,
+                            "$ref": "HeavyAdIssueDetails"
+                        },
+                        {
+                            "name": "contentSecurityPolicyIssueDetails",
+                            "optional": true,
+                            "$ref": "ContentSecurityPolicyIssueDetails"
+                        }
+                    ]
+                },
+                {
+                    "id": "InspectorIssue",
+                    "description": "An inspector issue reported from the back-end.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "code",
+                            "$ref": "InspectorIssueCode"
+                        },
+                        {
+                            "name": "details",
+                            "$ref": "InspectorIssueDetails"
+                        }
+                    ]
+                }
+            ],
             "commands": [
                 {
                     "name": "getEncodedResponse",
@@ -965,6 +1425,25 @@
                             "name": "encodedSize",
                             "description": "Size after re-encoding.",
                             "type": "integer"
+                        }
+                    ]
+                },
+                {
+                    "name": "disable",
+                    "description": "Disables issues domain, prevents further issues from being reported to the client."
+                },
+                {
+                    "name": "enable",
+                    "description": "Enables issues domain, sends the issues collected so far to the client by means of the\n`issueAdded` event."
+                }
+            ],
+            "events": [
+                {
+                    "name": "issueAdded",
+                    "parameters": [
+                        {
+                            "name": "issue",
+                            "$ref": "InspectorIssue"
                         }
                     ]
                 }
@@ -1126,6 +1605,11 @@
             "description": "The Browser domain defines methods and events for browser managing.",
             "types": [
                 {
+                    "id": "BrowserContextID",
+                    "experimental": true,
+                    "type": "string"
+                },
+                {
                     "id": "WindowID",
                     "experimental": true,
                     "type": "integer"
@@ -1189,19 +1673,21 @@
                         "audioCapture",
                         "backgroundSync",
                         "backgroundFetch",
-                        "clipboardRead",
-                        "clipboardWrite",
+                        "clipboardReadWrite",
+                        "clipboardSanitizedWrite",
                         "durableStorage",
                         "flash",
                         "geolocation",
                         "midi",
                         "midiSysex",
+                        "nfc",
                         "notifications",
                         "paymentHandler",
                         "periodicBackgroundSync",
                         "protectedMediaIdentifier",
                         "sensors",
                         "videoCapture",
+                        "videoCapturePanTiltZoom",
                         "idleDetection",
                         "wakeLockScreen",
                         "wakeLockSystem"
@@ -1241,11 +1727,26 @@
                             "type": "boolean"
                         },
                         {
-                            "name": "type",
-                            "description": "For \"wake-lock\" permission, must specify type as either \"screen\" or \"system\".",
+                            "name": "allowWithoutSanitization",
+                            "description": "For \"clipboard\" permission, may specify allowWithoutSanitization.",
                             "optional": true,
-                            "type": "string"
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "panTiltZoom",
+                            "description": "For \"camera\" permission, may specify panTiltZoom.",
+                            "optional": true,
+                            "type": "boolean"
                         }
+                    ]
+                },
+                {
+                    "id": "BrowserCommandId",
+                    "description": "Browser command ids used by executeBrowserCommand.",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "openTabSearch"
                     ]
                 },
                 {
@@ -1310,11 +1811,6 @@
                     "experimental": true,
                     "parameters": [
                         {
-                            "name": "origin",
-                            "description": "Origin the permission applies to.",
-                            "type": "string"
-                        },
-                        {
                             "name": "permission",
                             "description": "Descriptor of permission to override.",
                             "$ref": "PermissionDescriptor"
@@ -1325,10 +1821,16 @@
                             "$ref": "PermissionSetting"
                         },
                         {
+                            "name": "origin",
+                            "description": "Origin the permission applies to, all origins if not specified.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
                             "name": "browserContextId",
                             "description": "Context to override. When omitted, default browser context is used.",
                             "optional": true,
-                            "$ref": "Target.TargetID"
+                            "$ref": "BrowserContextID"
                         }
                     ]
                 },
@@ -1338,10 +1840,6 @@
                     "experimental": true,
                     "parameters": [
                         {
-                            "name": "origin",
-                            "type": "string"
-                        },
-                        {
                             "name": "permissions",
                             "type": "array",
                             "items": {
@@ -1349,10 +1847,16 @@
                             }
                         },
                         {
+                            "name": "origin",
+                            "description": "Origin the permission applies to, all origins if not specified.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
                             "name": "browserContextId",
                             "description": "BrowserContext to override permissions. When omitted, default browser context is used.",
                             "optional": true,
-                            "$ref": "Target.BrowserContextID"
+                            "$ref": "BrowserContextID"
                         }
                     ]
                 },
@@ -1365,7 +1869,37 @@
                             "name": "browserContextId",
                             "description": "BrowserContext to reset permissions. When omitted, default browser context is used.",
                             "optional": true,
-                            "$ref": "Target.BrowserContextID"
+                            "$ref": "BrowserContextID"
+                        }
+                    ]
+                },
+                {
+                    "name": "setDownloadBehavior",
+                    "description": "Set the behavior when downloading a file.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "behavior",
+                            "description": "Whether to allow all or deny all download requests, or use default Chrome behavior if\navailable (otherwise deny). |allowAndName| allows download and names files according to\ntheir dowmload guids.",
+                            "type": "string",
+                            "enum": [
+                                "deny",
+                                "allow",
+                                "allowAndName",
+                                "default"
+                            ]
+                        },
+                        {
+                            "name": "browserContextId",
+                            "description": "BrowserContext to set download behavior. When omitted, default browser context is used.",
+                            "optional": true,
+                            "$ref": "BrowserContextID"
+                        },
+                        {
+                            "name": "downloadPath",
+                            "description": "The default path to save downloaded files to. This is requred if behavior is set to 'allow'\nor 'allowAndName'.",
+                            "optional": true,
+                            "type": "string"
                         }
                     ]
                 },
@@ -1561,6 +2095,17 @@
                             "type": "string"
                         }
                     ]
+                },
+                {
+                    "name": "executeBrowserCommand",
+                    "description": "Invoke custom browser commands used by telemetry.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "commandId",
+                            "$ref": "BrowserCommandId"
+                        }
+                    ]
                 }
             ]
         },
@@ -1569,7 +2114,8 @@
             "description": "This domain exposes CSS read/write operations. All CSS objects (stylesheets, rules, and styles)\nhave an associated `id` used in subsequent operations on the related object. Each object type has\na specific `id` structure, and those are not interchangeable between objects of different kinds.\nCSS objects can be loaded using the `get*ForNode()` calls (which accept a DOM node id). A client\ncan also keep track of stylesheets via the `styleSheetAdded`/`styleSheetRemoved` events and\nsubsequently load the required stylesheet contents using the `getStyleSheet[Text]()` methods.",
             "experimental": true,
             "dependencies": [
-                "DOM"
+                "DOM",
+                "Page"
             ],
             "types": [
                 {
@@ -1745,6 +2291,16 @@
                             "type": "boolean"
                         },
                         {
+                            "name": "isMutable",
+                            "description": "Whether this stylesheet is mutable. Inline stylesheets become mutable\nafter they have been modified via CSSOM API.\n<link> element's stylesheets become mutable only if DevTools modifies them.\nConstructed stylesheets (new CSSStyleSheet()) are mutable immediately after creation.",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "isConstructed",
+                            "description": "Whether this stylesheet is a constructed stylesheet (created using new CSSStyleSheet()).",
+                            "type": "boolean"
+                        },
+                        {
                             "name": "startLine",
                             "description": "Line offset of the stylesheet within the resource (zero based).",
                             "type": "number"
@@ -1757,6 +2313,16 @@
                         {
                             "name": "length",
                             "description": "Size of the content (in characters).",
+                            "type": "number"
+                        },
+                        {
+                            "name": "endLine",
+                            "description": "Line offset of the end of the stylesheet within the resource (zero based).",
+                            "type": "number"
+                        },
+                        {
+                            "name": "endColumn",
+                            "description": "Column offset of the end of the stylesheet within the resource (zero based).",
                             "type": "number"
                         }
                     ]
@@ -2111,8 +2677,40 @@
                     ]
                 },
                 {
+                    "id": "FontVariationAxis",
+                    "description": "Information about font variation axes for variable fonts",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "tag",
+                            "description": "The font-variation-setting tag (a.k.a. \"axis tag\").",
+                            "type": "string"
+                        },
+                        {
+                            "name": "name",
+                            "description": "Human-readable variation name in the default language (normally, \"en\").",
+                            "type": "string"
+                        },
+                        {
+                            "name": "minValue",
+                            "description": "The minimum value (inclusive) the font supports for this tag.",
+                            "type": "number"
+                        },
+                        {
+                            "name": "maxValue",
+                            "description": "The maximum value (inclusive) the font supports for this tag.",
+                            "type": "number"
+                        },
+                        {
+                            "name": "defaultValue",
+                            "description": "The default value.",
+                            "type": "number"
+                        }
+                    ]
+                },
+                {
                     "id": "FontFace",
-                    "description": "Properties of a web font: https://www.w3.org/TR/2008/REC-CSS2-20080411/fonts.html#font-descriptions",
+                    "description": "Properties of a web font: https://www.w3.org/TR/2008/REC-CSS2-20080411/fonts.html#font-descriptions\nand additional information such as platformFontFamily and fontVariationAxes.",
                     "type": "object",
                     "properties": [
                         {
@@ -2154,6 +2752,15 @@
                             "name": "platformFontFamily",
                             "description": "The resolved platform font family",
                             "type": "string"
+                        },
+                        {
+                            "name": "fontVariationAxes",
+                            "description": "Available variation settings (a.k.a. \"axes\").",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "$ref": "FontVariationAxis"
+                            }
                         }
                     ]
                 },
@@ -2510,6 +3117,35 @@
                     ]
                 },
                 {
+                    "name": "trackComputedStyleUpdates",
+                    "description": "Starts tracking the given computed styles for updates. The specified array of properties\nreplaces the one previously specified. Pass empty array to disable tracking.\nUse takeComputedStyleUpdates to retrieve the list of nodes that had properties modified.\nThe changes to computed style properties are only tracked for nodes pushed to the front-end\nby the DOM agent. If no changes to the tracked properties occur after the node has been pushed\nto the front-end, no updates will be issued for the node.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "propertiesToTrack",
+                            "type": "array",
+                            "items": {
+                                "$ref": "CSSComputedStyleProperty"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "takeComputedStyleUpdates",
+                    "description": "Polls the next batch of computed style updates.",
+                    "experimental": true,
+                    "returns": [
+                        {
+                            "name": "nodeIds",
+                            "description": "The list of node Ids that have their tracked computed styles updated",
+                            "type": "array",
+                            "items": {
+                                "$ref": "DOM.NodeId"
+                            }
+                        }
+                    ]
+                },
+                {
                     "name": "setEffectivePropertyValueForNode",
                     "description": "Find a rule with the given active property for the given node and set the new value for this\nproperty",
                     "parameters": [
@@ -2675,6 +3311,23 @@
                             "items": {
                                 "$ref": "RuleUsage"
                             }
+                        },
+                        {
+                            "name": "timestamp",
+                            "description": "Monotonically increasing time, in seconds.",
+                            "type": "number"
+                        }
+                    ]
+                },
+                {
+                    "name": "setLocalFontsEnabled",
+                    "description": "Enables/disables rendering of local CSS fonts (enabled by default).",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "enabled",
+                            "description": "Whether rendering of local fonts is enabled.",
+                            "type": "boolean"
                         }
                     ]
                 }
@@ -2946,11 +3599,13 @@
                         {
                             "name": "skipCount",
                             "description": "Number of records to skip.",
+                            "optional": true,
                             "type": "integer"
                         },
                         {
                             "name": "pageSize",
                             "description": "Number of records to fetch.",
+                            "optional": true,
                             "type": "integer"
                         },
                         {
@@ -3124,8 +3779,10 @@
                         "first-letter",
                         "before",
                         "after",
+                        "marker",
                         "backdrop",
                         "selection",
+                        "target-text",
                         "first-line-inherited",
                         "scrollbar",
                         "scrollbar-thumb",
@@ -3464,6 +4121,22 @@
                             "type": "number"
                         }
                     ]
+                },
+                {
+                    "id": "CSSComputedStyleProperty",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "name",
+                            "description": "Computed style property name.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "value",
+                            "description": "Computed style property value.",
+                            "type": "string"
+                        }
+                    ]
                 }
             ],
             "commands": [
@@ -3559,6 +4232,37 @@
                             "name": "node",
                             "description": "Node description.",
                             "$ref": "Node"
+                        }
+                    ]
+                },
+                {
+                    "name": "scrollIntoViewIfNeeded",
+                    "description": "Scrolls the specified rect of the given node into view if not already visible.\nNote: exactly one between nodeId, backendNodeId and objectId should be passed\nto identify the node.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "nodeId",
+                            "description": "Identifier of the node.",
+                            "optional": true,
+                            "$ref": "NodeId"
+                        },
+                        {
+                            "name": "backendNodeId",
+                            "description": "Identifier of the backend node.",
+                            "optional": true,
+                            "$ref": "BackendNodeId"
+                        },
+                        {
+                            "name": "objectId",
+                            "description": "JavaScript object id of the node wrapper.",
+                            "optional": true,
+                            "$ref": "Runtime.RemoteObjectId"
+                        },
+                        {
+                            "name": "rect",
+                            "description": "The rect to be scrolled into view, relative to the node's border box, in CSS pixels.\nWhen omitted, center of the node will be used, similar to Element.scrollIntoView.",
+                            "optional": true,
+                            "$ref": "Rect"
                         }
                     ]
                 },
@@ -3720,7 +4424,8 @@
                 },
                 {
                     "name": "getFlattenedDocument",
-                    "description": "Returns the root DOM node (and optionally the subtree) to the caller.",
+                    "description": "Returns the root DOM node (and optionally the subtree) to the caller.\nDeprecated, as it is not designed to work well with the rest of the DOM agent.\nUse DOMSnapshot.captureSnapshot instead.",
+                    "deprecated": true,
                     "parameters": [
                         {
                             "name": "depth",
@@ -3747,9 +4452,44 @@
                     ]
                 },
                 {
+                    "name": "getNodesForSubtreeByStyle",
+                    "description": "Finds nodes with a given computed style in a subtree.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "nodeId",
+                            "description": "Node ID pointing to the root of a subtree.",
+                            "$ref": "NodeId"
+                        },
+                        {
+                            "name": "computedStyles",
+                            "description": "The style to filter nodes by (includes nodes if any of properties matches).",
+                            "type": "array",
+                            "items": {
+                                "$ref": "CSSComputedStyleProperty"
+                            }
+                        },
+                        {
+                            "name": "pierce",
+                            "description": "Whether or not iframes and shadow roots in the same target should be traversed when returning the\nresults (default is false).",
+                            "optional": true,
+                            "type": "boolean"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "nodeIds",
+                            "description": "Resulting nodes.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "NodeId"
+                            }
+                        }
+                    ]
+                },
+                {
                     "name": "getNodeForLocation",
                     "description": "Returns node id at given location. Depending on whether DOM domain is enabled, nodeId is\neither returned or not.",
-                    "experimental": true,
                     "parameters": [
                         {
                             "name": "x",
@@ -3766,6 +4506,12 @@
                             "description": "False to skip to the nearest non-UA shadow root ancestor (default: false).",
                             "optional": true,
                             "type": "boolean"
+                        },
+                        {
+                            "name": "ignorePointerEventsNone",
+                            "description": "Whether to ignore pointer-events: none on elements and hit test them.",
+                            "optional": true,
+                            "type": "boolean"
                         }
                     ],
                     "returns": [
@@ -3773,6 +4519,11 @@
                             "name": "backendNodeId",
                             "description": "Resulting node.",
                             "$ref": "BackendNodeId"
+                        },
+                        {
+                            "name": "frameId",
+                            "description": "Frame this node belongs to.",
+                            "$ref": "Page.FrameId"
                         },
                         {
                             "name": "nodeId",
@@ -5215,6 +5966,11 @@
                             "$ref": "StringIndex"
                         },
                         {
+                            "name": "title",
+                            "description": "Document title.",
+                            "$ref": "StringIndex"
+                        },
+                        {
                             "name": "baseURL",
                             "description": "Base URL that `Document` or `FrameOwner` node uses for URL completion.",
                             "$ref": "StringIndex"
@@ -5268,6 +6024,18 @@
                         {
                             "name": "scrollOffsetY",
                             "description": "Vertical scroll offset.",
+                            "optional": true,
+                            "type": "number"
+                        },
+                        {
+                            "name": "contentWidth",
+                            "description": "Document content width.",
+                            "optional": true,
+                            "type": "number"
+                        },
+                        {
+                            "name": "contentHeight",
+                            "description": "Document content height.",
                             "optional": true,
                             "type": "number"
                         }
@@ -5977,6 +6745,45 @@
                     ]
                 },
                 {
+                    "id": "DisplayFeature",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "orientation",
+                            "description": "Orientation of a display feature in relation to screen",
+                            "type": "string",
+                            "enum": [
+                                "vertical",
+                                "horizontal"
+                            ]
+                        },
+                        {
+                            "name": "offset",
+                            "description": "The offset from the screen origin in either the x (for vertical\norientation) or y (for horizontal orientation) direction.",
+                            "type": "integer"
+                        },
+                        {
+                            "name": "maskLength",
+                            "description": "A display feature may mask content such that it is not physically\ndisplayed - this length along with the offset describes this area.\nA display feature that only splits content will have a 0 mask_length.",
+                            "type": "integer"
+                        }
+                    ]
+                },
+                {
+                    "id": "MediaFeature",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "name",
+                            "type": "string"
+                        },
+                        {
+                            "name": "value",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
                     "id": "VirtualTimePolicy",
                     "description": "advance: If the scheduler runs out of immediate work, the virtual time base may fast forward to\nallow the next delayed task (if any) to run; pause: The virtual time base may not advance;\npauseIfNetworkFetchesPending: The virtual time base may not advance if there are any pending\nresource fetches.",
                     "experimental": true,
@@ -5985,6 +6792,71 @@
                         "advance",
                         "pause",
                         "pauseIfNetworkFetchesPending"
+                    ]
+                },
+                {
+                    "id": "UserAgentBrandVersion",
+                    "description": "Used to specify User Agent Cient Hints to emulate. See https://wicg.github.io/ua-client-hints",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "brand",
+                            "type": "string"
+                        },
+                        {
+                            "name": "version",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "id": "UserAgentMetadata",
+                    "description": "Used to specify User Agent Cient Hints to emulate. See https://wicg.github.io/ua-client-hints",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "brands",
+                            "type": "array",
+                            "items": {
+                                "$ref": "UserAgentBrandVersion"
+                            }
+                        },
+                        {
+                            "name": "fullVersion",
+                            "type": "string"
+                        },
+                        {
+                            "name": "platform",
+                            "type": "string"
+                        },
+                        {
+                            "name": "platformVersion",
+                            "type": "string"
+                        },
+                        {
+                            "name": "architecture",
+                            "type": "string"
+                        },
+                        {
+                            "name": "model",
+                            "type": "string"
+                        },
+                        {
+                            "name": "mobile",
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                {
+                    "id": "DisabledImageType",
+                    "description": "Enum of image types that can be disabled.",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "avif",
+                        "webp"
                     ]
                 }
             ],
@@ -6127,6 +6999,13 @@
                             "experimental": true,
                             "optional": true,
                             "$ref": "Page.Viewport"
+                        },
+                        {
+                            "name": "displayFeature",
+                            "description": "If set, the display feature of a multi-segment screen. If not set, multi-segment support\nis turned-off.",
+                            "experimental": true,
+                            "optional": true,
+                            "$ref": "DisplayFeature"
                         }
                     ]
                 },
@@ -6175,12 +7054,42 @@
                 },
                 {
                     "name": "setEmulatedMedia",
-                    "description": "Emulates the given media for CSS media queries.",
+                    "description": "Emulates the given media type or media feature for CSS media queries.",
                     "parameters": [
                         {
                             "name": "media",
                             "description": "Media type to emulate. Empty string disables the override.",
+                            "optional": true,
                             "type": "string"
+                        },
+                        {
+                            "name": "features",
+                            "description": "Media features to emulate.",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "$ref": "MediaFeature"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "setEmulatedVisionDeficiency",
+                    "description": "Emulates the given vision deficiency.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "type",
+                            "description": "Vision deficiency to emulate.",
+                            "type": "string",
+                            "enum": [
+                                "none",
+                                "achromatopsia",
+                                "blurredVision",
+                                "deuteranopia",
+                                "protanopia",
+                                "tritanopia"
+                            ]
                         }
                     ]
                 },
@@ -6207,6 +7116,28 @@
                             "type": "number"
                         }
                     ]
+                },
+                {
+                    "name": "setIdleOverride",
+                    "description": "Overrides the Idle state.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "isUserActive",
+                            "description": "Mock isUserActive",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "isScreenUnlocked",
+                            "description": "Mock isScreenUnlocked",
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                {
+                    "name": "clearIdleOverride",
+                    "description": "Clears Idle state overrides.",
+                    "experimental": true
                 },
                 {
                     "name": "setNavigatorOverrides",
@@ -6304,6 +7235,19 @@
                     ]
                 },
                 {
+                    "name": "setLocaleOverride",
+                    "description": "Overrides default host system locale with the specified one.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "locale",
+                            "description": "ICU style C locale (e.g. \"en_US\"). If not specified or empty, disables the override and\nrestores default host system locale.",
+                            "optional": true,
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
                     "name": "setTimezoneOverride",
                     "description": "Overrides default host system timezone with the specified one.",
                     "experimental": true,
@@ -6334,6 +7278,20 @@
                     ]
                 },
                 {
+                    "name": "setDisabledImageTypes",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "imageTypes",
+                            "description": "Image types to disable.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "DisabledImageType"
+                            }
+                        }
+                    ]
+                },
+                {
                     "name": "setUserAgentOverride",
                     "description": "Allows overriding user agent with the given string.",
                     "parameters": [
@@ -6353,6 +7311,13 @@
                             "description": "The platform navigator.platform should return.",
                             "optional": true,
                             "type": "string"
+                        },
+                        {
+                            "name": "userAgentMetadata",
+                            "description": "To be sent in Sec-CH-UA-* headers and returned in navigator.userAgentData",
+                            "experimental": true,
+                            "optional": true,
+                            "$ref": "UserAgentMetadata"
                         }
                     ]
                 }
@@ -6454,7 +7419,8 @@
             "events": [
                 {
                     "name": "needsBeginFramesChanged",
-                    "description": "Issued when the target starts or stops needing BeginFrames.",
+                    "description": "Issued when the target starts or stops needing BeginFrames.\nDeprecated. Issue beginFrame unconditionally instead and use result from\nbeginFrame to detect whether the frames were suppressed.",
+                    "deprecated": true,
                     "parameters": [
                         {
                             "name": "needsBeginFrames",
@@ -7013,6 +7979,34 @@
                             "type": "number"
                         },
                         {
+                            "name": "tangentialPressure",
+                            "description": "The normalized tangential pressure, which has a range of [-1,1] (default: 0).",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "number"
+                        },
+                        {
+                            "name": "tiltX",
+                            "description": "The plane angle between the Y-Z plane and the plane containing both the stylus axis and the Y axis, in degrees of the range [-90,90], a positive tiltX is to the right (default: 0)",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "integer"
+                        },
+                        {
+                            "name": "tiltY",
+                            "description": "The plane angle between the X-Z plane and the plane containing both the stylus axis and the X axis, in degrees of the range [-90,90], a positive tiltY is towards the user (default: 0).",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "integer"
+                        },
+                        {
+                            "name": "twist",
+                            "description": "The clockwise rotation of a pen stylus around its own major axis, in degrees in the range [0,359] (default: 0).",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "integer"
+                        },
+                        {
                             "name": "id",
                             "description": "Identifier used to track touch sources between events, must be unique within an event.",
                             "optional": true,
@@ -7028,6 +8022,18 @@
                         "default",
                         "touch",
                         "mouse"
+                    ]
+                },
+                {
+                    "id": "MouseButton",
+                    "type": "string",
+                    "enum": [
+                        "none",
+                        "left",
+                        "middle",
+                        "right",
+                        "back",
+                        "forward"
                     ]
                 },
                 {
@@ -7129,6 +8135,16 @@
                             "description": "Whether the event was from the left or right side of the keyboard. 1=Left, 2=Right (default:\n0).",
                             "optional": true,
                             "type": "integer"
+                        },
+                        {
+                            "name": "commands",
+                            "description": "Editing commands to send with the key event (e.g., 'selectAll') (default: []).\nThese are related to but not equal the command names used in `document.execCommand` and NSStandardKeyBindingResponding.\nSee https://source.chromium.org/chromium/chromium/src/+/master:third_party/blink/renderer/core/editing/commands/editor_command_names.h for valid command names.",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     ]
                 },
@@ -7185,15 +8201,7 @@
                             "name": "button",
                             "description": "Mouse button (default: \"none\").",
                             "optional": true,
-                            "type": "string",
-                            "enum": [
-                                "none",
-                                "left",
-                                "middle",
-                                "right",
-                                "back",
-                                "forward"
-                            ]
+                            "$ref": "MouseButton"
                         },
                         {
                             "name": "buttons",
@@ -7204,6 +8212,41 @@
                         {
                             "name": "clickCount",
                             "description": "Number of times the mouse button was clicked (default: 0).",
+                            "optional": true,
+                            "type": "integer"
+                        },
+                        {
+                            "name": "force",
+                            "description": "The normalized pressure, which has a range of [0,1] (default: 0).",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "number"
+                        },
+                        {
+                            "name": "tangentialPressure",
+                            "description": "The normalized tangential pressure, which has a range of [-1,1] (default: 0).",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "number"
+                        },
+                        {
+                            "name": "tiltX",
+                            "description": "The plane angle between the Y-Z plane and the plane containing both the stylus axis and the Y axis, in degrees of the range [-90,90], a positive tiltX is to the right (default: 0).",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "integer"
+                        },
+                        {
+                            "name": "tiltY",
+                            "description": "The plane angle between the X-Z plane and the plane containing both the stylus axis and the X axis, in degrees of the range [-90,90], a positive tiltY is towards the user (default: 0).",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "integer"
+                        },
+                        {
+                            "name": "twist",
+                            "description": "The clockwise rotation of a pen stylus around its own major axis, in degrees in the range [0,359] (default: 0).",
+                            "experimental": true,
                             "optional": true,
                             "type": "integer"
                         },
@@ -7296,14 +8339,8 @@
                         },
                         {
                             "name": "button",
-                            "description": "Mouse button.",
-                            "type": "string",
-                            "enum": [
-                                "none",
-                                "left",
-                                "middle",
-                                "right"
-                            ]
+                            "description": "Mouse button. Only \"none\", \"left\", \"right\" are supported.",
+                            "$ref": "MouseButton"
                         },
                         {
                             "name": "timestamp",
@@ -7747,6 +8784,15 @@
                         {
                             "name": "compositingReasons",
                             "description": "A list of strings specifying reasons for the given layer to become composited.",
+                            "deprecated": true,
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "name": "compositingReasonIds",
+                            "description": "A list of strings specifying reason IDs for the given layer to become composited.",
                             "type": "array",
                             "items": {
                                 "type": "string"
@@ -8402,8 +9448,18 @@
                     "enum": [
                         "Strict",
                         "Lax",
-                        "Extended",
                         "None"
+                    ]
+                },
+                {
+                    "id": "CookiePriority",
+                    "description": "Represents the cookie's 'Priority' status:\nhttps://tools.ietf.org/html/draft-west-cookie-priority-00",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "Low",
+                        "Medium",
+                        "High"
                     ]
                 },
                 {
@@ -8469,6 +9525,18 @@
                             "type": "number"
                         },
                         {
+                            "name": "workerFetchStart",
+                            "description": "Started fetch event.",
+                            "experimental": true,
+                            "type": "number"
+                        },
+                        {
+                            "name": "workerRespondWithSettled",
+                            "description": "Settled fetch event respondWith promise.",
+                            "experimental": true,
+                            "type": "number"
+                        },
+                        {
                             "name": "sendStart",
                             "description": "Started sending request.",
                             "type": "number"
@@ -8510,6 +9578,18 @@
                     ]
                 },
                 {
+                    "id": "PostDataEntry",
+                    "description": "Post data entry for HTTP request",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "bytes",
+                            "optional": true,
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
                     "id": "Request",
                     "description": "HTTP request data.",
                     "type": "object",
@@ -8548,6 +9628,16 @@
                             "type": "boolean"
                         },
                         {
+                            "name": "postDataEntries",
+                            "description": "Request body elements. This will be converted from base64 to binary",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "$ref": "PostDataEntry"
+                            }
+                        },
+                        {
                             "name": "mixedContentType",
                             "description": "The mixed content type of the request.",
                             "optional": true,
@@ -8578,6 +9668,13 @@
                             "description": "Whether is loaded via link preload.",
                             "optional": true,
                             "type": "boolean"
+                        },
+                        {
+                            "name": "trustTokenParams",
+                            "description": "Set for requests when the TrustToken API is used. Contains the parameters\npassed by the developer (e.g. via \"fetch\") as understood by the backend.",
+                            "experimental": true,
+                            "optional": true,
+                            "$ref": "TrustTokenParams"
                         }
                     ]
                 },
@@ -8730,7 +9827,108 @@
                         "inspector",
                         "subresource-filter",
                         "content-type",
-                        "collapsed-by-client"
+                        "collapsed-by-client",
+                        "coep-frame-resource-needs-coep-header",
+                        "coop-sandboxed-iframe-cannot-navigate-to-coop-page",
+                        "corp-not-same-origin",
+                        "corp-not-same-origin-after-defaulted-to-same-origin-by-coep",
+                        "corp-not-same-site"
+                    ]
+                },
+                {
+                    "id": "CorsError",
+                    "description": "The reason why request was blocked.",
+                    "type": "string",
+                    "enum": [
+                        "DisallowedByMode",
+                        "InvalidResponse",
+                        "WildcardOriginNotAllowed",
+                        "MissingAllowOriginHeader",
+                        "MultipleAllowOriginValues",
+                        "InvalidAllowOriginValue",
+                        "AllowOriginMismatch",
+                        "InvalidAllowCredentials",
+                        "CorsDisabledScheme",
+                        "PreflightInvalidStatus",
+                        "PreflightDisallowedRedirect",
+                        "PreflightWildcardOriginNotAllowed",
+                        "PreflightMissingAllowOriginHeader",
+                        "PreflightMultipleAllowOriginValues",
+                        "PreflightInvalidAllowOriginValue",
+                        "PreflightAllowOriginMismatch",
+                        "PreflightInvalidAllowCredentials",
+                        "PreflightMissingAllowExternal",
+                        "PreflightInvalidAllowExternal",
+                        "InvalidAllowMethodsPreflightResponse",
+                        "InvalidAllowHeadersPreflightResponse",
+                        "MethodDisallowedByPreflightResponse",
+                        "HeaderDisallowedByPreflightResponse",
+                        "RedirectContainsCredentials"
+                    ]
+                },
+                {
+                    "id": "CorsErrorStatus",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "corsError",
+                            "$ref": "CorsError"
+                        },
+                        {
+                            "name": "failedParameter",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "id": "ServiceWorkerResponseSource",
+                    "description": "Source of serviceworker response.",
+                    "type": "string",
+                    "enum": [
+                        "cache-storage",
+                        "http-cache",
+                        "fallback-code",
+                        "network"
+                    ]
+                },
+                {
+                    "id": "TrustTokenParams",
+                    "description": "Determines what type of Trust Token operation is executed and\ndepending on the type, some additional parameters.",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "type",
+                            "$ref": "TrustTokenOperationType"
+                        },
+                        {
+                            "name": "refreshPolicy",
+                            "description": "Only set for \"srr-token-redemption\" type and determine whether\nto request a fresh SRR or use a still valid cached SRR.",
+                            "type": "string",
+                            "enum": [
+                                "UseCached",
+                                "Refresh"
+                            ]
+                        },
+                        {
+                            "name": "issuers",
+                            "description": "Origins of issuers from whom to request tokens or redemption\nrecords.",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "TrustTokenOperationType",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "Issuance",
+                        "Redemption",
+                        "Signing"
                     ]
                 },
                 {
@@ -8831,6 +10029,24 @@
                             "description": "Timing information for the given request.",
                             "optional": true,
                             "$ref": "ResourceTiming"
+                        },
+                        {
+                            "name": "serviceWorkerResponseSource",
+                            "description": "Response source of response from ServiceWorker.",
+                            "optional": true,
+                            "$ref": "ServiceWorkerResponseSource"
+                        },
+                        {
+                            "name": "responseTime",
+                            "description": "The time at which the returned response was generated.",
+                            "optional": true,
+                            "$ref": "TimeSinceEpoch"
+                        },
+                        {
+                            "name": "cacheStorageCacheName",
+                            "description": "Cache Storage Cache Name.",
+                            "optional": true,
+                            "type": "string"
                         },
                         {
                             "name": "protocol",
@@ -8987,6 +10203,12 @@
                             "description": "Initiator line number, set for Parser type or for Script type (when script is importing\nmodule) (0-based).",
                             "optional": true,
                             "type": "number"
+                        },
+                        {
+                            "name": "columnNumber",
+                            "description": "Initiator column number, set for Parser type or for Script type (when script is importing\nmodule) (0-based).",
+                            "optional": true,
+                            "type": "number"
                         }
                     ]
                 },
@@ -9045,6 +10267,12 @@
                             "description": "Cookie SameSite type.",
                             "optional": true,
                             "$ref": "CookieSameSite"
+                        },
+                        {
+                            "name": "priority",
+                            "description": "Cookie Priority",
+                            "experimental": true,
+                            "$ref": "CookiePriority"
                         }
                     ]
                 },
@@ -9057,7 +10285,6 @@
                         "SecureOnly",
                         "SameSiteStrict",
                         "SameSiteLax",
-                        "SameSiteExtended",
                         "SameSiteUnspecifiedTreatedAsLax",
                         "SameSiteNoneInsecure",
                         "UserPreferences",
@@ -9066,7 +10293,10 @@
                         "OverwriteSecure",
                         "InvalidDomain",
                         "InvalidPrefix",
-                        "UnknownError"
+                        "UnknownError",
+                        "SchemefulSameSiteStrict",
+                        "SchemefulSameSiteLax",
+                        "SchemefulSameSiteUnspecifiedTreatedAsLax"
                     ]
                 },
                 {
@@ -9080,11 +10310,13 @@
                         "DomainMismatch",
                         "SameSiteStrict",
                         "SameSiteLax",
-                        "SameSiteExtended",
                         "SameSiteUnspecifiedTreatedAsLax",
                         "SameSiteNoneInsecure",
                         "UserPreferences",
-                        "UnknownError"
+                        "UnknownError",
+                        "SchemefulSameSiteStrict",
+                        "SchemefulSameSiteLax",
+                        "SchemefulSameSiteUnspecifiedTreatedAsLax"
                     ]
                 },
                 {
@@ -9094,9 +10326,12 @@
                     "type": "object",
                     "properties": [
                         {
-                            "name": "blockedReason",
-                            "description": "The reason this cookie was blocked.",
-                            "$ref": "SetCookieBlockedReason"
+                            "name": "blockedReasons",
+                            "description": "The reason(s) this cookie was blocked.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "SetCookieBlockedReason"
+                            }
                         },
                         {
                             "name": "cookieLine",
@@ -9118,9 +10353,12 @@
                     "type": "object",
                     "properties": [
                         {
-                            "name": "blockedReason",
-                            "description": "The reason the cookie was blocked.",
-                            "$ref": "CookieBlockedReason"
+                            "name": "blockedReasons",
+                            "description": "The reason(s) the cookie was blocked.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "CookieBlockedReason"
+                            }
                         },
                         {
                             "name": "cookie",
@@ -9185,6 +10423,13 @@
                             "description": "Cookie expiration date, session cookie if not set",
                             "optional": true,
                             "$ref": "TimeSinceEpoch"
+                        },
+                        {
+                            "name": "priority",
+                            "description": "Cookie Priority.",
+                            "experimental": true,
+                            "optional": true,
+                            "$ref": "CookiePriority"
                         }
                     ]
                 },
@@ -9454,6 +10699,147 @@
                             }
                         }
                     ]
+                },
+                {
+                    "id": "CrossOriginOpenerPolicyValue",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "SameOrigin",
+                        "SameOriginAllowPopups",
+                        "UnsafeNone",
+                        "SameOriginPlusCoep"
+                    ]
+                },
+                {
+                    "id": "CrossOriginOpenerPolicyStatus",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "value",
+                            "$ref": "CrossOriginOpenerPolicyValue"
+                        },
+                        {
+                            "name": "reportOnlyValue",
+                            "$ref": "CrossOriginOpenerPolicyValue"
+                        },
+                        {
+                            "name": "reportingEndpoint",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "reportOnlyReportingEndpoint",
+                            "optional": true,
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "id": "CrossOriginEmbedderPolicyValue",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "None",
+                        "RequireCorp"
+                    ]
+                },
+                {
+                    "id": "CrossOriginEmbedderPolicyStatus",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "value",
+                            "$ref": "CrossOriginEmbedderPolicyValue"
+                        },
+                        {
+                            "name": "reportOnlyValue",
+                            "$ref": "CrossOriginEmbedderPolicyValue"
+                        },
+                        {
+                            "name": "reportingEndpoint",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "reportOnlyReportingEndpoint",
+                            "optional": true,
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "id": "SecurityIsolationStatus",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "coop",
+                            "$ref": "CrossOriginOpenerPolicyStatus"
+                        },
+                        {
+                            "name": "coep",
+                            "$ref": "CrossOriginEmbedderPolicyStatus"
+                        }
+                    ]
+                },
+                {
+                    "id": "LoadNetworkResourcePageResult",
+                    "description": "An object providing the result of a network resource load.",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "success",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "netError",
+                            "description": "Optional values used for error reporting.",
+                            "optional": true,
+                            "type": "number"
+                        },
+                        {
+                            "name": "netErrorName",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "httpStatusCode",
+                            "optional": true,
+                            "type": "number"
+                        },
+                        {
+                            "name": "stream",
+                            "description": "If successful, one of the following two fields holds the result.",
+                            "optional": true,
+                            "$ref": "IO.StreamHandle"
+                        },
+                        {
+                            "name": "headers",
+                            "description": "Response headers.",
+                            "optional": true,
+                            "$ref": "Network.Headers"
+                        }
+                    ]
+                },
+                {
+                    "id": "LoadNetworkResourceOptions",
+                    "description": "An options object that may be extended later to better support CORS,\nCORB and streaming.",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "disableCache",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "includeCredentials",
+                            "type": "boolean"
+                        }
+                    ]
                 }
             ],
             "commands": [
@@ -9687,7 +11073,7 @@
                     "parameters": [
                         {
                             "name": "urls",
-                            "description": "The list of URLs for which applicable cookies will be fetched",
+                            "description": "The list of URLs for which applicable cookies will be fetched.\nIf not specified, it's assumed to be set to the list containing\nthe URLs of the page and all of its subframes.",
                             "optional": true,
                             "type": "array",
                             "items": {
@@ -9932,12 +11318,20 @@
                             "description": "Cookie expiration date, session cookie if not set",
                             "optional": true,
                             "$ref": "TimeSinceEpoch"
+                        },
+                        {
+                            "name": "priority",
+                            "description": "Cookie Priority type.",
+                            "experimental": true,
+                            "optional": true,
+                            "$ref": "CookiePriority"
                         }
                     ],
                     "returns": [
                         {
                             "name": "success",
-                            "description": "True if successfully set cookie.",
+                            "description": "Always set to true. If an error occurs, the response indicates protocol error.",
+                            "deprecated": true,
                             "type": "boolean"
                         }
                     ]
@@ -9985,6 +11379,18 @@
                     ]
                 },
                 {
+                    "name": "setAttachDebugStack",
+                    "description": "Specifies whether to attach a page script stack id in requests",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "enabled",
+                            "description": "Whether to attach a page script stack for debugging purpose.",
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                {
                     "name": "setRequestInterception",
                     "description": "Sets the requests to intercept that match the provided patterns and optionally resource types.\nDeprecated, please use Fetch.enable instead.",
                     "experimental": true,
@@ -10021,6 +11427,60 @@
                             "description": "The platform navigator.platform should return.",
                             "optional": true,
                             "type": "string"
+                        },
+                        {
+                            "name": "userAgentMetadata",
+                            "description": "To be sent in Sec-CH-UA-* headers and returned in navigator.userAgentData",
+                            "experimental": true,
+                            "optional": true,
+                            "$ref": "Emulation.UserAgentMetadata"
+                        }
+                    ]
+                },
+                {
+                    "name": "getSecurityIsolationStatus",
+                    "description": "Returns information about the COEP/COOP isolation status.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "frameId",
+                            "description": "If no frameId is provided, the status of the target is provided.",
+                            "optional": true,
+                            "$ref": "Page.FrameId"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "status",
+                            "$ref": "SecurityIsolationStatus"
+                        }
+                    ]
+                },
+                {
+                    "name": "loadNetworkResource",
+                    "description": "Fetches the resource and returns the content.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "frameId",
+                            "description": "Frame id to get the resource for.",
+                            "$ref": "Page.FrameId"
+                        },
+                        {
+                            "name": "url",
+                            "description": "URL of the resource to get content for.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "options",
+                            "description": "Options for the request.",
+                            "$ref": "LoadNetworkResourceOptions"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "resource",
+                            "$ref": "LoadNetworkResourcePageResult"
                         }
                     ]
                 }
@@ -10118,6 +11578,12 @@
                             "description": "The reason why loading was blocked, if any.",
                             "optional": true,
                             "$ref": "BlockedReason"
+                        },
+                        {
+                            "name": "corsErrorStatus",
+                            "description": "The reason why loading was blocked by CORS, if any.",
+                            "optional": true,
+                            "$ref": "CorsErrorStatus"
                         }
                     ]
                 },
@@ -10533,8 +11999,8 @@
                             "$ref": "RequestId"
                         },
                         {
-                            "name": "blockedCookies",
-                            "description": "A list of cookies which will not be sent with this request along with corresponding reasons\nfor blocking.",
+                            "name": "associatedCookies",
+                            "description": "A list of cookies potentially associated to the requested URL. This includes both cookies sent with\nthe request and the ones not sent; the latter are distinguished by having blockedReason field set.",
                             "type": "array",
                             "items": {
                                 "$ref": "BlockedCookieWithReason"
@@ -10591,6 +12057,152 @@
             ],
             "types": [
                 {
+                    "id": "SourceOrderConfig",
+                    "description": "Configuration data for drawing the source order of an elements children.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "parentOutlineColor",
+                            "description": "the color to outline the givent element in.",
+                            "$ref": "DOM.RGBA"
+                        },
+                        {
+                            "name": "childOutlineColor",
+                            "description": "the color to outline the child elements in.",
+                            "$ref": "DOM.RGBA"
+                        }
+                    ]
+                },
+                {
+                    "id": "GridHighlightConfig",
+                    "description": "Configuration data for the highlighting of Grid elements.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "showGridExtensionLines",
+                            "description": "Whether the extension lines from grid cells to the rulers should be shown (default: false).",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "showPositiveLineNumbers",
+                            "description": "Show Positive line number labels (default: false).",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "showNegativeLineNumbers",
+                            "description": "Show Negative line number labels (default: false).",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "showAreaNames",
+                            "description": "Show area name labels (default: false).",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "showLineNames",
+                            "description": "Show line name labels (default: false).",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "showTrackSizes",
+                            "description": "Show track size labels (default: false).",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "gridBorderColor",
+                            "description": "The grid container border highlight color (default: transparent).",
+                            "optional": true,
+                            "$ref": "DOM.RGBA"
+                        },
+                        {
+                            "name": "cellBorderColor",
+                            "description": "The cell border color (default: transparent). Deprecated, please use rowLineColor and columnLineColor instead.",
+                            "deprecated": true,
+                            "optional": true,
+                            "$ref": "DOM.RGBA"
+                        },
+                        {
+                            "name": "rowLineColor",
+                            "description": "The row line color (default: transparent).",
+                            "optional": true,
+                            "$ref": "DOM.RGBA"
+                        },
+                        {
+                            "name": "columnLineColor",
+                            "description": "The column line color (default: transparent).",
+                            "optional": true,
+                            "$ref": "DOM.RGBA"
+                        },
+                        {
+                            "name": "gridBorderDash",
+                            "description": "Whether the grid border is dashed (default: false).",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "cellBorderDash",
+                            "description": "Whether the cell border is dashed (default: false). Deprecated, please us rowLineDash and columnLineDash instead.",
+                            "deprecated": true,
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "rowLineDash",
+                            "description": "Whether row lines are dashed (default: false).",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "columnLineDash",
+                            "description": "Whether column lines are dashed (default: false).",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "rowGapColor",
+                            "description": "The row gap highlight fill color (default: transparent).",
+                            "optional": true,
+                            "$ref": "DOM.RGBA"
+                        },
+                        {
+                            "name": "rowHatchColor",
+                            "description": "The row gap hatching fill color (default: transparent).",
+                            "optional": true,
+                            "$ref": "DOM.RGBA"
+                        },
+                        {
+                            "name": "columnGapColor",
+                            "description": "The column gap highlight fill color (default: transparent).",
+                            "optional": true,
+                            "$ref": "DOM.RGBA"
+                        },
+                        {
+                            "name": "columnHatchColor",
+                            "description": "The column gap hatching fill color (default: transparent).",
+                            "optional": true,
+                            "$ref": "DOM.RGBA"
+                        },
+                        {
+                            "name": "areaBorderColor",
+                            "description": "The named grid areas border color (Default: transparent).",
+                            "optional": true,
+                            "$ref": "DOM.RGBA"
+                        },
+                        {
+                            "name": "gridBackgroundColor",
+                            "description": "The grid container background color (Default: transparent).",
+                            "optional": true,
+                            "$ref": "DOM.RGBA"
+                        }
+                    ]
+                },
+                {
                     "id": "HighlightConfig",
                     "description": "Configuration data for the highlighting of page elements.",
                     "type": "object",
@@ -10610,6 +12222,12 @@
                         {
                             "name": "showRulers",
                             "description": "Whether the rulers should be shown (default: false).",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "showAccessibilityInfo",
+                            "description": "Whether the a11y info should be shown (default: true).",
                             "optional": true,
                             "type": "boolean"
                         },
@@ -10666,6 +12284,68 @@
                             "description": "The grid layout color (default: transparent).",
                             "optional": true,
                             "$ref": "DOM.RGBA"
+                        },
+                        {
+                            "name": "colorFormat",
+                            "description": "The color format used to format color styles (default: hex).",
+                            "optional": true,
+                            "$ref": "ColorFormat"
+                        },
+                        {
+                            "name": "gridHighlightConfig",
+                            "description": "The grid layout highlight configuration (default: all transparent).",
+                            "optional": true,
+                            "$ref": "GridHighlightConfig"
+                        }
+                    ]
+                },
+                {
+                    "id": "ColorFormat",
+                    "type": "string",
+                    "enum": [
+                        "rgb",
+                        "hsl",
+                        "hex"
+                    ]
+                },
+                {
+                    "id": "GridNodeHighlightConfig",
+                    "description": "Configurations for Persistent Grid Highlight",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "gridHighlightConfig",
+                            "description": "A descriptor for the highlight appearance.",
+                            "$ref": "GridHighlightConfig"
+                        },
+                        {
+                            "name": "nodeId",
+                            "description": "Identifier of the node to highlight.",
+                            "$ref": "DOM.NodeId"
+                        }
+                    ]
+                },
+                {
+                    "id": "HingeConfig",
+                    "description": "Configuration for dual screen hinge",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "rect",
+                            "description": "A rectangle represent hinge",
+                            "$ref": "DOM.Rect"
+                        },
+                        {
+                            "name": "contentColor",
+                            "description": "The content box highlight fill color (default: a dark color).",
+                            "optional": true,
+                            "$ref": "DOM.RGBA"
+                        },
+                        {
+                            "name": "outlineColor",
+                            "description": "The content box highlight outline color (default: transparent).",
+                            "optional": true,
+                            "$ref": "DOM.RGBA"
                         }
                     ]
                 },
@@ -10710,12 +12390,63 @@
                             "description": "Whether to include style info.",
                             "optional": true,
                             "type": "boolean"
+                        },
+                        {
+                            "name": "colorFormat",
+                            "description": "The color format to get config with (default: hex).",
+                            "optional": true,
+                            "$ref": "ColorFormat"
+                        },
+                        {
+                            "name": "showAccessibilityInfo",
+                            "description": "Whether to show accessibility info (default: true).",
+                            "optional": true,
+                            "type": "boolean"
                         }
                     ],
                     "returns": [
                         {
                             "name": "highlight",
                             "description": "Highlight data for the node.",
+                            "type": "object"
+                        }
+                    ]
+                },
+                {
+                    "name": "getGridHighlightObjectsForTest",
+                    "description": "For Persistent Grid testing.",
+                    "parameters": [
+                        {
+                            "name": "nodeIds",
+                            "description": "Ids of the node to get highlight object for.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "DOM.NodeId"
+                            }
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "highlights",
+                            "description": "Grid Highlight data for the node ids provided.",
+                            "type": "object"
+                        }
+                    ]
+                },
+                {
+                    "name": "getSourceOrderHighlightObjectForTest",
+                    "description": "For Source Order Viewer testing.",
+                    "parameters": [
+                        {
+                            "name": "nodeId",
+                            "description": "Id of the node to highlight.",
+                            "$ref": "DOM.NodeId"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "highlight",
+                            "description": "Source order highlight data for the node id provided.",
                             "type": "object"
                         }
                     ]
@@ -10844,6 +12575,35 @@
                     ]
                 },
                 {
+                    "name": "highlightSourceOrder",
+                    "description": "Highlights the source order of the children of the DOM node with given id or with the given\nJavaScript object wrapper. Either nodeId or objectId must be specified.",
+                    "parameters": [
+                        {
+                            "name": "sourceOrderConfig",
+                            "description": "A descriptor for the appearance of the overlay drawing.",
+                            "$ref": "SourceOrderConfig"
+                        },
+                        {
+                            "name": "nodeId",
+                            "description": "Identifier of the node to highlight.",
+                            "optional": true,
+                            "$ref": "DOM.NodeId"
+                        },
+                        {
+                            "name": "backendNodeId",
+                            "description": "Identifier of the backend node to highlight.",
+                            "optional": true,
+                            "$ref": "DOM.BackendNodeId"
+                        },
+                        {
+                            "name": "objectId",
+                            "description": "JavaScript object id of the node to be highlighted.",
+                            "optional": true,
+                            "$ref": "Runtime.RemoteObjectId"
+                        }
+                    ]
+                },
+                {
                     "name": "setInspectMode",
                     "description": "Enters the 'inspect' mode. In this mode, elements that user is hovering over are highlighted.\nBackend then generates 'inspectNodeRequested' event upon element selection.",
                     "parameters": [
@@ -10905,6 +12665,20 @@
                     ]
                 },
                 {
+                    "name": "setShowGridOverlays",
+                    "description": "Highlight multiple elements with the CSS Grid overlay.",
+                    "parameters": [
+                        {
+                            "name": "gridNodeHighlightConfigs",
+                            "description": "An array of node identifiers and descriptors for the highlight appearance.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "GridNodeHighlightConfig"
+                            }
+                        }
+                    ]
+                },
+                {
                     "name": "setShowPaintRects",
                     "description": "Requests that backend shows paint rectangles",
                     "parameters": [
@@ -10956,6 +12730,18 @@
                             "name": "show",
                             "description": "Whether to paint size or not.",
                             "type": "boolean"
+                        }
+                    ]
+                },
+                {
+                    "name": "setShowHinge",
+                    "description": "Add a dual screen device hinge",
+                    "parameters": [
+                        {
+                            "name": "hingeConfig",
+                            "description": "hinge data, null means hideHinge",
+                            "optional": true,
+                            "$ref": "HingeConfig"
                         }
                     ]
                 }
@@ -11016,6 +12802,40 @@
                     "type": "string"
                 },
                 {
+                    "id": "AdFrameType",
+                    "description": "Indicates whether a frame has been identified as an ad.",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "none",
+                        "child",
+                        "root"
+                    ]
+                },
+                {
+                    "id": "SecureContextType",
+                    "description": "Indicates whether the frame is a secure context and why it is the case.",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "Secure",
+                        "SecureLocalhost",
+                        "InsecureScheme",
+                        "InsecureAncestor"
+                    ]
+                },
+                {
+                    "id": "CrossOriginIsolatedContextType",
+                    "description": "Indicates whether the frame is cross-origin isolated and why it is the case.",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "Isolated",
+                        "NotIsolated",
+                        "NotIsolatedFeatureDisabled"
+                    ]
+                },
+                {
                     "id": "Frame",
                     "description": "Information about the Frame on the page.",
                     "type": "object",
@@ -11055,6 +12875,12 @@
                             "type": "string"
                         },
                         {
+                            "name": "domainAndRegistry",
+                            "description": "Frame document's registered domain, taking the public suffixes list into account.\nExtracted from the Frame's url.\nExample URLs: http://www.google.com/file.html -> \"google.com\"\n              http://a.b.co.uk/file.html      -> \"b.co.uk\"",
+                            "experimental": true,
+                            "type": "string"
+                        },
+                        {
                             "name": "securityOrigin",
                             "description": "Frame document's security origin.",
                             "type": "string"
@@ -11070,6 +12896,25 @@
                             "experimental": true,
                             "optional": true,
                             "type": "string"
+                        },
+                        {
+                            "name": "adFrameType",
+                            "description": "Indicates whether this frame was tagged as an ad.",
+                            "experimental": true,
+                            "optional": true,
+                            "$ref": "AdFrameType"
+                        },
+                        {
+                            "name": "secureContextType",
+                            "description": "Indicates whether the main document is a secure context and explains why that is the case.",
+                            "experimental": true,
+                            "$ref": "SecureContextType"
+                        },
+                        {
+                            "name": "crossOriginIsolatedContextType",
+                            "description": "Indicates whether this is a cross origin isolated context.",
+                            "experimental": true,
+                            "$ref": "CrossOriginIsolatedContextType"
                         }
                     ]
                 },
@@ -11311,6 +13156,19 @@
                     ]
                 },
                 {
+                    "id": "AppManifestParsedProperties",
+                    "description": "Parsed app manifest properties.",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "scope",
+                            "description": "Computed scope value",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
                     "id": "LayoutViewport",
                     "description": "Layout viewport position and dimensions.",
                     "type": "object",
@@ -11498,7 +13356,73 @@
                         "scriptInitiated",
                         "metaTagRefresh",
                         "pageBlockInterstitial",
-                        "reload"
+                        "reload",
+                        "anchorClick"
+                    ]
+                },
+                {
+                    "id": "ClientNavigationDisposition",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "currentTab",
+                        "newTab",
+                        "newWindow",
+                        "download"
+                    ]
+                },
+                {
+                    "id": "InstallabilityErrorArgument",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "name",
+                            "description": "Argument name (e.g. name:'minimum-icon-size-in-pixels').",
+                            "type": "string"
+                        },
+                        {
+                            "name": "value",
+                            "description": "Argument value (e.g. value:'64').",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "id": "InstallabilityError",
+                    "description": "The installability error",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "errorId",
+                            "description": "The error id (e.g. 'manifest-missing-suitable-icon').",
+                            "type": "string"
+                        },
+                        {
+                            "name": "errorArguments",
+                            "description": "The list of error arguments (e.g. {name:'minimum-icon-size-in-pixels', value:'64'}).",
+                            "type": "array",
+                            "items": {
+                                "$ref": "InstallabilityErrorArgument"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "ReferrerPolicy",
+                    "description": "The referring-policy used for the navigation.",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "noReferrer",
+                        "noReferrerWhenDowngrade",
+                        "origin",
+                        "originWhenCrossOrigin",
+                        "sameOrigin",
+                        "strictOrigin",
+                        "strictOriginWhenCrossOrigin",
+                        "unsafeUrl"
                     ]
                 }
             ],
@@ -11712,6 +13636,13 @@
                             "description": "Manifest content.",
                             "optional": true,
                             "type": "string"
+                        },
+                        {
+                            "name": "parsed",
+                            "description": "Parsed manifest properties",
+                            "experimental": true,
+                            "optional": true,
+                            "$ref": "AppManifestParsedProperties"
                         }
                     ]
                 },
@@ -11720,11 +13651,22 @@
                     "experimental": true,
                     "returns": [
                         {
-                            "name": "errors",
+                            "name": "installabilityErrors",
                             "type": "array",
                             "items": {
-                                "type": "string"
+                                "$ref": "InstallabilityError"
                             }
+                        }
+                    ]
+                },
+                {
+                    "name": "getManifestIcons",
+                    "experimental": true,
+                    "returns": [
+                        {
+                            "name": "primaryIcon",
+                            "optional": true,
+                            "type": "string"
                         }
                     ]
                 },
@@ -11884,6 +13826,13 @@
                             "description": "Frame id to navigate, if not specified navigates the top frame.",
                             "optional": true,
                             "$ref": "FrameId"
+                        },
+                        {
+                            "name": "referrerPolicy",
+                            "description": "Referrer-policy used for the navigation.",
+                            "experimental": true,
+                            "optional": true,
+                            "$ref": "ReferrerPolicy"
                         }
                     ],
                     "returns": [
@@ -12303,6 +14252,7 @@
                     "name": "setDownloadBehavior",
                     "description": "Set the behavior when downloading a file.",
                     "experimental": true,
+                    "deprecated": true,
                     "parameters": [
                         {
                             "name": "behavior",
@@ -12517,37 +14467,12 @@
                 },
                 {
                     "name": "setInterceptFileChooserDialog",
-                    "description": "Intercept file chooser requests and transfer control to protocol clients.\nWhen file chooser interception is enabled, native file chooser dialog is not shown.\nInstead, a protocol event `Page.fileChooserOpened` is emitted.\nFile chooser can be handled with `page.handleFileChooser` command.",
+                    "description": "Intercept file chooser requests and transfer control to protocol clients.\nWhen file chooser interception is enabled, native file chooser dialog is not shown.\nInstead, a protocol event `Page.fileChooserOpened` is emitted.",
                     "experimental": true,
                     "parameters": [
                         {
                             "name": "enabled",
                             "type": "boolean"
-                        }
-                    ]
-                },
-                {
-                    "name": "handleFileChooser",
-                    "description": "Accepts or cancels an intercepted file chooser dialog.",
-                    "experimental": true,
-                    "parameters": [
-                        {
-                            "name": "action",
-                            "type": "string",
-                            "enum": [
-                                "accept",
-                                "cancel",
-                                "fallback"
-                            ]
-                        },
-                        {
-                            "name": "files",
-                            "description": "Array of absolute file paths to set, only respected with `accept` action.",
-                            "optional": true,
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
                         }
                     ]
                 }
@@ -12567,7 +14492,20 @@
                     "description": "Emitted only when `page.interceptFileChooser` is enabled.",
                     "parameters": [
                         {
+                            "name": "frameId",
+                            "description": "Id of the frame containing input node.",
+                            "experimental": true,
+                            "$ref": "FrameId"
+                        },
+                        {
+                            "name": "backendNodeId",
+                            "description": "Input node id.",
+                            "experimental": true,
+                            "$ref": "DOM.BackendNodeId"
+                        },
+                        {
                             "name": "mode",
+                            "description": "Input mode.",
                             "type": "string",
                             "enum": [
                                 "selectSingle",
@@ -12655,6 +14593,11 @@
                             "name": "url",
                             "description": "The destination URL for the requested navigation.",
                             "type": "string"
+                        },
+                        {
+                            "name": "disposition",
+                            "description": "The disposition for the navigation.",
+                            "$ref": "ClientNavigationDisposition"
                         }
                     ]
                 },
@@ -12676,16 +14619,7 @@
                         {
                             "name": "reason",
                             "description": "The reason for the navigation.",
-                            "type": "string",
-                            "enum": [
-                                "formSubmissionGet",
-                                "formSubmissionPost",
-                                "httpHeaderRefresh",
-                                "scriptInitiated",
-                                "metaTagRefresh",
-                                "pageBlockInterstitial",
-                                "reload"
-                            ]
+                            "$ref": "ClientNavigationReason"
                         },
                         {
                             "name": "url",
@@ -12729,9 +14663,51 @@
                             "$ref": "FrameId"
                         },
                         {
+                            "name": "guid",
+                            "description": "Global unique identifier of the download.",
+                            "type": "string"
+                        },
+                        {
                             "name": "url",
                             "description": "URL of the resource being downloaded.",
                             "type": "string"
+                        },
+                        {
+                            "name": "suggestedFilename",
+                            "description": "Suggested file name of the resource (the actual name of the file saved on disk may differ).",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "downloadProgress",
+                    "description": "Fired when download makes progress. Last call has |done| == true.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "guid",
+                            "description": "Global unique identifier of the download.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "totalBytes",
+                            "description": "Total expected bytes to download.",
+                            "type": "number"
+                        },
+                        {
+                            "name": "receivedBytes",
+                            "description": "Total bytes received.",
+                            "type": "number"
+                        },
+                        {
+                            "name": "state",
+                            "description": "Download status.",
+                            "type": "string",
+                            "enum": [
+                                "inProgress",
+                                "completed",
+                                "canceled"
+                            ]
                         }
                     ]
                 },
@@ -12950,12 +14926,25 @@
                 },
                 {
                     "name": "enable",
-                    "description": "Enable collecting and reporting metrics."
+                    "description": "Enable collecting and reporting metrics.",
+                    "parameters": [
+                        {
+                            "name": "timeDomain",
+                            "description": "Time domain to use for collecting and reporting duration metrics.",
+                            "optional": true,
+                            "type": "string",
+                            "enum": [
+                                "timeTicks",
+                                "threadTicks"
+                            ]
+                        }
+                    ]
                 },
                 {
                     "name": "setTimeDomain",
                     "description": "Sets time domain to use for collecting and reporting duration metrics.\nNote that this must be called before enabling metrics collection. Calling\nthis method while metrics collection is enabled returns an error.",
                     "experimental": true,
+                    "deprecated": true,
                     "parameters": [
                         {
                             "name": "timeDomain",
@@ -13033,7 +15022,172 @@
                         "neutral",
                         "insecure",
                         "secure",
-                        "info"
+                        "info",
+                        "insecure-broken"
+                    ]
+                },
+                {
+                    "id": "CertificateSecurityState",
+                    "description": "Details about the security state of the page certificate.",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "protocol",
+                            "description": "Protocol name (e.g. \"TLS 1.2\" or \"QUIC\").",
+                            "type": "string"
+                        },
+                        {
+                            "name": "keyExchange",
+                            "description": "Key Exchange used by the connection, or the empty string if not applicable.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "keyExchangeGroup",
+                            "description": "(EC)DH group used by the connection, if applicable.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "cipher",
+                            "description": "Cipher name.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "mac",
+                            "description": "TLS MAC. Note that AEAD ciphers do not have separate MACs.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "certificate",
+                            "description": "Page certificate.",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "name": "subjectName",
+                            "description": "Certificate subject name.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "issuer",
+                            "description": "Name of the issuing CA.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "validFrom",
+                            "description": "Certificate valid from date.",
+                            "$ref": "Network.TimeSinceEpoch"
+                        },
+                        {
+                            "name": "validTo",
+                            "description": "Certificate valid to (expiration) date",
+                            "$ref": "Network.TimeSinceEpoch"
+                        },
+                        {
+                            "name": "certificateNetworkError",
+                            "description": "The highest priority network error code, if the certificate has an error.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "certificateHasWeakSignature",
+                            "description": "True if the certificate uses a weak signature aglorithm.",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "certificateHasSha1Signature",
+                            "description": "True if the certificate has a SHA1 signature in the chain.",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "modernSSL",
+                            "description": "True if modern SSL",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "obsoleteSslProtocol",
+                            "description": "True if the connection is using an obsolete SSL protocol.",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "obsoleteSslKeyExchange",
+                            "description": "True if the connection is using an obsolete SSL key exchange.",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "obsoleteSslCipher",
+                            "description": "True if the connection is using an obsolete SSL cipher.",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "obsoleteSslSignature",
+                            "description": "True if the connection is using an obsolete SSL signature.",
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                {
+                    "id": "SafetyTipStatus",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "badReputation",
+                        "lookalike"
+                    ]
+                },
+                {
+                    "id": "SafetyTipInfo",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "safetyTipStatus",
+                            "description": "Describes whether the page triggers any safety tips or reputation warnings. Default is unknown.",
+                            "$ref": "SafetyTipStatus"
+                        },
+                        {
+                            "name": "safeUrl",
+                            "description": "The URL the safety tip suggested (\"Did you mean?\"). Only filled in for lookalike matches.",
+                            "optional": true,
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "id": "VisibleSecurityState",
+                    "description": "Security state information about the page.",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "securityState",
+                            "description": "The security level of the page.",
+                            "$ref": "SecurityState"
+                        },
+                        {
+                            "name": "certificateSecurityState",
+                            "description": "Security state details about the page certificate.",
+                            "optional": true,
+                            "$ref": "CertificateSecurityState"
+                        },
+                        {
+                            "name": "safetyTipInfo",
+                            "description": "The type of Safety Tip triggered on the page. Note that this field will be set even if the Safety Tip UI was not actually shown.",
+                            "optional": true,
+                            "$ref": "SafetyTipInfo"
+                        },
+                        {
+                            "name": "securityStateIssueIds",
+                            "description": "Array of security state issues ids.",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
                     ]
                 },
                 {
@@ -13213,6 +15367,18 @@
                     ]
                 },
                 {
+                    "name": "visibleSecurityStateChanged",
+                    "description": "The security state of the page changed.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "visibleSecurityState",
+                            "description": "Security state information about the page.",
+                            "$ref": "VisibleSecurityState"
+                        }
+                    ]
+                },
+                {
                     "name": "securityStateChanged",
                     "description": "The security state of the page changed.",
                     "parameters": [
@@ -13254,6 +15420,9 @@
         {
             "domain": "ServiceWorker",
             "experimental": true,
+            "dependencies": [
+                "Target"
+            ],
             "types": [
                 {
                     "id": "RegistrationID",
@@ -13552,6 +15721,10 @@
         {
             "domain": "Storage",
             "experimental": true,
+            "dependencies": [
+                "Browser",
+                "Network"
+            ],
             "types": [
                 {
                     "id": "StorageType",
@@ -13607,6 +15780,60 @@
                     ]
                 },
                 {
+                    "name": "getCookies",
+                    "description": "Returns all browser cookies.",
+                    "parameters": [
+                        {
+                            "name": "browserContextId",
+                            "description": "Browser context to use when called on the browser endpoint.",
+                            "optional": true,
+                            "$ref": "Browser.BrowserContextID"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "cookies",
+                            "description": "Array of cookie objects.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "Network.Cookie"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "setCookies",
+                    "description": "Sets given cookies.",
+                    "parameters": [
+                        {
+                            "name": "cookies",
+                            "description": "Cookies to be set.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "Network.CookieParam"
+                            }
+                        },
+                        {
+                            "name": "browserContextId",
+                            "description": "Browser context to use when called on the browser endpoint.",
+                            "optional": true,
+                            "$ref": "Browser.BrowserContextID"
+                        }
+                    ]
+                },
+                {
+                    "name": "clearCookies",
+                    "description": "Clears cookies.",
+                    "parameters": [
+                        {
+                            "name": "browserContextId",
+                            "description": "Browser context to use when called on the browser endpoint.",
+                            "optional": true,
+                            "$ref": "Browser.BrowserContextID"
+                        }
+                    ]
+                },
+                {
                     "name": "getUsageAndQuota",
                     "description": "Returns usage and quota in bytes.",
                     "parameters": [
@@ -13628,12 +15855,35 @@
                             "type": "number"
                         },
                         {
+                            "name": "overrideActive",
+                            "description": "Whether or not the origin has an active storage quota override",
+                            "type": "boolean"
+                        },
+                        {
                             "name": "usageBreakdown",
                             "description": "Storage usage per type (bytes).",
                             "type": "array",
                             "items": {
                                 "$ref": "UsageForType"
                             }
+                        }
+                    ]
+                },
+                {
+                    "name": "overrideQuotaForOrigin",
+                    "description": "Override quota for the specified origin",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "origin",
+                            "description": "Security origin.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "quotaSize",
+                            "description": "The quota size (in bytes) to override the original quota with.\nIf this is called multiple times, the overriden quota will be equal to\nthe quotaSize provided in the final call. If this is called without\nspecifying a quotaSize, the quota will be reset to the default value for\nthe specified origin. If this is called multiple times with different\norigins, the override will be maintained for each origin until it is\ndisabled (called without a quotaSize).",
+                            "optional": true,
+                            "type": "number"
                         }
                     ]
                 },
@@ -13762,6 +16012,18 @@
                         {
                             "name": "deviceId",
                             "description": "PCI ID of the GPU device, if available; 0 otherwise.",
+                            "type": "number"
+                        },
+                        {
+                            "name": "subSysId",
+                            "description": "Sub sys ID of the GPU, only available on Windows.",
+                            "optional": true,
+                            "type": "number"
+                        },
+                        {
+                            "name": "revision",
+                            "description": "Revision of the GPU, only available on Windows.",
+                            "optional": true,
                             "type": "number"
                         },
                         {
@@ -14040,11 +16302,6 @@
                     "type": "string"
                 },
                 {
-                    "id": "BrowserContextID",
-                    "experimental": true,
-                    "type": "string"
-                },
-                {
                     "id": "TargetInfo",
                     "type": "object",
                     "properties": [
@@ -14076,10 +16333,23 @@
                             "$ref": "TargetID"
                         },
                         {
+                            "name": "canAccessOpener",
+                            "description": "Whether the target has access to the originating window.",
+                            "experimental": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "openerFrameId",
+                            "description": "Frame id of originating window (is only set if target has an opener).",
+                            "experimental": true,
+                            "optional": true,
+                            "$ref": "Page.FrameId"
+                        },
+                        {
                             "name": "browserContextId",
                             "experimental": true,
                             "optional": true,
-                            "$ref": "BrowserContextID"
+                            "$ref": "Browser.BrowserContextID"
                         }
                     ]
                 },
@@ -14120,8 +16390,7 @@
                         },
                         {
                             "name": "flatten",
-                            "description": "Enables \"flat\" access to the session via specifying sessionId attribute in the commands.",
-                            "experimental": true,
+                            "description": "Enables \"flat\" access to the session via specifying sessionId attribute in the commands.\nWe plan to make this the default, deprecate non-flattened mode,\nand eventually retire it. See crbug.com/991325.",
                             "optional": true,
                             "type": "boolean"
                         }
@@ -14158,6 +16427,8 @@
                     "returns": [
                         {
                             "name": "success",
+                            "description": "Always set to true. If an error occurs, the response indicates protocol error.",
+                            "deprecated": true,
                             "type": "boolean"
                         }
                     ]
@@ -14183,11 +16454,31 @@
                     "name": "createBrowserContext",
                     "description": "Creates a new empty BrowserContext. Similar to an incognito profile but you can have more than\none.",
                     "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "disposeOnDetach",
+                            "description": "If specified, disposes this context when debugging session disconnects.",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "proxyServer",
+                            "description": "Proxy server, similar to the one passed to --proxy-server",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "proxyBypassList",
+                            "description": "Proxy bypass list, similar to the one passed to --proxy-bypass-list",
+                            "optional": true,
+                            "type": "string"
+                        }
+                    ],
                     "returns": [
                         {
                             "name": "browserContextId",
                             "description": "The id of the context created.",
-                            "$ref": "BrowserContextID"
+                            "$ref": "Browser.BrowserContextID"
                         }
                     ]
                 },
@@ -14201,7 +16492,7 @@
                             "description": "An array of browser context ids.",
                             "type": "array",
                             "items": {
-                                "$ref": "BrowserContextID"
+                                "$ref": "Browser.BrowserContextID"
                             }
                         }
                     ]
@@ -14231,7 +16522,7 @@
                             "name": "browserContextId",
                             "description": "The browser context to create the page in.",
                             "optional": true,
-                            "$ref": "BrowserContextID"
+                            "$ref": "Browser.BrowserContextID"
                         },
                         {
                             "name": "enableBeginFrameControl",
@@ -14287,7 +16578,7 @@
                     "parameters": [
                         {
                             "name": "browserContextId",
-                            "$ref": "BrowserContextID"
+                            "$ref": "Browser.BrowserContextID"
                         }
                     ]
                 },
@@ -14325,7 +16616,8 @@
                 },
                 {
                     "name": "sendMessageToTarget",
-                    "description": "Sends protocol message over session with given id.",
+                    "description": "Sends protocol message over session with given id.\nConsider using flat mode instead; see commands attachToTarget, setAutoAttach,\nand crbug.com/991325.",
+                    "deprecated": true,
                     "parameters": [
                         {
                             "name": "message",
@@ -14363,8 +16655,7 @@
                         },
                         {
                             "name": "flatten",
-                            "description": "Enables \"flat\" access to the session via specifying sessionId attribute in the commands.",
-                            "experimental": true,
+                            "description": "Enables \"flat\" access to the session via specifying sessionId attribute in the commands.\nWe plan to make this the default, deprecate non-flattened mode,\nand eventually retire it. See crbug.com/991325.",
                             "optional": true,
                             "type": "boolean"
                         }
@@ -14656,6 +16947,16 @@
                         "none",
                         "gzip"
                     ]
+                },
+                {
+                    "id": "MemoryDumpLevelOfDetail",
+                    "description": "Details exposed when memory request explicitly declared.\nKeep consistent with memory_dump_request_args.h and\nmemory_instrumentation.mojom",
+                    "type": "string",
+                    "enum": [
+                        "background",
+                        "light",
+                        "detailed"
+                    ]
                 }
             ],
             "commands": [
@@ -14691,6 +16992,20 @@
                 {
                     "name": "requestMemoryDump",
                     "description": "Request a global memory dump.",
+                    "parameters": [
+                        {
+                            "name": "deterministic",
+                            "description": "Enables more deterministic results by forcing garbage collection",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "levelOfDetail",
+                            "description": "Specifies level of details in memory dump. Defaults to \"detailed\".",
+                            "optional": true,
+                            "$ref": "MemoryDumpLevelOfDetail"
+                        }
+                    ],
                     "returns": [
                         {
                             "name": "dumpGuid",
@@ -14829,7 +17144,6 @@
         {
             "domain": "Fetch",
             "description": "A domain for letting clients substitute browser's network layer with client code.",
-            "experimental": true,
             "dependencies": [
                 "Network",
                 "IO",
@@ -14844,7 +17158,6 @@
                 {
                     "id": "RequestStage",
                     "description": "Stages of the request to handle. Request will intercept before the request is\nsent. Response will intercept after the response is received (but before response\nbody is received.",
-                    "experimental": true,
                     "type": "string",
                     "enum": [
                         "Request",
@@ -14853,7 +17166,6 @@
                 },
                 {
                     "id": "RequestPattern",
-                    "experimental": true,
                     "type": "object",
                     "properties": [
                         {
@@ -14894,7 +17206,6 @@
                 {
                     "id": "AuthChallenge",
                     "description": "Authorization challenge for HTTP status code 401 or 407.",
-                    "experimental": true,
                     "type": "object",
                     "properties": [
                         {
@@ -14927,7 +17238,6 @@
                 {
                     "id": "AuthChallengeResponse",
                     "description": "Response to an AuthChallenge.",
-                    "experimental": true,
                     "type": "object",
                     "properties": [
                         {
@@ -15014,10 +17324,17 @@
                         {
                             "name": "responseHeaders",
                             "description": "Response headers.",
+                            "optional": true,
                             "type": "array",
                             "items": {
                                 "$ref": "HeaderEntry"
                             }
+                        },
+                        {
+                            "name": "binaryResponseHeaders",
+                            "description": "Alternative way of specifying response headers as a \\0-separated\nseries of name: value pairs. Prefer the above method unless you\nneed to represent some non-UTF8 values that can't be transmitted\nover the protocol as text.",
+                            "optional": true,
+                            "type": "string"
                         },
                         {
                             "name": "body",
@@ -15027,7 +17344,7 @@
                         },
                         {
                             "name": "responsePhrase",
-                            "description": "A textual representation of responseCode.\nIf absent, a standard phrase mathcing responseCode is used.",
+                            "description": "A textual representation of responseCode.\nIf absent, a standard phrase matching responseCode is used.",
                             "optional": true,
                             "type": "string"
                         }
@@ -15062,7 +17379,7 @@
                         },
                         {
                             "name": "headers",
-                            "description": "If set, overrides the request headrts.",
+                            "description": "If set, overrides the request headers.",
                             "optional": true,
                             "type": "array",
                             "items": {
@@ -15349,7 +17666,7 @@
                 },
                 {
                     "id": "AudioListener",
-                    "description": "Protocol object for AudioListner",
+                    "description": "Protocol object for AudioListener",
                     "type": "object",
                     "properties": [
                         {
@@ -15696,6 +18013,14 @@
                     ]
                 },
                 {
+                    "id": "Ctap2Version",
+                    "type": "string",
+                    "enum": [
+                        "ctap2_0",
+                        "ctap2_1"
+                    ]
+                },
+                {
                     "id": "AuthenticatorTransport",
                     "type": "string",
                     "enum": [
@@ -15715,20 +18040,42 @@
                             "$ref": "AuthenticatorProtocol"
                         },
                         {
+                            "name": "ctap2Version",
+                            "description": "Defaults to ctap2_0. Ignored if |protocol| == u2f.",
+                            "optional": true,
+                            "$ref": "Ctap2Version"
+                        },
+                        {
                             "name": "transport",
                             "$ref": "AuthenticatorTransport"
                         },
                         {
                             "name": "hasResidentKey",
+                            "description": "Defaults to false.",
+                            "optional": true,
                             "type": "boolean"
                         },
                         {
                             "name": "hasUserVerification",
+                            "description": "Defaults to false.",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "hasLargeBlob",
+                            "description": "If set to true, the authenticator will support the largeBlob extension.\nhttps://w3c.github.io/webauthn#largeBlob\nDefaults to false.",
+                            "optional": true,
                             "type": "boolean"
                         },
                         {
                             "name": "automaticPresenceSimulation",
                             "description": "If set to true, tests of user presence will succeed immediately.\nOtherwise, they will not be resolved. Defaults to true.",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "isUserVerified",
+                            "description": "Sets whether User Verification succeeds or fails for an authenticator.\nDefaults to false.",
                             "optional": true,
                             "type": "boolean"
                         }
@@ -15767,6 +18114,12 @@
                             "name": "signCount",
                             "description": "Signature counter. This is incremented by one for each successful\nassertion.\nSee https://w3c.github.io/webauthn/#signature-counter",
                             "type": "integer"
+                        },
+                        {
+                            "name": "largeBlob",
+                            "description": "The large blob associated with the credential.\nSee https://w3c.github.io/webauthn/#sctn-large-blob-extension",
+                            "optional": true,
+                            "type": "string"
                         }
                     ]
                 }
@@ -15896,6 +18249,20 @@
                             "type": "boolean"
                         }
                     ]
+                },
+                {
+                    "name": "setAutomaticPresenceSimulation",
+                    "description": "Sets whether tests of user presence will succeed immediately (if true) or fail to resolve (if false) for an authenticator.\nThe default is true.",
+                    "parameters": [
+                        {
+                            "name": "authenticatorId",
+                            "$ref": "AuthenticatorId"
+                        },
+                        {
+                            "name": "enabled",
+                            "type": "boolean"
+                        }
+                    ]
                 }
             ]
         },
@@ -15914,50 +18281,73 @@
                     "type": "number"
                 },
                 {
-                    "id": "PlayerProperty",
-                    "description": "Player Property type",
+                    "id": "PlayerMessage",
+                    "description": "Have one type per entry in MediaLogRecord::Type\nCorresponds to kMessage",
                     "type": "object",
                     "properties": [
                         {
-                            "name": "name",
-                            "type": "string"
+                            "name": "level",
+                            "description": "Keep in sync with MediaLogMessageLevel\nWe are currently keeping the message level 'error' separate from the\nPlayerError type because right now they represent different things,\nthis one being a DVLOG(ERROR) style log message that gets printed\nbased on what log level is selected in the UI, and the other is a\nrepresentation of a media::PipelineStatus object. Soon however we're\ngoing to be moving away from using PipelineStatus for errors and\nintroducing a new error type which should hopefully let us integrate\nthe error log level into the PlayerError type.",
+                            "type": "string",
+                            "enum": [
+                                "error",
+                                "warning",
+                                "info",
+                                "debug"
+                            ]
                         },
                         {
-                            "name": "value",
-                            "optional": true,
+                            "name": "message",
                             "type": "string"
                         }
                     ]
                 },
                 {
-                    "id": "PlayerEventType",
-                    "description": "Break out events into different types",
-                    "type": "string",
-                    "enum": [
-                        "playbackEvent",
-                        "systemEvent",
-                        "messageEvent"
-                    ]
-                },
-                {
-                    "id": "PlayerEvent",
+                    "id": "PlayerProperty",
+                    "description": "Corresponds to kMediaPropertyChange",
                     "type": "object",
                     "properties": [
-                        {
-                            "name": "type",
-                            "$ref": "PlayerEventType"
-                        },
-                        {
-                            "name": "timestamp",
-                            "description": "Events are timestamped relative to the start of the player creation\nnot relative to the start of playback.",
-                            "$ref": "Timestamp"
-                        },
                         {
                             "name": "name",
                             "type": "string"
                         },
                         {
                             "name": "value",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "id": "PlayerEvent",
+                    "description": "Corresponds to kMediaEventTriggered",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "timestamp",
+                            "$ref": "Timestamp"
+                        },
+                        {
+                            "name": "value",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "id": "PlayerError",
+                    "description": "Corresponds to kMediaError",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "type",
+                            "type": "string",
+                            "enum": [
+                                "pipeline_error",
+                                "media_error"
+                            ]
+                        },
+                        {
+                            "name": "errorCode",
+                            "description": "When this switches to using media::Status instead of PipelineStatus\nwe can remove \"errorCode\" and replace it with the fields from\na Status instance. This also seems like a duplicate of the error\nlevel enum - there is a todo bug to have that level removed and\nuse this instead. (crbug.com/1068454)",
                             "type": "string"
                         }
                     ]
@@ -15994,6 +18384,40 @@
                             "type": "array",
                             "items": {
                                 "$ref": "PlayerEvent"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "playerMessagesLogged",
+                    "description": "Send a list of any messages that need to be delivered.",
+                    "parameters": [
+                        {
+                            "name": "playerId",
+                            "$ref": "PlayerId"
+                        },
+                        {
+                            "name": "messages",
+                            "type": "array",
+                            "items": {
+                                "$ref": "PlayerMessage"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "playerErrorsRaised",
+                    "description": "Send a list of any errors that need to be delivered.",
+                    "parameters": [
+                        {
+                            "name": "playerId",
+                            "$ref": "PlayerId"
+                        },
+                        {
+                            "name": "errors",
+                            "type": "array",
+                            "items": {
+                                "$ref": "PlayerError"
                             }
                         }
                     ]

@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.systeminfo;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,18 @@ package com.github.kklisura.cdt.protocol.types.systeminfo;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
+
 /** Describes a single graphics processor (GPU). */
 public class GPUDevice {
 
   private Double vendorId;
 
   private Double deviceId;
+
+  @Optional private Double subSysId;
+
+  @Optional private Double revision;
 
   private String vendorString;
 
@@ -53,6 +59,26 @@ public class GPUDevice {
   /** PCI ID of the GPU device, if available; 0 otherwise. */
   public void setDeviceId(Double deviceId) {
     this.deviceId = deviceId;
+  }
+
+  /** Sub sys ID of the GPU, only available on Windows. */
+  public Double getSubSysId() {
+    return subSysId;
+  }
+
+  /** Sub sys ID of the GPU, only available on Windows. */
+  public void setSubSysId(Double subSysId) {
+    this.subSysId = subSysId;
+  }
+
+  /** Revision of the GPU, only available on Windows. */
+  public Double getRevision() {
+    return revision;
+  }
+
+  /** Revision of the GPU, only available on Windows. */
+  public void setRevision(Double revision) {
+    this.revision = revision;
   }
 
   /** String description of the GPU vendor, if the PCI ID is not available. */

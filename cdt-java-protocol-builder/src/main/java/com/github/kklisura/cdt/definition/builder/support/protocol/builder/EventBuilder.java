@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.definition.builder.support.protocol.builder;
  * #%L
  * cdt-java-protocol-builder
  * %%
- * Copyright (C) 2018 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,8 +68,7 @@ public class EventBuilder extends TypesBuilder {
       }
     }
 
-    return result
-        .stream()
+    return result.stream()
         .map(EventHandlerResult::getBuilder)
         .filter(Objects::nonNull)
         .collect(Collectors.toList());

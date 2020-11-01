@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -113,4 +113,14 @@ public interface WebAuthn {
   void setUserVerified(
       @ParamName("authenticatorId") String authenticatorId,
       @ParamName("isUserVerified") Boolean isUserVerified);
+
+  /**
+   * Sets whether tests of user presence will succeed immediately (if true) or fail to resolve (if
+   * false) for an authenticator. The default is true.
+   *
+   * @param authenticatorId
+   * @param enabled
+   */
+  void setAutomaticPresenceSimulation(
+      @ParamName("authenticatorId") String authenticatorId, @ParamName("enabled") Boolean enabled);
 }

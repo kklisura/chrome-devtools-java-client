@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.css;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,11 +45,19 @@ public class CSSStyleSheetHeader {
 
   private Boolean isInline;
 
+  private Boolean isMutable;
+
+  private Boolean isConstructed;
+
   private Double startLine;
 
   private Double startColumn;
 
   private Double length;
+
+  private Double endLine;
+
+  private Double endColumn;
 
   /** The stylesheet identifier. */
   public String getStyleSheetId() {
@@ -157,6 +165,34 @@ public class CSSStyleSheetHeader {
     this.isInline = isInline;
   }
 
+  /**
+   * Whether this stylesheet is mutable. Inline stylesheets become mutable after they have been
+   * modified via CSSOM API. <link> element's stylesheets become mutable only if DevTools modifies
+   * them. Constructed stylesheets (new CSSStyleSheet()) are mutable immediately after creation.
+   */
+  public Boolean getIsMutable() {
+    return isMutable;
+  }
+
+  /**
+   * Whether this stylesheet is mutable. Inline stylesheets become mutable after they have been
+   * modified via CSSOM API. <link> element's stylesheets become mutable only if DevTools modifies
+   * them. Constructed stylesheets (new CSSStyleSheet()) are mutable immediately after creation.
+   */
+  public void setIsMutable(Boolean isMutable) {
+    this.isMutable = isMutable;
+  }
+
+  /** Whether this stylesheet is a constructed stylesheet (created using new CSSStyleSheet()). */
+  public Boolean getIsConstructed() {
+    return isConstructed;
+  }
+
+  /** Whether this stylesheet is a constructed stylesheet (created using new CSSStyleSheet()). */
+  public void setIsConstructed(Boolean isConstructed) {
+    this.isConstructed = isConstructed;
+  }
+
   /** Line offset of the stylesheet within the resource (zero based). */
   public Double getStartLine() {
     return startLine;
@@ -185,5 +221,25 @@ public class CSSStyleSheetHeader {
   /** Size of the content (in characters). */
   public void setLength(Double length) {
     this.length = length;
+  }
+
+  /** Line offset of the end of the stylesheet within the resource (zero based). */
+  public Double getEndLine() {
+    return endLine;
+  }
+
+  /** Line offset of the end of the stylesheet within the resource (zero based). */
+  public void setEndLine(Double endLine) {
+    this.endLine = endLine;
+  }
+
+  /** Column offset of the end of the stylesheet within the resource (zero based). */
+  public Double getEndColumn() {
+    return endColumn;
+  }
+
+  /** Column offset of the end of the stylesheet within the resource (zero based). */
+  public void setEndColumn(Double endColumn) {
+    this.endColumn = endColumn;
   }
 }

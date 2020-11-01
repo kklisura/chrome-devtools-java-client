@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2019 Kenan Klisura
+ * Copyright (C) 2018 - 2020 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,6 @@ public enum SetCookieBlockedReason {
   SAME_SITE_STRICT,
   @JsonProperty("SameSiteLax")
   SAME_SITE_LAX,
-  @JsonProperty("SameSiteExtended")
-  SAME_SITE_EXTENDED,
   @JsonProperty("SameSiteUnspecifiedTreatedAsLax")
   SAME_SITE_UNSPECIFIED_TREATED_AS_LAX,
   @JsonProperty("SameSiteNoneInsecure")
@@ -49,5 +47,11 @@ public enum SetCookieBlockedReason {
   @JsonProperty("InvalidPrefix")
   INVALID_PREFIX,
   @JsonProperty("UnknownError")
-  UNKNOWN_ERROR
+  UNKNOWN_ERROR,
+  @JsonProperty("SchemefulSameSiteStrict")
+  SCHEMEFUL_SAME_SITE_STRICT,
+  @JsonProperty("SchemefulSameSiteLax")
+  SCHEMEFUL_SAME_SITE_LAX,
+  @JsonProperty("SchemefulSameSiteUnspecifiedTreatedAsLax")
+  SCHEMEFUL_SAME_SITE_UNSPECIFIED_TREATED_AS_LAX
 }
