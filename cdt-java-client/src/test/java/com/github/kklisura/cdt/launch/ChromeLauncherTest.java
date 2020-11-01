@@ -100,6 +100,7 @@ public class ChromeLauncherTest extends EasyMockSupport {
   public void testGetChromeBinaryPathThrowsExceptionWhenNoBinaryFound() {
     expect(environment.getEnv("CHROME_PATH")).andReturn(null);
 
+    expect(processLauncher.isExecutable("/snap/bin/chromium")).andReturn(false);
     expect(processLauncher.isExecutable("/usr/bin/chromium")).andReturn(false);
     expect(processLauncher.isExecutable("/usr/bin/chromium-browser")).andReturn(false);
     expect(processLauncher.isExecutable("/usr/bin/google-chrome-stable")).andReturn(false);
