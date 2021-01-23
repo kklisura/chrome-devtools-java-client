@@ -26,6 +26,14 @@
         <url>https://kklisura.com</url>
     </organization>
 
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
     <scm>
         <connection>scm:git:git://github.com/kklisura/chrome-devtools-java-client.git</connection>
         <developerConnection>scm:git:ssh://github.com:kklisura/chrome-devtools-java-client.git</developerConnection>
