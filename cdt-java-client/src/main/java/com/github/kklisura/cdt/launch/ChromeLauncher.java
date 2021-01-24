@@ -42,9 +42,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,6 +62,9 @@ public class ChromeLauncher implements AutoCloseable {
   public static final String ENV_CHROME_PATH = "CHROME_PATH";
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ChromeLauncher.class);
+
+  private static final Logger CHROME_OUTPUT_LOGGER =
+      LoggerFactory.getLogger(ChromeLauncher.class.getPackage().getName() + ".chrome.output");
 
   private static final String TEMP_PREFIX = "cdt-user-data-dir";
 
@@ -321,8 +325,7 @@ public class ChromeLauncher implements AutoCloseable {
    * @throws ChromeProcessTimeoutException If timeout expired while waiting for chrome process.
    */
   private int waitForDevToolsServer(final Process process) throws ChromeProcessTimeoutException {
-    final AtomicInteger port = new AtomicInteger();
-    final AtomicBoolean success = new AtomicBoolean(false);
+    final CompletableFuture<Integer> port = new CompletableFuture<>();
     final AtomicReference<String> chromeOutput = new AtomicReference<>("");
 
     Thread readLineThread =
@@ -336,21 +339,36 @@ public class ChromeLauncher implements AutoCloseable {
                 // Wait for DevTools listening line and extract port number.
                 String line;
                 while ((line = reader.readLine()) != null) {
-                  Matcher matcher = DEVTOOLS_LISTENING_LINE_PATTERN.matcher(line);
-                  if (matcher.find()) {
-                    port.set(Integer.parseInt(matcher.group(1)));
-                    success.set(true);
-                    break;
-                  }
+                  CHROME_OUTPUT_LOGGER.debug(line);
 
-                  if (chromeOutputBuilder.length() != 0) {
-                    chromeOutputBuilder.append(System.lineSeparator());
+                  if (!port.isDone()) {
+                    Matcher matcher = DEVTOOLS_LISTENING_LINE_PATTERN.matcher(line);
+                    if (matcher.find()) {
+                      port.complete(Integer.parseInt(matcher.group(1)));
+                      if (!CHROME_OUTPUT_LOGGER.isDebugEnabled()) {
+                        // no need to keep reading, ending the thread
+                        break;
+                      }
+
+                      // no longer needed, clearing
+                      chromeOutputBuilder = null;
+                      chromeOutput.set(null);
+                    } else {
+                      if (chromeOutputBuilder.length() != 0) {
+                        chromeOutputBuilder.append(System.lineSeparator());
+                      }
+                      chromeOutputBuilder.append(line);
+                      chromeOutput.set(chromeOutputBuilder.toString());
+                    }
                   }
-                  chromeOutputBuilder.append(line);
-                  chromeOutput.set(chromeOutputBuilder.toString());
                 }
               } catch (Exception e) {
-                LOGGER.error("Failed while waiting for dev tools server.", e);
+                if (port.isDone()) {
+                  LOGGER.debug("Error while reading Chrome process output.", e);
+                } else {
+                  LOGGER.error("Failed while waiting for dev tools server.", e);
+                  port.completeExceptionally(e);
+                }
               } finally {
                 closeQuietly(reader);
               }
@@ -359,24 +377,24 @@ public class ChromeLauncher implements AutoCloseable {
     readLineThread.start();
 
     try {
-      readLineThread.join(TimeUnit.SECONDS.toMillis(configuration.getStartupWaitTime()));
+      return port.get(configuration.getStartupWaitTime(), TimeUnit.SECONDS);
+    } catch (TimeoutException e) {
+      close(readLineThread);
 
-      if (!success.get()) {
-        close(readLineThread);
-
-        throw new ChromeProcessTimeoutException(
-            "Failed while waiting for chrome to start: "
-                + "Timeout expired! Chrome output: "
-                + chromeOutput.get());
-      }
+      throw new ChromeProcessTimeoutException(
+          "Failed while waiting for chrome to start: "
+              + "Timeout expired! Chrome output: "
+              + chromeOutput.get());
     } catch (InterruptedException e) {
       close(readLineThread);
 
       LOGGER.error("Interrupted while waiting for dev tools server.", e);
       throw new RuntimeException("Interrupted while waiting for dev tools server.", e);
+    } catch (ExecutionException e) {
+      close(readLineThread);
+      // exception already logged before completeExceptionally
+      throw new RuntimeException("Failed while waiting for dev tools server.", e);
     }
-
-    return port.get();
   }
 
   private void close(Thread thread) {
