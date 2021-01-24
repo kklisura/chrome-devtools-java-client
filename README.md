@@ -103,6 +103,10 @@ For more examples, see [examples](cdt-examples/src/main/java/com/github/kklisura
 
 **How to fix:** With the version `2.1.0` and above, this buffer was increased to 8MB and can be further increased if necessary by setting the appropriate [configuration property](cdt-examples/src/main/java/com/github/kklisura/cdt/examples/IncreasedIncomingBufferInTyrusExample.java).
 
+## Debugging chrome
+
+In order to debug chrome when using this library, set the logger `com.github.kklisura.cdt.launch.chrome.output` to `DEBUG` level. See [ChromeLoggingExample](cdt-examples/src/main/java/com/github/kklisura/cdt/examples/ChromeLoggingExample.java) for more information. Be sure to remove or turn the logger off, when done.
+
 ## Running unit tests
 
 `make verify`
