@@ -33,11 +33,15 @@ import static org.junit.Assert.fail;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.replay;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
 import com.github.kklisura.cdt.launch.ChromeLauncher.Environment;
 import com.github.kklisura.cdt.launch.ChromeLauncher.ShutdownHookRegistry;
 import com.github.kklisura.cdt.launch.config.ChromeLauncherConfiguration;
 import com.github.kklisura.cdt.launch.exceptions.ChromeProcessTimeoutException;
 import com.github.kklisura.cdt.launch.support.ProcessLauncher;
+import com.github.kklisura.cdt.launch.utils.LogCollector;
 import com.github.kklisura.cdt.services.ChromeService;
 import com.github.kklisura.cdt.services.impl.ChromeServiceImpl;
 import com.github.kklisura.cdt.utils.FilesUtils;
@@ -45,6 +49,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.easymock.Capture;
@@ -56,6 +61,7 @@ import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.slf4j.LoggerFactory;
 
 /**
  * Chrome launcher test.
@@ -118,6 +124,8 @@ public class ChromeLauncherTest extends EasyMockSupport {
     expect(
             processLauncher.isExecutable(
                 "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe"))
+        .andReturn(false);
+    expect(processLauncher.isExecutable("C:/Program Files/Google/Chrome/Application/chrome.exe"))
         .andReturn(false);
 
     replayAll();
@@ -634,6 +642,102 @@ public class ChromeLauncherTest extends EasyMockSupport {
     assertEquals(123, launcher.exitValue());
 
     verifyAll();
+  }
+
+  /**
+   * Registers appender that adds logging events to the argument loggingEvents. This also sets the
+   * level of the logger to DEBUG.
+   *
+   * @param name Name of the logger.
+   * @param loggingEvents Logging events.
+   */
+  private static void registerAppenderOnDebugLogger(
+      String name, Level level, List<String> loggingEvents) {
+    LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+
+    final Logger logger = loggerContext.getLogger(name);
+    logger.setLevel(level);
+    logger.addAppender(new LogCollector(loggingEvents));
+  }
+
+  @Test
+  public void testLaunchWithDebugLogging()
+      throws IOException, ChromeProcessTimeoutException, InterruptedException {
+    List<String> loggingEvents = new ArrayList<>();
+    registerAppenderOnDebugLogger(
+        "com.github.kklisura.cdt.launch.chrome.output", Level.DEBUG, loggingEvents);
+
+    expect(environment.getEnv("CHROME_PATH")).andReturn("/test-binary-path");
+    expect(processLauncher.isExecutable("/test-binary-path")).andReturn(true);
+
+    shutdownHookRegistry.register(anyObject());
+
+    final String trigger =
+        "first-line\r\nsecond-line\r\nDevTools listening on ws://127.0.0.1:9123/\r\nthird-line\r\nforth-line\r\n";
+    expect(process.getInputStream()).andReturn(new ByteArrayInputStream(trigger.getBytes()));
+
+    expect(processLauncher.launch(eq("/test-binary-path"), anyObject())).andReturn(process);
+
+    expect(FilesUtils.randomTempDir("cdt-user-data-dir")).andReturn("temp-user-data-dir");
+
+    replayAll();
+    PowerMock.replay(FilesUtils.class);
+
+    ChromeService launch = launcher.launch();
+
+    verifyAll();
+    PowerMock.verify(FilesUtils.class);
+
+    assertNotNull(launch);
+    assertTrue(launch instanceof ChromeServiceImpl);
+
+    assertEquals(9123, ((ChromeServiceImpl) launch).getPort());
+
+    // Give a thread in waitForDevToolsServer method a bit more chance to collect logging events.
+    Thread.sleep(100);
+
+    assertEquals(5, loggingEvents.size());
+    assertEquals("[DEBUG] first-line", loggingEvents.get(0));
+    assertEquals("[DEBUG] second-line", loggingEvents.get(1));
+    assertEquals("[DEBUG] DevTools listening on ws://127.0.0.1:9123/", loggingEvents.get(2));
+    assertEquals("[DEBUG] third-line", loggingEvents.get(3));
+    assertEquals("[DEBUG] forth-line", loggingEvents.get(4));
+  }
+
+  @Test
+  public void testLaunchWithErrorLoggingDoesNotLogAnything()
+      throws IOException, ChromeProcessTimeoutException {
+    List<String> loggingEvents = new ArrayList<>();
+    registerAppenderOnDebugLogger(
+        "com.github.kklisura.cdt.launch.chrome.output", Level.ERROR, loggingEvents);
+
+    expect(environment.getEnv("CHROME_PATH")).andReturn("/test-binary-path");
+    expect(processLauncher.isExecutable("/test-binary-path")).andReturn(true);
+
+    shutdownHookRegistry.register(anyObject());
+
+    final String trigger =
+        "first-line\r\nsecond-line\r\nDevTools listening on ws://127.0.0.1:9123/\r\nthird-line\r\nforth-line\r\n";
+    expect(process.getInputStream()).andReturn(new ByteArrayInputStream(trigger.getBytes()));
+
+    expect(processLauncher.launch(eq("/test-binary-path"), anyObject())).andReturn(process);
+
+    expect(FilesUtils.randomTempDir("cdt-user-data-dir")).andReturn("temp-user-data-dir");
+
+    replayAll();
+    PowerMock.replay(FilesUtils.class);
+
+    ChromeService launch = launcher.launch();
+
+    verifyAll();
+    PowerMock.verify(FilesUtils.class);
+
+    assertNotNull(launch);
+    assertTrue(launch instanceof ChromeServiceImpl);
+
+    assertEquals(9123, ((ChromeServiceImpl) launch).getPort());
+
+    assertEquals(0, loggingEvents.size());
   }
 
   private static void assertUserDataDir(List<String> arguments) {
