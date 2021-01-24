@@ -95,6 +95,9 @@ public class ChromeArguments {
   @ChromeArgument("safebrowsing-disable-auto-update")
   private Boolean safebrowsingDisableAutoUpdate;
 
+  @ChromeArgument("enable-logging")
+  private String enableLogging;
+
   private Map<String, Object> additionalArguments;
 
   /**
@@ -297,6 +300,15 @@ public class ChromeArguments {
    */
   public Boolean getSafebrowsingDisableAutoUpdate() {
     return safebrowsingDisableAutoUpdate;
+  }
+
+  /**
+   * Gets the enable-logging argument.
+   *
+   * @return Enable logging argument.
+   */
+  public String getEnableLogging() {
+    return enableLogging;
   }
 
   /**
@@ -775,6 +787,16 @@ public class ChromeArguments {
      */
     public Builder safebrowsingDisableAutoUpdate() {
       return safebrowsingDisableAutoUpdate(Boolean.TRUE);
+    }
+
+    /**
+     * Sets the enable-logging argument.
+     *
+     * @return This builder.
+     */
+    public Builder enableLogging(String enableLogging) {
+      arguments.enableLogging = enableLogging;
+      return this;
     }
 
     /**

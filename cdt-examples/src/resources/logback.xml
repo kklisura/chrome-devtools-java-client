@@ -8,6 +8,8 @@
     </encoder>
   </appender>
 
+<!--  <logger name="com.github.kklisura.cdt.launch.chrome.output" level="DEBUG" />-->
+
   <root level="INFO">
     <appender-ref ref="STDOUT" />
   </root>

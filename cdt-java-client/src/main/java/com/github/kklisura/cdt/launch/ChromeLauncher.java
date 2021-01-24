@@ -374,6 +374,7 @@ public class ChromeLauncher implements AutoCloseable {
               }
             });
 
+    readLineThread.setName("chrome-launcher:read-line-thread");
     readLineThread.start();
 
     try {
