@@ -33,10 +33,12 @@ import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.dom.RGBA;
 import com.github.kklisura.cdt.protocol.types.overlay.ColorFormat;
+import com.github.kklisura.cdt.protocol.types.overlay.FlexNodeHighlightConfig;
 import com.github.kklisura.cdt.protocol.types.overlay.GridNodeHighlightConfig;
 import com.github.kklisura.cdt.protocol.types.overlay.HighlightConfig;
 import com.github.kklisura.cdt.protocol.types.overlay.HingeConfig;
 import com.github.kklisura.cdt.protocol.types.overlay.InspectMode;
+import com.github.kklisura.cdt.protocol.types.overlay.ScrollSnapHighlightConfig;
 import com.github.kklisura.cdt.protocol.types.overlay.SourceOrderConfig;
 import java.util.List;
 import java.util.Map;
@@ -270,6 +272,22 @@ public interface Overlay {
           List<GridNodeHighlightConfig> gridNodeHighlightConfigs);
 
   /**
+   * @param flexNodeHighlightConfigs An array of node identifiers and descriptors for the highlight
+   *     appearance.
+   */
+  void setShowFlexOverlays(
+      @ParamName("flexNodeHighlightConfigs")
+          List<FlexNodeHighlightConfig> flexNodeHighlightConfigs);
+
+  /**
+   * @param scrollSnapHighlightConfigs An array of node identifiers and descriptors for the
+   *     highlight appearance.
+   */
+  void setShowScrollSnapOverlays(
+      @ParamName("scrollSnapHighlightConfigs")
+          List<ScrollSnapHighlightConfig> scrollSnapHighlightConfigs);
+
+  /**
    * Requests that backend shows paint rectangles
    *
    * @param result True for showing paint rectangles
@@ -296,6 +314,13 @@ public interface Overlay {
    * @param show True for showing hit-test borders
    */
   void setShowHitTestBorders(@ParamName("show") Boolean show);
+
+  /**
+   * Request that backend shows an overlay with web vital metrics.
+   *
+   * @param show
+   */
+  void setShowWebVitals(@ParamName("show") Boolean show);
 
   /**
    * Paints viewport size upon main frame resize.

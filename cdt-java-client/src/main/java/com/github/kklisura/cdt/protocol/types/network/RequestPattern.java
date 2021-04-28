@@ -59,12 +59,12 @@ public class RequestPattern {
     this.resourceType = resourceType;
   }
 
-  /** Stage at wich to begin intercepting requests. Default is Request. */
+  /** Stage at which to begin intercepting requests. Default is Request. */
   public InterceptionStage getInterceptionStage() {
     return interceptionStage;
   }
 
-  /** Stage at wich to begin intercepting requests. Default is Request. */
+  /** Stage at which to begin intercepting requests. Default is Request. */
   public void setInterceptionStage(InterceptionStage interceptionStage) {
     this.interceptionStage = interceptionStage;
   }

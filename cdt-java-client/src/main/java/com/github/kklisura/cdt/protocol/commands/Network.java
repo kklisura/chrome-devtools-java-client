@@ -32,6 +32,7 @@ import com.github.kklisura.cdt.protocol.events.network.ResourceChangedPriority;
 import com.github.kklisura.cdt.protocol.events.network.ResponseReceived;
 import com.github.kklisura.cdt.protocol.events.network.ResponseReceivedExtraInfo;
 import com.github.kklisura.cdt.protocol.events.network.SignedExchangeReceived;
+import com.github.kklisura.cdt.protocol.events.network.TrustTokenOperationDone;
 import com.github.kklisura.cdt.protocol.events.network.WebSocketClosed;
 import com.github.kklisura.cdt.protocol.events.network.WebSocketCreated;
 import com.github.kklisura.cdt.protocol.events.network.WebSocketFrameError;
@@ -39,6 +40,9 @@ import com.github.kklisura.cdt.protocol.events.network.WebSocketFrameReceived;
 import com.github.kklisura.cdt.protocol.events.network.WebSocketFrameSent;
 import com.github.kklisura.cdt.protocol.events.network.WebSocketHandshakeResponseReceived;
 import com.github.kklisura.cdt.protocol.events.network.WebSocketWillSendHandshakeRequest;
+import com.github.kklisura.cdt.protocol.events.network.WebTransportClosed;
+import com.github.kklisura.cdt.protocol.events.network.WebTransportConnectionEstablished;
+import com.github.kklisura.cdt.protocol.events.network.WebTransportCreated;
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
@@ -50,10 +54,12 @@ import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.debugger.SearchMatch;
 import com.github.kklisura.cdt.protocol.types.network.AuthChallengeResponse;
 import com.github.kklisura.cdt.protocol.types.network.ConnectionType;
+import com.github.kklisura.cdt.protocol.types.network.ContentEncoding;
 import com.github.kklisura.cdt.protocol.types.network.Cookie;
 import com.github.kklisura.cdt.protocol.types.network.CookieParam;
 import com.github.kklisura.cdt.protocol.types.network.CookiePriority;
 import com.github.kklisura.cdt.protocol.types.network.CookieSameSite;
+import com.github.kklisura.cdt.protocol.types.network.CookieSourceScheme;
 import com.github.kklisura.cdt.protocol.types.network.ErrorReason;
 import com.github.kklisura.cdt.protocol.types.network.LoadNetworkResourceOptions;
 import com.github.kklisura.cdt.protocol.types.network.LoadNetworkResourcePageResult;
@@ -69,6 +75,19 @@ import java.util.Map;
  * file, data and other requests and responses, their headers, bodies, timing, etc.
  */
 public interface Network {
+
+  /**
+   * Sets a list of content encodings that will be accepted. Empty list means no encoding is
+   * accepted.
+   *
+   * @param encodings List of accepted content encodings.
+   */
+  @Experimental
+  void setAcceptedEncodings(@ParamName("encodings") List<ContentEncoding> encodings);
+
+  /** Clears accepted encodings set by setAcceptedEncodings */
+  @Experimental
+  void clearAcceptedEncodingsOverride();
 
   /** Tells whether clearing browser cache is supported. */
   @Deprecated
@@ -117,7 +136,7 @@ public interface Network {
    *     not be set in response to an authChallenge.
    * @param rawResponse If set the requests completes using with the provided base64 encoded raw
    *     response, including HTTP status line and headers etc... Must not be set in response to an
-   *     authChallenge.
+   *     authChallenge. (Encoded as a base64 string when passed over JSON)
    * @param url If set the request url will be modified in a way that's not observable by page. Must
    *     not be set in response to an authChallenge.
    * @param method If set this allows the request method to be overridden. Must not be set in
@@ -371,7 +390,7 @@ public interface Network {
    * @param name Cookie name.
    * @param value Cookie value.
    * @param url The request-URI to associate with the setting of the cookie. This value can affect
-   *     the default domain and path values of the created cookie.
+   *     the default domain, path, source port, and source scheme values of the created cookie.
    * @param domain Cookie domain.
    * @param path Cookie path.
    * @param secure True if cookie is secure.
@@ -379,6 +398,12 @@ public interface Network {
    * @param sameSite Cookie SameSite type.
    * @param expires Cookie expiration date, session cookie if not set
    * @param priority Cookie Priority type.
+   * @param sameParty True if cookie is SameParty.
+   * @param sourceScheme Cookie source scheme type.
+   * @param sourcePort Cookie source port. Valid values are {-1, [1, 65535]}, -1 indicates an
+   *     unspecified port. An unspecified port value allows protocol clients to emulate legacy
+   *     cookie scope for the port. This is a temporary ability and it will be removed in the
+   *     future.
    */
   @Returns("success")
   Boolean setCookie(
@@ -391,7 +416,10 @@ public interface Network {
       @Optional @ParamName("httpOnly") Boolean httpOnly,
       @Optional @ParamName("sameSite") CookieSameSite sameSite,
       @Optional @ParamName("expires") Double expires,
-      @Experimental @Optional @ParamName("priority") CookiePriority priority);
+      @Experimental @Optional @ParamName("priority") CookiePriority priority,
+      @Experimental @Optional @ParamName("sameParty") Boolean sameParty,
+      @Experimental @Optional @ParamName("sourceScheme") CookieSourceScheme sourceScheme,
+      @Experimental @Optional @ParamName("sourcePort") Integer sourcePort);
 
   /**
    * Sets given cookies.
@@ -544,6 +572,19 @@ public interface Network {
   EventListener onWebSocketWillSendHandshakeRequest(
       EventHandler<WebSocketWillSendHandshakeRequest> eventListener);
 
+  /** Fired upon WebTransport creation. */
+  @EventName("webTransportCreated")
+  EventListener onWebTransportCreated(EventHandler<WebTransportCreated> eventListener);
+
+  /** Fired when WebTransport handshake is finished. */
+  @EventName("webTransportConnectionEstablished")
+  EventListener onWebTransportConnectionEstablished(
+      EventHandler<WebTransportConnectionEstablished> eventListener);
+
+  /** Fired when WebTransport is disposed. */
+  @EventName("webTransportClosed")
+  EventListener onWebTransportClosed(EventHandler<WebTransportClosed> eventListener);
+
   /**
    * Fired when additional information about a requestWillBeSent event is available from the network
    * stack. Not every requestWillBeSent event will have an additional requestWillBeSentExtraInfo
@@ -563,4 +604,13 @@ public interface Network {
   @EventName("responseReceivedExtraInfo")
   @Experimental
   EventListener onResponseReceivedExtraInfo(EventHandler<ResponseReceivedExtraInfo> eventListener);
+
+  /**
+   * Fired exactly once for each Trust Token operation. Depending on the type of the operation and
+   * whether the operation succeeded or failed, the event is fired before the corresponding request
+   * was sent or after the response was received.
+   */
+  @EventName("trustTokenOperationDone")
+  @Experimental
+  EventListener onTrustTokenOperationDone(EventHandler<TrustTokenOperationDone> eventListener);
 }

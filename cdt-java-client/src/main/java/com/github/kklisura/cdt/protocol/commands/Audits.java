@@ -69,6 +69,20 @@ public interface Audits {
    */
   void enable();
 
+  /**
+   * Runs the contrast check for the target page. Found issues are reported using Audits.issueAdded
+   * event.
+   */
+  void checkContrast();
+
+  /**
+   * Runs the contrast check for the target page. Found issues are reported using Audits.issueAdded
+   * event.
+   *
+   * @param reportAAA Whether to report WCAG AAA level issues. Default is false.
+   */
+  void checkContrast(@Optional @ParamName("reportAAA") Boolean reportAAA);
+
   @EventName("issueAdded")
   EventListener onIssueAdded(EventHandler<IssueAdded> eventListener);
 }

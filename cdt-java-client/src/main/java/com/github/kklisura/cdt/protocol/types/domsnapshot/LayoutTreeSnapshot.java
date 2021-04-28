@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.protocol.types.domsnapshot;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import java.util.List;
 
@@ -43,6 +44,10 @@ public class LayoutTreeSnapshot {
   @Optional private List<List<Double>> scrollRects;
 
   @Optional private List<List<Double>> clientRects;
+
+  @Experimental @Optional private List<Integer> blendedBackgroundColors;
+
+  @Experimental @Optional private List<Double> textColorOpacities;
 
   /**
    * Index of the corresponding node in the `NodeTreeSnapshot` array returned by `captureSnapshot`.
@@ -150,5 +155,25 @@ public class LayoutTreeSnapshot {
   /** The client rect of nodes. Only available when includeDOMRects is set to true */
   public void setClientRects(List<List<Double>> clientRects) {
     this.clientRects = clientRects;
+  }
+
+  /** The list of background colors that are blended with colors of overlapping elements. */
+  public List<Integer> getBlendedBackgroundColors() {
+    return blendedBackgroundColors;
+  }
+
+  /** The list of background colors that are blended with colors of overlapping elements. */
+  public void setBlendedBackgroundColors(List<Integer> blendedBackgroundColors) {
+    this.blendedBackgroundColors = blendedBackgroundColors;
+  }
+
+  /** The list of computed text opacities. */
+  public List<Double> getTextColorOpacities() {
+    return textColorOpacities;
+  }
+
+  /** The list of computed text opacities. */
+  public void setTextColorOpacities(List<Double> textColorOpacities) {
+    this.textColorOpacities = textColorOpacities;
   }
 }

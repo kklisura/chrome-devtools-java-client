@@ -36,6 +36,8 @@ public class Initiator {
 
   @Optional private Double columnNumber;
 
+  @Optional private String requestId;
+
   /** Type of this initiator. */
   public InitiatorType getType() {
     return type;
@@ -102,5 +104,15 @@ public class Initiator {
    */
   public void setColumnNumber(Double columnNumber) {
     this.columnNumber = columnNumber;
+  }
+
+  /** Set if another request triggered this request (e.g. preflight). */
+  public String getRequestId() {
+    return requestId;
+  }
+
+  /** Set if another request triggered this request (e.g. preflight). */
+  public void setRequestId(String requestId) {
+    this.requestId = requestId;
   }
 }

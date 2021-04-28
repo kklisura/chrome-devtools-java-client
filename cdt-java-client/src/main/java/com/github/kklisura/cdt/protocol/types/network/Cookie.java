@@ -48,6 +48,12 @@ public class Cookie {
 
   @Experimental private CookiePriority priority;
 
+  @Experimental private Boolean sameParty;
+
+  @Experimental private CookieSourceScheme sourceScheme;
+
+  @Experimental private Integer sourcePort;
+
   /** Cookie name. */
   public String getName() {
     return name;
@@ -156,5 +162,43 @@ public class Cookie {
   /** Cookie Priority */
   public void setPriority(CookiePriority priority) {
     this.priority = priority;
+  }
+
+  /** True if cookie is SameParty. */
+  public Boolean getSameParty() {
+    return sameParty;
+  }
+
+  /** True if cookie is SameParty. */
+  public void setSameParty(Boolean sameParty) {
+    this.sameParty = sameParty;
+  }
+
+  /** Cookie source scheme type. */
+  public CookieSourceScheme getSourceScheme() {
+    return sourceScheme;
+  }
+
+  /** Cookie source scheme type. */
+  public void setSourceScheme(CookieSourceScheme sourceScheme) {
+    this.sourceScheme = sourceScheme;
+  }
+
+  /**
+   * Cookie source port. Valid values are {-1, [1, 65535]}, -1 indicates an unspecified port. An
+   * unspecified port value allows protocol clients to emulate legacy cookie scope for the port.
+   * This is a temporary ability and it will be removed in the future.
+   */
+  public Integer getSourcePort() {
+    return sourcePort;
+  }
+
+  /**
+   * Cookie source port. Valid values are {-1, [1, 65535]}, -1 indicates an unspecified port. An
+   * unspecified port value allows protocol clients to emulate legacy cookie scope for the port.
+   * This is a temporary ability and it will be removed in the future.
+   */
+  public void setSourcePort(Integer sourcePort) {
+    this.sourcePort = sourcePort;
   }
 }

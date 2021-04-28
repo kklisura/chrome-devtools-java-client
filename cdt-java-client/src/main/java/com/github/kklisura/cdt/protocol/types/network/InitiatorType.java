@@ -32,6 +32,8 @@ public enum InitiatorType {
   PRELOAD,
   @JsonProperty("SignedExchange")
   SIGNED_EXCHANGE,
+  @JsonProperty("preflight")
+  PREFLIGHT,
   @JsonProperty("other")
   OTHER
 }

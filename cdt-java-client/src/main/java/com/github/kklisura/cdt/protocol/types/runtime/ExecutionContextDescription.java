@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.protocol.types.runtime;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import java.util.Map;
 
@@ -31,6 +32,8 @@ public class ExecutionContextDescription {
   private String origin;
 
   private String name;
+
+  @Experimental private String uniqueId;
 
   @Optional private Map<String, Object> auxData;
 
@@ -68,6 +71,24 @@ public class ExecutionContextDescription {
   /** Human readable name describing given context. */
   public void setName(String name) {
     this.name = name;
+  }
+
+  /**
+   * A system-unique execution context identifier. Unlike the id, this is unique accross multiple
+   * processes, so can be reliably used to identify specific context while backend performs a
+   * cross-process navigation.
+   */
+  public String getUniqueId() {
+    return uniqueId;
+  }
+
+  /**
+   * A system-unique execution context identifier. Unlike the id, this is unique accross multiple
+   * processes, so can be reliably used to identify specific context while backend performs a
+   * cross-process navigation.
+   */
+  public void setUniqueId(String uniqueId) {
+    this.uniqueId = uniqueId;
   }
 
   /** Embedder-specific auxiliary data. */

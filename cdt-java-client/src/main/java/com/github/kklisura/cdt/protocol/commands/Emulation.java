@@ -47,10 +47,10 @@ public interface Emulation {
   @Returns("result")
   Boolean canEmulate();
 
-  /** Clears the overriden device metrics. */
+  /** Clears the overridden device metrics. */
   void clearDeviceMetricsOverride();
 
-  /** Clears the overriden Geolocation Position and Error. */
+  /** Clears the overridden Geolocation Position and Error. */
   void clearGeolocationOverride();
 
   /** Requests that page scale factor is reset to initial values. */
@@ -285,7 +285,7 @@ public interface Emulation {
    *     can be run before virtual is forced forwards to prevent deadlock.
    * @param waitForNavigation If set the virtual time policy change should be deferred until any
    *     frame starts navigating. Note any previous deferred policy change is superseded.
-   * @param initialVirtualTime If set, base::Time::Now will be overriden to initially return this
+   * @param initialVirtualTime If set, base::Time::Now will be overridden to initially return this
    *     value.
    */
   @Experimental

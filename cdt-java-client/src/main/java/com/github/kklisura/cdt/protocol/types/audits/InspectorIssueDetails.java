@@ -38,6 +38,16 @@ public class InspectorIssueDetails {
 
   @Optional private ContentSecurityPolicyIssueDetails contentSecurityPolicyIssueDetails;
 
+  @Optional private SharedArrayBufferIssueDetails sharedArrayBufferIssueDetails;
+
+  @Optional private TrustedWebActivityIssueDetails twaQualityEnforcementDetails;
+
+  @Optional private LowTextContrastIssueDetails lowTextContrastIssueDetails;
+
+  @Optional private CorsIssueDetails corsIssueDetails;
+
+  @Optional private AttributionReportingIssueDetails attributionReportingIssueDetails;
+
   public SameSiteCookieIssueDetails getSameSiteCookieIssueDetails() {
     return sameSiteCookieIssueDetails;
   }
@@ -78,5 +88,49 @@ public class InspectorIssueDetails {
   public void setContentSecurityPolicyIssueDetails(
       ContentSecurityPolicyIssueDetails contentSecurityPolicyIssueDetails) {
     this.contentSecurityPolicyIssueDetails = contentSecurityPolicyIssueDetails;
+  }
+
+  public SharedArrayBufferIssueDetails getSharedArrayBufferIssueDetails() {
+    return sharedArrayBufferIssueDetails;
+  }
+
+  public void setSharedArrayBufferIssueDetails(
+      SharedArrayBufferIssueDetails sharedArrayBufferIssueDetails) {
+    this.sharedArrayBufferIssueDetails = sharedArrayBufferIssueDetails;
+  }
+
+  public TrustedWebActivityIssueDetails getTwaQualityEnforcementDetails() {
+    return twaQualityEnforcementDetails;
+  }
+
+  public void setTwaQualityEnforcementDetails(
+      TrustedWebActivityIssueDetails twaQualityEnforcementDetails) {
+    this.twaQualityEnforcementDetails = twaQualityEnforcementDetails;
+  }
+
+  public LowTextContrastIssueDetails getLowTextContrastIssueDetails() {
+    return lowTextContrastIssueDetails;
+  }
+
+  public void setLowTextContrastIssueDetails(
+      LowTextContrastIssueDetails lowTextContrastIssueDetails) {
+    this.lowTextContrastIssueDetails = lowTextContrastIssueDetails;
+  }
+
+  public CorsIssueDetails getCorsIssueDetails() {
+    return corsIssueDetails;
+  }
+
+  public void setCorsIssueDetails(CorsIssueDetails corsIssueDetails) {
+    this.corsIssueDetails = corsIssueDetails;
+  }
+
+  public AttributionReportingIssueDetails getAttributionReportingIssueDetails() {
+    return attributionReportingIssueDetails;
+  }
+
+  public void setAttributionReportingIssueDetails(
+      AttributionReportingIssueDetails attributionReportingIssueDetails) {
+    this.attributionReportingIssueDetails = attributionReportingIssueDetails;
   }
 }

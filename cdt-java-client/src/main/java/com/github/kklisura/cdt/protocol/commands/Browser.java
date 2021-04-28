@@ -20,11 +20,16 @@ package com.github.kklisura.cdt.protocol.commands;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.events.browser.DownloadProgress;
+import com.github.kklisura.cdt.protocol.events.browser.DownloadWillBegin;
+import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
 import com.github.kklisura.cdt.protocol.support.annotations.ReturnTypeParameter;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
+import com.github.kklisura.cdt.protocol.support.types.EventHandler;
+import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.browser.Bounds;
 import com.github.kklisura.cdt.protocol.types.browser.BrowserCommandId;
 import com.github.kklisura.cdt.protocol.types.browser.Histogram;
@@ -118,14 +123,36 @@ public interface Browser {
    *     according to their dowmload guids.
    * @param browserContextId BrowserContext to set download behavior. When omitted, default browser
    *     context is used.
-   * @param downloadPath The default path to save downloaded files to. This is requred if behavior
+   * @param downloadPath The default path to save downloaded files to. This is required if behavior
    *     is set to 'allow' or 'allowAndName'.
+   * @param eventsEnabled Whether to emit download events (defaults to false).
    */
   @Experimental
   void setDownloadBehavior(
       @ParamName("behavior") SetDownloadBehaviorBehavior behavior,
       @Optional @ParamName("browserContextId") String browserContextId,
-      @Optional @ParamName("downloadPath") String downloadPath);
+      @Optional @ParamName("downloadPath") String downloadPath,
+      @Optional @ParamName("eventsEnabled") Boolean eventsEnabled);
+
+  /**
+   * Cancel a download if in progress
+   *
+   * @param guid Global unique identifier of the download.
+   */
+  @Experimental
+  void cancelDownload(@ParamName("guid") String guid);
+
+  /**
+   * Cancel a download if in progress
+   *
+   * @param guid Global unique identifier of the download.
+   * @param browserContextId BrowserContext to perform the action in. When omitted, default browser
+   *     context is used.
+   */
+  @Experimental
+  void cancelDownload(
+      @ParamName("guid") String guid,
+      @Optional @ParamName("browserContextId") String browserContextId);
 
   /** Close browser gracefully. */
   void close();
@@ -229,7 +256,7 @@ public interface Browser {
    * Set dock tile details, platform-specific.
    *
    * @param badgeLabel
-   * @param image Png encoded image.
+   * @param image Png encoded image. (Encoded as a base64 string when passed over JSON)
    */
   @Experimental
   void setDockTile(
@@ -243,4 +270,14 @@ public interface Browser {
    */
   @Experimental
   void executeBrowserCommand(@ParamName("commandId") BrowserCommandId commandId);
+
+  /** Fired when page is about to start a download. */
+  @EventName("downloadWillBegin")
+  @Experimental
+  EventListener onDownloadWillBegin(EventHandler<DownloadWillBegin> eventListener);
+
+  /** Fired when download makes progress. Last call has |done| == true. */
+  @EventName("downloadProgress")
+  @Experimental
+  EventListener onDownloadProgress(EventHandler<DownloadProgress> eventListener);
 }

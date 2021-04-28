@@ -20,13 +20,19 @@ package com.github.kklisura.cdt.protocol.commands;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.events.input.DragIntercepted;
+import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdt.protocol.support.types.EventHandler;
+import com.github.kklisura.cdt.protocol.support.types.EventListener;
+import com.github.kklisura.cdt.protocol.types.input.DispatchDragEventType;
 import com.github.kklisura.cdt.protocol.types.input.DispatchKeyEventType;
 import com.github.kklisura.cdt.protocol.types.input.DispatchMouseEventPointerType;
 import com.github.kklisura.cdt.protocol.types.input.DispatchMouseEventType;
 import com.github.kklisura.cdt.protocol.types.input.DispatchTouchEventType;
+import com.github.kklisura.cdt.protocol.types.input.DragData;
 import com.github.kklisura.cdt.protocol.types.input.EmulateTouchFromMouseEventType;
 import com.github.kklisura.cdt.protocol.types.input.GestureSourceType;
 import com.github.kklisura.cdt.protocol.types.input.MouseButton;
@@ -34,6 +40,43 @@ import com.github.kklisura.cdt.protocol.types.input.TouchPoint;
 import java.util.List;
 
 public interface Input {
+
+  /**
+   * Dispatches a drag event into the page.
+   *
+   * @param type Type of the drag event.
+   * @param x X coordinate of the event relative to the main frame's viewport in CSS pixels.
+   * @param y Y coordinate of the event relative to the main frame's viewport in CSS pixels. 0
+   *     refers to the top of the viewport and Y increases as it proceeds towards the bottom of the
+   *     viewport.
+   * @param data
+   */
+  @Experimental
+  void dispatchDragEvent(
+      @ParamName("type") DispatchDragEventType type,
+      @ParamName("x") Double x,
+      @ParamName("y") Double y,
+      @ParamName("data") DragData data);
+
+  /**
+   * Dispatches a drag event into the page.
+   *
+   * @param type Type of the drag event.
+   * @param x X coordinate of the event relative to the main frame's viewport in CSS pixels.
+   * @param y Y coordinate of the event relative to the main frame's viewport in CSS pixels. 0
+   *     refers to the top of the viewport and Y increases as it proceeds towards the bottom of the
+   *     viewport.
+   * @param data
+   * @param modifiers Bit field representing pressed modifier keys. Alt=1, Ctrl=2, Meta/Command=4,
+   *     Shift=8 (default: 0).
+   */
+  @Experimental
+  void dispatchDragEvent(
+      @ParamName("type") DispatchDragEventType type,
+      @ParamName("x") Double x,
+      @ParamName("y") Double y,
+      @ParamName("data") DragData data,
+      @Optional @ParamName("modifiers") Integer modifiers);
 
   /**
    * Dispatches a key event to the page.
@@ -238,6 +281,15 @@ public interface Input {
   void setIgnoreInputEvents(@ParamName("ignore") Boolean ignore);
 
   /**
+   * Prevents default drag and drop behavior and instead emits `Input.dragIntercepted` events. Drag
+   * and drop behavior can be directly controlled via `Input.dispatchDragEvent`.
+   *
+   * @param enabled
+   */
+  @Experimental
+  void setInterceptDrags(@ParamName("enabled") Boolean enabled);
+
+  /**
    * Synthesizes a pinch gesture over a time period by issuing appropriate touch events.
    *
    * @param x X coordinate of the start of the gesture in CSS pixels.
@@ -338,4 +390,12 @@ public interface Input {
       @Optional @ParamName("duration") Integer duration,
       @Optional @ParamName("tapCount") Integer tapCount,
       @Optional @ParamName("gestureSourceType") GestureSourceType gestureSourceType);
+
+  /**
+   * Emitted only when `Input.setInterceptDrags` is enabled. Use this data with
+   * `Input.dispatchDragEvent` to restore normal drag and drop behavior.
+   */
+  @EventName("dragIntercepted")
+  @Experimental
+  EventListener onDragIntercepted(EventHandler<DragIntercepted> eventListener);
 }

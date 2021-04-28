@@ -53,6 +53,7 @@ import com.github.kklisura.cdt.protocol.commands.Network;
 import com.github.kklisura.cdt.protocol.commands.Overlay;
 import com.github.kklisura.cdt.protocol.commands.Page;
 import com.github.kklisura.cdt.protocol.commands.Performance;
+import com.github.kklisura.cdt.protocol.commands.PerformanceTimeline;
 import com.github.kklisura.cdt.protocol.commands.Profiler;
 import com.github.kklisura.cdt.protocol.commands.Runtime;
 import com.github.kklisura.cdt.protocol.commands.Schema;
@@ -169,6 +170,9 @@ public interface ChromeDevTools {
 
   /** Returns the Performance command. */
   Performance getPerformance();
+
+  /** Returns the PerformanceTimeline command. */
+  PerformanceTimeline getPerformanceTimeline();
 
   /** Returns the Security command. */
   Security getSecurity();

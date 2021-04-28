@@ -79,7 +79,7 @@ public class Node {
 
   @Optional private List<Node> pseudoElements;
 
-  @Optional private Node importedDocument;
+  @Deprecated @Optional private Node importedDocument;
 
   @Optional private List<BackendNode> distributedNodes;
 
@@ -347,12 +347,18 @@ public class Node {
     this.pseudoElements = pseudoElements;
   }
 
-  /** Import document for the HTMLImport links. */
+  /**
+   * Deprecated, as the HTML Imports API has been removed (crbug.com/937746). This property used to
+   * return the imported document for the HTMLImport links. The property is always undefined now.
+   */
   public Node getImportedDocument() {
     return importedDocument;
   }
 
-  /** Import document for the HTMLImport links. */
+  /**
+   * Deprecated, as the HTML Imports API has been removed (crbug.com/937746). This property used to
+   * return the imported document for the HTMLImport links. The property is always undefined now.
+   */
   public void setImportedDocument(Node importedDocument) {
     this.importedDocument = importedDocument;
   }

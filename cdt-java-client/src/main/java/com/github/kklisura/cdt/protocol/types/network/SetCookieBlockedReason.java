@@ -53,5 +53,9 @@ public enum SetCookieBlockedReason {
   @JsonProperty("SchemefulSameSiteLax")
   SCHEMEFUL_SAME_SITE_LAX,
   @JsonProperty("SchemefulSameSiteUnspecifiedTreatedAsLax")
-  SCHEMEFUL_SAME_SITE_UNSPECIFIED_TREATED_AS_LAX
+  SCHEMEFUL_SAME_SITE_UNSPECIFIED_TREATED_AS_LAX,
+  @JsonProperty("SamePartyFromCrossPartyContext")
+  SAME_PARTY_FROM_CROSS_PARTY_CONTEXT,
+  @JsonProperty("SamePartyConflictsWithOtherAttributes")
+  SAME_PARTY_CONFLICTS_WITH_OTHER_ATTRIBUTES
 }

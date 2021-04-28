@@ -21,7 +21,9 @@ package com.github.kklisura.cdt.protocol.events.network;
  */
 
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.network.BlockedCookieWithReason;
+import com.github.kklisura.cdt.protocol.types.network.ClientSecurityState;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +41,8 @@ public class RequestWillBeSentExtraInfo {
   private List<BlockedCookieWithReason> associatedCookies;
 
   private Map<String, Object> headers;
+
+  @Optional private ClientSecurityState clientSecurityState;
 
   /** Request identifier. Used to match this information to an existing requestWillBeSent event. */
   public String getRequestId() {
@@ -76,5 +80,15 @@ public class RequestWillBeSentExtraInfo {
   /** Raw request headers as they will be sent over the wire. */
   public void setHeaders(Map<String, Object> headers) {
     this.headers = headers;
+  }
+
+  /** The client security state set for the request. */
+  public ClientSecurityState getClientSecurityState() {
+    return clientSecurityState;
+  }
+
+  /** The client security state set for the request. */
+  public void setClientSecurityState(ClientSecurityState clientSecurityState) {
+    this.clientSecurityState = clientSecurityState;
   }
 }

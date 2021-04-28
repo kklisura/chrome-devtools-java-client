@@ -26,7 +26,8 @@ import java.util.List;
 
 /**
  * Determines what type of Trust Token operation is executed and depending on the type, some
- * additional parameters.
+ * additional parameters. The values are specified in
+ * third_party/blink/renderer/core/fetch/trust_token.idl.
  */
 @Experimental
 public class TrustTokenParams {
@@ -46,7 +47,7 @@ public class TrustTokenParams {
   }
 
   /**
-   * Only set for "srr-token-redemption" type and determine whether to request a fresh SRR or use a
+   * Only set for "token-redemption" type and determine whether to request a fresh SRR or use a
    * still valid cached SRR.
    */
   public TrustTokenParamsRefreshPolicy getRefreshPolicy() {
@@ -54,7 +55,7 @@ public class TrustTokenParams {
   }
 
   /**
-   * Only set for "srr-token-redemption" type and determine whether to request a fresh SRR or use a
+   * Only set for "token-redemption" type and determine whether to request a fresh SRR or use a
    * still valid cached SRR.
    */
   public void setRefreshPolicy(TrustTokenParamsRefreshPolicy refreshPolicy) {

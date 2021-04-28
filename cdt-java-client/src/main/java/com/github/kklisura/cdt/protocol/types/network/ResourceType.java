@@ -54,6 +54,8 @@ public enum ResourceType {
   PING,
   @JsonProperty("CSPViolationReport")
   CSP_VIOLATION_REPORT,
+  @JsonProperty("Preflight")
+  PREFLIGHT,
   @JsonProperty("Other")
   OTHER
 }

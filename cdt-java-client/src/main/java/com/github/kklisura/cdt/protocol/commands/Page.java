@@ -20,7 +20,9 @@ package com.github.kklisura.cdt.protocol.commands;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.events.page.BackForwardCacheNotUsed;
 import com.github.kklisura.cdt.protocol.events.page.CompilationCacheProduced;
+import com.github.kklisura.cdt.protocol.events.page.DocumentOpened;
 import com.github.kklisura.cdt.protocol.events.page.DomContentEventFired;
 import com.github.kklisura.cdt.protocol.events.page.DownloadProgress;
 import com.github.kklisura.cdt.protocol.events.page.DownloadWillBegin;
@@ -56,6 +58,7 @@ import com.github.kklisura.cdt.protocol.types.debugger.SearchMatch;
 import com.github.kklisura.cdt.protocol.types.page.AppManifest;
 import com.github.kklisura.cdt.protocol.types.page.CaptureScreenshotFormat;
 import com.github.kklisura.cdt.protocol.types.page.CaptureSnapshotFormat;
+import com.github.kklisura.cdt.protocol.types.page.CompilationCacheParams;
 import com.github.kklisura.cdt.protocol.types.page.FontFamilies;
 import com.github.kklisura.cdt.protocol.types.page.FontSizes;
 import com.github.kklisura.cdt.protocol.types.page.FrameResourceTree;
@@ -64,6 +67,7 @@ import com.github.kklisura.cdt.protocol.types.page.InstallabilityError;
 import com.github.kklisura.cdt.protocol.types.page.LayoutMetrics;
 import com.github.kklisura.cdt.protocol.types.page.Navigate;
 import com.github.kklisura.cdt.protocol.types.page.NavigationHistory;
+import com.github.kklisura.cdt.protocol.types.page.PermissionsPolicyFeatureState;
 import com.github.kklisura.cdt.protocol.types.page.PrintToPDF;
 import com.github.kklisura.cdt.protocol.types.page.PrintToPDFTransferMode;
 import com.github.kklisura.cdt.protocol.types.page.ReferrerPolicy;
@@ -124,13 +128,15 @@ public interface Page {
    * @param clip Capture the screenshot of a given region only.
    * @param fromSurface Capture the screenshot from the surface, rather than the view. Defaults to
    *     true.
+   * @param captureBeyondViewport Capture the screenshot beyond the viewport. Defaults to false.
    */
   @Returns("data")
   String captureScreenshot(
       @Optional @ParamName("format") CaptureScreenshotFormat format,
       @Optional @ParamName("quality") Integer quality,
       @Optional @ParamName("clip") Viewport clip,
-      @Experimental @Optional @ParamName("fromSurface") Boolean fromSurface);
+      @Experimental @Optional @ParamName("fromSurface") Boolean fromSurface,
+      @Experimental @Optional @ParamName("captureBeyondViewport") Boolean captureBeyondViewport);
 
   /**
    * Returns a snapshot of the page as a string. For MHTML format, the serialization includes
@@ -402,6 +408,17 @@ public interface Page {
   void setBypassCSP(@ParamName("enabled") Boolean enabled);
 
   /**
+   * Get Permissions Policy state on given frame.
+   *
+   * @param frameId
+   */
+  @Experimental
+  @Returns("states")
+  @ReturnTypeParameter(PermissionsPolicyFeatureState.class)
+  List<PermissionsPolicyFeatureState> getPermissionsPolicyState(
+      @ParamName("frameId") String frameId);
+
+  /**
    * Set generic font families.
    *
    * @param fontFamilies Specifies font families to set. If a font family is not specified, it won't
@@ -442,7 +459,7 @@ public interface Page {
    *
    * @param behavior Whether to allow all or deny all download requests, or use default Chrome
    *     behavior if available (otherwise deny).
-   * @param downloadPath The default path to save downloaded files to. This is requred if behavior
+   * @param downloadPath The default path to save downloaded files to. This is required if behavior
    *     is set to 'allow'
    */
   @Deprecated
@@ -505,7 +522,8 @@ public interface Page {
   void stopScreencast();
 
   /**
-   * Forces compilation cache to be generated for every subresource script.
+   * Forces compilation cache to be generated for every subresource script. See also:
+   * `Page.produceCompilationCache`.
    *
    * @param enabled
    */
@@ -513,11 +531,25 @@ public interface Page {
   void setProduceCompilationCache(@ParamName("enabled") Boolean enabled);
 
   /**
+   * Requests backend to produce compilation cache for the specified scripts. Unlike
+   * setProduceCompilationCache, this allows client to only produce cache for specific scripts.
+   * `scripts` are appeneded to the list of scripts for which the cache for would produced.
+   * Disabling compilation cache with `setProduceCompilationCache` would reset all pending cache
+   * requests. The list may also be reset during page navigation. When script with a matching URL is
+   * encountered, the cache is optionally produced upon backend discretion, based on internal
+   * heuristics. See also: `Page.compilationCacheProduced`.
+   *
+   * @param scripts
+   */
+  @Experimental
+  void produceCompilationCache(@ParamName("scripts") List<CompilationCacheParams> scripts);
+
+  /**
    * Seeds compilation cache for given url. Compilation cache does not survive cross-process
    * navigation.
    *
    * @param url
-   * @param data Base64-encoded data
+   * @param data Base64-encoded data (Encoded as a base64 string when passed over JSON)
    */
   @Experimental
   void addCompilationCache(@ParamName("url") String url, @ParamName("data") String data);
@@ -585,6 +617,11 @@ public interface Page {
   @EventName("frameNavigated")
   EventListener onFrameNavigated(EventHandler<FrameNavigated> eventListener);
 
+  /** Fired when opening document to write to. */
+  @EventName("documentOpened")
+  @Experimental
+  EventListener onDocumentOpened(EventHandler<DocumentOpened> eventListener);
+
   @EventName("frameResized")
   @Experimental
   EventListener onFrameResized(EventHandler<FrameResized> eventListener);
@@ -612,13 +649,21 @@ public interface Page {
   @Experimental
   EventListener onFrameStoppedLoading(EventHandler<FrameStoppedLoading> eventListener);
 
-  /** Fired when page is about to start a download. */
+  /**
+   * Fired when page is about to start a download. Deprecated. Use Browser.downloadWillBegin
+   * instead.
+   */
   @EventName("downloadWillBegin")
+  @Deprecated
   @Experimental
   EventListener onDownloadWillBegin(EventHandler<DownloadWillBegin> eventListener);
 
-  /** Fired when download makes progress. Last call has |done| == true. */
+  /**
+   * Fired when download makes progress. Last call has |done| == true. Deprecated. Use
+   * Browser.downloadProgress instead.
+   */
   @EventName("downloadProgress")
+  @Deprecated
   @Experimental
   EventListener onDownloadProgress(EventHandler<DownloadProgress> eventListener);
 
@@ -647,6 +692,16 @@ public interface Page {
   /** Fired for top level page lifecycle events such as navigation, load, paint, etc. */
   @EventName("lifecycleEvent")
   EventListener onLifecycleEvent(EventHandler<LifecycleEvent> eventListener);
+
+  /**
+   * Fired for failed bfcache history navigations if BackForwardCache feature is enabled. Do not
+   * assume any ordering with the Page.frameNavigated event. This event is fired only for main-frame
+   * history navigation where the document changes (non-same-document navigations), when bfcache
+   * navigation fails.
+   */
+  @EventName("backForwardCacheNotUsed")
+  @Experimental
+  EventListener onBackForwardCacheNotUsed(EventHandler<BackForwardCacheNotUsed> eventListener);
 
   @EventName("loadEventFired")
   EventListener onLoadEventFired(EventHandler<LoadEventFired> eventListener);

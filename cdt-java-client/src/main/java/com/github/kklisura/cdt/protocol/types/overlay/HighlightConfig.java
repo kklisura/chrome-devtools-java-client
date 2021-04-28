@@ -56,6 +56,12 @@ public class HighlightConfig {
 
   @Optional private GridHighlightConfig gridHighlightConfig;
 
+  @Optional private FlexContainerHighlightConfig flexContainerHighlightConfig;
+
+  @Optional private FlexItemHighlightConfig flexItemHighlightConfig;
+
+  @Optional private ContrastAlgorithm contrastAlgorithm;
+
   /** Whether the node info tooltip should be shown (default: false). */
   public Boolean getShowInfo() {
     return showInfo;
@@ -204,5 +210,36 @@ public class HighlightConfig {
   /** The grid layout highlight configuration (default: all transparent). */
   public void setGridHighlightConfig(GridHighlightConfig gridHighlightConfig) {
     this.gridHighlightConfig = gridHighlightConfig;
+  }
+
+  /** The flex container highlight configuration (default: all transparent). */
+  public FlexContainerHighlightConfig getFlexContainerHighlightConfig() {
+    return flexContainerHighlightConfig;
+  }
+
+  /** The flex container highlight configuration (default: all transparent). */
+  public void setFlexContainerHighlightConfig(
+      FlexContainerHighlightConfig flexContainerHighlightConfig) {
+    this.flexContainerHighlightConfig = flexContainerHighlightConfig;
+  }
+
+  /** The flex item highlight configuration (default: all transparent). */
+  public FlexItemHighlightConfig getFlexItemHighlightConfig() {
+    return flexItemHighlightConfig;
+  }
+
+  /** The flex item highlight configuration (default: all transparent). */
+  public void setFlexItemHighlightConfig(FlexItemHighlightConfig flexItemHighlightConfig) {
+    this.flexItemHighlightConfig = flexItemHighlightConfig;
+  }
+
+  /** The contrast algorithm to use for the contrast ratio (default: aa). */
+  public ContrastAlgorithm getContrastAlgorithm() {
+    return contrastAlgorithm;
+  }
+
+  /** The contrast algorithm to use for the contrast ratio (default: aa). */
+  public void setContrastAlgorithm(ContrastAlgorithm contrastAlgorithm) {
+    this.contrastAlgorithm = contrastAlgorithm;
   }
 }

@@ -38,8 +38,6 @@ public enum BlockedReason {
   SUBRESOURCE_FILTER,
   @JsonProperty("content-type")
   CONTENT_TYPE,
-  @JsonProperty("collapsed-by-client")
-  COLLAPSED_BY_CLIENT,
   @JsonProperty("coep-frame-resource-needs-coep-header")
   COEP_FRAME_RESOURCE_NEEDS_COEP_HEADER,
   @JsonProperty("coop-sandboxed-iframe-cannot-navigate-to-coop-page")

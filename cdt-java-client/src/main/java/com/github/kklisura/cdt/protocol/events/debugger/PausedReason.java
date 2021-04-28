@@ -28,6 +28,8 @@ public enum PausedReason {
   AMBIGUOUS,
   @JsonProperty("assert")
   ASSERT,
+  @JsonProperty("CSPViolation")
+  CSP_VIOLATION,
   @JsonProperty("debugCommand")
   DEBUG_COMMAND,
   @JsonProperty("DOM")

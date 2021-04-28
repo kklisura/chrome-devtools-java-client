@@ -35,6 +35,8 @@ public enum PermissionType {
   CLIPBOARD_READ_WRITE,
   @JsonProperty("clipboardSanitizedWrite")
   CLIPBOARD_SANITIZED_WRITE,
+  @JsonProperty("displayCapture")
+  DISPLAY_CAPTURE,
   @JsonProperty("durableStorage")
   DURABLE_STORAGE,
   @JsonProperty("flash")

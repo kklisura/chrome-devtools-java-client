@@ -37,6 +37,7 @@ import com.github.kklisura.cdt.protocol.types.tracing.StartTransferMode;
 import com.github.kklisura.cdt.protocol.types.tracing.StreamCompression;
 import com.github.kklisura.cdt.protocol.types.tracing.StreamFormat;
 import com.github.kklisura.cdt.protocol.types.tracing.TraceConfig;
+import com.github.kklisura.cdt.protocol.types.tracing.TracingBackend;
 import java.util.List;
 
 @Experimental
@@ -87,6 +88,10 @@ public interface Tracing {
    * @param streamCompression Compression format to use. This only applies when using
    *     `ReturnAsStream` transfer mode (defaults to `none`)
    * @param traceConfig
+   * @param perfettoConfig Base64-encoded serialized perfetto.protos.TraceConfig protobuf message
+   *     When specified, the parameters `categories`, `options`, `traceConfig` are ignored. (Encoded
+   *     as a base64 string when passed over JSON)
+   * @param tracingBackend Backend type (defaults to `auto`)
    */
   void start(
       @Deprecated @Optional @ParamName("categories") String categories,
@@ -95,7 +100,9 @@ public interface Tracing {
       @Optional @ParamName("transferMode") StartTransferMode transferMode,
       @Optional @ParamName("streamFormat") StreamFormat streamFormat,
       @Optional @ParamName("streamCompression") StreamCompression streamCompression,
-      @Optional @ParamName("traceConfig") TraceConfig traceConfig);
+      @Optional @ParamName("traceConfig") TraceConfig traceConfig,
+      @Optional @ParamName("perfettoConfig") String perfettoConfig,
+      @Optional @ParamName("tracingBackend") TracingBackend tracingBackend);
 
   @EventName("bufferUsage")
   EventListener onBufferUsage(EventHandler<BufferUsage> eventListener);

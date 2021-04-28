@@ -22,8 +22,11 @@ package com.github.kklisura.cdt.protocol.events.page;
 
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 
-/** Fired when page is about to start a download. */
+/**
+ * Fired when page is about to start a download. Deprecated. Use Browser.downloadWillBegin instead.
+ */
 @Experimental
+@Deprecated
 public class DownloadWillBegin {
 
   private String frameId;

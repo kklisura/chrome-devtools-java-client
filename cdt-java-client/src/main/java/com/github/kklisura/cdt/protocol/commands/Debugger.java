@@ -36,7 +36,6 @@ import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.debugger.BreakLocation;
 import com.github.kklisura.cdt.protocol.types.debugger.ContinueToLocationTargetCallFrames;
 import com.github.kklisura.cdt.protocol.types.debugger.EvaluateOnCallFrame;
-import com.github.kklisura.cdt.protocol.types.debugger.ExecuteWasmEvaluator;
 import com.github.kklisura.cdt.protocol.types.debugger.Location;
 import com.github.kklisura.cdt.protocol.types.debugger.LocationRange;
 import com.github.kklisura.cdt.protocol.types.debugger.RestartFrame;
@@ -133,29 +132,6 @@ public interface Debugger {
       @Optional @ParamName("returnByValue") Boolean returnByValue,
       @Experimental @Optional @ParamName("generatePreview") Boolean generatePreview,
       @Optional @ParamName("throwOnSideEffect") Boolean throwOnSideEffect,
-      @Experimental @Optional @ParamName("timeout") Double timeout);
-
-  /**
-   * Execute a Wasm Evaluator module on a given call frame.
-   *
-   * @param callFrameId WebAssembly call frame identifier to evaluate on.
-   * @param evaluator Code of the evaluator module.
-   */
-  @Experimental
-  ExecuteWasmEvaluator executeWasmEvaluator(
-      @ParamName("callFrameId") String callFrameId, @ParamName("evaluator") String evaluator);
-
-  /**
-   * Execute a Wasm Evaluator module on a given call frame.
-   *
-   * @param callFrameId WebAssembly call frame identifier to evaluate on.
-   * @param evaluator Code of the evaluator module.
-   * @param timeout Terminate execution after timing out (number of milliseconds).
-   */
-  @Experimental
-  ExecuteWasmEvaluator executeWasmEvaluator(
-      @ParamName("callFrameId") String callFrameId,
-      @ParamName("evaluator") String evaluator,
       @Experimental @Optional @ParamName("timeout") Double timeout);
 
   /**

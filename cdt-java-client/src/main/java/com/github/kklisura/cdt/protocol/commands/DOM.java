@@ -692,7 +692,7 @@ public interface DOM {
   @EventName("childNodeRemoved")
   EventListener onChildNodeRemoved(EventHandler<ChildNodeRemoved> eventListener);
 
-  /** Called when distrubution is changed. */
+  /** Called when distribution is changed. */
   @EventName("distributedNodesUpdated")
   @Experimental
   EventListener onDistributedNodesUpdated(EventHandler<DistributedNodesUpdated> eventListener);

@@ -20,13 +20,25 @@ package com.github.kklisura.cdt.protocol.types.audits;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
+
 public class SourceCodeLocation {
+
+  @Optional private String scriptId;
 
   private String url;
 
   private Integer lineNumber;
 
   private Integer columnNumber;
+
+  public String getScriptId() {
+    return scriptId;
+  }
+
+  public void setScriptId(String scriptId) {
+    this.scriptId = scriptId;
+  }
 
   public String getUrl() {
     return url;

@@ -24,7 +24,7 @@ import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.types.dom.BackendNode;
 import java.util.List;
 
-/** Called when distrubution is changed. */
+/** Called when distribution is changed. */
 @Experimental
 public class DistributedNodesUpdated {
 
@@ -32,12 +32,12 @@ public class DistributedNodesUpdated {
 
   private List<BackendNode> distributedNodes;
 
-  /** Insertion point where distrubuted nodes were updated. */
+  /** Insertion point where distributed nodes were updated. */
   public Integer getInsertionPointId() {
     return insertionPointId;
   }
 
-  /** Insertion point where distrubuted nodes were updated. */
+  /** Insertion point where distributed nodes were updated. */
   public void setInsertionPointId(Integer insertionPointId) {
     this.insertionPointId = insertionPointId;
   }
