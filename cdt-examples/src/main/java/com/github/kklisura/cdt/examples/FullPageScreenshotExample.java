@@ -36,7 +36,7 @@ import java.util.Base64;
 
 /**
  * Takes a full page screenshot. The output screenshot dimensions will be page width x page height,
- * for example when capturing http://github.com the output screenshot image will be 1200 × 6598.
+ * for example when capturing https://news.ycombinator.com/ the output screenshot image will be 1185x1214
  *
  * @author Kenan Klisura
  */
@@ -66,7 +66,8 @@ public class FullPageScreenshotExample {
 
     dump(
         outputFilename,
-        page.captureScreenshot(CaptureScreenshotFormat.PNG, 100, viewport, Boolean.TRUE));
+        page.captureScreenshot(
+            CaptureScreenshotFormat.PNG, 100, viewport, Boolean.TRUE, Boolean.FALSE));
   }
 
   public static void main(String[] args) {
@@ -100,7 +101,7 @@ public class FullPageScreenshotExample {
     page.enable();
 
     // Navigate to github.com.
-    page.navigate("http://github.com");
+    page.navigate("https://news.ycombinator.com/");
 
     devToolsService.waitUntilClosed();
   }

@@ -12,6 +12,8 @@ For more information on DevTools, see https://chromedevtools.github.io/devtools-
 
 [v3.0.0](https://github.com/kklisura/chrome-devtools-java-client/tree/v3.0.0) tested on Google Chrome Version 86.0.4240.111. Protocol files from [dev-tools-protocol#fcb68d10bc](https://github.com/ChromeDevTools/devtools-protocol/tree/fcb68d10bc5258ebf96121caf57200069f6e6731/json)
 
+[v4.0.0](https://github.com/kklisura/chrome-devtools-java-client/tree/v4.0.0) tested on Google Chrome Version 90.0.4430.212. Protocol files from [dev-tools-protocol#987bbb1124](https://github.com/ChromeDevTools/devtools-protocol/tree/987bbb1124f098c7e4bca6b2f91c7e96b350a8e6/json)
+
 [1] https://chromedevtools.github.io/devtools-protocol/.
 
 ## Usage
@@ -22,7 +24,7 @@ Add the following dependency to your `pom.xml`:
 <dependency>
   <groupId>com.github.kklisura.cdt</groupId>
   <artifactId>cdt-java-client</artifactId>
-  <version>3.0.0</version>
+  <version>4.0.0</version>
 </dependency>
 ```
 
