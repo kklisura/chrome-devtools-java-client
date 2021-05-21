@@ -36,7 +36,8 @@ import java.util.Base64;
 
 /**
  * Takes a full page screenshot. The output screenshot dimensions will be page width x page height,
- * for example when capturing https://news.ycombinator.com/ the output screenshot image will be 1185x1214
+ * for example when capturing https://news.ycombinator.com/ the output screenshot image will be
+ * 1185x1214
  *
  * @author Kenan Klisura
  */

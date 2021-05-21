@@ -33,8 +33,8 @@ import java.io.IOException;
 import java.util.Base64;
 
 /**
- * The following example opens the HackerNews and prints its page to PDF. PDF printing is
- * supported on chrome headless at the moment.
+ * The following example opens the HackerNews and prints its page to PDF. PDF printing is supported
+ * on chrome headless at the moment.
  *
  * @author Kenan Klisura
  */
