@@ -71,5 +71,7 @@ public enum CorsError {
   @JsonProperty("HeaderDisallowedByPreflightResponse")
   HEADER_DISALLOWED_BY_PREFLIGHT_RESPONSE,
   @JsonProperty("RedirectContainsCredentials")
-  REDIRECT_CONTAINS_CREDENTIALS
+  REDIRECT_CONTAINS_CREDENTIALS,
+  @JsonProperty("InsecurePrivateNetwork")
+  INSECURE_PRIVATE_NETWORK
 }

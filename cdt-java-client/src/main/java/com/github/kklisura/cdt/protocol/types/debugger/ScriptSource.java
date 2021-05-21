@@ -38,12 +38,12 @@ public class ScriptSource {
     this.scriptSource = scriptSource;
   }
 
-  /** Wasm bytecode. */
+  /** Wasm bytecode. (Encoded as a base64 string when passed over JSON) */
   public String getBytecode() {
     return bytecode;
   }
 
-  /** Wasm bytecode. */
+  /** Wasm bytecode. (Encoded as a base64 string when passed over JSON) */
   public void setBytecode(String bytecode) {
     this.bytecode = bytecode;
   }

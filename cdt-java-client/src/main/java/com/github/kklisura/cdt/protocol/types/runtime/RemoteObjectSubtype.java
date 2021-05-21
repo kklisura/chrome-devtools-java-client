@@ -22,7 +22,10 @@ package com.github.kklisura.cdt.protocol.types.runtime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Object subtype hint. Specified for `object` or `wasm` type values only. */
+/**
+ * Object subtype hint. Specified for `object` type values only. NOTE: If you change anything here,
+ * make sure to also update `subtype` in `ObjectPreview` and `PropertyPreview` below.
+ */
 public enum RemoteObjectSubtype {
   @JsonProperty("array")
   ARRAY,
@@ -58,16 +61,8 @@ public enum RemoteObjectSubtype {
   ARRAYBUFFER,
   @JsonProperty("dataview")
   DATAVIEW,
-  @JsonProperty("i32")
-  I_32,
-  @JsonProperty("i64")
-  I_64,
-  @JsonProperty("f32")
-  F_32,
-  @JsonProperty("f64")
-  F_64,
-  @JsonProperty("v128")
-  V_128,
-  @JsonProperty("externref")
-  EXTERNREF
+  @JsonProperty("webassemblymemory")
+  WEBASSEMBLYMEMORY,
+  @JsonProperty("wasmvalue")
+  WASMVALUE
 }

@@ -64,19 +64,25 @@ public class Credential {
     this.rpId = rpId;
   }
 
-  /** The ECDSA P-256 private key in PKCS#8 format. */
+  /**
+   * The ECDSA P-256 private key in PKCS#8 format. (Encoded as a base64 string when passed over
+   * JSON)
+   */
   public String getPrivateKey() {
     return privateKey;
   }
 
-  /** The ECDSA P-256 private key in PKCS#8 format. */
+  /**
+   * The ECDSA P-256 private key in PKCS#8 format. (Encoded as a base64 string when passed over
+   * JSON)
+   */
   public void setPrivateKey(String privateKey) {
     this.privateKey = privateKey;
   }
 
   /**
    * An opaque byte sequence with a maximum size of 64 bytes mapping the credential to a specific
-   * user.
+   * user. (Encoded as a base64 string when passed over JSON)
    */
   public String getUserHandle() {
     return userHandle;
@@ -84,7 +90,7 @@ public class Credential {
 
   /**
    * An opaque byte sequence with a maximum size of 64 bytes mapping the credential to a specific
-   * user.
+   * user. (Encoded as a base64 string when passed over JSON)
    */
   public void setUserHandle(String userHandle) {
     this.userHandle = userHandle;
@@ -108,7 +114,8 @@ public class Credential {
 
   /**
    * The large blob associated with the credential. See
-   * https://w3c.github.io/webauthn/#sctn-large-blob-extension
+   * https://w3c.github.io/webauthn/#sctn-large-blob-extension (Encoded as a base64 string when
+   * passed over JSON)
    */
   public String getLargeBlob() {
     return largeBlob;
@@ -116,7 +123,8 @@ public class Credential {
 
   /**
    * The large blob associated with the credential. See
-   * https://w3c.github.io/webauthn/#sctn-large-blob-extension
+   * https://w3c.github.io/webauthn/#sctn-large-blob-extension (Encoded as a base64 string when
+   * passed over JSON)
    */
   public void setLargeBlob(String largeBlob) {
     this.largeBlob = largeBlob;

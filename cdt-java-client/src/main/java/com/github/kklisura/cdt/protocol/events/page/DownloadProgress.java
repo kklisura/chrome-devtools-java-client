@@ -22,8 +22,12 @@ package com.github.kklisura.cdt.protocol.events.page;
 
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 
-/** Fired when download makes progress. Last call has |done| == true. */
+/**
+ * Fired when download makes progress. Last call has |done| == true. Deprecated. Use
+ * Browser.downloadProgress instead.
+ */
 @Experimental
+@Deprecated
 public class DownloadProgress {
 
   private String guid;

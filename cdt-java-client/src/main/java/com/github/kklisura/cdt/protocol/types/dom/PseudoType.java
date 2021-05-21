@@ -40,6 +40,10 @@ public enum PseudoType {
   SELECTION,
   @JsonProperty("target-text")
   TARGET_TEXT,
+  @JsonProperty("spelling-error")
+  SPELLING_ERROR,
+  @JsonProperty("grammar-error")
+  GRAMMAR_ERROR,
   @JsonProperty("first-line-inherited")
   FIRST_LINE_INHERITED,
   @JsonProperty("scrollbar")

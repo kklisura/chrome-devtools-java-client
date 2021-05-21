@@ -34,6 +34,8 @@ public enum AXValueNativeSourceType {
   LABELWRAPPED,
   @JsonProperty("legend")
   LEGEND,
+  @JsonProperty("rubyannotation")
+  RUBYANNOTATION,
   @JsonProperty("tablecaption")
   TABLECAPTION,
   @JsonProperty("title")

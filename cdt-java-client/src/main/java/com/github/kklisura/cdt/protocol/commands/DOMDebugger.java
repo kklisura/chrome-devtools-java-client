@@ -25,6 +25,7 @@ import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
 import com.github.kklisura.cdt.protocol.support.annotations.ReturnTypeParameter;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
+import com.github.kklisura.cdt.protocol.types.domdebugger.CSPViolationType;
 import com.github.kklisura.cdt.protocol.types.domdebugger.DOMBreakpointType;
 import com.github.kklisura.cdt.protocol.types.domdebugger.EventListener;
 import java.util.List;
@@ -100,6 +101,14 @@ public interface DOMDebugger {
    * @param url Resource URL substring.
    */
   void removeXHRBreakpoint(@ParamName("url") String url);
+
+  /**
+   * Sets breakpoint on particular CSP violations.
+   *
+   * @param violationTypes CSP Violations to stop upon.
+   */
+  @Experimental
+  void setBreakOnCSPViolation(@ParamName("violationTypes") List<CSPViolationType> violationTypes);
 
   /**
    * Sets breakpoint on particular operation with DOM.

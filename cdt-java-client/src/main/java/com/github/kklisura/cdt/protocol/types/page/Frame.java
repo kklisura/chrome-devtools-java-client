@@ -22,6 +22,7 @@ package com.github.kklisura.cdt.protocol.types.page;
 
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
+import java.util.List;
 
 /** Information about the Frame on the page. */
 public class Frame {
@@ -51,6 +52,8 @@ public class Frame {
   @Experimental private SecureContextType secureContextType;
 
   @Experimental private CrossOriginIsolatedContextType crossOriginIsolatedContextType;
+
+  @Experimental private List<GatedAPIFeatures> gatedAPIFeatures;
 
   /** Frame unique identifier. */
   public String getId() {
@@ -195,5 +198,15 @@ public class Frame {
   public void setCrossOriginIsolatedContextType(
       CrossOriginIsolatedContextType crossOriginIsolatedContextType) {
     this.crossOriginIsolatedContextType = crossOriginIsolatedContextType;
+  }
+
+  /** Indicated which gated APIs / features are available. */
+  public List<GatedAPIFeatures> getGatedAPIFeatures() {
+    return gatedAPIFeatures;
+  }
+
+  /** Indicated which gated APIs / features are available. */
+  public void setGatedAPIFeatures(List<GatedAPIFeatures> gatedAPIFeatures) {
+    this.gatedAPIFeatures = gatedAPIFeatures;
   }
 }

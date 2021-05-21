@@ -47,5 +47,19 @@ public enum ObjectPreviewSubtype {
   @JsonProperty("generator")
   GENERATOR,
   @JsonProperty("error")
-  ERROR
+  ERROR,
+  @JsonProperty("proxy")
+  PROXY,
+  @JsonProperty("promise")
+  PROMISE,
+  @JsonProperty("typedarray")
+  TYPEDARRAY,
+  @JsonProperty("arraybuffer")
+  ARRAYBUFFER,
+  @JsonProperty("dataview")
+  DATAVIEW,
+  @JsonProperty("webassemblymemory")
+  WEBASSEMBLYMEMORY,
+  @JsonProperty("wasmvalue")
+  WASMVALUE
 }

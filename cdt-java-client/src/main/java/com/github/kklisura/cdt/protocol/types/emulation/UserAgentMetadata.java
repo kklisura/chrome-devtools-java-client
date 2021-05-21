@@ -21,15 +21,19 @@ package com.github.kklisura.cdt.protocol.types.emulation;
  */
 
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import java.util.List;
 
-/** Used to specify User Agent Cient Hints to emulate. See https://wicg.github.io/ua-client-hints */
+/**
+ * Used to specify User Agent Cient Hints to emulate. See https://wicg.github.io/ua-client-hints
+ * Missing optional values will be filled in by the target with what it would normally use.
+ */
 @Experimental
 public class UserAgentMetadata {
 
-  private List<UserAgentBrandVersion> brands;
+  @Optional private List<UserAgentBrandVersion> brands;
 
-  private String fullVersion;
+  @Optional private String fullVersion;
 
   private String platform;
 

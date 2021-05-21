@@ -23,6 +23,7 @@ package com.github.kklisura.cdt.protocol.events.network;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.network.BlockedSetCookieWithReason;
+import com.github.kklisura.cdt.protocol.types.network.IPAddressSpace;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +40,8 @@ public class ResponseReceivedExtraInfo {
   private List<BlockedSetCookieWithReason> blockedCookies;
 
   private Map<String, Object> headers;
+
+  private IPAddressSpace resourceIPAddressSpace;
 
   @Optional private String headersText;
 
@@ -78,6 +81,22 @@ public class ResponseReceivedExtraInfo {
   /** Raw response headers as they were received over the wire. */
   public void setHeaders(Map<String, Object> headers) {
     this.headers = headers;
+  }
+
+  /**
+   * The IP address space of the resource. The address space can only be determined once the
+   * transport established the connection, so we can't send it in `requestWillBeSentExtraInfo`.
+   */
+  public IPAddressSpace getResourceIPAddressSpace() {
+    return resourceIPAddressSpace;
+  }
+
+  /**
+   * The IP address space of the resource. The address space can only be determined once the
+   * transport established the connection, so we can't send it in `requestWillBeSentExtraInfo`.
+   */
+  public void setResourceIPAddressSpace(IPAddressSpace resourceIPAddressSpace) {
+    this.resourceIPAddressSpace = resourceIPAddressSpace;
   }
 
   /**

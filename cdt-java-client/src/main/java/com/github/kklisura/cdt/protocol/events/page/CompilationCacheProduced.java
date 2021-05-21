@@ -41,12 +41,12 @@ public class CompilationCacheProduced {
     this.url = url;
   }
 
-  /** Base64-encoded data */
+  /** Base64-encoded data (Encoded as a base64 string when passed over JSON) */
   public String getData() {
     return data;
   }
 
-  /** Base64-encoded data */
+  /** Base64-encoded data (Encoded as a base64 string when passed over JSON) */
   public void setData(String data) {
     this.data = data;
   }

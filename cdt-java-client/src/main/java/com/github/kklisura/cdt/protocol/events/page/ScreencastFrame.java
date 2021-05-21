@@ -33,12 +33,12 @@ public class ScreencastFrame {
 
   private Integer sessionId;
 
-  /** Base64-encoded compressed image. */
+  /** Base64-encoded compressed image. (Encoded as a base64 string when passed over JSON) */
   public String getData() {
     return data;
   }
 
-  /** Base64-encoded compressed image. */
+  /** Base64-encoded compressed image. (Encoded as a base64 string when passed over JSON) */
   public void setData(String data) {
     this.data = data;
   }

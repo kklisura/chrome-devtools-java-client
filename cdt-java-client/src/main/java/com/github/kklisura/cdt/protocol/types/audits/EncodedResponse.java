@@ -30,12 +30,18 @@ public class EncodedResponse {
 
   private Integer encodedSize;
 
-  /** The encoded body as a base64 string. Omitted if sizeOnly is true. */
+  /**
+   * The encoded body as a base64 string. Omitted if sizeOnly is true. (Encoded as a base64 string
+   * when passed over JSON)
+   */
   public String getBody() {
     return body;
   }
 
-  /** The encoded body as a base64 string. Omitted if sizeOnly is true. */
+  /**
+   * The encoded body as a base64 string. Omitted if sizeOnly is true. (Encoded as a base64 string
+   * when passed over JSON)
+   */
   public void setBody(String body) {
     this.body = body;
   }

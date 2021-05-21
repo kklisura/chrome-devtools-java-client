@@ -26,6 +26,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum DisabledImageType {
   @JsonProperty("avif")
   AVIF,
+  @JsonProperty("jxl")
+  JXL,
   @JsonProperty("webp")
   WEBP
 }

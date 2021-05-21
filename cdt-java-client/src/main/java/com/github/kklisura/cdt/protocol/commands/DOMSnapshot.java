@@ -89,9 +89,20 @@ public interface DOMSnapshot {
    * @param includePaintOrder Whether to include layout object paint orders into the snapshot.
    * @param includeDOMRects Whether to include DOM rectangles (offsetRects, clientRects,
    *     scrollRects) into the snapshot
+   * @param includeBlendedBackgroundColors Whether to include blended background colors in the
+   *     snapshot (default: false). Blended background color is achieved by blending background
+   *     colors of all elements that overlap with the current element.
+   * @param includeTextColorOpacities Whether to include text color opacity in the snapshot
+   *     (default: false). An element might have the opacity property set that affects the text
+   *     color of the element. The final text color opacity is computed based on the opacity of all
+   *     overlapping elements.
    */
   CaptureSnapshot captureSnapshot(
       @ParamName("computedStyles") List<String> computedStyles,
       @Optional @ParamName("includePaintOrder") Boolean includePaintOrder,
-      @Optional @ParamName("includeDOMRects") Boolean includeDOMRects);
+      @Optional @ParamName("includeDOMRects") Boolean includeDOMRects,
+      @Experimental @Optional @ParamName("includeBlendedBackgroundColors")
+          Boolean includeBlendedBackgroundColors,
+      @Experimental @Optional @ParamName("includeTextColorOpacities")
+          Boolean includeTextColorOpacities);
 }

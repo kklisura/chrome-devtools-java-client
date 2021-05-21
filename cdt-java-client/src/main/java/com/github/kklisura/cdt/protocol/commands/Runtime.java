@@ -175,7 +175,9 @@ public interface Runtime {
    * @param silent In silent mode exceptions thrown during evaluation are not reported and do not
    *     pause execution. Overrides `setPauseOnException` state.
    * @param contextId Specifies in which execution context to perform evaluation. If the parameter
-   *     is omitted the evaluation will be performed in the context of the inspected page.
+   *     is omitted the evaluation will be performed in the context of the inspected page. This is
+   *     mutually exclusive with `uniqueContextId`, which offers an alternative way to identify the
+   *     execution context that is more reliable in a multi-process environment.
    * @param returnByValue Whether the result is expected to be a JSON object that should be sent by
    *     value.
    * @param generatePreview Whether preview should be generated for the result.
@@ -193,6 +195,11 @@ public interface Runtime {
    *     'unsafe-eval' which includes eval(), Function(), setTimeout() and setInterval() when called
    *     with non-callable arguments. This flag bypasses CSP for this evaluation and allows
    *     unsafe-eval. Defaults to true.
+   * @param uniqueContextId An alternative way to specify the execution context to evaluate in.
+   *     Compared to contextId that may be reused accross processes, this is guaranteed to be
+   *     system-unique, so it can be used to prevent accidental evaluation of the expression in
+   *     context different than intended (e.g. as a result of navigation accross process
+   *     boundaries). This is mutually exclusive with `contextId`.
    */
   Evaluate evaluate(
       @ParamName("expression") String expression,
@@ -209,7 +216,8 @@ public interface Runtime {
       @Experimental @Optional @ParamName("disableBreaks") Boolean disableBreaks,
       @Experimental @Optional @ParamName("replMode") Boolean replMode,
       @Experimental @Optional @ParamName("allowUnsafeEvalBlockedByCSP")
-          Boolean allowUnsafeEvalBlockedByCSP);
+          Boolean allowUnsafeEvalBlockedByCSP,
+      @Experimental @Optional @ParamName("uniqueContextId") String uniqueContextId);
 
   /** Returns the isolate id. */
   @Experimental
@@ -345,11 +353,10 @@ public interface Runtime {
 
   /**
    * If executionContextId is empty, adds binding with the given name on the global objects of all
-   * inspected contexts, including those created later, bindings survive reloads. If
-   * executionContextId is specified, adds binding only on global object of given execution context.
-   * Binding function takes exactly one argument, this argument should be string, in case of any
-   * other input, function throws an exception. Each binding function call produces
-   * Runtime.bindingCalled notification.
+   * inspected contexts, including those created later, bindings survive reloads. Binding function
+   * takes exactly one argument, this argument should be string, in case of any other input,
+   * function throws an exception. Each binding function call produces Runtime.bindingCalled
+   * notification.
    *
    * @param name
    */
@@ -358,19 +365,27 @@ public interface Runtime {
 
   /**
    * If executionContextId is empty, adds binding with the given name on the global objects of all
-   * inspected contexts, including those created later, bindings survive reloads. If
-   * executionContextId is specified, adds binding only on global object of given execution context.
-   * Binding function takes exactly one argument, this argument should be string, in case of any
-   * other input, function throws an exception. Each binding function call produces
-   * Runtime.bindingCalled notification.
+   * inspected contexts, including those created later, bindings survive reloads. Binding function
+   * takes exactly one argument, this argument should be string, in case of any other input,
+   * function throws an exception. Each binding function call produces Runtime.bindingCalled
+   * notification.
    *
    * @param name
-   * @param executionContextId
+   * @param executionContextId If specified, the binding would only be exposed to the specified
+   *     execution context. If omitted and `executionContextName` is not set, the binding is exposed
+   *     to all execution contexts of the target. This parameter is mutually exclusive with
+   *     `executionContextName`.
+   * @param executionContextName If specified, the binding is exposed to the executionContext with
+   *     matching name, even for contexts created after the binding is added. See also
+   *     `ExecutionContext.name` and `worldName` parameter to
+   *     `Page.addScriptToEvaluateOnNewDocument`. This parameter is mutually exclusive with
+   *     `executionContextId`.
    */
   @Experimental
   void addBinding(
       @ParamName("name") String name,
-      @Optional @ParamName("executionContextId") Integer executionContextId);
+      @Optional @ParamName("executionContextId") Integer executionContextId,
+      @Experimental @Optional @ParamName("executionContextName") String executionContextName);
 
   /**
    * This method does not remove binding function from global object but unsubscribes current

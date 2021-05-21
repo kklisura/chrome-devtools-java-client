@@ -21,13 +21,14 @@ package com.github.kklisura.cdt.protocol.types.network;
  */
 
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
 @Experimental
 public class SecurityIsolationStatus {
 
-  private CrossOriginOpenerPolicyStatus coop;
+  @Optional private CrossOriginOpenerPolicyStatus coop;
 
-  private CrossOriginEmbedderPolicyStatus coep;
+  @Optional private CrossOriginEmbedderPolicyStatus coep;
 
   public CrossOriginOpenerPolicyStatus getCoop() {
     return coop;

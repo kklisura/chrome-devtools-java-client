@@ -36,5 +36,15 @@ public enum InspectorIssueCode {
   @JsonProperty("HeavyAdIssue")
   HEAVY_AD_ISSUE,
   @JsonProperty("ContentSecurityPolicyIssue")
-  CONTENT_SECURITY_POLICY_ISSUE
+  CONTENT_SECURITY_POLICY_ISSUE,
+  @JsonProperty("SharedArrayBufferIssue")
+  SHARED_ARRAY_BUFFER_ISSUE,
+  @JsonProperty("TrustedWebActivityIssue")
+  TRUSTED_WEB_ACTIVITY_ISSUE,
+  @JsonProperty("LowTextContrastIssue")
+  LOW_TEXT_CONTRAST_ISSUE,
+  @JsonProperty("CorsIssue")
+  CORS_ISSUE,
+  @JsonProperty("AttributionReportingIssue")
+  ATTRIBUTION_REPORTING_ISSUE
 }

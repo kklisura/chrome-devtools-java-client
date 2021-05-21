@@ -50,12 +50,12 @@ public class Read {
     this.data = data;
   }
 
-  /** Set if the end-of-file condition occured while reading. */
+  /** Set if the end-of-file condition occurred while reading. */
   public Boolean getEof() {
     return eof;
   }
 
-  /** Set if the end-of-file condition occured while reading. */
+  /** Set if the end-of-file condition occurred while reading. */
   public void setEof(Boolean eof) {
     this.eof = eof;
   }

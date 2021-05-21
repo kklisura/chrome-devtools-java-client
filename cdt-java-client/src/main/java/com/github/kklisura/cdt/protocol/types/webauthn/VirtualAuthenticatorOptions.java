@@ -36,6 +36,8 @@ public class VirtualAuthenticatorOptions {
 
   @Optional private Boolean hasLargeBlob;
 
+  @Optional private Boolean hasCredBlob;
+
   @Optional private Boolean automaticPresenceSimulation;
 
   @Optional private Boolean isUserVerified;
@@ -100,6 +102,24 @@ public class VirtualAuthenticatorOptions {
    */
   public void setHasLargeBlob(Boolean hasLargeBlob) {
     this.hasLargeBlob = hasLargeBlob;
+  }
+
+  /**
+   * If set to true, the authenticator will support the credBlob extension.
+   * https://fidoalliance.org/specs/fido-v2.1-rd-20201208/fido-client-to-authenticator-protocol-v2.1-rd-20201208.html#sctn-credBlob-extension
+   * Defaults to false.
+   */
+  public Boolean getHasCredBlob() {
+    return hasCredBlob;
+  }
+
+  /**
+   * If set to true, the authenticator will support the credBlob extension.
+   * https://fidoalliance.org/specs/fido-v2.1-rd-20201208/fido-client-to-authenticator-protocol-v2.1-rd-20201208.html#sctn-credBlob-extension
+   * Defaults to false.
+   */
+  public void setHasCredBlob(Boolean hasCredBlob) {
+    this.hasCredBlob = hasCredBlob;
   }
 
   /**

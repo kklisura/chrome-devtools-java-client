@@ -68,11 +68,33 @@ public interface Accessibility {
       @Optional @ParamName("objectId") String objectId,
       @Optional @ParamName("fetchRelatives") Boolean fetchRelatives);
 
-  /** Fetches the entire accessibility tree */
+  /** Fetches the entire accessibility tree for the root Document */
   @Experimental
   @Returns("nodes")
   @ReturnTypeParameter(AXNode.class)
   List<AXNode> getFullAXTree();
+
+  /**
+   * Fetches the entire accessibility tree for the root Document
+   *
+   * @param max_depth The maximum depth at which descendants of the root node should be retrieved.
+   *     If omitted, the full tree is returned.
+   */
+  @Experimental
+  @Returns("nodes")
+  @ReturnTypeParameter(AXNode.class)
+  List<AXNode> getFullAXTree(@Optional @ParamName("max_depth") Integer max_depth);
+
+  /**
+   * Fetches a particular accessibility node by AXNodeId. Requires `enable()` to have been called
+   * previously.
+   *
+   * @param id
+   */
+  @Experimental
+  @Returns("nodes")
+  @ReturnTypeParameter(AXNode.class)
+  List<AXNode> getChildAXNodes(@ParamName("id") String id);
 
   /**
    * Query a DOM node's accessibility subtree for accessible name and role. This command computes

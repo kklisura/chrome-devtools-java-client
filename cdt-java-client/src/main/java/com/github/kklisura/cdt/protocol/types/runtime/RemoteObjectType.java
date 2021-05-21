@@ -39,7 +39,5 @@ public enum RemoteObjectType {
   @JsonProperty("symbol")
   SYMBOL,
   @JsonProperty("bigint")
-  BIGINT,
-  @JsonProperty("wasm")
-  WASM
+  BIGINT
 }

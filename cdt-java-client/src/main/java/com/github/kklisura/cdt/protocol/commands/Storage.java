@@ -34,6 +34,7 @@ import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.network.Cookie;
 import com.github.kklisura.cdt.protocol.types.network.CookieParam;
+import com.github.kklisura.cdt.protocol.types.storage.TrustTokens;
 import com.github.kklisura.cdt.protocol.types.storage.UsageAndQuota;
 import java.util.List;
 
@@ -110,7 +111,7 @@ public interface Storage {
    *
    * @param origin Security origin.
    * @param quotaSize The quota size (in bytes) to override the original quota with. If this is
-   *     called multiple times, the overriden quota will be equal to the quotaSize provided in the
+   *     called multiple times, the overridden quota will be equal to the quotaSize provided in the
    *     final call. If this is called without specifying a quotaSize, the quota will be reset to
    *     the default value for the specified origin. If this is called multiple times with different
    *     origins, the override will be maintained for each origin until it is disabled (called
@@ -147,6 +148,22 @@ public interface Storage {
    * @param origin Security origin.
    */
   void untrackIndexedDBForOrigin(@ParamName("origin") String origin);
+
+  /** Returns the number of stored Trust Tokens per issuer for the current browsing context. */
+  @Experimental
+  @Returns("tokens")
+  @ReturnTypeParameter(TrustTokens.class)
+  List<TrustTokens> getTrustTokens();
+
+  /**
+   * Removes all Trust Tokens issued by the provided issuerOrigin. Leaves other stored data,
+   * including the issuer's Redemption Records, intact.
+   *
+   * @param issuerOrigin
+   */
+  @Experimental
+  @Returns("didDeleteTokens")
+  Boolean clearTrustTokens(@ParamName("issuerOrigin") String issuerOrigin);
 
   /** A cache's contents have been modified. */
   @EventName("cacheStorageContentUpdated")
