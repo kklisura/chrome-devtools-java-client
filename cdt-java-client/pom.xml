@@ -58,7 +58,7 @@
 
         <project.inceptionYear>2018</project.inceptionYear>
 
-        <jackson.version>2.11.3</jackson.version>
+        <jackson.version>2.12.6.1</jackson.version>
         <websocket.api.version>1.1</websocket.api.version>
         <tyrus.version>1.13.1</tyrus.version>
         <javassist.version>3.24.1-GA</javassist.version>
