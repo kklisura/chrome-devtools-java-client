@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.services.impl;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2023 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,16 +27,16 @@ import com.github.kklisura.cdt.services.WebSocketService;
 import com.github.kklisura.cdt.services.exceptions.WebSocketServiceException;
 import com.github.kklisura.cdt.services.factory.WebSocketContainerFactory;
 import com.github.kklisura.cdt.services.factory.impl.DefaultWebSocketContainerFactory;
+import jakarta.websocket.CloseReason;
+import jakarta.websocket.DeploymentException;
+import jakarta.websocket.Endpoint;
+import jakarta.websocket.EndpointConfig;
+import jakarta.websocket.MessageHandler;
+import jakarta.websocket.Session;
+import jakarta.websocket.WebSocketContainer;
 import java.io.IOException;
 import java.net.URI;
 import java.util.function.Consumer;
-import javax.websocket.CloseReason;
-import javax.websocket.DeploymentException;
-import javax.websocket.Endpoint;
-import javax.websocket.EndpointConfig;
-import javax.websocket.MessageHandler;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

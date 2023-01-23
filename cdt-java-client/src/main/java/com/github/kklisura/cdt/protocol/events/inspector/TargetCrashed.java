@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.events.inspector;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2023 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
