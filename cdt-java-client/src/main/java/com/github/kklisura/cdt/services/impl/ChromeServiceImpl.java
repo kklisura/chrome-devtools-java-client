@@ -269,6 +269,7 @@ public class ChromeServiceImpl implements ChromeService {
     try {
       URL uri = new URL(String.format(path, params));
       connection = (HttpURLConnection) uri.openConnection();
+      connection.setRequestMethod("PUT");
 
       int responseCode = connection.getResponseCode();
       if (HttpURLConnection.HTTP_OK == responseCode) {
