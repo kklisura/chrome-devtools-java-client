@@ -42,6 +42,8 @@ public enum ResourceType {
   XHR,
   @JsonProperty("Fetch")
   FETCH,
+  @JsonProperty("Prefetch")
+  PREFETCH,
   @JsonProperty("EventSource")
   EVENT_SOURCE,
   @JsonProperty("WebSocket")
