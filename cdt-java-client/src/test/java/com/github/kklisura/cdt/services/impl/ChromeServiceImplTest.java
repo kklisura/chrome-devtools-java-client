@@ -98,7 +98,7 @@ public class ChromeServiceImplTest extends EasyMockSupport {
 
     RecordedRequest request = server.takeRequest();
     assertEquals(1, server.getRequestCount());
-    assertEquals("GET /json/list HTTP/1.1", request.getRequestLine());
+    assertEquals("PUT /json/list HTTP/1.1", request.getRequestLine());
 
     assertFalse(tabs.isEmpty());
     assertEquals(2, tabs.size());
@@ -138,7 +138,7 @@ public class ChromeServiceImplTest extends EasyMockSupport {
 
     RecordedRequest request = server.takeRequest();
     assertEquals(1, server.getRequestCount());
-    assertEquals("GET /json/new?some-tab-name HTTP/1.1", request.getRequestLine());
+    assertEquals("PUT /json/new?some-tab-name HTTP/1.1", request.getRequestLine());
 
     assertEquals("", tab.getDescription());
     assertEquals(
@@ -174,7 +174,7 @@ public class ChromeServiceImplTest extends EasyMockSupport {
 
     RecordedRequest request = server.takeRequest();
     assertEquals(1, server.getRequestCount());
-    assertEquals("GET /json/new?about:blank HTTP/1.1", request.getRequestLine());
+    assertEquals("PUT /json/new?about:blank HTTP/1.1", request.getRequestLine());
 
     assertEquals("", tab.getDescription());
     assertEquals(
@@ -212,7 +212,7 @@ public class ChromeServiceImplTest extends EasyMockSupport {
     RecordedRequest request = server.takeRequest();
     assertEquals(1, server.getRequestCount());
     assertEquals(
-        "GET /json/activate/D4CEC22C995F1A9C8526737014CD436D HTTP/1.1", request.getRequestLine());
+        "PUT /json/activate/D4CEC22C995F1A9C8526737014CD436D HTTP/1.1", request.getRequestLine());
 
     server.shutdown();
   }
@@ -267,7 +267,7 @@ public class ChromeServiceImplTest extends EasyMockSupport {
     RecordedRequest request = server.takeRequest();
     assertEquals(1, server.getRequestCount());
     assertEquals(
-        "GET /json/close/D4CEC22C995F1A9C8526737014CD436D HTTP/1.1", request.getRequestLine());
+        "PUT /json/close/D4CEC22C995F1A9C8526737014CD436D HTTP/1.1", request.getRequestLine());
 
     server.shutdown();
 
@@ -292,7 +292,7 @@ public class ChromeServiceImplTest extends EasyMockSupport {
     RecordedRequest request = server.takeRequest();
     assertEquals(1, server.getRequestCount());
     assertEquals(
-        "GET /json/close/D4CEC22C995F1A9C8526737014CD436D HTTP/1.1", request.getRequestLine());
+        "PUT /json/close/D4CEC22C995F1A9C8526737014CD436D HTTP/1.1", request.getRequestLine());
 
     server.shutdown();
   }
@@ -312,7 +312,7 @@ public class ChromeServiceImplTest extends EasyMockSupport {
 
     RecordedRequest request = server.takeRequest();
     assertEquals(1, server.getRequestCount());
-    assertEquals("GET /json/version HTTP/1.1", request.getRequestLine());
+    assertEquals("PUT /json/version HTTP/1.1", request.getRequestLine());
 
     assertEquals("Chrome/63.0.3239.132", version.getBrowser());
     assertEquals("1.2", version.getProtocolVersion());
