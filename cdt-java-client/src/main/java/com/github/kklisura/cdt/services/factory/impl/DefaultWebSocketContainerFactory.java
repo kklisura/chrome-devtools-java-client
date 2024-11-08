@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.services.factory.impl;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2023 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ package com.github.kklisura.cdt.services.factory.impl;
 import static com.github.kklisura.cdt.services.utils.ConfigurationUtils.systemProperty;
 
 import com.github.kklisura.cdt.services.factory.WebSocketContainerFactory;
-import javax.websocket.WebSocketContainer;
+import jakarta.websocket.WebSocketContainer;
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.container.grizzly.client.GrizzlyClientContainer;
 

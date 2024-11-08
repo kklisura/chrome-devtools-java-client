@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.definition.builder.support.protocol.builder;
  * #%L
  * cdt-java-protocol-builder
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2023 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,8 +35,8 @@ import com.github.kklisura.cdt.protocol.definition.types.type.object.ObjectType;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.Property;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.RefProperty;
 import com.github.kklisura.cdt.protocol.definition.types.type.object.properties.StringProperty;
-import edu.emory.mathcs.backport.java.util.Collections;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
