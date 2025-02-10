@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,14 +88,6 @@ public interface DOMDebugger {
       @Experimental @Optional @ParamName("targetName") String targetName);
 
   /**
-   * Removes breakpoint on particular native event.
-   *
-   * @param eventName Instrumentation name to stop on.
-   */
-  @Experimental
-  void removeInstrumentationBreakpoint(@ParamName("eventName") String eventName);
-
-  /**
    * Removes breakpoint from XMLHttpRequest.
    *
    * @param url Resource URL substring.
@@ -136,14 +128,6 @@ public interface DOMDebugger {
   void setEventListenerBreakpoint(
       @ParamName("eventName") String eventName,
       @Experimental @Optional @ParamName("targetName") String targetName);
-
-  /**
-   * Sets breakpoint on particular native event.
-   *
-   * @param eventName Instrumentation name to stop on.
-   */
-  @Experimental
-  void setInstrumentationBreakpoint(@ParamName("eventName") String eventName);
 
   /**
    * Sets breakpoint on XMLHttpRequest.

@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.events.network;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.protocol.events.network;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.network.ResourceType;
 import com.github.kklisura.cdt.protocol.types.network.Response;
@@ -36,6 +37,8 @@ public class ResponseReceived {
   private ResourceType type;
 
   private Response response;
+
+  @Experimental private Boolean hasExtraInfo;
 
   @Optional private String frameId;
 
@@ -87,6 +90,22 @@ public class ResponseReceived {
   /** Response data. */
   public void setResponse(Response response) {
     this.response = response;
+  }
+
+  /**
+   * Indicates whether requestWillBeSentExtraInfo and responseReceivedExtraInfo events will be or
+   * were emitted for this request.
+   */
+  public Boolean getHasExtraInfo() {
+    return hasExtraInfo;
+  }
+
+  /**
+   * Indicates whether requestWillBeSentExtraInfo and responseReceivedExtraInfo events will be or
+   * were emitted for this request.
+   */
+  public void setHasExtraInfo(Boolean hasExtraInfo) {
+    this.hasExtraInfo = hasExtraInfo;
   }
 
   /** Frame identifier. */

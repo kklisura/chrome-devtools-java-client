@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,12 +66,12 @@ public class SignedExchangeInfo {
     this.securityDetails = securityDetails;
   }
 
-  /** Errors occurred while handling the signed exchagne. */
+  /** Errors occurred while handling the signed exchange. */
   public List<SignedExchangeError> getErrors() {
     return errors;
   }
 
-  /** Errors occurred while handling the signed exchagne. */
+  /** Errors occurred while handling the signed exchange. */
   public void setErrors(List<SignedExchangeError> errors) {
     this.errors = errors;
   }

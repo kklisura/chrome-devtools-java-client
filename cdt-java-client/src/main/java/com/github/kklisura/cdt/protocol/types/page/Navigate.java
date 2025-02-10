@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.page;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,12 +40,18 @@ public class Navigate {
     this.frameId = frameId;
   }
 
-  /** Loader identifier. */
+  /**
+   * Loader identifier. This is omitted in case of same-document navigation, as the previously
+   * committed loaderId would not change.
+   */
   public String getLoaderId() {
     return loaderId;
   }
 
-  /** Loader identifier. */
+  /**
+   * Loader identifier. This is omitted in case of same-document navigation, as the previously
+   * committed loaderId would not change.
+   */
   public void setLoaderId(String loaderId) {
     this.loaderId = loaderId;
   }

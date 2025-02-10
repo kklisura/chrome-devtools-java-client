@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.page;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,9 @@ public class AppManifest {
 
   @Optional private String data;
 
-  @Experimental @Optional private AppManifestParsedProperties parsed;
+  @Deprecated @Experimental @Optional private AppManifestParsedProperties parsed;
+
+  @Experimental private WebAppManifest manifest;
 
   /** Manifest location. */
   public String getUrl() {
@@ -62,13 +64,21 @@ public class AppManifest {
     this.data = data;
   }
 
-  /** Parsed manifest properties */
+  /** Parsed manifest properties. Deprecated, use manifest instead. */
   public AppManifestParsedProperties getParsed() {
     return parsed;
   }
 
-  /** Parsed manifest properties */
+  /** Parsed manifest properties. Deprecated, use manifest instead. */
   public void setParsed(AppManifestParsedProperties parsed) {
     this.parsed = parsed;
+  }
+
+  public WebAppManifest getManifest() {
+    return manifest;
+  }
+
+  public void setManifest(WebAppManifest manifest) {
+    this.manifest = manifest;
   }
 }

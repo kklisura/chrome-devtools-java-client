@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.performancetimeline;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ public class TimelineEvent {
   /**
    * The event type, as specified in
    * https://w3c.github.io/performance-timeline/#dom-performanceentry-entrytype This determines
-   * which of the optional "details" fiedls is present.
+   * which of the optional "details" fields is present.
    */
   public String getType() {
     return type;
@@ -60,7 +60,7 @@ public class TimelineEvent {
   /**
    * The event type, as specified in
    * https://w3c.github.io/performance-timeline/#dom-performanceentry-entrytype This determines
-   * which of the optional "details" fiedls is present.
+   * which of the optional "details" fields is present.
    */
   public void setType(String type) {
     this.type = type;

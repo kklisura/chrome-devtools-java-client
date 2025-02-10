@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.css;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.protocol.types.css;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.dom.PseudoType;
 import java.util.List;
 
@@ -27,6 +28,8 @@ import java.util.List;
 public class PseudoElementMatches {
 
   private PseudoType pseudoType;
+
+  @Optional private String pseudoIdentifier;
 
   private List<RuleMatch> matches;
 
@@ -38,6 +41,16 @@ public class PseudoElementMatches {
   /** Pseudo element type. */
   public void setPseudoType(PseudoType pseudoType) {
     this.pseudoType = pseudoType;
+  }
+
+  /** Pseudo element custom ident. */
+  public String getPseudoIdentifier() {
+    return pseudoIdentifier;
+  }
+
+  /** Pseudo element custom ident. */
+  public void setPseudoIdentifier(String pseudoIdentifier) {
+    this.pseudoIdentifier = pseudoIdentifier;
   }
 
   /** Matches of CSS rules applicable to the pseudo style. */

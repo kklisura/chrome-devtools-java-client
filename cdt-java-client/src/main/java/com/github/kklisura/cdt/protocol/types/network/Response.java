@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.security.SecurityState;
 import java.util.Map;
@@ -35,13 +36,15 @@ public class Response {
 
   private Map<String, Object> headers;
 
-  @Optional private String headersText;
+  @Deprecated @Optional private String headersText;
 
   private String mimeType;
 
+  private String charset;
+
   @Optional private Map<String, Object> requestHeaders;
 
-  @Optional private String requestHeadersText;
+  @Deprecated @Optional private String requestHeadersText;
 
   private Boolean connectionReused;
 
@@ -57,6 +60,10 @@ public class Response {
 
   @Optional private Boolean fromPrefetchCache;
 
+  @Optional private Boolean fromEarlyHints;
+
+  @Experimental @Optional private ServiceWorkerRouterInfo serviceWorkerRouterInfo;
+
   private Double encodedDataLength;
 
   @Optional private ResourceTiming timing;
@@ -68,6 +75,8 @@ public class Response {
   @Optional private String cacheStorageCacheName;
 
   @Optional private String protocol;
+
+  @Experimental @Optional private AlternateProtocolUsage alternateProtocolUsage;
 
   private SecurityState securityState;
 
@@ -113,12 +122,18 @@ public class Response {
     this.headers = headers;
   }
 
-  /** HTTP response headers text. */
+  /**
+   * HTTP response headers text. This has been replaced by the headers in
+   * Network.responseReceivedExtraInfo.
+   */
   public String getHeadersText() {
     return headersText;
   }
 
-  /** HTTP response headers text. */
+  /**
+   * HTTP response headers text. This has been replaced by the headers in
+   * Network.responseReceivedExtraInfo.
+   */
   public void setHeadersText(String headersText) {
     this.headersText = headersText;
   }
@@ -133,6 +148,16 @@ public class Response {
     this.mimeType = mimeType;
   }
 
+  /** Resource charset as determined by the browser (if applicable). */
+  public String getCharset() {
+    return charset;
+  }
+
+  /** Resource charset as determined by the browser (if applicable). */
+  public void setCharset(String charset) {
+    this.charset = charset;
+  }
+
   /** Refined HTTP request headers that were actually transmitted over the network. */
   public Map<String, Object> getRequestHeaders() {
     return requestHeaders;
@@ -143,12 +168,18 @@ public class Response {
     this.requestHeaders = requestHeaders;
   }
 
-  /** HTTP request headers text. */
+  /**
+   * HTTP request headers text. This has been replaced by the headers in
+   * Network.requestWillBeSentExtraInfo.
+   */
   public String getRequestHeadersText() {
     return requestHeadersText;
   }
 
-  /** HTTP request headers text. */
+  /**
+   * HTTP request headers text. This has been replaced by the headers in
+   * Network.requestWillBeSentExtraInfo.
+   */
   public void setRequestHeadersText(String requestHeadersText) {
     this.requestHeadersText = requestHeadersText;
   }
@@ -223,6 +254,34 @@ public class Response {
     this.fromPrefetchCache = fromPrefetchCache;
   }
 
+  /** Specifies that the request was served from the prefetch cache. */
+  public Boolean getFromEarlyHints() {
+    return fromEarlyHints;
+  }
+
+  /** Specifies that the request was served from the prefetch cache. */
+  public void setFromEarlyHints(Boolean fromEarlyHints) {
+    this.fromEarlyHints = fromEarlyHints;
+  }
+
+  /**
+   * Information about how ServiceWorker Static Router API was used. If this field is set with
+   * `matchedSourceType` field, a matching rule is found. If this field is set without
+   * `matchedSource`, no matching rule is found. Otherwise, the API is not used.
+   */
+  public ServiceWorkerRouterInfo getServiceWorkerRouterInfo() {
+    return serviceWorkerRouterInfo;
+  }
+
+  /**
+   * Information about how ServiceWorker Static Router API was used. If this field is set with
+   * `matchedSourceType` field, a matching rule is found. If this field is set without
+   * `matchedSource`, no matching rule is found. Otherwise, the API is not used.
+   */
+  public void setServiceWorkerRouterInfo(ServiceWorkerRouterInfo serviceWorkerRouterInfo) {
+    this.serviceWorkerRouterInfo = serviceWorkerRouterInfo;
+  }
+
   /** Total number of bytes received for this request so far. */
   public Double getEncodedDataLength() {
     return encodedDataLength;
@@ -282,6 +341,16 @@ public class Response {
   /** Protocol used to fetch this request. */
   public void setProtocol(String protocol) {
     this.protocol = protocol;
+  }
+
+  /** The reason why Chrome uses a specific transport protocol for HTTP semantics. */
+  public AlternateProtocolUsage getAlternateProtocolUsage() {
+    return alternateProtocolUsage;
+  }
+
+  /** The reason why Chrome uses a specific transport protocol for HTTP semantics. */
+  public void setAlternateProtocolUsage(AlternateProtocolUsage alternateProtocolUsage) {
+    this.alternateProtocolUsage = alternateProtocolUsage;
   }
 
   /** Security state of the request resource. */

@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.events.page;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,8 @@ public class NavigatedWithinDocument {
 
   private String url;
 
+  private NavigatedWithinDocumentNavigationType navigationType;
+
   /** Id of the frame. */
   public String getFrameId() {
     return frameId;
@@ -50,5 +52,15 @@ public class NavigatedWithinDocument {
   /** Frame's new url. */
   public void setUrl(String url) {
     this.url = url;
+  }
+
+  /** Navigation type */
+  public NavigatedWithinDocumentNavigationType getNavigationType() {
+    return navigationType;
+  }
+
+  /** Navigation type */
+  public void setNavigationType(NavigatedWithinDocumentNavigationType navigationType) {
+    this.navigationType = navigationType;
   }
 }

@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import com.github.kklisura.cdt.protocol.types.indexeddb.DatabaseWithObjectStores
 import com.github.kklisura.cdt.protocol.types.indexeddb.KeyRange;
 import com.github.kklisura.cdt.protocol.types.indexeddb.Metadata;
 import com.github.kklisura.cdt.protocol.types.indexeddb.RequestData;
+import com.github.kklisura.cdt.protocol.types.storage.StorageBucket;
 import java.util.List;
 
 @Experimental
@@ -37,35 +38,79 @@ public interface IndexedDB {
   /**
    * Clears all entries from an object store.
    *
-   * @param securityOrigin Security origin.
    * @param databaseName Database name.
    * @param objectStoreName Object store name.
    */
   void clearObjectStore(
-      @ParamName("securityOrigin") String securityOrigin,
+      @ParamName("databaseName") String databaseName,
+      @ParamName("objectStoreName") String objectStoreName);
+
+  /**
+   * Clears all entries from an object store.
+   *
+   * @param securityOrigin At least and at most one of securityOrigin, storageKey, or storageBucket
+   *     must be specified. Security origin.
+   * @param storageKey Storage key.
+   * @param storageBucket Storage bucket. If not specified, it uses the default bucket.
+   * @param databaseName Database name.
+   * @param objectStoreName Object store name.
+   */
+  void clearObjectStore(
+      @Optional @ParamName("securityOrigin") String securityOrigin,
+      @Optional @ParamName("storageKey") String storageKey,
+      @Optional @ParamName("storageBucket") StorageBucket storageBucket,
       @ParamName("databaseName") String databaseName,
       @ParamName("objectStoreName") String objectStoreName);
 
   /**
    * Deletes a database.
    *
-   * @param securityOrigin Security origin.
+   * @param databaseName Database name.
+   */
+  void deleteDatabase(@ParamName("databaseName") String databaseName);
+
+  /**
+   * Deletes a database.
+   *
+   * @param securityOrigin At least and at most one of securityOrigin, storageKey, or storageBucket
+   *     must be specified. Security origin.
+   * @param storageKey Storage key.
+   * @param storageBucket Storage bucket. If not specified, it uses the default bucket.
    * @param databaseName Database name.
    */
   void deleteDatabase(
-      @ParamName("securityOrigin") String securityOrigin,
+      @Optional @ParamName("securityOrigin") String securityOrigin,
+      @Optional @ParamName("storageKey") String storageKey,
+      @Optional @ParamName("storageBucket") StorageBucket storageBucket,
       @ParamName("databaseName") String databaseName);
 
   /**
    * Delete a range of entries from an object store
    *
-   * @param securityOrigin
    * @param databaseName
    * @param objectStoreName
    * @param keyRange Range of entry keys to delete
    */
   void deleteObjectStoreEntries(
-      @ParamName("securityOrigin") String securityOrigin,
+      @ParamName("databaseName") String databaseName,
+      @ParamName("objectStoreName") String objectStoreName,
+      @ParamName("keyRange") KeyRange keyRange);
+
+  /**
+   * Delete a range of entries from an object store
+   *
+   * @param securityOrigin At least and at most one of securityOrigin, storageKey, or storageBucket
+   *     must be specified. Security origin.
+   * @param storageKey Storage key.
+   * @param storageBucket Storage bucket. If not specified, it uses the default bucket.
+   * @param databaseName
+   * @param objectStoreName
+   * @param keyRange Range of entry keys to delete
+   */
+  void deleteObjectStoreEntries(
+      @Optional @ParamName("securityOrigin") String securityOrigin,
+      @Optional @ParamName("storageKey") String storageKey,
+      @Optional @ParamName("storageBucket") StorageBucket storageBucket,
       @ParamName("databaseName") String databaseName,
       @ParamName("objectStoreName") String objectStoreName,
       @ParamName("keyRange") KeyRange keyRange);
@@ -79,7 +124,6 @@ public interface IndexedDB {
   /**
    * Requests data from object store or index.
    *
-   * @param securityOrigin Security origin.
    * @param databaseName Database name.
    * @param objectStoreName Object store name.
    * @param indexName Index name, empty string for object store data requests.
@@ -87,7 +131,6 @@ public interface IndexedDB {
    * @param pageSize Number of records to fetch.
    */
   RequestData requestData(
-      @ParamName("securityOrigin") String securityOrigin,
       @ParamName("databaseName") String databaseName,
       @ParamName("objectStoreName") String objectStoreName,
       @ParamName("indexName") String indexName,
@@ -97,7 +140,10 @@ public interface IndexedDB {
   /**
    * Requests data from object store or index.
    *
-   * @param securityOrigin Security origin.
+   * @param securityOrigin At least and at most one of securityOrigin, storageKey, or storageBucket
+   *     must be specified. Security origin.
+   * @param storageKey Storage key.
+   * @param storageBucket Storage bucket. If not specified, it uses the default bucket.
    * @param databaseName Database name.
    * @param objectStoreName Object store name.
    * @param indexName Index name, empty string for object store data requests.
@@ -106,7 +152,9 @@ public interface IndexedDB {
    * @param keyRange Key range.
    */
   RequestData requestData(
-      @ParamName("securityOrigin") String securityOrigin,
+      @Optional @ParamName("securityOrigin") String securityOrigin,
+      @Optional @ParamName("storageKey") String storageKey,
+      @Optional @ParamName("storageBucket") StorageBucket storageBucket,
       @ParamName("databaseName") String databaseName,
       @ParamName("objectStoreName") String objectStoreName,
       @ParamName("indexName") String indexName,
@@ -115,34 +163,73 @@ public interface IndexedDB {
       @Optional @ParamName("keyRange") KeyRange keyRange);
 
   /**
-   * Gets metadata of an object store
+   * Gets metadata of an object store.
    *
-   * @param securityOrigin Security origin.
    * @param databaseName Database name.
    * @param objectStoreName Object store name.
    */
   Metadata getMetadata(
-      @ParamName("securityOrigin") String securityOrigin,
+      @ParamName("databaseName") String databaseName,
+      @ParamName("objectStoreName") String objectStoreName);
+
+  /**
+   * Gets metadata of an object store.
+   *
+   * @param securityOrigin At least and at most one of securityOrigin, storageKey, or storageBucket
+   *     must be specified. Security origin.
+   * @param storageKey Storage key.
+   * @param storageBucket Storage bucket. If not specified, it uses the default bucket.
+   * @param databaseName Database name.
+   * @param objectStoreName Object store name.
+   */
+  Metadata getMetadata(
+      @Optional @ParamName("securityOrigin") String securityOrigin,
+      @Optional @ParamName("storageKey") String storageKey,
+      @Optional @ParamName("storageBucket") StorageBucket storageBucket,
       @ParamName("databaseName") String databaseName,
       @ParamName("objectStoreName") String objectStoreName);
 
   /**
    * Requests database with given name in given frame.
    *
-   * @param securityOrigin Security origin.
+   * @param databaseName Database name.
+   */
+  @Returns("databaseWithObjectStores")
+  DatabaseWithObjectStores requestDatabase(@ParamName("databaseName") String databaseName);
+
+  /**
+   * Requests database with given name in given frame.
+   *
+   * @param securityOrigin At least and at most one of securityOrigin, storageKey, or storageBucket
+   *     must be specified. Security origin.
+   * @param storageKey Storage key.
+   * @param storageBucket Storage bucket. If not specified, it uses the default bucket.
    * @param databaseName Database name.
    */
   @Returns("databaseWithObjectStores")
   DatabaseWithObjectStores requestDatabase(
-      @ParamName("securityOrigin") String securityOrigin,
+      @Optional @ParamName("securityOrigin") String securityOrigin,
+      @Optional @ParamName("storageKey") String storageKey,
+      @Optional @ParamName("storageBucket") StorageBucket storageBucket,
       @ParamName("databaseName") String databaseName);
+
+  /** Requests database names for given security origin. */
+  @Returns("databaseNames")
+  @ReturnTypeParameter(String.class)
+  List<String> requestDatabaseNames();
 
   /**
    * Requests database names for given security origin.
    *
-   * @param securityOrigin Security origin.
+   * @param securityOrigin At least and at most one of securityOrigin, storageKey, or storageBucket
+   *     must be specified. Security origin.
+   * @param storageKey Storage key.
+   * @param storageBucket Storage bucket. If not specified, it uses the default bucket.
    */
   @Returns("databaseNames")
   @ReturnTypeParameter(String.class)
-  List<String> requestDatabaseNames(@ParamName("securityOrigin") String securityOrigin);
+  List<String> requestDatabaseNames(
+      @Optional @ParamName("securityOrigin") String securityOrigin,
+      @Optional @ParamName("storageKey") String storageKey,
+      @Optional @ParamName("storageBucket") StorageBucket storageBucket);
 }

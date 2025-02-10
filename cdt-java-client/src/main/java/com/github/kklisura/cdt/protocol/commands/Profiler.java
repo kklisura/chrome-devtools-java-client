@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,11 +31,8 @@ import com.github.kklisura.cdt.protocol.support.annotations.ReturnTypeParameter;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
-import com.github.kklisura.cdt.protocol.types.profiler.CounterInfo;
 import com.github.kklisura.cdt.protocol.types.profiler.Profile;
-import com.github.kklisura.cdt.protocol.types.profiler.RuntimeCallCounterInfo;
 import com.github.kklisura.cdt.protocol.types.profiler.ScriptCoverage;
-import com.github.kklisura.cdt.protocol.types.profiler.ScriptTypeProfile;
 import com.github.kklisura.cdt.protocol.types.profiler.TakePreciseCoverage;
 import java.util.List;
 
@@ -85,10 +82,6 @@ public interface Profiler {
       @Optional @ParamName("detailed") Boolean detailed,
       @Optional @ParamName("allowTriggeredUpdates") Boolean allowTriggeredUpdates);
 
-  /** Enable type profile. */
-  @Experimental
-  void startTypeProfile();
-
   @Returns("profile")
   Profile stop();
 
@@ -98,49 +91,11 @@ public interface Profiler {
    */
   void stopPreciseCoverage();
 
-  /** Disable type profile. Disabling releases type profile data collected so far. */
-  @Experimental
-  void stopTypeProfile();
-
   /**
    * Collect coverage data for the current isolate, and resets execution counters. Precise code
    * coverage needs to have started.
    */
   TakePreciseCoverage takePreciseCoverage();
-
-  /** Collect type profile. */
-  @Experimental
-  @Returns("result")
-  @ReturnTypeParameter(ScriptTypeProfile.class)
-  List<ScriptTypeProfile> takeTypeProfile();
-
-  /** Enable counters collection. */
-  @Experimental
-  void enableCounters();
-
-  /** Disable counters collection. */
-  @Experimental
-  void disableCounters();
-
-  /** Retrieve counters. */
-  @Experimental
-  @Returns("result")
-  @ReturnTypeParameter(CounterInfo.class)
-  List<CounterInfo> getCounters();
-
-  /** Enable run time call stats collection. */
-  @Experimental
-  void enableRuntimeCallStats();
-
-  /** Disable run time call stats collection. */
-  @Experimental
-  void disableRuntimeCallStats();
-
-  /** Retrieve run time call stats. */
-  @Experimental
-  @Returns("result")
-  @ReturnTypeParameter(RuntimeCallCounterInfo.class)
-  List<RuntimeCallCounterInfo> getRuntimeCallStats();
 
   @EventName("consoleProfileFinished")
   EventListener onConsoleProfileFinished(EventHandler<ConsoleProfileFinished> eventListener);
@@ -153,7 +108,7 @@ public interface Profiler {
    * Reports coverage delta since the last poll (either from an event like this, or from
    * `takePreciseCoverage` for the current isolate. May only be sent if precise code coverage has
    * been started. This event can be trigged by the embedder to, for example, trigger collection of
-   * coverage data immediatelly at a certain point in time.
+   * coverage data immediately at a certain point in time.
    */
   @EventName("preciseCoverageDeltaUpdate")
   @Experimental

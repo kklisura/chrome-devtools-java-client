@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.dom;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.protocol.types.dom;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import java.util.List;
 
@@ -67,6 +68,8 @@ public class Node {
 
   @Optional private PseudoType pseudoType;
 
+  @Optional private String pseudoIdentifier;
+
   @Optional private ShadowRootType shadowRootType;
 
   @Optional private String frameId;
@@ -84,6 +87,12 @@ public class Node {
   @Optional private List<BackendNode> distributedNodes;
 
   @Optional private Boolean isSVG;
+
+  @Optional private CompatibilityMode compatibilityMode;
+
+  @Optional private BackendNode assignedSlot;
+
+  @Experimental @Optional private Boolean isScrollable;
 
   /**
    * Node identifier that is passed into the rest of the DOM messages as the `nodeId`. Backend will
@@ -287,6 +296,16 @@ public class Node {
     this.pseudoType = pseudoType;
   }
 
+  /** Pseudo element identifier for this node. Only present if there is a valid pseudoType. */
+  public String getPseudoIdentifier() {
+    return pseudoIdentifier;
+  }
+
+  /** Pseudo element identifier for this node. Only present if there is a valid pseudoType. */
+  public void setPseudoIdentifier(String pseudoIdentifier) {
+    this.pseudoIdentifier = pseudoIdentifier;
+  }
+
   /** Shadow root type. */
   public ShadowRootType getShadowRootType() {
     return shadowRootType;
@@ -381,5 +400,29 @@ public class Node {
   /** Whether the node is SVG. */
   public void setIsSVG(Boolean isSVG) {
     this.isSVG = isSVG;
+  }
+
+  public CompatibilityMode getCompatibilityMode() {
+    return compatibilityMode;
+  }
+
+  public void setCompatibilityMode(CompatibilityMode compatibilityMode) {
+    this.compatibilityMode = compatibilityMode;
+  }
+
+  public BackendNode getAssignedSlot() {
+    return assignedSlot;
+  }
+
+  public void setAssignedSlot(BackendNode assignedSlot) {
+    this.assignedSlot = assignedSlot;
+  }
+
+  public Boolean getIsScrollable() {
+    return isScrollable;
+  }
+
+  public void setIsScrollable(Boolean isScrollable) {
+    this.isScrollable = isScrollable;
   }
 }

@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.events.debugger;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,11 @@ package com.github.kklisura.cdt.protocol.events.debugger;
 
 import com.github.kklisura.cdt.protocol.types.debugger.Location;
 
-/** Fired when breakpoint is resolved to an actual script and location. */
+/**
+ * Fired when breakpoint is resolved to an actual script and location. Deprecated in favor of
+ * `resolvedBreakpoints` in the `scriptParsed` event.
+ */
+@Deprecated
 public class BreakpointResolved {
 
   private String breakpointId;

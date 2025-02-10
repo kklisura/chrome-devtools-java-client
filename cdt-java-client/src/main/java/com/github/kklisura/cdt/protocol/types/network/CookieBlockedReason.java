@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,10 @@ public enum CookieBlockedReason {
   SAME_SITE_NONE_INSECURE,
   @JsonProperty("UserPreferences")
   USER_PREFERENCES,
+  @JsonProperty("ThirdPartyPhaseout")
+  THIRD_PARTY_PHASEOUT,
+  @JsonProperty("ThirdPartyBlockedInFirstPartySet")
+  THIRD_PARTY_BLOCKED_IN_FIRST_PARTY_SET,
   @JsonProperty("UnknownError")
   UNKNOWN_ERROR,
   @JsonProperty("SchemefulSameSiteStrict")
@@ -49,5 +53,11 @@ public enum CookieBlockedReason {
   @JsonProperty("SchemefulSameSiteUnspecifiedTreatedAsLax")
   SCHEMEFUL_SAME_SITE_UNSPECIFIED_TREATED_AS_LAX,
   @JsonProperty("SamePartyFromCrossPartyContext")
-  SAME_PARTY_FROM_CROSS_PARTY_CONTEXT
+  SAME_PARTY_FROM_CROSS_PARTY_CONTEXT,
+  @JsonProperty("NameValuePairExceedsMaxSize")
+  NAME_VALUE_PAIR_EXCEEDS_MAX_SIZE,
+  @JsonProperty("PortMismatch")
+  PORT_MISMATCH,
+  @JsonProperty("SchemeMismatch")
+  SCHEME_MISMATCH
 }

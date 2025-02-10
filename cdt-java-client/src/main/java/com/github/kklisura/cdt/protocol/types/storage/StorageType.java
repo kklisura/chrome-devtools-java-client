@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.storage;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Enum of possible storage types. */
 public enum StorageType {
-  @JsonProperty("appcache")
-  APPCACHE,
   @JsonProperty("cookies")
   COOKIES,
   @JsonProperty("file_systems")
@@ -42,6 +40,12 @@ public enum StorageType {
   SERVICE_WORKERS,
   @JsonProperty("cache_storage")
   CACHE_STORAGE,
+  @JsonProperty("interest_groups")
+  INTEREST_GROUPS,
+  @JsonProperty("shared_storage")
+  SHARED_STORAGE,
+  @JsonProperty("storage_buckets")
+  STORAGE_BUCKETS,
   @JsonProperty("all")
   ALL,
   @JsonProperty("other")

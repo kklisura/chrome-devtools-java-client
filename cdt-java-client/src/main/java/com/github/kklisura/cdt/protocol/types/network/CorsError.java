@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,6 +62,10 @@ public enum CorsError {
   PREFLIGHT_MISSING_ALLOW_EXTERNAL,
   @JsonProperty("PreflightInvalidAllowExternal")
   PREFLIGHT_INVALID_ALLOW_EXTERNAL,
+  @JsonProperty("PreflightMissingAllowPrivateNetwork")
+  PREFLIGHT_MISSING_ALLOW_PRIVATE_NETWORK,
+  @JsonProperty("PreflightInvalidAllowPrivateNetwork")
+  PREFLIGHT_INVALID_ALLOW_PRIVATE_NETWORK,
   @JsonProperty("InvalidAllowMethodsPreflightResponse")
   INVALID_ALLOW_METHODS_PREFLIGHT_RESPONSE,
   @JsonProperty("InvalidAllowHeadersPreflightResponse")
@@ -73,5 +77,19 @@ public enum CorsError {
   @JsonProperty("RedirectContainsCredentials")
   REDIRECT_CONTAINS_CREDENTIALS,
   @JsonProperty("InsecurePrivateNetwork")
-  INSECURE_PRIVATE_NETWORK
+  INSECURE_PRIVATE_NETWORK,
+  @JsonProperty("InvalidPrivateNetworkAccess")
+  INVALID_PRIVATE_NETWORK_ACCESS,
+  @JsonProperty("UnexpectedPrivateNetworkAccess")
+  UNEXPECTED_PRIVATE_NETWORK_ACCESS,
+  @JsonProperty("NoCorsRedirectModeNotFollow")
+  NO_CORS_REDIRECT_MODE_NOT_FOLLOW,
+  @JsonProperty("PreflightMissingPrivateNetworkAccessId")
+  PREFLIGHT_MISSING_PRIVATE_NETWORK_ACCESS_ID,
+  @JsonProperty("PreflightMissingPrivateNetworkAccessName")
+  PREFLIGHT_MISSING_PRIVATE_NETWORK_ACCESS_NAME,
+  @JsonProperty("PrivateNetworkAccessPermissionUnavailable")
+  PRIVATE_NETWORK_ACCESS_PERMISSION_UNAVAILABLE,
+  @JsonProperty("PrivateNetworkAccessPermissionDenied")
+  PRIVATE_NETWORK_ACCESS_PERMISSION_DENIED
 }

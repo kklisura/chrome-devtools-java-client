@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.css;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.protocol.types.css;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
 /** Data for a simple selector (these are delimited by commas in a selector list). */
@@ -28,6 +29,8 @@ public class Value {
   private String text;
 
   @Optional private SourceRange range;
+
+  @Experimental @Optional private Specificity specificity;
 
   /** Value text. */
   public String getText() {
@@ -47,5 +50,15 @@ public class Value {
   /** Value range in the underlying resource (if available). */
   public void setRange(SourceRange range) {
     this.range = range;
+  }
+
+  /** Specificity of the selector. */
+  public Specificity getSpecificity() {
+    return specificity;
+  }
+
+  /** Specificity of the selector. */
+  public void setSpecificity(Specificity specificity) {
+    this.specificity = specificity;
   }
 }

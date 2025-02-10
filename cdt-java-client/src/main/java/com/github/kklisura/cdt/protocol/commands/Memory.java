@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,16 +23,29 @@ package com.github.kklisura.cdt.protocol.commands;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
+import com.github.kklisura.cdt.protocol.support.annotations.ReturnTypeParameter;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
+import com.github.kklisura.cdt.protocol.types.memory.DOMCounter;
 import com.github.kklisura.cdt.protocol.types.memory.DOMCounters;
 import com.github.kklisura.cdt.protocol.types.memory.PressureLevel;
 import com.github.kklisura.cdt.protocol.types.memory.SamplingProfile;
+import java.util.List;
 
 @Experimental
 public interface Memory {
 
+  /** Retruns current DOM object counters. */
   DOMCounters getDOMCounters();
 
+  /** Retruns DOM object counters after preparing renderer for leak detection. */
+  @Returns("counters")
+  @ReturnTypeParameter(DOMCounter.class)
+  List<DOMCounter> getDOMCountersForLeakDetection();
+
+  /**
+   * Prepares for leak detection by terminating workers, stopping spellcheckers, dropping
+   * non-essential internal caches, running garbage collections, etc.
+   */
   void prepareForLeakDetection();
 
   /** Simulate OomIntervention by purging V8 memory. */

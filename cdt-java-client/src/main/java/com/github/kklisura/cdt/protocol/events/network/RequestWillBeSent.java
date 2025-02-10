@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.events.network;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.protocol.events.network;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.network.Initiator;
 import com.github.kklisura.cdt.protocol.types.network.Request;
@@ -42,6 +43,8 @@ public class RequestWillBeSent {
   private Double wallTime;
 
   private Initiator initiator;
+
+  @Experimental private Boolean redirectHasExtraInfo;
 
   @Optional private Response redirectResponse;
 
@@ -119,6 +122,24 @@ public class RequestWillBeSent {
   /** Request initiator. */
   public void setInitiator(Initiator initiator) {
     this.initiator = initiator;
+  }
+
+  /**
+   * In the case that redirectResponse is populated, this flag indicates whether
+   * requestWillBeSentExtraInfo and responseReceivedExtraInfo events will be or were emitted for the
+   * request which was just redirected.
+   */
+  public Boolean getRedirectHasExtraInfo() {
+    return redirectHasExtraInfo;
+  }
+
+  /**
+   * In the case that redirectResponse is populated, this flag indicates whether
+   * requestWillBeSentExtraInfo and responseReceivedExtraInfo events will be or were emitted for the
+   * request which was just redirected.
+   */
+  public void setRedirectHasExtraInfo(Boolean redirectHasExtraInfo) {
+    this.redirectHasExtraInfo = redirectHasExtraInfo;
   }
 
   /** Redirect response data. */

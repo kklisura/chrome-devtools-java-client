@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.css;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.protocol.types.css;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
 /** CSS stylesheet metainformation. */
@@ -59,6 +60,8 @@ public class CSSStyleSheetHeader {
 
   private Double endColumn;
 
+  @Experimental @Optional private Boolean loadingFailed;
+
   /** The stylesheet identifier. */
   public String getStyleSheetId() {
     return styleSheetId;
@@ -79,12 +82,20 @@ public class CSSStyleSheetHeader {
     this.frameId = frameId;
   }
 
-  /** Stylesheet resource URL. */
+  /**
+   * Stylesheet resource URL. Empty if this is a constructed stylesheet created using new
+   * CSSStyleSheet() (but non-empty if this is a constructed stylesheet imported as a CSS module
+   * script).
+   */
   public String getSourceURL() {
     return sourceURL;
   }
 
-  /** Stylesheet resource URL. */
+  /**
+   * Stylesheet resource URL. Empty if this is a constructed stylesheet created using new
+   * CSSStyleSheet() (but non-empty if this is a constructed stylesheet imported as a CSS module
+   * script).
+   */
   public void setSourceURL(String sourceURL) {
     this.sourceURL = sourceURL;
   }
@@ -167,7 +178,7 @@ public class CSSStyleSheetHeader {
 
   /**
    * Whether this stylesheet is mutable. Inline stylesheets become mutable after they have been
-   * modified via CSSOM API. <link> element's stylesheets become mutable only if DevTools modifies
+   * modified via CSSOM API. `<link>` element's stylesheets become mutable only if DevTools modifies
    * them. Constructed stylesheets (new CSSStyleSheet()) are mutable immediately after creation.
    */
   public Boolean getIsMutable() {
@@ -176,19 +187,25 @@ public class CSSStyleSheetHeader {
 
   /**
    * Whether this stylesheet is mutable. Inline stylesheets become mutable after they have been
-   * modified via CSSOM API. <link> element's stylesheets become mutable only if DevTools modifies
+   * modified via CSSOM API. `<link>` element's stylesheets become mutable only if DevTools modifies
    * them. Constructed stylesheets (new CSSStyleSheet()) are mutable immediately after creation.
    */
   public void setIsMutable(Boolean isMutable) {
     this.isMutable = isMutable;
   }
 
-  /** Whether this stylesheet is a constructed stylesheet (created using new CSSStyleSheet()). */
+  /**
+   * True if this stylesheet is created through new CSSStyleSheet() or imported as a CSS module
+   * script.
+   */
   public Boolean getIsConstructed() {
     return isConstructed;
   }
 
-  /** Whether this stylesheet is a constructed stylesheet (created using new CSSStyleSheet()). */
+  /**
+   * True if this stylesheet is created through new CSSStyleSheet() or imported as a CSS module
+   * script.
+   */
   public void setIsConstructed(Boolean isConstructed) {
     this.isConstructed = isConstructed;
   }
@@ -241,5 +258,21 @@ public class CSSStyleSheetHeader {
   /** Column offset of the end of the stylesheet within the resource (zero based). */
   public void setEndColumn(Double endColumn) {
     this.endColumn = endColumn;
+  }
+
+  /**
+   * If the style sheet was loaded from a network resource, this indicates when the resource failed
+   * to load
+   */
+  public Boolean getLoadingFailed() {
+    return loadingFailed;
+  }
+
+  /**
+   * If the style sheet was loaded from a network resource, this indicates when the resource failed
+   * to load
+   */
+  public void setLoadingFailed(Boolean loadingFailed) {
+    this.loadingFailed = loadingFailed;
   }
 }

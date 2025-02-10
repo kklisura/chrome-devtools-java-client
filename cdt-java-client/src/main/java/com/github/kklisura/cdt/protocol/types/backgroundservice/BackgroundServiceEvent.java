@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.backgroundservice;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,8 @@ public class BackgroundServiceEvent {
   private String instanceId;
 
   private List<EventMetadata> eventMetadata;
+
+  private String storageKey;
 
   /** Timestamp of the event (in seconds). */
   public Double getTimestamp() {
@@ -106,5 +108,15 @@ public class BackgroundServiceEvent {
   /** A list of event-specific information. */
   public void setEventMetadata(List<EventMetadata> eventMetadata) {
     this.eventMetadata = eventMetadata;
+  }
+
+  /** Storage key this event belongs to. */
+  public String getStorageKey() {
+    return storageKey;
+  }
+
+  /** Storage key this event belongs to. */
+  public void setStorageKey(String storageKey) {
+    this.storageKey = storageKey;
   }
 }

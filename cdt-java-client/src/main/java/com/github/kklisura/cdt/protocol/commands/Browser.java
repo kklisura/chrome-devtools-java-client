@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,6 @@ public interface Browser {
       @Optional @ParamName("browserContextId") String browserContextId);
 
   /** Reset all permission management for all origins. */
-  @Experimental
   void resetPermissions();
 
   /**
@@ -102,7 +101,6 @@ public interface Browser {
    * @param browserContextId BrowserContext to reset permissions. When omitted, default browser
    *     context is used.
    */
-  @Experimental
   void resetPermissions(@Optional @ParamName("browserContextId") String browserContextId);
 
   /**
@@ -110,7 +108,7 @@ public interface Browser {
    *
    * @param behavior Whether to allow all or deny all download requests, or use default Chrome
    *     behavior if available (otherwise deny). |allowAndName| allows download and names files
-   *     according to their dowmload guids.
+   *     according to their download guids.
    */
   @Experimental
   void setDownloadBehavior(@ParamName("behavior") SetDownloadBehaviorBehavior behavior);
@@ -120,7 +118,7 @@ public interface Browser {
    *
    * @param behavior Whether to allow all or deny all download requests, or use default Chrome
    *     behavior if available (otherwise deny). |allowAndName| allows download and names files
-   *     according to their dowmload guids.
+   *     according to their download guids.
    * @param browserContextId BrowserContext to set download behavior. When omitted, default browser
    *     context is used.
    * @param downloadPath The default path to save downloaded files to. This is required if behavior
@@ -188,7 +186,7 @@ public interface Browser {
    *
    * @param query Requested substring in name. Only histograms which have query as a substring in
    *     their name are extracted. An empty or absent query returns all histograms.
-   * @param delta If true, retrieve delta since last call.
+   * @param delta If true, retrieve delta since last delta call.
    */
   @Experimental
   @Returns("histograms")
@@ -209,7 +207,7 @@ public interface Browser {
    * Get a Chrome histogram by name.
    *
    * @param name Requested histogram name.
-   * @param delta If true, retrieve delta since last call.
+   * @param delta If true, retrieve delta since last delta call.
    */
   @Experimental
   @Returns("histogram")
@@ -270,6 +268,14 @@ public interface Browser {
    */
   @Experimental
   void executeBrowserCommand(@ParamName("commandId") BrowserCommandId commandId);
+
+  /**
+   * Allows a site to use privacy sandbox features that require enrollment without the site actually
+   * being enrolled. Only supported on page targets.
+   *
+   * @param url
+   */
+  void addPrivacySandboxEnrollmentOverride(@ParamName("url") String url);
 
   /** Fired when page is about to start a download. */
   @EventName("downloadWillBegin")

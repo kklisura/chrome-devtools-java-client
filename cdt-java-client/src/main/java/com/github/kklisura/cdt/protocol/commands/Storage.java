@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,18 @@ package com.github.kklisura.cdt.protocol.commands;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.events.storage.AttributionReportingSourceRegistered;
+import com.github.kklisura.cdt.protocol.events.storage.AttributionReportingTriggerRegistered;
 import com.github.kklisura.cdt.protocol.events.storage.CacheStorageContentUpdated;
 import com.github.kklisura.cdt.protocol.events.storage.CacheStorageListUpdated;
 import com.github.kklisura.cdt.protocol.events.storage.IndexedDBContentUpdated;
 import com.github.kklisura.cdt.protocol.events.storage.IndexedDBListUpdated;
+import com.github.kklisura.cdt.protocol.events.storage.InterestGroupAccessed;
+import com.github.kklisura.cdt.protocol.events.storage.InterestGroupAuctionEventOccurred;
+import com.github.kklisura.cdt.protocol.events.storage.InterestGroupAuctionNetworkRequestCreated;
+import com.github.kklisura.cdt.protocol.events.storage.SharedStorageAccessed;
+import com.github.kklisura.cdt.protocol.events.storage.StorageBucketCreatedOrUpdated;
+import com.github.kklisura.cdt.protocol.events.storage.StorageBucketDeleted;
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
@@ -34,12 +42,25 @@ import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.network.Cookie;
 import com.github.kklisura.cdt.protocol.types.network.CookieParam;
+import com.github.kklisura.cdt.protocol.types.storage.RelatedWebsiteSet;
+import com.github.kklisura.cdt.protocol.types.storage.SharedStorageEntry;
+import com.github.kklisura.cdt.protocol.types.storage.SharedStorageMetadata;
+import com.github.kklisura.cdt.protocol.types.storage.StorageBucket;
 import com.github.kklisura.cdt.protocol.types.storage.TrustTokens;
 import com.github.kklisura.cdt.protocol.types.storage.UsageAndQuota;
 import java.util.List;
+import java.util.Map;
 
 @Experimental
 public interface Storage {
+
+  /**
+   * Returns a storage key given a frame id.
+   *
+   * @param frameId
+   */
+  @Returns("storageKey")
+  String getStorageKeyForFrame(@ParamName("frameId") String frameId);
 
   /**
    * Clears storage for origin.
@@ -49,6 +70,15 @@ public interface Storage {
    */
   void clearDataForOrigin(
       @ParamName("origin") String origin, @ParamName("storageTypes") String storageTypes);
+
+  /**
+   * Clears storage for storage key.
+   *
+   * @param storageKey Storage key.
+   * @param storageTypes Comma separated list of StorageType to clear.
+   */
+  void clearDataForStorageKey(
+      @ParamName("storageKey") String storageKey, @ParamName("storageTypes") String storageTypes);
 
   /** Returns all browser cookies. */
   @Returns("cookies")
@@ -129,11 +159,25 @@ public interface Storage {
   void trackCacheStorageForOrigin(@ParamName("origin") String origin);
 
   /**
+   * Registers storage key to be notified when an update occurs to its cache storage list.
+   *
+   * @param storageKey Storage key.
+   */
+  void trackCacheStorageForStorageKey(@ParamName("storageKey") String storageKey);
+
+  /**
    * Registers origin to be notified when an update occurs to its IndexedDB.
    *
    * @param origin Security origin.
    */
   void trackIndexedDBForOrigin(@ParamName("origin") String origin);
+
+  /**
+   * Registers storage key to be notified when an update occurs to its IndexedDB.
+   *
+   * @param storageKey Storage key.
+   */
+  void trackIndexedDBForStorageKey(@ParamName("storageKey") String storageKey);
 
   /**
    * Unregisters origin from receiving notifications for cache storage.
@@ -143,11 +187,25 @@ public interface Storage {
   void untrackCacheStorageForOrigin(@ParamName("origin") String origin);
 
   /**
+   * Unregisters storage key from receiving notifications for cache storage.
+   *
+   * @param storageKey Storage key.
+   */
+  void untrackCacheStorageForStorageKey(@ParamName("storageKey") String storageKey);
+
+  /**
    * Unregisters origin from receiving notifications for IndexedDB.
    *
    * @param origin Security origin.
    */
   void untrackIndexedDBForOrigin(@ParamName("origin") String origin);
+
+  /**
+   * Unregisters storage key from receiving notifications for IndexedDB.
+   *
+   * @param storageKey Storage key.
+   */
+  void untrackIndexedDBForStorageKey(@ParamName("storageKey") String storageKey);
 
   /** Returns the number of stored Trust Tokens per issuer for the current browsing context. */
   @Experimental
@@ -165,6 +223,187 @@ public interface Storage {
   @Returns("didDeleteTokens")
   Boolean clearTrustTokens(@ParamName("issuerOrigin") String issuerOrigin);
 
+  /**
+   * Gets details for a named interest group.
+   *
+   * @param ownerOrigin
+   * @param name
+   */
+  @Experimental
+  @Returns("details")
+  Map<String, Object> getInterestGroupDetails(
+      @ParamName("ownerOrigin") String ownerOrigin, @ParamName("name") String name);
+
+  /**
+   * Enables/Disables issuing of interestGroupAccessed events.
+   *
+   * @param enable
+   */
+  @Experimental
+  void setInterestGroupTracking(@ParamName("enable") Boolean enable);
+
+  /**
+   * Enables/Disables issuing of interestGroupAuctionEventOccurred and
+   * interestGroupAuctionNetworkRequestCreated.
+   *
+   * @param enable
+   */
+  @Experimental
+  void setInterestGroupAuctionTracking(@ParamName("enable") Boolean enable);
+
+  /**
+   * Gets metadata for an origin's shared storage.
+   *
+   * @param ownerOrigin
+   */
+  @Experimental
+  @Returns("metadata")
+  SharedStorageMetadata getSharedStorageMetadata(@ParamName("ownerOrigin") String ownerOrigin);
+
+  /**
+   * Gets the entries in an given origin's shared storage.
+   *
+   * @param ownerOrigin
+   */
+  @Experimental
+  @Returns("entries")
+  @ReturnTypeParameter(SharedStorageEntry.class)
+  List<SharedStorageEntry> getSharedStorageEntries(@ParamName("ownerOrigin") String ownerOrigin);
+
+  /**
+   * Sets entry with `key` and `value` for a given origin's shared storage.
+   *
+   * @param ownerOrigin
+   * @param key
+   * @param value
+   */
+  @Experimental
+  void setSharedStorageEntry(
+      @ParamName("ownerOrigin") String ownerOrigin,
+      @ParamName("key") String key,
+      @ParamName("value") String value);
+
+  /**
+   * Sets entry with `key` and `value` for a given origin's shared storage.
+   *
+   * @param ownerOrigin
+   * @param key
+   * @param value
+   * @param ignoreIfPresent If `ignoreIfPresent` is included and true, then only sets the entry if
+   *     `key` doesn't already exist.
+   */
+  @Experimental
+  void setSharedStorageEntry(
+      @ParamName("ownerOrigin") String ownerOrigin,
+      @ParamName("key") String key,
+      @ParamName("value") String value,
+      @Optional @ParamName("ignoreIfPresent") Boolean ignoreIfPresent);
+
+  /**
+   * Deletes entry for `key` (if it exists) for a given origin's shared storage.
+   *
+   * @param ownerOrigin
+   * @param key
+   */
+  @Experimental
+  void deleteSharedStorageEntry(
+      @ParamName("ownerOrigin") String ownerOrigin, @ParamName("key") String key);
+
+  /**
+   * Clears all entries for a given origin's shared storage.
+   *
+   * @param ownerOrigin
+   */
+  @Experimental
+  void clearSharedStorageEntries(@ParamName("ownerOrigin") String ownerOrigin);
+
+  /**
+   * Resets the budget for `ownerOrigin` by clearing all budget withdrawals.
+   *
+   * @param ownerOrigin
+   */
+  @Experimental
+  void resetSharedStorageBudget(@ParamName("ownerOrigin") String ownerOrigin);
+
+  /**
+   * Enables/disables issuing of sharedStorageAccessed events.
+   *
+   * @param enable
+   */
+  @Experimental
+  void setSharedStorageTracking(@ParamName("enable") Boolean enable);
+
+  /**
+   * Set tracking for a storage key's buckets.
+   *
+   * @param storageKey
+   * @param enable
+   */
+  @Experimental
+  void setStorageBucketTracking(
+      @ParamName("storageKey") String storageKey, @ParamName("enable") Boolean enable);
+
+  /**
+   * Deletes the Storage Bucket with the given storage key and bucket name.
+   *
+   * @param bucket
+   */
+  @Experimental
+  void deleteStorageBucket(@ParamName("bucket") StorageBucket bucket);
+
+  /** Deletes state for sites identified as potential bounce trackers, immediately. */
+  @Experimental
+  @Returns("deletedSites")
+  @ReturnTypeParameter(String.class)
+  List<String> runBounceTrackingMitigations();
+
+  /**
+   * https://wicg.github.io/attribution-reporting-api/
+   *
+   * @param enabled If enabled, noise is suppressed and reports are sent immediately.
+   */
+  @Experimental
+  void setAttributionReportingLocalTestingMode(@ParamName("enabled") Boolean enabled);
+
+  /**
+   * Enables/disables issuing of Attribution Reporting events.
+   *
+   * @param enable
+   */
+  @Experimental
+  void setAttributionReportingTracking(@ParamName("enable") Boolean enable);
+
+  /**
+   * Sends all pending Attribution Reports immediately, regardless of their scheduled report time.
+   */
+  @Experimental
+  @Returns("numSent")
+  Integer sendPendingAttributionReports();
+
+  /**
+   * Returns the effective Related Website Sets in use by this profile for the browser session. The
+   * effective Related Website Sets will not change during a browser session.
+   */
+  @Experimental
+  @Returns("sets")
+  @ReturnTypeParameter(RelatedWebsiteSet.class)
+  List<RelatedWebsiteSet> getRelatedWebsiteSets();
+
+  /**
+   * Returns the list of URLs from a page and its embedded resources that match existing grace
+   * period URL pattern rules.
+   * https://developers.google.com/privacy-sandbox/cookies/temporary-exceptions/grace-period
+   *
+   * @param firstPartyUrl The URL of the page currently being visited.
+   * @param thirdPartyUrls The list of embedded resource URLs from the page.
+   */
+  @Experimental
+  @Returns("matchedUrls")
+  @ReturnTypeParameter(String.class)
+  List<String> getAffectedUrlsForThirdPartyCookieMetadata(
+      @ParamName("firstPartyUrl") String firstPartyUrl,
+      @ParamName("thirdPartyUrls") List<String> thirdPartyUrls);
+
   /** A cache's contents have been modified. */
   @EventName("cacheStorageContentUpdated")
   EventListener onCacheStorageContentUpdated(
@@ -181,4 +420,49 @@ public interface Storage {
   /** The origin's IndexedDB database list has been modified. */
   @EventName("indexedDBListUpdated")
   EventListener onIndexedDBListUpdated(EventHandler<IndexedDBListUpdated> eventListener);
+
+  /**
+   * One of the interest groups was accessed. Note that these events are global to all targets
+   * sharing an interest group store.
+   */
+  @EventName("interestGroupAccessed")
+  EventListener onInterestGroupAccessed(EventHandler<InterestGroupAccessed> eventListener);
+
+  /** An auction involving interest groups is taking place. These events are target-specific. */
+  @EventName("interestGroupAuctionEventOccurred")
+  EventListener onInterestGroupAuctionEventOccurred(
+      EventHandler<InterestGroupAuctionEventOccurred> eventListener);
+
+  /**
+   * Specifies which auctions a particular network fetch may be related to, and in what role. Note
+   * that it is not ordered with respect to Network.requestWillBeSent (but will happen before
+   * loadingFinished loadingFailed).
+   */
+  @EventName("interestGroupAuctionNetworkRequestCreated")
+  EventListener onInterestGroupAuctionNetworkRequestCreated(
+      EventHandler<InterestGroupAuctionNetworkRequestCreated> eventListener);
+
+  /**
+   * Shared storage was accessed by the associated page. The following parameters are included in
+   * all events.
+   */
+  @EventName("sharedStorageAccessed")
+  EventListener onSharedStorageAccessed(EventHandler<SharedStorageAccessed> eventListener);
+
+  @EventName("storageBucketCreatedOrUpdated")
+  EventListener onStorageBucketCreatedOrUpdated(
+      EventHandler<StorageBucketCreatedOrUpdated> eventListener);
+
+  @EventName("storageBucketDeleted")
+  EventListener onStorageBucketDeleted(EventHandler<StorageBucketDeleted> eventListener);
+
+  @EventName("attributionReportingSourceRegistered")
+  @Experimental
+  EventListener onAttributionReportingSourceRegistered(
+      EventHandler<AttributionReportingSourceRegistered> eventListener);
+
+  @EventName("attributionReportingTriggerRegistered")
+  @Experimental
+  EventListener onAttributionReportingTriggerRegistered(
+      EventHandler<AttributionReportingTriggerRegistered> eventListener);
 }

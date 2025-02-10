@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.domstorage;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,14 @@ package com.github.kklisura.cdt.protocol.types.domstorage;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
+
 /** DOM Storage identifier. */
 public class StorageId {
 
-  private String securityOrigin;
+  @Optional private String securityOrigin;
+
+  @Optional private String storageKey;
 
   private Boolean isLocalStorage;
 
@@ -35,6 +39,16 @@ public class StorageId {
   /** Security origin for the storage. */
   public void setSecurityOrigin(String securityOrigin) {
     this.securityOrigin = securityOrigin;
+  }
+
+  /** Represents a key by which DOM Storage keys its CachedStorageAreas */
+  public String getStorageKey() {
+    return storageKey;
+  }
+
+  /** Represents a key by which DOM Storage keys its CachedStorageAreas */
+  public void setStorageKey(String storageKey) {
+    this.storageKey = storageKey;
   }
 
   /** Whether the storage is local storage (not session storage). */

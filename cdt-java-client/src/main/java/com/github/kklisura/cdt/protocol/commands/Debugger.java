@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,10 +35,12 @@ import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.debugger.BreakLocation;
 import com.github.kklisura.cdt.protocol.types.debugger.ContinueToLocationTargetCallFrames;
+import com.github.kklisura.cdt.protocol.types.debugger.DisassembleWasmModule;
 import com.github.kklisura.cdt.protocol.types.debugger.EvaluateOnCallFrame;
 import com.github.kklisura.cdt.protocol.types.debugger.Location;
 import com.github.kklisura.cdt.protocol.types.debugger.LocationRange;
 import com.github.kklisura.cdt.protocol.types.debugger.RestartFrame;
+import com.github.kklisura.cdt.protocol.types.debugger.RestartFrameMode;
 import com.github.kklisura.cdt.protocol.types.debugger.ScriptPosition;
 import com.github.kklisura.cdt.protocol.types.debugger.ScriptSource;
 import com.github.kklisura.cdt.protocol.types.debugger.SearchMatch;
@@ -47,6 +49,7 @@ import com.github.kklisura.cdt.protocol.types.debugger.SetBreakpointByUrl;
 import com.github.kklisura.cdt.protocol.types.debugger.SetInstrumentationBreakpointInstrumentation;
 import com.github.kklisura.cdt.protocol.types.debugger.SetPauseOnExceptionsState;
 import com.github.kklisura.cdt.protocol.types.debugger.SetScriptSource;
+import com.github.kklisura.cdt.protocol.types.debugger.WasmDisassemblyChunk;
 import com.github.kklisura.cdt.protocol.types.runtime.CallArgument;
 import com.github.kklisura.cdt.protocol.types.runtime.StackTrace;
 import com.github.kklisura.cdt.protocol.types.runtime.StackTraceId;
@@ -90,7 +93,7 @@ public interface Debugger {
    * enabled until the result for this command is received.
    *
    * @param maxScriptsCacheSize The maximum size in bytes of collected scripts (not referenced by
-   *     other heap objects) the debugger can hold. Puts no limit if paramter is omitted.
+   *     other heap objects) the debugger can hold. Puts no limit if parameter is omitted.
    */
   @Returns("debuggerId")
   String enable(
@@ -168,6 +171,21 @@ public interface Debugger {
    */
   ScriptSource getScriptSource(@ParamName("scriptId") String scriptId);
 
+  /** @param scriptId Id of the script to disassemble */
+  @Experimental
+  DisassembleWasmModule disassembleWasmModule(@ParamName("scriptId") String scriptId);
+
+  /**
+   * Disassemble the next chunk of lines for the module corresponding to the stream. If disassembly
+   * is complete, this API will invalidate the streamId and return an empty chunk. Any subsequent
+   * calls for the now invalid stream will return errors.
+   *
+   * @param streamId
+   */
+  @Experimental
+  @Returns("chunk")
+  WasmDisassemblyChunk nextWasmDisassemblyChunk(@ParamName("streamId") String streamId);
+
   /**
    * This command is deprecated. Use getScriptSource instead.
    *
@@ -205,11 +223,42 @@ public interface Debugger {
   void removeBreakpoint(@ParamName("breakpointId") String breakpointId);
 
   /**
-   * Restarts particular call frame from the beginning.
+   * Restarts particular call frame from the beginning. The old, deprecated behavior of
+   * `restartFrame` is to stay paused and allow further CDP commands after a restart was scheduled.
+   * This can cause problems with restarting, so we now continue execution immediatly after it has
+   * been scheduled until we reach the beginning of the restarted frame.
+   *
+   * <p>To stay back-wards compatible, `restartFrame` now expects a `mode` parameter to be present.
+   * If the `mode` parameter is missing, `restartFrame` errors out.
+   *
+   * <p>The various return values are deprecated and `callFrames` is always empty. Use the call
+   * frames from the `Debugger#paused` events instead, that fires once V8 pauses at the beginning of
+   * the restarted function.
    *
    * @param callFrameId Call frame identifier to evaluate on.
    */
   RestartFrame restartFrame(@ParamName("callFrameId") String callFrameId);
+
+  /**
+   * Restarts particular call frame from the beginning. The old, deprecated behavior of
+   * `restartFrame` is to stay paused and allow further CDP commands after a restart was scheduled.
+   * This can cause problems with restarting, so we now continue execution immediatly after it has
+   * been scheduled until we reach the beginning of the restarted frame.
+   *
+   * <p>To stay back-wards compatible, `restartFrame` now expects a `mode` parameter to be present.
+   * If the `mode` parameter is missing, `restartFrame` errors out.
+   *
+   * <p>The various return values are deprecated and `callFrames` is always empty. Use the call
+   * frames from the `Debugger#paused` events instead, that fires once V8 pauses at the beginning of
+   * the restarted function.
+   *
+   * @param callFrameId Call frame identifier to evaluate on.
+   * @param mode The `mode` parameter must be present and set to 'StepInto', otherwise
+   *     `restartFrame` will error out.
+   */
+  RestartFrame restartFrame(
+      @ParamName("callFrameId") String callFrameId,
+      @Experimental @Optional @ParamName("mode") RestartFrameMode mode);
 
   /** Resumes JavaScript execution. */
   void resume();
@@ -261,6 +310,16 @@ public interface Debugger {
   void setAsyncCallStackDepth(@ParamName("maxDepth") Integer maxDepth);
 
   /**
+   * Replace previous blackbox execution contexts with passed ones. Forces backend to skip
+   * stepping/pausing in scripts in these execution contexts. VM will try to leave blackboxed script
+   * by performing 'step in' several times, finally resorting to 'step out' if unsuccessful.
+   *
+   * @param uniqueIds Array of execution context unique ids for the debugger to ignore.
+   */
+  @Experimental
+  void setBlackboxExecutionContexts(@ParamName("uniqueIds") List<String> uniqueIds);
+
+  /**
    * Replace previous blackbox patterns with passed ones. Forces backend to skip stepping/pausing in
    * scripts with url matching one of the patterns. VM will try to leave blackboxed script by
    * performing 'step in' several times, finally resorting to 'step out' if unsuccessful.
@@ -269,6 +328,19 @@ public interface Debugger {
    */
   @Experimental
   void setBlackboxPatterns(@ParamName("patterns") List<String> patterns);
+
+  /**
+   * Replace previous blackbox patterns with passed ones. Forces backend to skip stepping/pausing in
+   * scripts with url matching one of the patterns. VM will try to leave blackboxed script by
+   * performing 'step in' several times, finally resorting to 'step out' if unsuccessful.
+   *
+   * @param patterns Array of regexps that will be used to check script url for blackbox state.
+   * @param skipAnonymous If true, also ignore scripts with no source url.
+   */
+  @Experimental
+  void setBlackboxPatterns(
+      @ParamName("patterns") List<String> patterns,
+      @Optional @ParamName("skipAnonymous") Boolean skipAnonymous);
 
   /**
    * Makes backend skip steps in the script in blackboxed ranges. VM will try leave blacklisted
@@ -374,8 +446,8 @@ public interface Debugger {
   void setBreakpointsActive(@ParamName("active") Boolean active);
 
   /**
-   * Defines pause on exceptions state. Can be set to stop on all exceptions, uncaught exceptions or
-   * no exceptions. Initial pause on exceptions state is `none`.
+   * Defines pause on exceptions state. Can be set to stop on all exceptions, uncaught exceptions,
+   * or caught exceptions, no exceptions. Initial pause on exceptions state is `none`.
    *
    * @param state Pause on exceptions mode.
    */
@@ -392,6 +464,11 @@ public interface Debugger {
   /**
    * Edits JavaScript source live.
    *
+   * <p>In general, functions that are currently on the stack can not be edited with a single
+   * exception: If the edited function is the top-most stack frame and that is the only activation
+   * of that function on the stack. In this case the live edit will be successful and a
+   * `Debugger.restartFrame` for the top-most function is automatically triggered.
+   *
    * @param scriptId Id of the script to edit.
    * @param scriptSource New content of the script.
    */
@@ -401,15 +478,24 @@ public interface Debugger {
   /**
    * Edits JavaScript source live.
    *
+   * <p>In general, functions that are currently on the stack can not be edited with a single
+   * exception: If the edited function is the top-most stack frame and that is the only activation
+   * of that function on the stack. In this case the live edit will be successful and a
+   * `Debugger.restartFrame` for the top-most function is automatically triggered.
+   *
    * @param scriptId Id of the script to edit.
    * @param scriptSource New content of the script.
    * @param dryRun If true the change will not actually be applied. Dry run may be used to get
    *     result description without actually modifying the code.
+   * @param allowTopFrameEditing If true, then `scriptSource` is allowed to change the function on
+   *     top of the stack as long as the top-most stack frame is the only activation of that
+   *     function.
    */
   SetScriptSource setScriptSource(
       @ParamName("scriptId") String scriptId,
       @ParamName("scriptSource") String scriptSource,
-      @Optional @ParamName("dryRun") Boolean dryRun);
+      @Optional @ParamName("dryRun") Boolean dryRun,
+      @Experimental @Optional @ParamName("allowTopFrameEditing") Boolean allowTopFrameEditing);
 
   /**
    * Makes page not interrupt on any pauses (breakpoint, exception, dom exception etc).
@@ -461,8 +547,12 @@ public interface Debugger {
    */
   void stepOver(@Experimental @Optional @ParamName("skipList") List<LocationRange> skipList);
 
-  /** Fired when breakpoint is resolved to an actual script and location. */
+  /**
+   * Fired when breakpoint is resolved to an actual script and location. Deprecated in favor of
+   * `resolvedBreakpoints` in the `scriptParsed` event.
+   */
   @EventName("breakpointResolved")
+  @Deprecated
   EventListener onBreakpointResolved(EventHandler<BreakpointResolved> eventListener);
 
   /**

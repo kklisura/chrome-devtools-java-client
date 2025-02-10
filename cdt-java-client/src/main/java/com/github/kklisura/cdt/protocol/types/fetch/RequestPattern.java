@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.fetch;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,16 +32,16 @@ public class RequestPattern {
   @Optional private RequestStage requestStage;
 
   /**
-   * Wildcards ('*' -> zero or more, '?' -> exactly one) are allowed. Escape character is backslash.
-   * Omitting is equivalent to "*".
+   * Wildcards (`'*'` -> zero or more, `'?'` -> exactly one) are allowed. Escape character is
+   * backslash. Omitting is equivalent to `"*"`.
    */
   public String getUrlPattern() {
     return urlPattern;
   }
 
   /**
-   * Wildcards ('*' -> zero or more, '?' -> exactly one) are allowed. Escape character is backslash.
-   * Omitting is equivalent to "*".
+   * Wildcards (`'*'` -> zero or more, `'?'` -> exactly one) are allowed. Escape character is
+   * backslash. Omitting is equivalent to `"*"`.
    */
   public void setUrlPattern(String urlPattern) {
     this.urlPattern = urlPattern;

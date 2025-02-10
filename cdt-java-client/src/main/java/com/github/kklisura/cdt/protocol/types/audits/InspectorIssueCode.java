@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.audits;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * InspectorIssueDetails to convey more specific information about the kind of issue.
  */
 public enum InspectorIssueCode {
-  @JsonProperty("SameSiteCookieIssue")
-  SAME_SITE_COOKIE_ISSUE,
+  @JsonProperty("CookieIssue")
+  COOKIE_ISSUE,
   @JsonProperty("MixedContentIssue")
   MIXED_CONTENT_ISSUE,
   @JsonProperty("BlockedByResponseIssue")
@@ -39,12 +39,36 @@ public enum InspectorIssueCode {
   CONTENT_SECURITY_POLICY_ISSUE,
   @JsonProperty("SharedArrayBufferIssue")
   SHARED_ARRAY_BUFFER_ISSUE,
-  @JsonProperty("TrustedWebActivityIssue")
-  TRUSTED_WEB_ACTIVITY_ISSUE,
   @JsonProperty("LowTextContrastIssue")
   LOW_TEXT_CONTRAST_ISSUE,
   @JsonProperty("CorsIssue")
   CORS_ISSUE,
   @JsonProperty("AttributionReportingIssue")
-  ATTRIBUTION_REPORTING_ISSUE
+  ATTRIBUTION_REPORTING_ISSUE,
+  @JsonProperty("QuirksModeIssue")
+  QUIRKS_MODE_ISSUE,
+  @JsonProperty("NavigatorUserAgentIssue")
+  NAVIGATOR_USER_AGENT_ISSUE,
+  @JsonProperty("GenericIssue")
+  GENERIC_ISSUE,
+  @JsonProperty("DeprecationIssue")
+  DEPRECATION_ISSUE,
+  @JsonProperty("ClientHintIssue")
+  CLIENT_HINT_ISSUE,
+  @JsonProperty("FederatedAuthRequestIssue")
+  FEDERATED_AUTH_REQUEST_ISSUE,
+  @JsonProperty("BounceTrackingIssue")
+  BOUNCE_TRACKING_ISSUE,
+  @JsonProperty("CookieDeprecationMetadataIssue")
+  COOKIE_DEPRECATION_METADATA_ISSUE,
+  @JsonProperty("StylesheetLoadingIssue")
+  STYLESHEET_LOADING_ISSUE,
+  @JsonProperty("FederatedAuthUserInfoRequestIssue")
+  FEDERATED_AUTH_USER_INFO_REQUEST_ISSUE,
+  @JsonProperty("PropertyRuleIssue")
+  PROPERTY_RULE_ISSUE,
+  @JsonProperty("SharedDictionaryIssue")
+  SHARED_DICTIONARY_ISSUE,
+  @JsonProperty("SelectElementAccessibilityIssue")
+  SELECT_ELEMENT_ACCESSIBILITY_ISSUE
 }

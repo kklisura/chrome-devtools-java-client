@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.audits;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,11 @@ import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
 /**
  * Details for issues around "Attribution Reporting API" usage. Explainer:
- * https://github.com/WICG/conversion-measurement-api
+ * https://github.com/WICG/attribution-reporting-api
  */
 public class AttributionReportingIssueDetails {
 
   private AttributionReportingIssueType violationType;
-
-  @Optional private AffectedFrame frame;
 
   @Optional private AffectedRequest request;
 
@@ -44,14 +42,6 @@ public class AttributionReportingIssueDetails {
 
   public void setViolationType(AttributionReportingIssueType violationType) {
     this.violationType = violationType;
-  }
-
-  public AffectedFrame getFrame() {
-    return frame;
-  }
-
-  public void setFrame(AffectedFrame frame) {
-    this.frame = frame;
   }
 
   public AffectedRequest getRequest() {

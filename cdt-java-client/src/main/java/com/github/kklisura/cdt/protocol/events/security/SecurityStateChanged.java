@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.events.security;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,18 +26,19 @@ import com.github.kklisura.cdt.protocol.types.security.SecurityState;
 import com.github.kklisura.cdt.protocol.types.security.SecurityStateExplanation;
 import java.util.List;
 
-/** The security state of the page changed. */
+/** The security state of the page changed. No longer being sent. */
+@Deprecated
 public class SecurityStateChanged {
 
   private SecurityState securityState;
 
   @Deprecated private Boolean schemeIsCryptographic;
 
-  private List<SecurityStateExplanation> explanations;
+  @Deprecated private List<SecurityStateExplanation> explanations;
 
   @Deprecated private InsecureContentStatus insecureContentStatus;
 
-  @Optional private String summary;
+  @Deprecated @Optional private String summary;
 
   /** Security state. */
   public SecurityState getSecurityState() {
@@ -59,18 +60,12 @@ public class SecurityStateChanged {
     this.schemeIsCryptographic = schemeIsCryptographic;
   }
 
-  /**
-   * List of explanations for the security state. If the overall security state is `insecure` or
-   * `warning`, at least one corresponding explanation should be included.
-   */
+  /** Previously a list of explanations for the security state. Now always empty. */
   public List<SecurityStateExplanation> getExplanations() {
     return explanations;
   }
 
-  /**
-   * List of explanations for the security state. If the overall security state is `insecure` or
-   * `warning`, at least one corresponding explanation should be included.
-   */
+  /** Previously a list of explanations for the security state. Now always empty. */
   public void setExplanations(List<SecurityStateExplanation> explanations) {
     this.explanations = explanations;
   }
@@ -85,12 +80,12 @@ public class SecurityStateChanged {
     this.insecureContentStatus = insecureContentStatus;
   }
 
-  /** Overrides user-visible description of the state. */
+  /** Overrides user-visible description of the state. Always omitted. */
   public String getSummary() {
     return summary;
   }
 
-  /** Overrides user-visible description of the state. */
+  /** Overrides user-visible description of the state. Always omitted. */
   public void setSummary(String summary) {
     this.summary = summary;
   }

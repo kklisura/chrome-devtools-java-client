@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.css;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ public class PlatformFontUsage {
 
   private String familyName;
 
+  private String postScriptName;
+
   private Boolean isCustomFont;
 
   private Double glyphCount;
@@ -37,6 +39,16 @@ public class PlatformFontUsage {
   /** Font's family name reported by platform. */
   public void setFamilyName(String familyName) {
     this.familyName = familyName;
+  }
+
+  /** Font's PostScript name reported by platform. */
+  public String getPostScriptName() {
+    return postScriptName;
+  }
+
+  /** Font's PostScript name reported by platform. */
+  public void setPostScriptName(String postScriptName) {
+    this.postScriptName = postScriptName;
   }
 
   /** Indicates if the font was downloaded or resolved locally. */

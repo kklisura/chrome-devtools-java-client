@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ package com.github.kklisura.cdt.protocol.types.network;
 
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
+import java.util.List;
 
 @Experimental
 public class SecurityIsolationStatus {
@@ -29,6 +30,8 @@ public class SecurityIsolationStatus {
   @Optional private CrossOriginOpenerPolicyStatus coop;
 
   @Optional private CrossOriginEmbedderPolicyStatus coep;
+
+  @Optional private List<ContentSecurityPolicyStatus> csp;
 
   public CrossOriginOpenerPolicyStatus getCoop() {
     return coop;
@@ -44,5 +47,13 @@ public class SecurityIsolationStatus {
 
   public void setCoep(CrossOriginEmbedderPolicyStatus coep) {
     this.coep = coep;
+  }
+
+  public List<ContentSecurityPolicyStatus> getCsp() {
+    return csp;
+  }
+
+  public void setCsp(List<ContentSecurityPolicyStatus> csp) {
+    this.csp = csp;
   }
 }

@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.events.fetch;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package com.github.kklisura.cdt.protocol.events.fetch;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.fetch.HeaderEntry;
 import com.github.kklisura.cdt.protocol.types.network.ErrorReason;
@@ -32,7 +33,10 @@ import java.util.List;
  * is paused until the client responds with one of continueRequest, failRequest or fulfillRequest.
  * The stage of the request can be determined by presence of responseErrorReason and
  * responseStatusCode -- the request is at the response stage if either of these fields is present
- * and in the request stage otherwise.
+ * and in the request stage otherwise. Redirect responses and subsequent requests are reported
+ * similarly to regular responses and requests. Redirect responses may be distinguished by the value
+ * of `responseStatusCode` (which is one of 301, 302, 303, 307, 308) along with presence of the
+ * `location` header. Requests resulting from a redirect will have `redirectedRequestId` field set.
  */
 public class RequestPaused {
 
@@ -48,9 +52,13 @@ public class RequestPaused {
 
   @Optional private Integer responseStatusCode;
 
+  @Optional private String responseStatusText;
+
   @Optional private List<HeaderEntry> responseHeaders;
 
   @Optional private String networkId;
+
+  @Experimental @Optional private String redirectedRequestId;
 
   /** Each request the page makes will have a unique id. */
   public String getRequestId() {
@@ -112,6 +120,16 @@ public class RequestPaused {
     this.responseStatusCode = responseStatusCode;
   }
 
+  /** Response status text if intercepted at response stage. */
+  public String getResponseStatusText() {
+    return responseStatusText;
+  }
+
+  /** Response status text if intercepted at response stage. */
+  public void setResponseStatusText(String responseStatusText) {
+    this.responseStatusText = responseStatusText;
+  }
+
   /** Response headers if intercepted at the response stage. */
   public List<HeaderEntry> getResponseHeaders() {
     return responseHeaders;
@@ -136,5 +154,21 @@ public class RequestPaused {
    */
   public void setNetworkId(String networkId) {
     this.networkId = networkId;
+  }
+
+  /**
+   * If the request is due to a redirect response from the server, the id of the request that has
+   * caused the redirect.
+   */
+  public String getRedirectedRequestId() {
+    return redirectedRequestId;
+  }
+
+  /**
+   * If the request is due to a redirect response from the server, the id of the request that has
+   * caused the redirect.
+   */
+  public void setRedirectedRequestId(String redirectedRequestId) {
+    this.redirectedRequestId = redirectedRequestId;
   }
 }

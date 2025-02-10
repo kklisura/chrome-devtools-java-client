@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.runtime;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,9 @@ package com.github.kklisura.cdt.protocol.types.runtime;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
+import java.util.Map;
 
 /**
  * Detailed information about exception (or error) that was thrown during script compilation or
@@ -45,6 +47,8 @@ public class ExceptionDetails {
   @Optional private RemoteObject exception;
 
   @Optional private Integer executionContextId;
+
+  @Experimental @Optional private Map<String, Object> exceptionMetaData;
 
   /** Exception id. */
   public Integer getExceptionId() {
@@ -134,5 +138,21 @@ public class ExceptionDetails {
   /** Identifier of the context where exception happened. */
   public void setExecutionContextId(Integer executionContextId) {
     this.executionContextId = executionContextId;
+  }
+
+  /**
+   * Dictionary with entries of meta data that the client associated with this exception, such as
+   * information about associated network requests, etc.
+   */
+  public Map<String, Object> getExceptionMetaData() {
+    return exceptionMetaData;
+  }
+
+  /**
+   * Dictionary with entries of meta data that the client associated with this exception, such as
+   * information about associated network requests, etc.
+   */
+  public void setExceptionMetaData(Map<String, Object> exceptionMetaData) {
+    this.exceptionMetaData = exceptionMetaData;
   }
 }

@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,10 @@ package com.github.kklisura.cdt.protocol;
 
 import com.github.kklisura.cdt.protocol.commands.Accessibility;
 import com.github.kklisura.cdt.protocol.commands.Animation;
-import com.github.kklisura.cdt.protocol.commands.ApplicationCache;
 import com.github.kklisura.cdt.protocol.commands.Audits;
+import com.github.kklisura.cdt.protocol.commands.Autofill;
 import com.github.kklisura.cdt.protocol.commands.BackgroundService;
+import com.github.kklisura.cdt.protocol.commands.BluetoothEmulation;
 import com.github.kklisura.cdt.protocol.commands.Browser;
 import com.github.kklisura.cdt.protocol.commands.CSS;
 import com.github.kklisura.cdt.protocol.commands.CacheStorage;
@@ -34,11 +35,15 @@ import com.github.kklisura.cdt.protocol.commands.DOM;
 import com.github.kklisura.cdt.protocol.commands.DOMDebugger;
 import com.github.kklisura.cdt.protocol.commands.DOMSnapshot;
 import com.github.kklisura.cdt.protocol.commands.DOMStorage;
-import com.github.kklisura.cdt.protocol.commands.Database;
 import com.github.kklisura.cdt.protocol.commands.Debugger;
+import com.github.kklisura.cdt.protocol.commands.DeviceAccess;
 import com.github.kklisura.cdt.protocol.commands.DeviceOrientation;
 import com.github.kklisura.cdt.protocol.commands.Emulation;
+import com.github.kklisura.cdt.protocol.commands.EventBreakpoints;
+import com.github.kklisura.cdt.protocol.commands.Extensions;
+import com.github.kklisura.cdt.protocol.commands.FedCm;
 import com.github.kklisura.cdt.protocol.commands.Fetch;
+import com.github.kklisura.cdt.protocol.commands.FileSystem;
 import com.github.kklisura.cdt.protocol.commands.HeadlessExperimental;
 import com.github.kklisura.cdt.protocol.commands.HeapProfiler;
 import com.github.kklisura.cdt.protocol.commands.IO;
@@ -51,9 +56,11 @@ import com.github.kklisura.cdt.protocol.commands.Media;
 import com.github.kklisura.cdt.protocol.commands.Memory;
 import com.github.kklisura.cdt.protocol.commands.Network;
 import com.github.kklisura.cdt.protocol.commands.Overlay;
+import com.github.kklisura.cdt.protocol.commands.PWA;
 import com.github.kklisura.cdt.protocol.commands.Page;
 import com.github.kklisura.cdt.protocol.commands.Performance;
 import com.github.kklisura.cdt.protocol.commands.PerformanceTimeline;
+import com.github.kklisura.cdt.protocol.commands.Preload;
 import com.github.kklisura.cdt.protocol.commands.Profiler;
 import com.github.kklisura.cdt.protocol.commands.Runtime;
 import com.github.kklisura.cdt.protocol.commands.Schema;
@@ -93,11 +100,14 @@ public interface ChromeDevTools {
   /** Returns the Animation command. */
   Animation getAnimation();
 
-  /** Returns the ApplicationCache command. */
-  ApplicationCache getApplicationCache();
-
   /** Returns the Audits command. */
   Audits getAudits();
+
+  /** Returns the Extensions command. */
+  Extensions getExtensions();
+
+  /** Returns the Autofill command. */
+  Autofill getAutofill();
 
   /** Returns the BackgroundService command. */
   BackgroundService getBackgroundService();
@@ -120,14 +130,14 @@ public interface ChromeDevTools {
   /** Returns the DOMDebugger command. */
   DOMDebugger getDOMDebugger();
 
+  /** Returns the EventBreakpoints command. */
+  EventBreakpoints getEventBreakpoints();
+
   /** Returns the DOMSnapshot command. */
   DOMSnapshot getDOMSnapshot();
 
   /** Returns the DOMStorage command. */
   DOMStorage getDOMStorage();
-
-  /** Returns the Database command. */
-  Database getDatabase();
 
   /** Returns the DeviceOrientation command. */
   DeviceOrientation getDeviceOrientation();
@@ -140,6 +150,9 @@ public interface ChromeDevTools {
 
   /** Returns the IO command. */
   IO getIO();
+
+  /** Returns the FileSystem command. */
+  FileSystem getFileSystem();
 
   /** Returns the IndexedDB command. */
   IndexedDB getIndexedDB();
@@ -206,4 +219,19 @@ public interface ChromeDevTools {
 
   /** Returns the Media command. */
   Media getMedia();
+
+  /** Returns the DeviceAccess command. */
+  DeviceAccess getDeviceAccess();
+
+  /** Returns the Preload command. */
+  Preload getPreload();
+
+  /** Returns the FedCm command. */
+  FedCm getFedCm();
+
+  /** Returns the PWA command. */
+  PWA getPWA();
+
+  /** Returns the BluetoothEmulation command. */
+  BluetoothEmulation getBluetoothEmulation();
 }

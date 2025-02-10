@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.tracing;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,27 +20,30 @@ package com.github.kklisura.cdt.protocol.types.tracing;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import java.util.List;
 import java.util.Map;
 
 public class TraceConfig {
 
-  @Optional private TraceConfigRecordMode recordMode;
+  @Experimental @Optional private TraceConfigRecordMode recordMode;
 
-  @Optional private Boolean enableSampling;
+  @Experimental @Optional private Double traceBufferSizeInKb;
 
-  @Optional private Boolean enableSystrace;
+  @Experimental @Optional private Boolean enableSampling;
 
-  @Optional private Boolean enableArgumentFilter;
+  @Experimental @Optional private Boolean enableSystrace;
+
+  @Experimental @Optional private Boolean enableArgumentFilter;
 
   @Optional private List<String> includedCategories;
 
   @Optional private List<String> excludedCategories;
 
-  @Optional private List<String> syntheticDelays;
+  @Experimental @Optional private List<String> syntheticDelays;
 
-  @Optional private Map<String, Object> memoryDumpConfig;
+  @Experimental @Optional private Map<String, Object> memoryDumpConfig;
 
   /** Controls how the trace buffer stores data. */
   public TraceConfigRecordMode getRecordMode() {
@@ -50,6 +53,22 @@ public class TraceConfig {
   /** Controls how the trace buffer stores data. */
   public void setRecordMode(TraceConfigRecordMode recordMode) {
     this.recordMode = recordMode;
+  }
+
+  /**
+   * Size of the trace buffer in kilobytes. If not specified or zero is passed, a default value of
+   * 200 MB would be used.
+   */
+  public Double getTraceBufferSizeInKb() {
+    return traceBufferSizeInKb;
+  }
+
+  /**
+   * Size of the trace buffer in kilobytes. If not specified or zero is passed, a default value of
+   * 200 MB would be used.
+   */
+  public void setTraceBufferSizeInKb(Double traceBufferSizeInKb) {
+    this.traceBufferSizeInKb = traceBufferSizeInKb;
   }
 
   /** Turns on JavaScript stack sampling. */

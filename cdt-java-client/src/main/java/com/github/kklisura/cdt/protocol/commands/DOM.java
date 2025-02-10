@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,9 +31,11 @@ import com.github.kklisura.cdt.protocol.events.dom.DocumentUpdated;
 import com.github.kklisura.cdt.protocol.events.dom.InlineStyleInvalidated;
 import com.github.kklisura.cdt.protocol.events.dom.PseudoElementAdded;
 import com.github.kklisura.cdt.protocol.events.dom.PseudoElementRemoved;
+import com.github.kklisura.cdt.protocol.events.dom.ScrollableFlagUpdated;
 import com.github.kklisura.cdt.protocol.events.dom.SetChildNodes;
 import com.github.kklisura.cdt.protocol.events.dom.ShadowRootPopped;
 import com.github.kklisura.cdt.protocol.events.dom.ShadowRootPushed;
+import com.github.kklisura.cdt.protocol.events.dom.TopLayerElementsUpdated;
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
@@ -44,10 +46,15 @@ import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.dom.BoxModel;
 import com.github.kklisura.cdt.protocol.types.dom.CSSComputedStyleProperty;
+import com.github.kklisura.cdt.protocol.types.dom.DetachedElementInfo;
+import com.github.kklisura.cdt.protocol.types.dom.EnableIncludeWhitespace;
 import com.github.kklisura.cdt.protocol.types.dom.FrameOwner;
+import com.github.kklisura.cdt.protocol.types.dom.GetElementByRelationRelation;
+import com.github.kklisura.cdt.protocol.types.dom.LogicalAxes;
 import com.github.kklisura.cdt.protocol.types.dom.Node;
 import com.github.kklisura.cdt.protocol.types.dom.NodeForLocation;
 import com.github.kklisura.cdt.protocol.types.dom.PerformSearch;
+import com.github.kklisura.cdt.protocol.types.dom.PhysicalAxes;
 import com.github.kklisura.cdt.protocol.types.dom.Rect;
 import com.github.kklisura.cdt.protocol.types.runtime.RemoteObject;
 import com.github.kklisura.cdt.protocol.types.runtime.StackTrace;
@@ -59,10 +66,8 @@ import java.util.List;
  * it into the JavaScript object wrapper, etc. It is important that client receives DOM events only
  * for the nodes that are known to the client. Backend keeps track of the nodes that were sent to
  * the client and never sends the same node twice. It is client's responsibility to collect
- * information about the nodes that were sent to the client.
- *
- * <p>Note that `iframe` owner elements will return corresponding document elements as their child
- * nodes.
+ * information about the nodes that were sent to the client. Note that `iframe` owner elements will
+ * return corresponding document elements as their child nodes.
  */
 public interface DOM {
 
@@ -135,7 +140,6 @@ public interface DOM {
    * Scrolls the specified rect of the given node into view if not already visible. Note: exactly
    * one between nodeId, backendNodeId and objectId should be passed to identify the node.
    */
-  @Experimental
   void scrollIntoViewIfNeeded();
 
   /**
@@ -148,7 +152,6 @@ public interface DOM {
    * @param rect The rect to be scrolled into view, relative to the node's border box, in CSS
    *     pixels. When omitted, center of the node will be used, similar to Element.scrollIntoView.
    */
-  @Experimental
   void scrollIntoViewIfNeeded(
       @Optional @ParamName("nodeId") Integer nodeId,
       @Optional @ParamName("backendNodeId") Integer backendNodeId,
@@ -170,6 +173,16 @@ public interface DOM {
   /** Enables DOM agent for the given page. */
   void enable();
 
+  /**
+   * Enables DOM agent for the given page.
+   *
+   * @param includeWhitespace Whether to include whitespaces in the children array of returned
+   *     Nodes.
+   */
+  void enable(
+      @Experimental @Optional @ParamName("includeWhitespace")
+          EnableIncludeWhitespace includeWhitespace);
+
   /** Focuses the given element. */
   void focus();
 
@@ -188,7 +201,7 @@ public interface DOM {
   /**
    * Returns attributes for the specified node.
    *
-   * @param nodeId Id of the node to retrieve attibutes for.
+   * @param nodeId Id of the node to retrieve attributes for.
    */
   @Returns("attributes")
   @ReturnTypeParameter(String.class)
@@ -236,12 +249,16 @@ public interface DOM {
       @Optional @ParamName("backendNodeId") Integer backendNodeId,
       @Optional @ParamName("objectId") String objectId);
 
-  /** Returns the root DOM node (and optionally the subtree) to the caller. */
+  /**
+   * Returns the root DOM node (and optionally the subtree) to the caller. Implicitly enables the
+   * DOM domain events for the current target.
+   */
   @Returns("root")
   Node getDocument();
 
   /**
-   * Returns the root DOM node (and optionally the subtree) to the caller.
+   * Returns the root DOM node (and optionally the subtree) to the caller. Implicitly enables the
+   * DOM domain events for the current target.
    *
    * @param depth The maximum depth at which children should be retrieved, defaults to 1. Use -1 for
    *     the entire subtree or provide an integer larger than 0.
@@ -465,6 +482,27 @@ public interface DOM {
   List<Integer> querySelectorAll(
       @ParamName("nodeId") Integer nodeId, @ParamName("selector") String selector);
 
+  /**
+   * Returns NodeIds of current top layer elements. Top layer is rendered closest to the user within
+   * a viewport, therefore its elements always appear on top of all other content.
+   */
+  @Experimental
+  @Returns("nodeIds")
+  @ReturnTypeParameter(Integer.class)
+  List<Integer> getTopLayerElements();
+
+  /**
+   * Returns the NodeId of the matched element according to certain relations.
+   *
+   * @param nodeId Id of the node from which to query the relation.
+   * @param relation Type of relation to get.
+   */
+  @Experimental
+  @Returns("nodeId")
+  Integer getElementByRelation(
+      @ParamName("nodeId") Integer nodeId,
+      @ParamName("relation") GetElementByRelationRelation relation);
+
   /** Re-does the last undone action. */
   @Experimental
   void redo();
@@ -622,6 +660,12 @@ public interface DOM {
   @Returns("path")
   String getFileInfo(@ParamName("objectId") String objectId);
 
+  /** Returns list of detached nodes */
+  @Experimental
+  @Returns("detachedNodes")
+  @ReturnTypeParameter(DetachedElementInfo.class)
+  List<DetachedElementInfo> getDetachedDomNodes();
+
   /**
    * Enables console to refer to the node with given id via $x (see Command Line API for more
    * details $x functions).
@@ -668,6 +712,75 @@ public interface DOM {
   @Experimental
   FrameOwner getFrameOwner(@ParamName("frameId") String frameId);
 
+  /**
+   * Returns the query container of the given node based on container query conditions:
+   * containerName, physical and logical axes, and whether it queries scroll-state. If no axes are
+   * provided and queriesScrollState is false, the style container is returned, which is the direct
+   * parent or the closest element with a matching container-name.
+   *
+   * @param nodeId
+   */
+  @Experimental
+  @Returns("nodeId")
+  Integer getContainerForNode(@ParamName("nodeId") Integer nodeId);
+
+  /**
+   * Returns the query container of the given node based on container query conditions:
+   * containerName, physical and logical axes, and whether it queries scroll-state. If no axes are
+   * provided and queriesScrollState is false, the style container is returned, which is the direct
+   * parent or the closest element with a matching container-name.
+   *
+   * @param nodeId
+   * @param containerName
+   * @param physicalAxes
+   * @param logicalAxes
+   * @param queriesScrollState
+   */
+  @Experimental
+  @Returns("nodeId")
+  Integer getContainerForNode(
+      @ParamName("nodeId") Integer nodeId,
+      @Optional @ParamName("containerName") String containerName,
+      @Optional @ParamName("physicalAxes") PhysicalAxes physicalAxes,
+      @Optional @ParamName("logicalAxes") LogicalAxes logicalAxes,
+      @Optional @ParamName("queriesScrollState") Boolean queriesScrollState);
+
+  /**
+   * Returns the descendants of a container query container that have container queries against this
+   * container.
+   *
+   * @param nodeId Id of the container node to find querying descendants from.
+   */
+  @Experimental
+  @Returns("nodeIds")
+  @ReturnTypeParameter(Integer.class)
+  List<Integer> getQueryingDescendantsForContainer(@ParamName("nodeId") Integer nodeId);
+
+  /**
+   * Returns the target anchor element of the given anchor query according to
+   * https://www.w3.org/TR/css-anchor-position-1/#target.
+   *
+   * @param nodeId Id of the positioned element from which to find the anchor.
+   */
+  @Experimental
+  @Returns("nodeId")
+  Integer getAnchorElement(@ParamName("nodeId") Integer nodeId);
+
+  /**
+   * Returns the target anchor element of the given anchor query according to
+   * https://www.w3.org/TR/css-anchor-position-1/#target.
+   *
+   * @param nodeId Id of the positioned element from which to find the anchor.
+   * @param anchorSpecifier An optional anchor specifier, as defined in
+   *     https://www.w3.org/TR/css-anchor-position-1/#anchor-specifier. If not provided, it will
+   *     return the implicit anchor element for the given positioned element.
+   */
+  @Experimental
+  @Returns("nodeId")
+  Integer getAnchorElement(
+      @ParamName("nodeId") Integer nodeId,
+      @Optional @ParamName("anchorSpecifier") String anchorSpecifier);
+
   /** Fired when `Element`'s attribute is modified. */
   @EventName("attributeModified")
   EventListener onAttributeModified(EventHandler<AttributeModified> eventListener);
@@ -710,6 +823,16 @@ public interface DOM {
   @EventName("pseudoElementAdded")
   @Experimental
   EventListener onPseudoElementAdded(EventHandler<PseudoElementAdded> eventListener);
+
+  /** Called when top layer elements are changed. */
+  @EventName("topLayerElementsUpdated")
+  @Experimental
+  EventListener onTopLayerElementsUpdated(EventHandler<TopLayerElementsUpdated> eventListener);
+
+  /** Fired when a node's scrollability state changes. */
+  @EventName("scrollableFlagUpdated")
+  @Experimental
+  EventListener onScrollableFlagUpdated(EventHandler<ScrollableFlagUpdated> eventListener);
 
   /** Called when a pseudo element is removed from an element. */
   @EventName("pseudoElementRemoved")

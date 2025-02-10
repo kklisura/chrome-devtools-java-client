@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.debugger;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,13 +29,15 @@ import java.util.List;
 
 public class SetScriptSource {
 
-  @Optional private List<CallFrame> callFrames;
+  @Deprecated @Optional private List<CallFrame> callFrames;
 
-  @Optional private Boolean stackChanged;
+  @Deprecated @Optional private Boolean stackChanged;
 
-  @Optional private StackTrace asyncStackTrace;
+  @Deprecated @Optional private StackTrace asyncStackTrace;
 
-  @Experimental @Optional private StackTraceId asyncStackTraceId;
+  @Deprecated @Optional private StackTraceId asyncStackTraceId;
+
+  @Experimental private SetScriptSourceStatus status;
 
   @Optional private ExceptionDetails exceptionDetails;
 
@@ -79,12 +81,28 @@ public class SetScriptSource {
     this.asyncStackTraceId = asyncStackTraceId;
   }
 
-  /** Exception details if any. */
+  /**
+   * Whether the operation was successful or not. Only `Ok` denotes a successful live edit while the
+   * other enum variants denote why the live edit failed.
+   */
+  public SetScriptSourceStatus getStatus() {
+    return status;
+  }
+
+  /**
+   * Whether the operation was successful or not. Only `Ok` denotes a successful live edit while the
+   * other enum variants denote why the live edit failed.
+   */
+  public void setStatus(SetScriptSourceStatus status) {
+    this.status = status;
+  }
+
+  /** Exception details if any. Only present when `status` is `CompileError`. */
   public ExceptionDetails getExceptionDetails() {
     return exceptionDetails;
   }
 
-  /** Exception details if any. */
+  /** Exception details if any. Only present when `status` is `CompileError`. */
   public void setExceptionDetails(ExceptionDetails exceptionDetails) {
     this.exceptionDetails = exceptionDetails;
   }

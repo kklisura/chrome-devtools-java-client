@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.domsnapshot;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,8 @@ public class NodeTreeSnapshot {
 
   @Optional private List<Integer> nodeType;
 
+  @Optional private RareStringData shadowRootType;
+
   @Optional private List<Integer> nodeName;
 
   @Optional private List<Integer> nodeValue;
@@ -49,6 +51,8 @@ public class NodeTreeSnapshot {
   @Optional private RareIntegerData contentDocumentIndex;
 
   @Optional private RareStringData pseudoType;
+
+  @Optional private RareStringData pseudoIdentifier;
 
   @Optional private RareBooleanData isClickable;
 
@@ -74,6 +78,20 @@ public class NodeTreeSnapshot {
   /** `Node`'s nodeType. */
   public void setNodeType(List<Integer> nodeType) {
     this.nodeType = nodeType;
+  }
+
+  /**
+   * Type of the shadow root the `Node` is in. String values are equal to the `ShadowRootType` enum.
+   */
+  public RareStringData getShadowRootType() {
+    return shadowRootType;
+  }
+
+  /**
+   * Type of the shadow root the `Node` is in. String values are equal to the `ShadowRootType` enum.
+   */
+  public void setShadowRootType(RareStringData shadowRootType) {
+    this.shadowRootType = shadowRootType;
   }
 
   /** `Node`'s nodeName. */
@@ -174,6 +192,16 @@ public class NodeTreeSnapshot {
   /** Type of a pseudo element node. */
   public void setPseudoType(RareStringData pseudoType) {
     this.pseudoType = pseudoType;
+  }
+
+  /** Pseudo element identifier for this node. Only present if there is a valid pseudoType. */
+  public RareStringData getPseudoIdentifier() {
+    return pseudoIdentifier;
+  }
+
+  /** Pseudo element identifier for this node. Only present if there is a valid pseudoType. */
+  public void setPseudoIdentifier(RareStringData pseudoIdentifier) {
+    this.pseudoIdentifier = pseudoIdentifier;
   }
 
   /**

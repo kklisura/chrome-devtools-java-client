@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.events.debugger;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,10 @@ package com.github.kklisura.cdt.protocol.events.debugger;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.types.debugger.DebugSymbols;
+import com.github.kklisura.cdt.protocol.types.debugger.ResolvedBreakpoint;
 import com.github.kklisura.cdt.protocol.types.debugger.ScriptLanguage;
 import com.github.kklisura.cdt.protocol.types.runtime.StackTrace;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,6 +51,8 @@ public class ScriptParsed {
 
   private String hash;
 
+  private String buildId;
+
   @Optional private Map<String, Object> executionContextAuxData;
 
   @Experimental @Optional private Boolean isLiveEdit;
@@ -67,9 +71,11 @@ public class ScriptParsed {
 
   @Experimental @Optional private ScriptLanguage scriptLanguage;
 
-  @Experimental @Optional private DebugSymbols debugSymbols;
+  @Experimental @Optional private List<DebugSymbols> debugSymbols;
 
   @Experimental @Optional private String embedderName;
+
+  @Experimental @Optional private List<ResolvedBreakpoint> resolvedBreakpoints;
 
   /** Identifier of the script parsed. */
   public String getScriptId() {
@@ -141,22 +147,38 @@ public class ScriptParsed {
     this.executionContextId = executionContextId;
   }
 
-  /** Content hash of the script. */
+  /** Content hash of the script, SHA-256. */
   public String getHash() {
     return hash;
   }
 
-  /** Content hash of the script. */
+  /** Content hash of the script, SHA-256. */
   public void setHash(String hash) {
     this.hash = hash;
   }
 
-  /** Embedder-specific auxiliary data. */
+  /** For Wasm modules, the content of the `build_id` custom section. */
+  public String getBuildId() {
+    return buildId;
+  }
+
+  /** For Wasm modules, the content of the `build_id` custom section. */
+  public void setBuildId(String buildId) {
+    this.buildId = buildId;
+  }
+
+  /**
+   * Embedder-specific auxiliary data likely matching {isDefault: boolean, type:
+   * 'default'|'isolated'|'worker', frameId: string}
+   */
   public Map<String, Object> getExecutionContextAuxData() {
     return executionContextAuxData;
   }
 
-  /** Embedder-specific auxiliary data. */
+  /**
+   * Embedder-specific auxiliary data likely matching {isDefault: boolean, type:
+   * 'default'|'isolated'|'worker', frameId: string}
+   */
   public void setExecutionContextAuxData(Map<String, Object> executionContextAuxData) {
     this.executionContextAuxData = executionContextAuxData;
   }
@@ -241,13 +263,13 @@ public class ScriptParsed {
     this.scriptLanguage = scriptLanguage;
   }
 
-  /** If the scriptLanguage is WebASsembly, the source of debug symbols for the module. */
-  public DebugSymbols getDebugSymbols() {
+  /** If the scriptLanguage is WebAssembly, the source of debug symbols for the module. */
+  public List<DebugSymbols> getDebugSymbols() {
     return debugSymbols;
   }
 
-  /** If the scriptLanguage is WebASsembly, the source of debug symbols for the module. */
-  public void setDebugSymbols(DebugSymbols debugSymbols) {
+  /** If the scriptLanguage is WebAssembly, the source of debug symbols for the module. */
+  public void setDebugSymbols(List<DebugSymbols> debugSymbols) {
     this.debugSymbols = debugSymbols;
   }
 
@@ -259,5 +281,23 @@ public class ScriptParsed {
   /** The name the embedder supplied for this script. */
   public void setEmbedderName(String embedderName) {
     this.embedderName = embedderName;
+  }
+
+  /**
+   * The list of set breakpoints in this script if calls to `setBreakpointByUrl` matches this
+   * script's URL or hash. Clients that use this list can ignore the `breakpointResolved` event.
+   * They are equivalent.
+   */
+  public List<ResolvedBreakpoint> getResolvedBreakpoints() {
+    return resolvedBreakpoints;
+  }
+
+  /**
+   * The list of set breakpoints in this script if calls to `setBreakpointByUrl` matches this
+   * script's URL or hash. Clients that use this list can ignore the `breakpointResolved` event.
+   * They are equivalent.
+   */
+  public void setResolvedBreakpoints(List<ResolvedBreakpoint> resolvedBreakpoints) {
+    this.resolvedBreakpoints = resolvedBreakpoints;
   }
 }

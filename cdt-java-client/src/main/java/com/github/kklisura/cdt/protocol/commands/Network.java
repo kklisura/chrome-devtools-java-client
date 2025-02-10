@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,14 +24,23 @@ import com.github.kklisura.cdt.protocol.events.network.DataReceived;
 import com.github.kklisura.cdt.protocol.events.network.EventSourceMessageReceived;
 import com.github.kklisura.cdt.protocol.events.network.LoadingFailed;
 import com.github.kklisura.cdt.protocol.events.network.LoadingFinished;
+import com.github.kklisura.cdt.protocol.events.network.PolicyUpdated;
+import com.github.kklisura.cdt.protocol.events.network.ReportingApiEndpointsChangedForOrigin;
+import com.github.kklisura.cdt.protocol.events.network.ReportingApiReportAdded;
+import com.github.kklisura.cdt.protocol.events.network.ReportingApiReportUpdated;
 import com.github.kklisura.cdt.protocol.events.network.RequestIntercepted;
 import com.github.kklisura.cdt.protocol.events.network.RequestServedFromCache;
 import com.github.kklisura.cdt.protocol.events.network.RequestWillBeSent;
 import com.github.kklisura.cdt.protocol.events.network.RequestWillBeSentExtraInfo;
 import com.github.kklisura.cdt.protocol.events.network.ResourceChangedPriority;
 import com.github.kklisura.cdt.protocol.events.network.ResponseReceived;
+import com.github.kklisura.cdt.protocol.events.network.ResponseReceivedEarlyHints;
 import com.github.kklisura.cdt.protocol.events.network.ResponseReceivedExtraInfo;
 import com.github.kklisura.cdt.protocol.events.network.SignedExchangeReceived;
+import com.github.kklisura.cdt.protocol.events.network.SubresourceWebBundleInnerResponseError;
+import com.github.kklisura.cdt.protocol.events.network.SubresourceWebBundleInnerResponseParsed;
+import com.github.kklisura.cdt.protocol.events.network.SubresourceWebBundleMetadataError;
+import com.github.kklisura.cdt.protocol.events.network.SubresourceWebBundleMetadataReceived;
 import com.github.kklisura.cdt.protocol.events.network.TrustTokenOperationDone;
 import com.github.kklisura.cdt.protocol.events.network.WebSocketClosed;
 import com.github.kklisura.cdt.protocol.events.network.WebSocketCreated;
@@ -57,6 +66,7 @@ import com.github.kklisura.cdt.protocol.types.network.ConnectionType;
 import com.github.kklisura.cdt.protocol.types.network.ContentEncoding;
 import com.github.kklisura.cdt.protocol.types.network.Cookie;
 import com.github.kklisura.cdt.protocol.types.network.CookieParam;
+import com.github.kklisura.cdt.protocol.types.network.CookiePartitionKey;
 import com.github.kklisura.cdt.protocol.types.network.CookiePriority;
 import com.github.kklisura.cdt.protocol.types.network.CookieSameSite;
 import com.github.kklisura.cdt.protocol.types.network.CookieSourceScheme;
@@ -161,26 +171,29 @@ public interface Network {
       @Optional @ParamName("authChallengeResponse") AuthChallengeResponse authChallengeResponse);
 
   /**
-   * Deletes browser cookies with matching name and url or domain/path pair.
+   * Deletes browser cookies with matching name and url or domain/path/partitionKey pair.
    *
    * @param name Name of the cookies to remove.
    */
   void deleteCookies(@ParamName("name") String name);
 
   /**
-   * Deletes browser cookies with matching name and url or domain/path pair.
+   * Deletes browser cookies with matching name and url or domain/path/partitionKey pair.
    *
    * @param name Name of the cookies to remove.
    * @param url If specified, deletes all the cookies with the given name where domain and path
    *     match provided URL.
    * @param domain If specified, deletes only cookies with the exact domain.
    * @param path If specified, deletes only cookies with the exact path.
+   * @param partitionKey If specified, deletes only cookies with the the given name and partitionKey
+   *     where all partition key attributes match the cookie partition key attribute.
    */
   void deleteCookies(
       @ParamName("name") String name,
       @Optional @ParamName("url") String url,
       @Optional @ParamName("domain") String domain,
-      @Optional @ParamName("path") String path);
+      @Optional @ParamName("path") String path,
+      @Experimental @Optional @ParamName("partitionKey") CookiePartitionKey partitionKey);
 
   /** Disables network tracking, prevents network events from being sent to the client. */
   void disable();
@@ -211,13 +224,21 @@ public interface Network {
    * @param uploadThroughput Maximal aggregated upload throughput (bytes/sec). -1 disables upload
    *     throttling.
    * @param connectionType Connection type if known.
+   * @param packetLoss WebRTC packet loss (percent, 0-100). 0 disables packet loss emulation, 100
+   *     drops all the packets.
+   * @param packetQueueLength WebRTC packet queue length (packet). 0 removes any queue length
+   *     limitations.
+   * @param packetReordering WebRTC packetReordering feature.
    */
   void emulateNetworkConditions(
       @ParamName("offline") Boolean offline,
       @ParamName("latency") Double latency,
       @ParamName("downloadThroughput") Double downloadThroughput,
       @ParamName("uploadThroughput") Double uploadThroughput,
-      @Optional @ParamName("connectionType") ConnectionType connectionType);
+      @Optional @ParamName("connectionType") ConnectionType connectionType,
+      @Experimental @Optional @ParamName("packetLoss") Double packetLoss,
+      @Experimental @Optional @ParamName("packetQueueLength") Integer packetQueueLength,
+      @Experimental @Optional @ParamName("packetReordering") Boolean packetReordering);
 
   /** Enables network tracking, network events will now be delivered to the client. */
   void enable();
@@ -239,8 +260,9 @@ public interface Network {
 
   /**
    * Returns all browser cookies. Depending on the backend support, will return detailed cookie
-   * information in the `cookies` field.
+   * information in the `cookies` field. Deprecated. Use Storage.getCookies instead.
    */
+  @Deprecated
   @Returns("cookies")
   @ReturnTypeParameter(Cookie.class)
   List<Cookie> getAllCookies();
@@ -365,7 +387,6 @@ public interface Network {
    *
    * @param bypass Bypass service worker and load from network.
    */
-  @Experimental
   void setBypassServiceWorker(@ParamName("bypass") Boolean bypass);
 
   /**
@@ -404,6 +425,8 @@ public interface Network {
    *     unspecified port. An unspecified port value allows protocol clients to emulate legacy
    *     cookie scope for the port. This is a temporary ability and it will be removed in the
    *     future.
+   * @param partitionKey Cookie partition key. If not set, the cookie will be set as not
+   *     partitioned.
    */
   @Returns("success")
   Boolean setCookie(
@@ -419,7 +442,8 @@ public interface Network {
       @Experimental @Optional @ParamName("priority") CookiePriority priority,
       @Experimental @Optional @ParamName("sameParty") Boolean sameParty,
       @Experimental @Optional @ParamName("sourceScheme") CookieSourceScheme sourceScheme,
-      @Experimental @Optional @ParamName("sourcePort") Integer sourcePort);
+      @Experimental @Optional @ParamName("sourcePort") Integer sourcePort,
+      @Experimental @Optional @ParamName("partitionKey") CookiePartitionKey partitionKey);
 
   /**
    * Sets given cookies.
@@ -427,17 +451,6 @@ public interface Network {
    * @param cookies Cookies to be set.
    */
   void setCookies(@ParamName("cookies") List<CookieParam> cookies);
-
-  /**
-   * For testing.
-   *
-   * @param maxTotalSize Maximum total buffer size.
-   * @param maxResourceSize Maximum per-resource size.
-   */
-  @Experimental
-  void setDataSizeLimitsForTest(
-      @ParamName("maxTotalSize") Integer maxTotalSize,
-      @ParamName("maxResourceSize") Integer maxResourceSize);
 
   /**
    * Specifies whether to always send extra HTTP headers with the requests from this page.
@@ -465,6 +478,16 @@ public interface Network {
   @Experimental
   void setRequestInterception(@ParamName("patterns") List<RequestPattern> patterns);
 
+  /**
+   * Enables streaming of the response for the given requestId. If enabled, the dataReceived event
+   * contains the data that was received during streaming.
+   *
+   * @param requestId Identifier of the request to stream.
+   */
+  @Experimental
+  @Returns("bufferedData")
+  String streamResourceContent(@ParamName("requestId") String requestId);
+
   /** Returns information about the COEP/COOP isolation status. */
   @Experimental
   @Returns("status")
@@ -481,18 +504,55 @@ public interface Network {
       @Optional @ParamName("frameId") String frameId);
 
   /**
+   * Enables tracking for the Reporting API, events generated by the Reporting API will now be
+   * delivered to the client. Enabling triggers 'reportingApiReportAdded' for all existing reports.
+   *
+   * @param enable Whether to enable or disable events for the Reporting API
+   */
+  @Experimental
+  void enableReportingApi(@ParamName("enable") Boolean enable);
+
+  /**
    * Fetches the resource and returns the content.
    *
-   * @param frameId Frame id to get the resource for.
    * @param url URL of the resource to get content for.
    * @param options Options for the request.
    */
   @Experimental
   @Returns("resource")
   LoadNetworkResourcePageResult loadNetworkResource(
-      @ParamName("frameId") String frameId,
+      @ParamName("url") String url, @ParamName("options") LoadNetworkResourceOptions options);
+
+  /**
+   * Fetches the resource and returns the content.
+   *
+   * @param frameId Frame id to get the resource for. Mandatory for frame targets, and should be
+   *     omitted for worker targets.
+   * @param url URL of the resource to get content for.
+   * @param options Options for the request.
+   */
+  @Experimental
+  @Returns("resource")
+  LoadNetworkResourcePageResult loadNetworkResource(
+      @Optional @ParamName("frameId") String frameId,
       @ParamName("url") String url,
       @ParamName("options") LoadNetworkResourceOptions options);
+
+  /**
+   * Sets Controls for third-party cookie access Page reload is required before the new cookie
+   * bahavior will be observed
+   *
+   * @param enableThirdPartyCookieRestriction Whether 3pc restriction is enabled.
+   * @param disableThirdPartyCookieMetadata Whether 3pc grace period exception should be enabled;
+   *     false by default.
+   * @param disableThirdPartyCookieHeuristics Whether 3pc heuristics exceptions should be enabled;
+   *     false by default.
+   */
+  @Experimental
+  void setCookieControls(
+      @ParamName("enableThirdPartyCookieRestriction") Boolean enableThirdPartyCookieRestriction,
+      @ParamName("disableThirdPartyCookieMetadata") Boolean disableThirdPartyCookieMetadata,
+      @ParamName("disableThirdPartyCookieHeuristics") Boolean disableThirdPartyCookieHeuristics);
 
   /** Fired when data chunk was received over the network. */
   @EventName("dataReceived")
@@ -606,6 +666,16 @@ public interface Network {
   EventListener onResponseReceivedExtraInfo(EventHandler<ResponseReceivedExtraInfo> eventListener);
 
   /**
+   * Fired when 103 Early Hints headers is received in addition to the common response. Not every
+   * responseReceived event will have an responseReceivedEarlyHints fired. Only one
+   * responseReceivedEarlyHints may be fired for eached responseReceived event.
+   */
+  @EventName("responseReceivedEarlyHints")
+  @Experimental
+  EventListener onResponseReceivedEarlyHints(
+      EventHandler<ResponseReceivedEarlyHints> eventListener);
+
+  /**
    * Fired exactly once for each Trust Token operation. Depending on the type of the operation and
    * whether the operation succeeded or failed, the event is fired before the corresponding request
    * was sent or after the response was received.
@@ -613,4 +683,56 @@ public interface Network {
   @EventName("trustTokenOperationDone")
   @Experimental
   EventListener onTrustTokenOperationDone(EventHandler<TrustTokenOperationDone> eventListener);
+
+  /** Fired once security policy has been updated. */
+  @EventName("policyUpdated")
+  @Experimental
+  EventListener onPolicyUpdated(EventHandler<PolicyUpdated> eventListener);
+
+  /**
+   * Fired once when parsing the .wbn file has succeeded. The event contains the information about
+   * the web bundle contents.
+   */
+  @EventName("subresourceWebBundleMetadataReceived")
+  @Experimental
+  EventListener onSubresourceWebBundleMetadataReceived(
+      EventHandler<SubresourceWebBundleMetadataReceived> eventListener);
+
+  /** Fired once when parsing the .wbn file has failed. */
+  @EventName("subresourceWebBundleMetadataError")
+  @Experimental
+  EventListener onSubresourceWebBundleMetadataError(
+      EventHandler<SubresourceWebBundleMetadataError> eventListener);
+
+  /**
+   * Fired when handling requests for resources within a .wbn file. Note: this will only be fired
+   * for resources that are requested by the webpage.
+   */
+  @EventName("subresourceWebBundleInnerResponseParsed")
+  @Experimental
+  EventListener onSubresourceWebBundleInnerResponseParsed(
+      EventHandler<SubresourceWebBundleInnerResponseParsed> eventListener);
+
+  /** Fired when request for resources within a .wbn file failed. */
+  @EventName("subresourceWebBundleInnerResponseError")
+  @Experimental
+  EventListener onSubresourceWebBundleInnerResponseError(
+      EventHandler<SubresourceWebBundleInnerResponseError> eventListener);
+
+  /**
+   * Is sent whenever a new report is added. And after 'enableReportingApi' for all existing
+   * reports.
+   */
+  @EventName("reportingApiReportAdded")
+  @Experimental
+  EventListener onReportingApiReportAdded(EventHandler<ReportingApiReportAdded> eventListener);
+
+  @EventName("reportingApiReportUpdated")
+  @Experimental
+  EventListener onReportingApiReportUpdated(EventHandler<ReportingApiReportUpdated> eventListener);
+
+  @EventName("reportingApiEndpointsChangedForOrigin")
+  @Experimental
+  EventListener onReportingApiEndpointsChangedForOrigin(
+      EventHandler<ReportingApiEndpointsChangedForOrigin> eventListener);
 }

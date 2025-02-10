@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ package com.github.kklisura.cdt.protocol.commands;
 import com.github.kklisura.cdt.protocol.events.animation.AnimationCanceled;
 import com.github.kklisura.cdt.protocol.events.animation.AnimationCreated;
 import com.github.kklisura.cdt.protocol.events.animation.AnimationStarted;
+import com.github.kklisura.cdt.protocol.events.animation.AnimationUpdated;
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
@@ -117,4 +118,8 @@ public interface Animation {
   /** Event for animation that has been started. */
   @EventName("animationStarted")
   EventListener onAnimationStarted(EventHandler<AnimationStarted> eventListener);
+
+  /** Event for animation that has been updated. */
+  @EventName("animationUpdated")
+  EventListener onAnimationUpdated(EventHandler<AnimationUpdated> eventListener);
 }

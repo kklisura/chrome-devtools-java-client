@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,18 @@ package com.github.kklisura.cdt.protocol.commands;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.events.webauthn.CredentialAdded;
+import com.github.kklisura.cdt.protocol.events.webauthn.CredentialAsserted;
+import com.github.kklisura.cdt.protocol.events.webauthn.CredentialDeleted;
+import com.github.kklisura.cdt.protocol.events.webauthn.CredentialUpdated;
+import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
 import com.github.kklisura.cdt.protocol.support.annotations.ReturnTypeParameter;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
+import com.github.kklisura.cdt.protocol.support.types.EventHandler;
+import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.webauthn.Credential;
 import com.github.kklisura.cdt.protocol.types.webauthn.VirtualAuthenticatorOptions;
 import java.util.List;
@@ -38,6 +46,17 @@ public interface WebAuthn {
    */
   void enable();
 
+  /**
+   * Enable the WebAuthn domain and start intercepting credential storage and retrieval with a
+   * virtual authenticator.
+   *
+   * @param enableUI Whether to enable the WebAuthn user interface. Enabling the UI is recommended
+   *     for debugging and demo purposes, as it is closer to the real experience. Disabling the UI
+   *     is recommended for automated testing. Supported at the embedder's discretion if UI is
+   *     available. Defaults to false.
+   */
+  void enable(@Optional @ParamName("enableUI") Boolean enableUI);
+
   /** Disable the WebAuthn domain. */
   void disable();
 
@@ -48,6 +67,30 @@ public interface WebAuthn {
    */
   @Returns("authenticatorId")
   String addVirtualAuthenticator(@ParamName("options") VirtualAuthenticatorOptions options);
+
+  /**
+   * Resets parameters isBogusSignature, isBadUV, isBadUP to false if they are not present.
+   *
+   * @param authenticatorId
+   */
+  void setResponseOverrideBits(@ParamName("authenticatorId") String authenticatorId);
+
+  /**
+   * Resets parameters isBogusSignature, isBadUV, isBadUP to false if they are not present.
+   *
+   * @param authenticatorId
+   * @param isBogusSignature If isBogusSignature is set, overrides the signature in the
+   *     authenticator response to be zero. Defaults to false.
+   * @param isBadUV If isBadUV is set, overrides the UV bit in the flags in the authenticator
+   *     response to be zero. Defaults to false.
+   * @param isBadUP If isBadUP is set, overrides the UP bit in the flags in the authenticator
+   *     response to be zero. Defaults to false.
+   */
+  void setResponseOverrideBits(
+      @ParamName("authenticatorId") String authenticatorId,
+      @Optional @ParamName("isBogusSignature") Boolean isBogusSignature,
+      @Optional @ParamName("isBadUV") Boolean isBadUV,
+      @Optional @ParamName("isBadUP") Boolean isBadUP);
 
   /**
    * Removes the given authenticator.
@@ -123,4 +166,52 @@ public interface WebAuthn {
    */
   void setAutomaticPresenceSimulation(
       @ParamName("authenticatorId") String authenticatorId, @ParamName("enabled") Boolean enabled);
+
+  /**
+   * Allows setting credential properties.
+   * https://w3c.github.io/webauthn/#sctn-automation-set-credential-properties
+   *
+   * @param authenticatorId
+   * @param credentialId
+   */
+  void setCredentialProperties(
+      @ParamName("authenticatorId") String authenticatorId,
+      @ParamName("credentialId") String credentialId);
+
+  /**
+   * Allows setting credential properties.
+   * https://w3c.github.io/webauthn/#sctn-automation-set-credential-properties
+   *
+   * @param authenticatorId
+   * @param credentialId
+   * @param backupEligibility
+   * @param backupState
+   */
+  void setCredentialProperties(
+      @ParamName("authenticatorId") String authenticatorId,
+      @ParamName("credentialId") String credentialId,
+      @Optional @ParamName("backupEligibility") Boolean backupEligibility,
+      @Optional @ParamName("backupState") Boolean backupState);
+
+  /** Triggered when a credential is added to an authenticator. */
+  @EventName("credentialAdded")
+  EventListener onCredentialAdded(EventHandler<CredentialAdded> eventListener);
+
+  /**
+   * Triggered when a credential is deleted, e.g. through
+   * PublicKeyCredential.signalUnknownCredential().
+   */
+  @EventName("credentialDeleted")
+  EventListener onCredentialDeleted(EventHandler<CredentialDeleted> eventListener);
+
+  /**
+   * Triggered when a credential is updated, e.g. through
+   * PublicKeyCredential.signalCurrentUserDetails().
+   */
+  @EventName("credentialUpdated")
+  EventListener onCredentialUpdated(EventHandler<CredentialUpdated> eventListener);
+
+  /** Triggered when a credential is used in a webauthn assertion. */
+  @EventName("credentialAsserted")
+  EventListener onCredentialAsserted(EventHandler<CredentialAsserted> eventListener);
 }
