@@ -21,6 +21,8 @@ package com.github.kklisura.cdt.services;
  */
 
 import com.github.kklisura.cdt.services.exceptions.WebSocketServiceException;
+
+import java.io.Closeable;
 import java.net.URI;
 import java.util.function.Consumer;
 
@@ -29,7 +31,7 @@ import java.util.function.Consumer;
  *
  * @author Kenan Klisura
  */
-public interface WebSocketService {
+public interface WebSocketService extends Closeable {
   /**
    * Connects to a specified URI.
    *
