@@ -67,8 +67,7 @@ public class FullPageScreenshotExample {
 
     dump(
         outputFilename,
-        page.captureScreenshot(
-            CaptureScreenshotFormat.PNG, 100, viewport, Boolean.TRUE, Boolean.FALSE));
+        page.captureScreenshot(CaptureScreenshotFormat.PNG, 100, viewport, true, false, false));
   }
 
   public static void main(String[] args) {

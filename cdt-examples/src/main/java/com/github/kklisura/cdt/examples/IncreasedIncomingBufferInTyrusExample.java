@@ -87,11 +87,12 @@ public class IncreasedIncomingBufferInTyrusExample {
           Double marginLeft = 0d;
           Double marginRight = 0d;
           String pageRanges = "";
-          Boolean ignoreInvalidPageRanges = false;
           String headerTemplate = "";
           String footerTemplate = "";
           Boolean preferCSSPageSize = false;
           PrintToPDFTransferMode mode = PrintToPDFTransferMode.RETURN_AS_BASE_64;
+          Boolean generateTaggedPDF = true;
+          Boolean generateDocumentOutline = true;
 
           dump(
               outputFilename,
@@ -109,11 +110,12 @@ public class IncreasedIncomingBufferInTyrusExample {
                       marginLeft,
                       marginRight,
                       pageRanges,
-                      ignoreInvalidPageRanges,
                       headerTemplate,
                       footerTemplate,
                       preferCSSPageSize,
-                      mode));
+                      mode,
+                      generateTaggedPDF,
+                      generateDocumentOutline));
 
           System.out.println("Done!");
           devToolsService.close();
