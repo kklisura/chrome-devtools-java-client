@@ -156,8 +156,10 @@ public class WebSocketServiceImpl implements WebSocketService {
   @Override
   public void close() {
     try {
-      session.close();
-      session = null;
+      if (session != null) {
+        session.close();
+        session = null;
+      }
     } catch (IOException e) {
       LOGGER.error("Failed closing ws session on {}...", session.getRequestURI(), e);
     }
