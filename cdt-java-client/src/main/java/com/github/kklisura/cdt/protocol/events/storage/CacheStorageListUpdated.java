@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.events.storage;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,10 @@ public class CacheStorageListUpdated {
 
   private String origin;
 
+  private String storageKey;
+
+  private String bucketId;
+
   /** Origin to update. */
   public String getOrigin() {
     return origin;
@@ -33,5 +37,25 @@ public class CacheStorageListUpdated {
   /** Origin to update. */
   public void setOrigin(String origin) {
     this.origin = origin;
+  }
+
+  /** Storage key to update. */
+  public String getStorageKey() {
+    return storageKey;
+  }
+
+  /** Storage key to update. */
+  public void setStorageKey(String storageKey) {
+    this.storageKey = storageKey;
+  }
+
+  /** Storage bucket to update. */
+  public String getBucketId() {
+    return bucketId;
+  }
+
+  /** Storage bucket to update. */
+  public void setBucketId(String bucketId) {
+    this.bucketId = bucketId;
   }
 }

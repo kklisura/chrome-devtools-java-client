@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,6 +51,8 @@ public class CookieParam {
   @Experimental @Optional private CookieSourceScheme sourceScheme;
 
   @Experimental @Optional private Integer sourcePort;
+
+  @Experimental @Optional private CookiePartitionKey partitionKey;
 
   /** Cookie name. */
   public String getName() {
@@ -194,5 +196,15 @@ public class CookieParam {
    */
   public void setSourcePort(Integer sourcePort) {
     this.sourcePort = sourcePort;
+  }
+
+  /** Cookie partition key. If not set, the cookie will be set as not partitioned. */
+  public CookiePartitionKey getPartitionKey() {
+    return partitionKey;
+  }
+
+  /** Cookie partition key. If not set, the cookie will be set as not partitioned. */
+  public void setPartitionKey(CookiePartitionKey partitionKey) {
+    this.partitionKey = partitionKey;
   }
 }

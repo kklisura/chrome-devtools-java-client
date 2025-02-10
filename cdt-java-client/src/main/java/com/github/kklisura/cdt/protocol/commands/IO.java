@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public interface IO {
    * Read a chunk of the stream
    *
    * @param handle Handle of the stream to read.
-   * @param offset Seek to the specified offset before reading (if not specificed, proceed with
+   * @param offset Seek to the specified offset before reading (if not specified, proceed with
    *     offset following the last read). Some types of streams may only support sequential reads.
    * @param size Maximum number of bytes to read (left upon the agent discretion if not specified).
    */

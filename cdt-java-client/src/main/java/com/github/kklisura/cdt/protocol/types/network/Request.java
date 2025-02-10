@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public class Request {
 
   private Map<String, Object> headers;
 
-  @Optional private String postData;
+  @Deprecated @Optional private String postData;
 
   @Optional private Boolean hasPostData;
 
@@ -52,6 +52,8 @@ public class Request {
   @Optional private Boolean isLinkPreload;
 
   @Experimental @Optional private TrustTokenParams trustTokenParams;
+
+  @Experimental @Optional private Boolean isSameSite;
 
   /** Request URL (without fragment). */
   public String getUrl() {
@@ -93,12 +95,12 @@ public class Request {
     this.headers = headers;
   }
 
-  /** HTTP POST request data. */
+  /** HTTP POST request data. Use postDataEntries instead. */
   public String getPostData() {
     return postData;
   }
 
-  /** HTTP POST request data. */
+  /** HTTP POST request data. Use postDataEntries instead. */
   public void setPostData(String postData) {
     this.postData = postData;
   }
@@ -119,12 +121,12 @@ public class Request {
     this.hasPostData = hasPostData;
   }
 
-  /** Request body elements. This will be converted from base64 to binary */
+  /** Request body elements (post data broken into individual entries). */
   public List<PostDataEntry> getPostDataEntries() {
     return postDataEntries;
   }
 
-  /** Request body elements. This will be converted from base64 to binary */
+  /** Request body elements (post data broken into individual entries). */
   public void setPostDataEntries(List<PostDataEntry> postDataEntries) {
     this.postDataEntries = postDataEntries;
   }
@@ -183,5 +185,21 @@ public class Request {
    */
   public void setTrustTokenParams(TrustTokenParams trustTokenParams) {
     this.trustTokenParams = trustTokenParams;
+  }
+
+  /**
+   * True if this resource request is considered to be the 'same site' as the request corresponding
+   * to the main frame.
+   */
+  public Boolean getIsSameSite() {
+    return isSameSite;
+  }
+
+  /**
+   * True if this resource request is considered to be the 'same site' as the request corresponding
+   * to the main frame.
+   */
+  public void setIsSameSite(Boolean isSameSite) {
+    this.isSameSite = isSameSite;
   }
 }

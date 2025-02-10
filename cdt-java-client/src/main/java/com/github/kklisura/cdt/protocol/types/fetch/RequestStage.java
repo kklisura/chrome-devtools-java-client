@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.fetch;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Stages of the request to handle. Request will intercept before the request is sent. Response will
- * intercept after the response is received (but before response body is received.
+ * intercept after the response is received (but before response body is received).
  */
 public enum RequestStage {
   @JsonProperty("Request")

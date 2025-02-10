@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.audits;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,16 @@ package com.github.kklisura.cdt.protocol.types.audits;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
+
 /** An inspector issue reported from the back-end. */
 public class InspectorIssue {
 
   private InspectorIssueCode code;
 
   private InspectorIssueDetails details;
+
+  @Optional private String issueId;
 
   public InspectorIssueCode getCode() {
     return code;
@@ -41,5 +45,21 @@ public class InspectorIssue {
 
   public void setDetails(InspectorIssueDetails details) {
     this.details = details;
+  }
+
+  /**
+   * A unique id for this issue. May be omitted if no other entity (e.g. exception, CDP message,
+   * etc.) is referencing this issue.
+   */
+  public String getIssueId() {
+    return issueId;
+  }
+
+  /**
+   * A unique id for this issue. May be omitted if no other entity (e.g. exception, CDP message,
+   * etc.) is referencing this issue.
+   */
+  public void setIssueId(String issueId) {
+    this.issueId = issueId;
   }
 }

@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.emulation;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,14 +22,19 @@ package com.github.kklisura.cdt.protocol.types.emulation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Vision deficiency to emulate. */
+/**
+ * Vision deficiency to emulate. Order: best-effort emulations come first, followed by any
+ * physiologically accurate emulations for medically recognized color vision deficiencies.
+ */
 public enum SetEmulatedVisionDeficiencyType {
   @JsonProperty("none")
   NONE,
-  @JsonProperty("achromatopsia")
-  ACHROMATOPSIA,
   @JsonProperty("blurredVision")
   BLURRED_VISION,
+  @JsonProperty("reducedContrast")
+  REDUCED_CONTRAST,
+  @JsonProperty("achromatopsia")
+  ACHROMATOPSIA,
   @JsonProperty("deuteranopia")
   DEUTERANOPIA,
   @JsonProperty("protanopia")

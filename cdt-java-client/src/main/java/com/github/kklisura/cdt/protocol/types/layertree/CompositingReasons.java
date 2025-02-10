@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.layertree;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.util.List;
 
 public class CompositingReasons {
 
-  @Deprecated private List<String> compositingReasons;
+  private List<String> compositingReasons;
 
   private List<String> compositingReasonIds;
 

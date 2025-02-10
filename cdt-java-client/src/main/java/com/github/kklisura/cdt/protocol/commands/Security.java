@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,6 @@ public interface Security {
    *
    * @param ignore If true, all certificate errors will be ignored.
    */
-  @Experimental
   void setIgnoreCertificateErrors(@ParamName("ignore") Boolean ignore);
 
   /**
@@ -83,7 +82,8 @@ public interface Security {
   EventListener onVisibleSecurityStateChanged(
       EventHandler<VisibleSecurityStateChanged> eventListener);
 
-  /** The security state of the page changed. */
+  /** The security state of the page changed. No longer being sent. */
   @EventName("securityStateChanged")
+  @Deprecated
   EventListener onSecurityStateChanged(EventHandler<SecurityStateChanged> eventListener);
 }

@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,8 +77,25 @@ public interface HeapProfiler {
   /**
    * @param samplingInterval Average sample interval in bytes. Poisson distribution is used for the
    *     intervals. The default value is 32768 bytes.
+   * @param includeObjectsCollectedByMajorGC By default, the sampling heap profiler reports only
+   *     objects which are still alive when the profile is returned via getSamplingProfile or
+   *     stopSampling, which is useful for determining what functions contribute the most to
+   *     steady-state memory usage. This flag instructs the sampling heap profiler to also include
+   *     information about objects discarded by major GC, which will show which functions cause
+   *     large temporary memory usage or long GC pauses.
+   * @param includeObjectsCollectedByMinorGC By default, the sampling heap profiler reports only
+   *     objects which are still alive when the profile is returned via getSamplingProfile or
+   *     stopSampling, which is useful for determining what functions contribute the most to
+   *     steady-state memory usage. This flag instructs the sampling heap profiler to also include
+   *     information about objects discarded by minor GC, which is useful when tuning a
+   *     latency-sensitive application for minimal GC activity.
    */
-  void startSampling(@Optional @ParamName("samplingInterval") Double samplingInterval);
+  void startSampling(
+      @Optional @ParamName("samplingInterval") Double samplingInterval,
+      @Optional @ParamName("includeObjectsCollectedByMajorGC")
+          Boolean includeObjectsCollectedByMajorGC,
+      @Optional @ParamName("includeObjectsCollectedByMinorGC")
+          Boolean includeObjectsCollectedByMinorGC);
 
   void startTrackingHeapObjects();
 
@@ -93,23 +110,33 @@ public interface HeapProfiler {
   /**
    * @param reportProgress If true 'reportHeapSnapshotProgress' events will be generated while
    *     snapshot is being taken when the tracking is stopped.
-   * @param treatGlobalObjectsAsRoots
+   * @param treatGlobalObjectsAsRoots Deprecated in favor of `exposeInternals`.
+   * @param captureNumericValue If true, numerical values are included in the snapshot
+   * @param exposeInternals If true, exposes internals of the snapshot.
    */
   void stopTrackingHeapObjects(
       @Optional @ParamName("reportProgress") Boolean reportProgress,
-      @Optional @ParamName("treatGlobalObjectsAsRoots") Boolean treatGlobalObjectsAsRoots);
+      @Deprecated @Optional @ParamName("treatGlobalObjectsAsRoots")
+          Boolean treatGlobalObjectsAsRoots,
+      @Optional @ParamName("captureNumericValue") Boolean captureNumericValue,
+      @Experimental @Optional @ParamName("exposeInternals") Boolean exposeInternals);
 
   void takeHeapSnapshot();
 
   /**
    * @param reportProgress If true 'reportHeapSnapshotProgress' events will be generated while
    *     snapshot is being taken.
-   * @param treatGlobalObjectsAsRoots If true, a raw snapshot without artifical roots will be
-   *     generated
+   * @param treatGlobalObjectsAsRoots If true, a raw snapshot without artificial roots will be
+   *     generated. Deprecated in favor of `exposeInternals`.
+   * @param captureNumericValue If true, numerical values are included in the snapshot
+   * @param exposeInternals If true, exposes internals of the snapshot.
    */
   void takeHeapSnapshot(
       @Optional @ParamName("reportProgress") Boolean reportProgress,
-      @Optional @ParamName("treatGlobalObjectsAsRoots") Boolean treatGlobalObjectsAsRoots);
+      @Deprecated @Optional @ParamName("treatGlobalObjectsAsRoots")
+          Boolean treatGlobalObjectsAsRoots,
+      @Optional @ParamName("captureNumericValue") Boolean captureNumericValue,
+      @Experimental @Optional @ParamName("exposeInternals") Boolean exposeInternals);
 
   @EventName("addHeapSnapshotChunk")
   EventListener onAddHeapSnapshotChunk(EventHandler<AddHeapSnapshotChunk> eventListener);

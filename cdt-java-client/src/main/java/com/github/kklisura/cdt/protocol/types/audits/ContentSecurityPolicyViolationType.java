@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.audits;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,5 +32,7 @@ public enum ContentSecurityPolicyViolationType {
   @JsonProperty("kTrustedTypesSinkViolation")
   K_TRUSTED_TYPES_SINK_VIOLATION,
   @JsonProperty("kTrustedTypesPolicyViolation")
-  K_TRUSTED_TYPES_POLICY_VIOLATION
+  K_TRUSTED_TYPES_POLICY_VIOLATION,
+  @JsonProperty("kWasmEvalViolation")
+  K_WASM_EVAL_VIOLATION
 }

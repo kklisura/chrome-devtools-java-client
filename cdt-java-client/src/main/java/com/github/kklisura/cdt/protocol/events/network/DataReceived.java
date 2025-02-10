@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.events.network;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,9 @@ package com.github.kklisura.cdt.protocol.events.network;
  * #L%
  */
 
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
+
 /** Fired when data chunk was received over the network. */
 public class DataReceived {
 
@@ -30,6 +33,8 @@ public class DataReceived {
   private Integer dataLength;
 
   private Integer encodedDataLength;
+
+  @Experimental @Optional private String data;
 
   /** Request identifier. */
   public String getRequestId() {
@@ -69,5 +74,15 @@ public class DataReceived {
   /** Actual bytes received (might be less than dataLength for compressed encodings). */
   public void setEncodedDataLength(Integer encodedDataLength) {
     this.encodedDataLength = encodedDataLength;
+  }
+
+  /** Data that was received. (Encoded as a base64 string when passed over JSON) */
+  public String getData() {
+    return data;
+  }
+
+  /** Data that was received. (Encoded as a base64 string when passed over JSON) */
+  public void setData(String data) {
+    this.data = data;
   }
 }

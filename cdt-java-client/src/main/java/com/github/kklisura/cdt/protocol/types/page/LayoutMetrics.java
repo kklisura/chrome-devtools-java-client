@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.page;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,49 +37,43 @@ public class LayoutMetrics {
   private Rect cssContentSize;
 
   /**
-   * Deprecated metrics relating to the layout viewport. Can be in DP or in CSS pixels depending on
-   * the `enable-use-zoom-for-dsf` flag. Use `cssLayoutViewport` instead.
+   * Deprecated metrics relating to the layout viewport. Is in device pixels. Use
+   * `cssLayoutViewport` instead.
    */
   public LayoutViewport getLayoutViewport() {
     return layoutViewport;
   }
 
   /**
-   * Deprecated metrics relating to the layout viewport. Can be in DP or in CSS pixels depending on
-   * the `enable-use-zoom-for-dsf` flag. Use `cssLayoutViewport` instead.
+   * Deprecated metrics relating to the layout viewport. Is in device pixels. Use
+   * `cssLayoutViewport` instead.
    */
   public void setLayoutViewport(LayoutViewport layoutViewport) {
     this.layoutViewport = layoutViewport;
   }
 
   /**
-   * Deprecated metrics relating to the visual viewport. Can be in DP or in CSS pixels depending on
-   * the `enable-use-zoom-for-dsf` flag. Use `cssVisualViewport` instead.
+   * Deprecated metrics relating to the visual viewport. Is in device pixels. Use
+   * `cssVisualViewport` instead.
    */
   public VisualViewport getVisualViewport() {
     return visualViewport;
   }
 
   /**
-   * Deprecated metrics relating to the visual viewport. Can be in DP or in CSS pixels depending on
-   * the `enable-use-zoom-for-dsf` flag. Use `cssVisualViewport` instead.
+   * Deprecated metrics relating to the visual viewport. Is in device pixels. Use
+   * `cssVisualViewport` instead.
    */
   public void setVisualViewport(VisualViewport visualViewport) {
     this.visualViewport = visualViewport;
   }
 
-  /**
-   * Deprecated size of scrollable area. Can be in DP or in CSS pixels depending on the
-   * `enable-use-zoom-for-dsf` flag. Use `cssContentSize` instead.
-   */
+  /** Deprecated size of scrollable area. Is in DP. Use `cssContentSize` instead. */
   public Rect getContentSize() {
     return contentSize;
   }
 
-  /**
-   * Deprecated size of scrollable area. Can be in DP or in CSS pixels depending on the
-   * `enable-use-zoom-for-dsf` flag. Use `cssContentSize` instead.
-   */
+  /** Deprecated size of scrollable area. Is in DP. Use `cssContentSize` instead. */
   public void setContentSize(Rect contentSize) {
     this.contentSize = contentSize;
   }

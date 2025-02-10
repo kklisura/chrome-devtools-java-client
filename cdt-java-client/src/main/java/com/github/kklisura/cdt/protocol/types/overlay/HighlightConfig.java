@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.overlay;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,6 +61,8 @@ public class HighlightConfig {
   @Optional private FlexItemHighlightConfig flexItemHighlightConfig;
 
   @Optional private ContrastAlgorithm contrastAlgorithm;
+
+  @Optional private ContainerQueryContainerHighlightConfig containerQueryContainerHighlightConfig;
 
   /** Whether the node info tooltip should be shown (default: false). */
   public Boolean getShowInfo() {
@@ -241,5 +243,16 @@ public class HighlightConfig {
   /** The contrast algorithm to use for the contrast ratio (default: aa). */
   public void setContrastAlgorithm(ContrastAlgorithm contrastAlgorithm) {
     this.contrastAlgorithm = contrastAlgorithm;
+  }
+
+  /** The container query container highlight configuration (default: all transparent). */
+  public ContainerQueryContainerHighlightConfig getContainerQueryContainerHighlightConfig() {
+    return containerQueryContainerHighlightConfig;
+  }
+
+  /** The container query container highlight configuration (default: all transparent). */
+  public void setContainerQueryContainerHighlightConfig(
+      ContainerQueryContainerHighlightConfig containerQueryContainerHighlightConfig) {
+    this.containerQueryContainerHighlightConfig = containerQueryContainerHighlightConfig;
   }
 }

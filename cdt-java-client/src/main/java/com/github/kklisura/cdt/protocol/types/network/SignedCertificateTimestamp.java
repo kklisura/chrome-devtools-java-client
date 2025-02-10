@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,12 +79,18 @@ public class SignedCertificateTimestamp {
     this.logId = logId;
   }
 
-  /** Issuance date. */
+  /**
+   * Issuance date. Unlike TimeSinceEpoch, this contains the number of milliseconds since January 1,
+   * 1970, UTC, not the number of seconds.
+   */
   public Double getTimestamp() {
     return timestamp;
   }
 
-  /** Issuance date. */
+  /**
+   * Issuance date. Unlike TimeSinceEpoch, this contains the number of milliseconds since January 1,
+   * 1970, UTC, not the number of seconds.
+   */
   public void setTimestamp(Double timestamp) {
     this.timestamp = timestamp;
   }

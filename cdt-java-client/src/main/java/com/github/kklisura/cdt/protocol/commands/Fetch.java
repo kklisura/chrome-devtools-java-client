@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ package com.github.kklisura.cdt.protocol.commands;
 import com.github.kklisura.cdt.protocol.events.fetch.AuthRequired;
 import com.github.kklisura.cdt.protocol.events.fetch.RequestPaused;
 import com.github.kklisura.cdt.protocol.support.annotations.EventName;
+import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
 import com.github.kklisura.cdt.protocol.support.annotations.Returns;
@@ -89,7 +90,9 @@ public interface Fetch {
    *     series of name: value pairs. Prefer the above method unless you need to represent some
    *     non-UTF8 values that can't be transmitted over the protocol as text. (Encoded as a base64
    *     string when passed over JSON)
-   * @param body A response body. (Encoded as a base64 string when passed over JSON)
+   * @param body A response body. If absent, original response body will be used if the request is
+   *     intercepted at the response stage and empty body will be used if the request is intercepted
+   *     at the request stage. (Encoded as a base64 string when passed over JSON)
    * @param responsePhrase A textual representation of responseCode. If absent, a standard phrase
    *     matching responseCode is used.
    */
@@ -116,14 +119,18 @@ public interface Fetch {
    * @param method If set, the request method is overridden.
    * @param postData If set, overrides the post data in the request. (Encoded as a base64 string
    *     when passed over JSON)
-   * @param headers If set, overrides the request headers.
+   * @param headers If set, overrides the request headers. Note that the overrides do not extend to
+   *     subsequent redirect hops, if a redirect happens. Another override may be applied to a
+   *     different request produced by a redirect.
+   * @param interceptResponse If set, overrides response interception behavior for this request.
    */
   void continueRequest(
       @ParamName("requestId") String requestId,
       @Optional @ParamName("url") String url,
       @Optional @ParamName("method") String method,
       @Optional @ParamName("postData") String postData,
-      @Optional @ParamName("headers") List<HeaderEntry> headers);
+      @Optional @ParamName("headers") List<HeaderEntry> headers,
+      @Experimental @Optional @ParamName("interceptResponse") Boolean interceptResponse);
 
   /**
    * Continues a request supplying authChallengeResponse following authRequired event.
@@ -136,10 +143,44 @@ public interface Fetch {
       @ParamName("authChallengeResponse") AuthChallengeResponse authChallengeResponse);
 
   /**
+   * Continues loading of the paused response, optionally modifying the response headers. If either
+   * responseCode or headers are modified, all of them must be present.
+   *
+   * @param requestId An id the client received in requestPaused event.
+   */
+  @Experimental
+  void continueResponse(@ParamName("requestId") String requestId);
+
+  /**
+   * Continues loading of the paused response, optionally modifying the response headers. If either
+   * responseCode or headers are modified, all of them must be present.
+   *
+   * @param requestId An id the client received in requestPaused event.
+   * @param responseCode An HTTP response code. If absent, original response code will be used.
+   * @param responsePhrase A textual representation of responseCode. If absent, a standard phrase
+   *     matching responseCode is used.
+   * @param responseHeaders Response headers. If absent, original response headers will be used.
+   * @param binaryResponseHeaders Alternative way of specifying response headers as a \0-separated
+   *     series of name: value pairs. Prefer the above method unless you need to represent some
+   *     non-UTF8 values that can't be transmitted over the protocol as text. (Encoded as a base64
+   *     string when passed over JSON)
+   */
+  @Experimental
+  void continueResponse(
+      @ParamName("requestId") String requestId,
+      @Optional @ParamName("responseCode") Integer responseCode,
+      @Optional @ParamName("responsePhrase") String responsePhrase,
+      @Optional @ParamName("responseHeaders") List<HeaderEntry> responseHeaders,
+      @Optional @ParamName("binaryResponseHeaders") String binaryResponseHeaders);
+
+  /**
    * Causes the body of the response to be received from the server and returned as a single string.
    * May only be issued for a request that is paused in the Response stage and is mutually exclusive
    * with takeResponseBodyForInterceptionAsStream. Calling other methods that affect the request or
-   * disabling fetch domain before body is received results in an undefined behavior.
+   * disabling fetch domain before body is received results in an undefined behavior. Note that the
+   * response body is not available for redirects. Requests paused in the _redirect received_ state
+   * may be differentiated by `responseCode` and presence of `location` response header, see
+   * comments to `requestPaused` for details.
    *
    * @param requestId Identifier for the intercepted request to get body for.
    */
@@ -163,7 +204,11 @@ public interface Fetch {
    * is paused until the client responds with one of continueRequest, failRequest or fulfillRequest.
    * The stage of the request can be determined by presence of responseErrorReason and
    * responseStatusCode -- the request is at the response stage if either of these fields is present
-   * and in the request stage otherwise.
+   * and in the request stage otherwise. Redirect responses and subsequent requests are reported
+   * similarly to regular responses and requests. Redirect responses may be distinguished by the
+   * value of `responseStatusCode` (which is one of 301, 302, 303, 307, 308) along with presence of
+   * the `location` header. Requests resulting from a redirect will have `redirectedRequestId` field
+   * set.
    */
   @EventName("requestPaused")
   EventListener onRequestPaused(EventHandler<RequestPaused> eventListener);

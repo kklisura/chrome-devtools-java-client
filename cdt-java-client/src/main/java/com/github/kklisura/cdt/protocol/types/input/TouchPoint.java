@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.input;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,9 +39,9 @@ public class TouchPoint {
 
   @Experimental @Optional private Double tangentialPressure;
 
-  @Experimental @Optional private Integer tiltX;
+  @Optional private Double tiltX;
 
-  @Experimental @Optional private Integer tiltY;
+  @Optional private Double tiltY;
 
   @Experimental @Optional private Integer twist;
 
@@ -127,7 +127,7 @@ public class TouchPoint {
    * The plane angle between the Y-Z plane and the plane containing both the stylus axis and the Y
    * axis, in degrees of the range [-90,90], a positive tiltX is to the right (default: 0)
    */
-  public Integer getTiltX() {
+  public Double getTiltX() {
     return tiltX;
   }
 
@@ -135,7 +135,7 @@ public class TouchPoint {
    * The plane angle between the Y-Z plane and the plane containing both the stylus axis and the Y
    * axis, in degrees of the range [-90,90], a positive tiltX is to the right (default: 0)
    */
-  public void setTiltX(Integer tiltX) {
+  public void setTiltX(Double tiltX) {
     this.tiltX = tiltX;
   }
 
@@ -143,7 +143,7 @@ public class TouchPoint {
    * The plane angle between the X-Z plane and the plane containing both the stylus axis and the X
    * axis, in degrees of the range [-90,90], a positive tiltY is towards the user (default: 0).
    */
-  public Integer getTiltY() {
+  public Double getTiltY() {
     return tiltY;
   }
 
@@ -151,7 +151,7 @@ public class TouchPoint {
    * The plane angle between the X-Z plane and the plane containing both the stylus axis and the X
    * axis, in degrees of the range [-90,90], a positive tiltY is towards the user (default: 0).
    */
-  public void setTiltY(Integer tiltY) {
+  public void setTiltY(Double tiltY) {
     this.tiltY = tiltY;
   }
 

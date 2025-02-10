@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.animation;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,8 @@ public class Animation {
   @Optional private AnimationEffect source;
 
   @Optional private String cssId;
+
+  @Optional private ViewOrScrollTimeline viewOrScrollTimeline;
 
   /** `Animation`'s id. */
   public String getId() {
@@ -95,12 +97,18 @@ public class Animation {
     this.playbackRate = playbackRate;
   }
 
-  /** `Animation`'s start time. */
+  /**
+   * `Animation`'s start time. Milliseconds for time based animations and percentage [0 - 100] for
+   * scroll driven animations (i.e. when viewOrScrollTimeline exists).
+   */
   public Double getStartTime() {
     return startTime;
   }
 
-  /** `Animation`'s start time. */
+  /**
+   * `Animation`'s start time. Milliseconds for time based animations and percentage [0 - 100] for
+   * scroll driven animations (i.e. when viewOrScrollTimeline exists).
+   */
   public void setStartTime(Double startTime) {
     this.startTime = startTime;
   }
@@ -149,5 +157,15 @@ public class Animation {
    */
   public void setCssId(String cssId) {
     this.cssId = cssId;
+  }
+
+  /** View or scroll timeline */
+  public ViewOrScrollTimeline getViewOrScrollTimeline() {
+    return viewOrScrollTimeline;
+  }
+
+  /** View or scroll timeline */
+  public void setViewOrScrollTimeline(ViewOrScrollTimeline viewOrScrollTimeline) {
+    this.viewOrScrollTimeline = viewOrScrollTimeline;
   }
 }

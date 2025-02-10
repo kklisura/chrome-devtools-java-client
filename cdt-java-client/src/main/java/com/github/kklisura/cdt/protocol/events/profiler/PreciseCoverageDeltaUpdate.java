@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.events.profiler;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,14 +28,14 @@ import java.util.List;
  * Reports coverage delta since the last poll (either from an event like this, or from
  * `takePreciseCoverage` for the current isolate. May only be sent if precise code coverage has been
  * started. This event can be trigged by the embedder to, for example, trigger collection of
- * coverage data immediatelly at a certain point in time.
+ * coverage data immediately at a certain point in time.
  */
 @Experimental
 public class PreciseCoverageDeltaUpdate {
 
   private Double timestamp;
 
-  private String occassion;
+  private String occasion;
 
   private List<ScriptCoverage> result;
 
@@ -54,13 +54,13 @@ public class PreciseCoverageDeltaUpdate {
   }
 
   /** Identifier for distinguishing coverage events. */
-  public String getOccassion() {
-    return occassion;
+  public String getOccasion() {
+    return occasion;
   }
 
   /** Identifier for distinguishing coverage events. */
-  public void setOccassion(String occassion) {
-    this.occassion = occassion;
+  public void setOccasion(String occasion) {
+    this.occasion = occasion;
   }
 
   /** Coverage data for the current isolate. */

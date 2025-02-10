@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.network;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ package com.github.kklisura.cdt.protocol.types.network;
  */
 
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
+import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 
 /** Timing information for the request. */
 public class ResourceTiming {
@@ -51,6 +52,10 @@ public class ResourceTiming {
 
   @Experimental private Double workerRespondWithSettled;
 
+  @Experimental @Optional private Double workerRouterEvaluationStart;
+
+  @Experimental @Optional private Double workerCacheLookupStart;
+
   private Double sendStart;
 
   private Double sendEnd;
@@ -58,6 +63,8 @@ public class ResourceTiming {
   @Experimental private Double pushStart;
 
   @Experimental private Double pushEnd;
+
+  @Experimental private Double receiveHeadersStart;
 
   private Double receiveHeadersEnd;
 
@@ -197,6 +204,26 @@ public class ResourceTiming {
     this.workerRespondWithSettled = workerRespondWithSettled;
   }
 
+  /** Started ServiceWorker static routing source evaluation. */
+  public Double getWorkerRouterEvaluationStart() {
+    return workerRouterEvaluationStart;
+  }
+
+  /** Started ServiceWorker static routing source evaluation. */
+  public void setWorkerRouterEvaluationStart(Double workerRouterEvaluationStart) {
+    this.workerRouterEvaluationStart = workerRouterEvaluationStart;
+  }
+
+  /** Started cache lookup when the source was evaluated to `cache`. */
+  public Double getWorkerCacheLookupStart() {
+    return workerCacheLookupStart;
+  }
+
+  /** Started cache lookup when the source was evaluated to `cache`. */
+  public void setWorkerCacheLookupStart(Double workerCacheLookupStart) {
+    this.workerCacheLookupStart = workerCacheLookupStart;
+  }
+
   /** Started sending request. */
   public Double getSendStart() {
     return sendStart;
@@ -235,6 +262,16 @@ public class ResourceTiming {
   /** Time the server finished pushing request. */
   public void setPushEnd(Double pushEnd) {
     this.pushEnd = pushEnd;
+  }
+
+  /** Started receiving response headers. */
+  public Double getReceiveHeadersStart() {
+    return receiveHeadersStart;
+  }
+
+  /** Started receiving response headers. */
+  public void setReceiveHeadersStart(Double receiveHeadersStart) {
+    this.receiveHeadersStart = receiveHeadersStart;
   }
 
   /** Finished receiving response headers. */

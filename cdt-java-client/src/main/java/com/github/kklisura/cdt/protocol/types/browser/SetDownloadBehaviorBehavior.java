@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.browser;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Whether to allow all or deny all download requests, or use default Chrome behavior if available
- * (otherwise deny). |allowAndName| allows download and names files according to their dowmload
+ * (otherwise deny). |allowAndName| allows download and names files according to their download
  * guids.
  */
 public enum SetDownloadBehaviorBehavior {

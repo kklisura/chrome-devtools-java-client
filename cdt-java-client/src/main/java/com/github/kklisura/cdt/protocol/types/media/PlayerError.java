@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.media;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,38 +20,79 @@ package com.github.kklisura.cdt.protocol.types.media;
  * #L%
  */
 
+import java.util.List;
+import java.util.Map;
+
 /** Corresponds to kMediaError */
 public class PlayerError {
 
-  private PlayerErrorType type;
+  private String errorType;
 
-  private String errorCode;
+  private Integer code;
 
-  public PlayerErrorType getType() {
-    return type;
+  private List<PlayerErrorSourceLocation> stack;
+
+  private List<PlayerError> cause;
+
+  private Map<String, Object> data;
+
+  public String getErrorType() {
+    return errorType;
   }
 
-  public void setType(PlayerErrorType type) {
-    this.type = type;
-  }
-
-  /**
-   * When this switches to using media::Status instead of PipelineStatus we can remove "errorCode"
-   * and replace it with the fields from a Status instance. This also seems like a duplicate of the
-   * error level enum - there is a todo bug to have that level removed and use this instead.
-   * (crbug.com/1068454)
-   */
-  public String getErrorCode() {
-    return errorCode;
+  public void setErrorType(String errorType) {
+    this.errorType = errorType;
   }
 
   /**
-   * When this switches to using media::Status instead of PipelineStatus we can remove "errorCode"
-   * and replace it with the fields from a Status instance. This also seems like a duplicate of the
-   * error level enum - there is a todo bug to have that level removed and use this instead.
-   * (crbug.com/1068454)
+   * Code is the numeric enum entry for a specific set of error codes, such as PipelineStatusCodes
+   * in media/base/pipeline_status.h
    */
-  public void setErrorCode(String errorCode) {
-    this.errorCode = errorCode;
+  public Integer getCode() {
+    return code;
+  }
+
+  /**
+   * Code is the numeric enum entry for a specific set of error codes, such as PipelineStatusCodes
+   * in media/base/pipeline_status.h
+   */
+  public void setCode(Integer code) {
+    this.code = code;
+  }
+
+  /** A trace of where this error was caused / where it passed through. */
+  public List<PlayerErrorSourceLocation> getStack() {
+    return stack;
+  }
+
+  /** A trace of where this error was caused / where it passed through. */
+  public void setStack(List<PlayerErrorSourceLocation> stack) {
+    this.stack = stack;
+  }
+
+  /**
+   * Errors potentially have a root cause error, ie, a DecoderError might be caused by an
+   * WindowsError
+   */
+  public List<PlayerError> getCause() {
+    return cause;
+  }
+
+  /**
+   * Errors potentially have a root cause error, ie, a DecoderError might be caused by an
+   * WindowsError
+   */
+  public void setCause(List<PlayerError> cause) {
+    this.cause = cause;
+  }
+
+  /** Extra data attached to an error, such as an HRESULT, Video Codec, etc. */
+  public Map<String, Object> getData() {
+    return data;
+  }
+
+  /** Extra data attached to an error, such as an HRESULT, Video Codec, etc. */
+  public void setData(Map<String, Object> data) {
+    this.data = data;
   }
 }

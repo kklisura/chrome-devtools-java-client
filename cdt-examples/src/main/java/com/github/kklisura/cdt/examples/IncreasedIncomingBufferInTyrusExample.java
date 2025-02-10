@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.examples;
  * #%L
  * cdt-examples
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,11 +87,12 @@ public class IncreasedIncomingBufferInTyrusExample {
           Double marginLeft = 0d;
           Double marginRight = 0d;
           String pageRanges = "";
-          Boolean ignoreInvalidPageRanges = false;
           String headerTemplate = "";
           String footerTemplate = "";
           Boolean preferCSSPageSize = false;
           PrintToPDFTransferMode mode = PrintToPDFTransferMode.RETURN_AS_BASE_64;
+          Boolean generateTaggedPDF = true;
+          Boolean generateDocumentOutline = true;
 
           dump(
               outputFilename,
@@ -109,11 +110,12 @@ public class IncreasedIncomingBufferInTyrusExample {
                       marginLeft,
                       marginRight,
                       pageRanges,
-                      ignoreInvalidPageRanges,
                       headerTemplate,
                       footerTemplate,
                       preferCSSPageSize,
-                      mode));
+                      mode,
+                      generateTaggedPDF,
+                      generateDocumentOutline));
 
           System.out.println("Done!");
           devToolsService.close();

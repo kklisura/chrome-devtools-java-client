@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.events.css;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import com.github.kklisura.cdt.protocol.types.css.FontFace;
 
 /**
  * Fires whenever a web font is updated. A non-empty font parameter indicates a successfully loaded
- * web font
+ * web font.
  */
 public class FontsUpdated {
 

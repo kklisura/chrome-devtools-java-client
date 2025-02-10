@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,9 @@ package com.github.kklisura.cdt.protocol.commands;
  * #L%
  */
 
-import com.github.kklisura.cdt.protocol.events.headlessexperimental.NeedsBeginFramesChanged;
-import com.github.kklisura.cdt.protocol.support.annotations.EventName;
 import com.github.kklisura.cdt.protocol.support.annotations.Experimental;
 import com.github.kklisura.cdt.protocol.support.annotations.Optional;
 import com.github.kklisura.cdt.protocol.support.annotations.ParamName;
-import com.github.kklisura.cdt.protocol.support.types.EventHandler;
-import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.headlessexperimental.BeginFrame;
 import com.github.kklisura.cdt.protocol.types.headlessexperimental.ScreenshotParams;
 
@@ -38,7 +34,7 @@ public interface HeadlessExperimental {
    * Sends a BeginFrame to the target and returns when the frame was completed. Optionally captures
    * a screenshot from the resulting frame. Requires that the target was created with enabled
    * BeginFrameControl. Designed for use with --run-all-compositor-stages-before-draw, see also
-   * https://goo.gl/3zHXhB for more background.
+   * https://goo.gle/chrome-headless-rendering for more background.
    */
   BeginFrame beginFrame();
 
@@ -46,7 +42,7 @@ public interface HeadlessExperimental {
    * Sends a BeginFrame to the target and returns when the frame was completed. Optionally captures
    * a screenshot from the resulting frame. Requires that the target was created with enabled
    * BeginFrameControl. Designed for use with --run-all-compositor-stages-before-draw, see also
-   * https://goo.gl/3zHXhB for more background.
+   * https://goo.gle/chrome-headless-rendering for more background.
    *
    * @param frameTimeTicks Timestamp of this BeginFrame in Renderer TimeTicks (milliseconds of
    *     uptime). If not set, the current time will be used.
@@ -67,17 +63,10 @@ public interface HeadlessExperimental {
       @Optional @ParamName("screenshot") ScreenshotParams screenshot);
 
   /** Disables headless events for the target. */
+  @Deprecated
   void disable();
 
   /** Enables headless events for the target. */
-  void enable();
-
-  /**
-   * Issued when the target starts or stops needing BeginFrames. Deprecated. Issue beginFrame
-   * unconditionally instead and use result from beginFrame to detect whether the frames were
-   * suppressed.
-   */
-  @EventName("needsBeginFramesChanged")
   @Deprecated
-  EventListener onNeedsBeginFramesChanged(EventHandler<NeedsBeginFramesChanged> eventListener);
+  void enable();
 }

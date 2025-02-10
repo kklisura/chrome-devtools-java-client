@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.page;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class Frame {
 
   @Experimental @Optional private String unreachableUrl;
 
-  @Experimental @Optional private AdFrameType adFrameType;
+  @Experimental @Optional private AdFrameStatus adFrameStatus;
 
   @Experimental private SecureContextType secureContextType;
 
@@ -169,14 +169,14 @@ public class Frame {
     this.unreachableUrl = unreachableUrl;
   }
 
-  /** Indicates whether this frame was tagged as an ad. */
-  public AdFrameType getAdFrameType() {
-    return adFrameType;
+  /** Indicates whether this frame was tagged as an ad and why. */
+  public AdFrameStatus getAdFrameStatus() {
+    return adFrameStatus;
   }
 
-  /** Indicates whether this frame was tagged as an ad. */
-  public void setAdFrameType(AdFrameType adFrameType) {
-    this.adFrameType = adFrameType;
+  /** Indicates whether this frame was tagged as an ad and why. */
+  public void setAdFrameStatus(AdFrameStatus adFrameStatus) {
+    this.adFrameStatus = adFrameStatus;
   }
 
   /** Indicates whether the main document is a secure context and explains why that is the case. */

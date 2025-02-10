@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.security;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -174,12 +174,12 @@ public class CertificateSecurityState {
     this.certificateNetworkError = certificateNetworkError;
   }
 
-  /** True if the certificate uses a weak signature aglorithm. */
+  /** True if the certificate uses a weak signature algorithm. */
   public Boolean getCertificateHasWeakSignature() {
     return certificateHasWeakSignature;
   }
 
-  /** True if the certificate uses a weak signature aglorithm. */
+  /** True if the certificate uses a weak signature algorithm. */
   public void setCertificateHasWeakSignature(Boolean certificateHasWeakSignature) {
     this.certificateHasWeakSignature = certificateHasWeakSignature;
   }

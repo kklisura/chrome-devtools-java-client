@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.types.page;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public class FontFamilies {
 
   @Optional private String fantasy;
 
-  @Optional private String pictograph;
+  @Optional private String math;
 
   /** The standard font-family. */
   public String getStandard() {
@@ -101,13 +101,13 @@ public class FontFamilies {
     this.fantasy = fantasy;
   }
 
-  /** The pictograph font-family. */
-  public String getPictograph() {
-    return pictograph;
+  /** The math font-family. */
+  public String getMath() {
+    return math;
   }
 
-  /** The pictograph font-family. */
-  public void setPictograph(String pictograph) {
-    this.pictograph = pictograph;
+  /** The math font-family. */
+  public void setMath(String math) {
+    this.math = math;
   }
 }

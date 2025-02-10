@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.protocol.commands;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +29,17 @@ import com.github.kklisura.cdt.protocol.support.annotations.Returns;
 import com.github.kklisura.cdt.protocol.support.types.EventHandler;
 import com.github.kklisura.cdt.protocol.support.types.EventListener;
 import com.github.kklisura.cdt.protocol.types.dom.RGBA;
+import com.github.kklisura.cdt.protocol.types.emulation.DevicePosture;
 import com.github.kklisura.cdt.protocol.types.emulation.DisabledImageType;
 import com.github.kklisura.cdt.protocol.types.emulation.DisplayFeature;
 import com.github.kklisura.cdt.protocol.types.emulation.MediaFeature;
+import com.github.kklisura.cdt.protocol.types.emulation.PressureMetadata;
+import com.github.kklisura.cdt.protocol.types.emulation.PressureSource;
+import com.github.kklisura.cdt.protocol.types.emulation.PressureState;
 import com.github.kklisura.cdt.protocol.types.emulation.ScreenOrientation;
+import com.github.kklisura.cdt.protocol.types.emulation.SensorMetadata;
+import com.github.kklisura.cdt.protocol.types.emulation.SensorReading;
+import com.github.kklisura.cdt.protocol.types.emulation.SensorType;
 import com.github.kklisura.cdt.protocol.types.emulation.SetEmitTouchEventsForMouseConfiguration;
 import com.github.kklisura.cdt.protocol.types.emulation.SetEmulatedVisionDeficiencyType;
 import com.github.kklisura.cdt.protocol.types.emulation.UserAgentMetadata;
@@ -44,6 +51,7 @@ import java.util.List;
 public interface Emulation {
 
   /** Tells whether emulation is supported. */
+  @Deprecated
   @Returns("result")
   Boolean canEmulate();
 
@@ -65,12 +73,24 @@ public interface Emulation {
   @Experimental
   void setFocusEmulationEnabled(@ParamName("enabled") Boolean enabled);
 
+  /** Automatically render all web contents using a dark theme. */
+  @Experimental
+  void setAutoDarkModeOverride();
+
+  /**
+   * Automatically render all web contents using a dark theme.
+   *
+   * @param enabled Whether to enable or disable automatic dark mode. If not specified, any existing
+   *     override will be cleared.
+   */
+  @Experimental
+  void setAutoDarkModeOverride(@Optional @ParamName("enabled") Boolean enabled);
+
   /**
    * Enables CPU throttling to emulate slow CPUs.
    *
    * @param rate Throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc).
    */
-  @Experimental
   void setCPUThrottlingRate(@ParamName("rate") Double rate);
 
   /**
@@ -131,6 +151,8 @@ public interface Emulation {
    *     positions.
    * @param displayFeature If set, the display feature of a multi-segment screen. If not set,
    *     multi-segment support is turned-off.
+   * @param devicePosture If set, the posture of a foldable device. If not set the posture is set to
+   *     continuous. Deprecated, use Emulation.setDevicePostureOverride.
    */
   void setDeviceMetricsOverride(
       @ParamName("width") Integer width,
@@ -145,7 +167,25 @@ public interface Emulation {
       @Experimental @Optional @ParamName("dontSetVisibleSize") Boolean dontSetVisibleSize,
       @Optional @ParamName("screenOrientation") ScreenOrientation screenOrientation,
       @Experimental @Optional @ParamName("viewport") Viewport viewport,
-      @Experimental @Optional @ParamName("displayFeature") DisplayFeature displayFeature);
+      @Experimental @Optional @ParamName("displayFeature") DisplayFeature displayFeature,
+      @Deprecated @Experimental @Optional @ParamName("devicePosture") DevicePosture devicePosture);
+
+  /**
+   * Start reporting the given posture value to the Device Posture API. This override can also be
+   * set in setDeviceMetricsOverride().
+   *
+   * @param posture
+   */
+  @Experimental
+  void setDevicePostureOverride(@ParamName("posture") DevicePosture posture);
+
+  /**
+   * Clears a device posture override set with either setDeviceMetricsOverride() or
+   * setDevicePostureOverride() and starts using posture information from the platform again. Does
+   * nothing if no override is set.
+   */
+  @Experimental
+  void clearDevicePostureOverride();
 
   /** @param hidden Whether scrollbars should be always hidden. */
   @Experimental
@@ -184,9 +224,9 @@ public interface Emulation {
   /**
    * Emulates the given vision deficiency.
    *
-   * @param type Vision deficiency to emulate.
+   * @param type Vision deficiency to emulate. Order: best-effort emulations come first, followed by
+   *     any physiologically accurate emulations for medically recognized color vision deficiencies.
    */
-  @Experimental
   void setEmulatedVisionDeficiency(@ParamName("type") SetEmulatedVisionDeficiencyType type);
 
   /**
@@ -208,19 +248,101 @@ public interface Emulation {
       @Optional @ParamName("longitude") Double longitude,
       @Optional @ParamName("accuracy") Double accuracy);
 
+  /** @param type */
+  @Experimental
+  @Returns("requestedSamplingFrequency")
+  Double getOverriddenSensorInformation(@ParamName("type") SensorType type);
+
+  /**
+   * Overrides a platform sensor of a given type. If |enabled| is true, calls to Sensor.start() will
+   * use a virtual sensor as backend rather than fetching data from a real hardware sensor.
+   * Otherwise, existing virtual sensor-backend Sensor objects will fire an error event and new
+   * calls to Sensor.start() will attempt to use a real sensor instead.
+   *
+   * @param enabled
+   * @param type
+   */
+  @Experimental
+  void setSensorOverrideEnabled(
+      @ParamName("enabled") Boolean enabled, @ParamName("type") SensorType type);
+
+  /**
+   * Overrides a platform sensor of a given type. If |enabled| is true, calls to Sensor.start() will
+   * use a virtual sensor as backend rather than fetching data from a real hardware sensor.
+   * Otherwise, existing virtual sensor-backend Sensor objects will fire an error event and new
+   * calls to Sensor.start() will attempt to use a real sensor instead.
+   *
+   * @param enabled
+   * @param type
+   * @param metadata
+   */
+  @Experimental
+  void setSensorOverrideEnabled(
+      @ParamName("enabled") Boolean enabled,
+      @ParamName("type") SensorType type,
+      @Optional @ParamName("metadata") SensorMetadata metadata);
+
+  /**
+   * Updates the sensor readings reported by a sensor type previously overridden by
+   * setSensorOverrideEnabled.
+   *
+   * @param type
+   * @param reading
+   */
+  @Experimental
+  void setSensorOverrideReadings(
+      @ParamName("type") SensorType type, @ParamName("reading") SensorReading reading);
+
+  /**
+   * Overrides a pressure source of a given type, as used by the Compute Pressure API, so that
+   * updates to PressureObserver.observe() are provided via setPressureStateOverride instead of
+   * being retrieved from platform-provided telemetry data.
+   *
+   * @param enabled
+   * @param source
+   */
+  @Experimental
+  void setPressureSourceOverrideEnabled(
+      @ParamName("enabled") Boolean enabled, @ParamName("source") PressureSource source);
+
+  /**
+   * Overrides a pressure source of a given type, as used by the Compute Pressure API, so that
+   * updates to PressureObserver.observe() are provided via setPressureStateOverride instead of
+   * being retrieved from platform-provided telemetry data.
+   *
+   * @param enabled
+   * @param source
+   * @param metadata
+   */
+  @Experimental
+  void setPressureSourceOverrideEnabled(
+      @ParamName("enabled") Boolean enabled,
+      @ParamName("source") PressureSource source,
+      @Optional @ParamName("metadata") PressureMetadata metadata);
+
+  /**
+   * Provides a given pressure state that will be processed and eventually be delivered to
+   * PressureObserver users. |source| must have been previously overridden by
+   * setPressureSourceOverrideEnabled.
+   *
+   * @param source
+   * @param state
+   */
+  @Experimental
+  void setPressureStateOverride(
+      @ParamName("source") PressureSource source, @ParamName("state") PressureState state);
+
   /**
    * Overrides the Idle state.
    *
    * @param isUserActive Mock isUserActive
    * @param isScreenUnlocked Mock isScreenUnlocked
    */
-  @Experimental
   void setIdleOverride(
       @ParamName("isUserActive") Boolean isUserActive,
       @ParamName("isScreenUnlocked") Boolean isScreenUnlocked);
 
   /** Clears Idle state overrides. */
-  @Experimental
   void clearIdleOverride();
 
   /**
@@ -283,8 +405,6 @@ public interface Emulation {
    *     paused and a virtualTimeBudgetExpired event is sent.
    * @param maxVirtualTimeTaskStarvationCount If set this specifies the maximum number of tasks that
    *     can be run before virtual is forced forwards to prevent deadlock.
-   * @param waitForNavigation If set the virtual time policy change should be deferred until any
-   *     frame starts navigating. Note any previous deferred policy change is superseded.
    * @param initialVirtualTime If set, base::Time::Now will be overridden to initially return this
    *     value.
    */
@@ -295,7 +415,6 @@ public interface Emulation {
       @Optional @ParamName("budget") Double budget,
       @Optional @ParamName("maxVirtualTimeTaskStarvationCount")
           Integer maxVirtualTimeTaskStarvationCount,
-      @Optional @ParamName("waitForNavigation") Boolean waitForNavigation,
       @Optional @ParamName("initialVirtualTime") Double initialVirtualTime);
 
   /** Overrides default host system locale with the specified one. */
@@ -314,10 +433,10 @@ public interface Emulation {
   /**
    * Overrides default host system timezone with the specified one.
    *
-   * @param timezoneId The timezone identifier. If empty, disables the override and restores default
-   *     host system timezone.
+   * @param timezoneId The timezone identifier. List of supported timezones:
+   *     https://source.chromium.org/chromium/chromium/deps/icu.git/+/faee8bc70570192d82d2978a71e2a615788597d1:source/data/misc/metaZones.txt
+   *     If empty, disables the override and restores default host system timezone.
    */
-  @Experimental
   void setTimezoneOverride(@ParamName("timezoneId") String timezoneId);
 
   /**
@@ -336,18 +455,25 @@ public interface Emulation {
   @Experimental
   void setDisabledImageTypes(@ParamName("imageTypes") List<DisabledImageType> imageTypes);
 
+  /** @param hardwareConcurrency Hardware concurrency to report */
+  @Experimental
+  void setHardwareConcurrencyOverride(
+      @ParamName("hardwareConcurrency") Integer hardwareConcurrency);
+
   /**
-   * Allows overriding user agent with the given string.
+   * Allows overriding user agent with the given string. `userAgentMetadata` must be set for Client
+   * Hint headers to be sent.
    *
    * @param userAgent User agent to use.
    */
   void setUserAgentOverride(@ParamName("userAgent") String userAgent);
 
   /**
-   * Allows overriding user agent with the given string.
+   * Allows overriding user agent with the given string. `userAgentMetadata` must be set for Client
+   * Hint headers to be sent.
    *
    * @param userAgent User agent to use.
-   * @param acceptLanguage Browser langugage to emulate.
+   * @param acceptLanguage Browser language to emulate.
    * @param platform The platform navigator.platform should return.
    * @param userAgentMetadata To be sent in Sec-CH-UA-* headers and returned in
    *     navigator.userAgentData
@@ -357,6 +483,14 @@ public interface Emulation {
       @Optional @ParamName("acceptLanguage") String acceptLanguage,
       @Optional @ParamName("platform") String platform,
       @Experimental @Optional @ParamName("userAgentMetadata") UserAgentMetadata userAgentMetadata);
+
+  /**
+   * Allows overriding the automation flag.
+   *
+   * @param enabled Whether the override should be enabled.
+   */
+  @Experimental
+  void setAutomationOverride(@ParamName("enabled") Boolean enabled);
 
   /**
    * Notification sent after the virtual time budget for the current VirtualTimePolicy has run out.
