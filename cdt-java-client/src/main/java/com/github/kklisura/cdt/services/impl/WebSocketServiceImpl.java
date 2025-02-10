@@ -29,7 +29,10 @@ import com.github.kklisura.cdt.services.factory.WebSocketContainerFactory;
 import com.github.kklisura.cdt.services.factory.impl.DefaultWebSocketContainerFactory;
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+import javax.websocket.ClientEndpointConfig;
 import javax.websocket.CloseReason;
 import javax.websocket.DeploymentException;
 import javax.websocket.Endpoint;
@@ -114,6 +117,15 @@ public class WebSocketServiceImpl implements WebSocketService {
                   webSocketService.onError(session, thr);
                 }
               },
+              ClientEndpointConfig.Builder.create()
+                  .configurator(
+                      new ClientEndpointConfig.Configurator() {
+                        @Override
+                        public void beforeRequest(Map<String, List<String>> headers) {
+                          headers.remove("Origin");
+                        }
+                      })
+                  .build(),
               uri);
     } catch (DeploymentException | IOException e) {
       LOGGER.warn("Failed connecting to ws server {}...", uri, e);
