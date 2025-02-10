@@ -156,22 +156,40 @@ public class ChromeServiceImpl implements ChromeService {
   }
 
   @Override
-  public synchronized ChromeDevToolsService createDevToolsService(ChromeTab tab)
-      throws ChromeServiceException {
+  public ChromeDevToolsService createDevToolsService() throws ChromeServiceException {
+    return createDevToolsService(null, new ChromeDevToolsServiceConfiguration());
+  }
+
+  @Override
+  public ChromeDevToolsService createDevToolsService(ChromeTab tab) throws ChromeServiceException {
     return createDevToolsService(tab, new ChromeDevToolsServiceConfiguration());
+  }
+
+  @Override
+  public ChromeDevToolsService createDevToolsService(
+      ChromeDevToolsServiceConfiguration chromeDevToolsServiceConfiguration)
+      throws ChromeServiceException {
+    return createDevToolsService(null, chromeDevToolsServiceConfiguration);
   }
 
   @Override
   public synchronized ChromeDevToolsService createDevToolsService(
       ChromeTab tab, ChromeDevToolsServiceConfiguration chromeDevToolsServiceConfiguration)
       throws ChromeServiceException {
+    String id, webSocketDebuggerUrl;
+    if (tab == null) {
+      id = "browser";
+      webSocketDebuggerUrl = getVersion().getWebSocketDebuggerUrl();
+    } else {
+      id = tab.getId();
+      webSocketDebuggerUrl = tab.getWebSocketDebuggerUrl();
+    }
     try {
-      if (isChromeDevToolsServiceCached(tab)) {
-        return getCachedChromeDevToolsService(tab);
+      if (isChromeDevToolsServiceCached(id)) {
+        return getCachedChromeDevToolsService(id);
       }
 
       // Connect to a tab via web socket
-      String webSocketDebuggerUrl = tab.getWebSocketDebuggerUrl();
       WebSocketService webSocketService =
           webSocketServiceFactory.createWebSocketService(webSocketDebuggerUrl);
 
@@ -199,7 +217,7 @@ public class ChromeServiceImpl implements ChromeService {
       commandInvocationHandler.setChromeDevToolsService(chromeDevToolsService);
 
       // Cache it up.
-      cacheChromeDevToolsService(tab, chromeDevToolsService);
+      cacheChromeDevToolsService(id, chromeDevToolsService);
 
       return chromeDevToolsService;
     } catch (WebSocketServiceException ex) {
@@ -238,17 +256,16 @@ public class ChromeServiceImpl implements ChromeService {
     }
   }
 
-  private boolean isChromeDevToolsServiceCached(ChromeTab tab) {
-    return chromeDevToolServiceCache.get(tab.getId()) != null;
+  private boolean isChromeDevToolsServiceCached(String id) {
+    return chromeDevToolServiceCache.get(id) != null;
   }
 
-  private ChromeDevToolsService getCachedChromeDevToolsService(ChromeTab tab) {
-    return chromeDevToolServiceCache.get(tab.getId());
+  private ChromeDevToolsService getCachedChromeDevToolsService(String id) {
+    return chromeDevToolServiceCache.get(id);
   }
 
-  private void cacheChromeDevToolsService(
-      ChromeTab tab, ChromeDevToolsService chromeDevToolsService) {
-    chromeDevToolServiceCache.put(tab.getId(), chromeDevToolsService);
+  private void cacheChromeDevToolsService(String id, ChromeDevToolsService chromeDevToolsService) {
+    chromeDevToolServiceCache.put(id, chromeDevToolsService);
   }
 
   /**

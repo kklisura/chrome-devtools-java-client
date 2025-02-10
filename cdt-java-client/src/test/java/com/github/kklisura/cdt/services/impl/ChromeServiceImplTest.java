@@ -352,6 +352,36 @@ public class ChromeServiceImplTest extends EasyMockSupport {
   }
 
   @Test
+  public void testGetBrowserDevTools()
+      throws IOException, ChromeServiceException, WebSocketServiceException {
+    MockWebServer server = new MockWebServer();
+    String fixture = ChromeServiceImpl.inputStreamToString(getFixture("chrome/version.json"));
+    server.enqueue(new MockResponse().setBody(fixture));
+    server.start();
+
+    ChromeServiceImpl service =
+        new ChromeServiceImpl(server.getHostName(), server.getPort(), webSocketServiceFactory);
+
+    ObjectMapper mapper = new ObjectMapper();
+
+    expect(
+            webSocketServiceFactory.createWebSocketService(
+                mapper.readTree(fixture).path("webSocketDebuggerUrl").asText()))
+        .andReturn(webSocketService);
+
+    webSocketService.addMessageHandler(anyObject());
+
+    replayAll();
+
+    ChromeDevTools devTools = service.createDevToolsService();
+
+    verifyAll();
+
+    assertNotNull(devTools);
+    server.shutdown();
+  }
+
+  @Test
   public void testGetDevToolsIsCachedPerTab()
       throws IOException, ChromeServiceException, WebSocketServiceException {
     ChromeServiceImpl service = new ChromeServiceImpl(9222, webSocketServiceFactory);
