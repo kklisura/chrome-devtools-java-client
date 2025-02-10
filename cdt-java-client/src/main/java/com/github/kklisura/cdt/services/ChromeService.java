@@ -79,7 +79,7 @@ public interface ChromeService {
    * @return Version info.
    * @throws ChromeServiceException If request fails for any reason.
    */
-  ChromeVersion getVersion() throws ChromeServiceException;;
+  ChromeVersion getVersion() throws ChromeServiceException;
 
   /**
    * Creates a dev tools service to specified tab.
@@ -99,4 +99,21 @@ public interface ChromeService {
    * @return Dev tools.
    */
   ChromeDevToolsService createDevToolsService(ChromeTab tab) throws ChromeServiceException;
+
+  /**
+   * Creates a dev tools service to the browser.
+   *
+   * @param chromeDevToolsServiceConfiguration Service configuration.
+   * @return Dev tools.
+   */
+  ChromeDevToolsService createDevToolsService(
+      ChromeDevToolsServiceConfiguration chromeDevToolsServiceConfiguration)
+      throws ChromeServiceException;
+
+  /**
+   * Creates a dev tools service to the browser with default service configuration.
+   *
+   * @return Dev tools.
+   */
+  ChromeDevToolsService createDevToolsService() throws ChromeServiceException;
 }
